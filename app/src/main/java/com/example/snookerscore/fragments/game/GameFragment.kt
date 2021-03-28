@@ -3,12 +3,15 @@ package com.example.snookerscore.fragments.game
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameBinding
 
-class GameFragment : Fragment() {
+class GameFragment : androidx.fragment.app.Fragment() {
+
+    private lateinit var viewModel: GameViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -16,10 +19,28 @@ class GameFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding: FragmentGameBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false)
+        setHasOptionsMenu(true)
+
+        viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
+
         binding.fragGameButton.setOnClickListener {
             it.findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameStatsFragment())
         }
-        setHasOptionsMenu(true)
+
+        binding.gameViewModel = viewModel
+        binding.fragGameButtons.gameViewModel = viewModel
+        binding.lifecycleOwner = this
+
+//        viewModel.scorePlayerA.observe(viewLifecycleOwner, Observer {
+//            binding.gameTextScoreA.text = it.toString()
+//        })
+//
+//        viewModel.eventFrameComplete.observe(viewLifecycleOwner, Observer {
+//            if (it == true) {
+//                binding.gameTextScoreFramesA.text = it.toString()
+//                viewModel.resetFrame()
+//            }
+//        })
         return binding.root
     }
 

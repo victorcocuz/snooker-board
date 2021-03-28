@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="gameViewModel"
+            type="com.example.snookerscore.fragments.game.GameViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -12,8 +14,79 @@
         android:layout_height="match_parent"
         tools:context=".fragments.game.GameFragment">
 
+        <TextView
+            android:id="@+id/game_label_player_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="Player A"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/game_label_player_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="Player B"
+            app:layout_constraintStart_toStartOf="@+id/game_label_player_a"
+            app:layout_constraintTop_toBottomOf="@+id/game_label_player_a" />
+
+        <TextView
+            android:id="@+id/game_text_score_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_xlarge"
+            android:text="@{gameViewModel.scorePlayerA.toString()}"
+            app:layout_constraintBottom_toBottomOf="@+id/game_label_player_a"
+            app:layout_constraintStart_toEndOf="@+id/game_label_player_a" />
+
+        <TextView
+            android:id="@+id/game_text_score_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{gameViewModel.scorePlayerB.toString()}"
+            app:layout_constraintBottom_toBottomOf="@+id/game_label_player_b"
+            app:layout_constraintStart_toStartOf="@+id/game_text_score_a" />
+
+        <TextView
+            android:id="@+id/game_text_score_remaining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/game_label_remaining"
+            app:layout_constraintStart_toStartOf="@+id/game_text_score_b" />
+
+        <TextView
+            android:id="@+id/game_text_score_diff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/game_label_diff"
+            app:layout_constraintStart_toStartOf="@+id/game_text_score_remaining" />
+
+        <TextView
+            android:id="@+id/game_label_remaining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="@+id/game_label_player_b"
+            app:layout_constraintTop_toBottomOf="@+id/game_label_player_b" />
+
+        <TextView
+            android:id="@+id/game_label_diff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="TextView"
+            app:layout_constraintStart_toStartOf="@+id/game_label_remaining"
+            app:layout_constraintTop_toBottomOf="@+id/game_label_remaining" />
+
         <include
             layout="@layout/layout_game_buttons"
+            android:id="@+id/frag_game_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@+id/frag_game_button"
@@ -28,6 +101,23 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/game_text_score_frames_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_xlarge"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/game_text_score_a"
+            app:layout_constraintStart_toEndOf="@+id/game_text_score_a" />
+
+        <TextView
+            android:id="@+id/game_text_score_frames_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/game_text_score_b"
+            app:layout_constraintStart_toStartOf="@+id/game_text_score_frames_a" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
