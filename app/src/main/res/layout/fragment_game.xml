@@ -12,11 +12,13 @@
         android:layout_height="match_parent"
         tools:context=".fragments.game.GameFragment">
 
-        <!-- TODO: Update blank fragment layout -->
-        <TextView
+        <include
+            layout="@layout/layout_game_buttons"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="GAME FRAGMENT" />
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/frag_game_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/frag_game_button"

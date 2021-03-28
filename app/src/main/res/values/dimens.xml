@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="temp_btn_width">68dp</dimen>
+    <dimen name="temp_btn_height">32dp</dimen>
+
+    <!-- Margins -->
+    <dimen name="margin_standard">16dp</dimen>
+    <dimen name="margin_large">32dp</dimen>
+    <dimen name="margin_small">4dp</dimen>
+</resources>

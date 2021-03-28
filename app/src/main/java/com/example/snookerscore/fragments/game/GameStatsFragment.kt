@@ -22,5 +22,6 @@ class GameStatsFragment : Fragment() {
         binding.fragGameStatsBtn.setOnClickListener {
             it.findNavController().navigate(GameStatsFragmentDirections.actionGameStatsFragmentToPlayFragment())
         }
-        return binding.root    }
+        return binding.root
+    }
 }
