@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/navigation"
+    app:startDestination="@id/playFragment">
+
+    <!-- Main Fragments -->
+    <fragment
+        android:id="@+id/rankingsFragment"
+        android:name="com.example.snookerscore.fragments.main.RankingsFragment"
+        android:label="RankingsFragment" />
+    <fragment
+        android:id="@+id/friendsFragment"
+        android:name="com.example.snookerscore.fragments.main.FriendsFragment"
+        android:label="FriendsFragment" />
+    <fragment
+        android:id="@+id/playFragment"
+        android:name="com.example.snookerscore.fragments.main.PlayFragment"
+        android:label="PlayFragment" >
+        <action
+            android:id="@+id/action_playFragment_to_gameFragment"
+            app:destination="@id/gameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.example.snookerscore.fragments.main.HistoryFragment"
+        android:label="HistoryFragment" />
+    <fragment
+        android:id="@+id/statisticsFragment"
+        android:name="com.example.snookerscore.fragments.main.StatisticsFragment"
+        android:label="StatisticsFragment" />
+
+    <!-- Authentication Fragments -->
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.snookerscore.fragments.authentication.LoginFragment"
+        android:label="LoginFragment" />
+
+    <!-- Game Fragments -->
+    <fragment
+        android:id="@+id/gameFragment"
+        android:name="com.example.snookerscore.fragments.game.GameFragment"
+        android:label="GameFragment" >
+        <action
+            android:id="@+id/action_gameFragment_to_gameStatsFragment"
+            app:destination="@id/gameStatsFragment"
+            app:popUpTo="@id/playFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameStatsFragment"
+        android:name="com.example.snookerscore.fragments.game.GameStatsFragment"
+        android:label="GameStatsFragment" >
+        <action
+            android:id="@+id/action_gameStatsFragment_to_playFragment"
+            app:destination="@id/playFragment"
+            app:popUpTo="@id/gameStatsFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>
