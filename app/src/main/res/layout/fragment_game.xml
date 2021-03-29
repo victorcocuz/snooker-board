@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="gameViewModel"
             type="com.example.snookerscore.fragments.game.GameViewModel" />
@@ -38,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_xlarge"
-            android:text="@{gameViewModel.scorePlayerA.toString()}"
+            android:text="@{String.valueOf(gameViewModel.frame.playerA.frameScore)}"
             app:layout_constraintBottom_toBottomOf="@+id/game_label_player_a"
             app:layout_constraintStart_toEndOf="@+id/game_label_player_a" />
 
@@ -46,7 +47,7 @@
             android:id="@+id/game_text_score_b"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{gameViewModel.scorePlayerB.toString()}"
+            android:text="@{String.valueOf(gameViewModel.frame.playerB.frameScore)}"
             app:layout_constraintBottom_toBottomOf="@+id/game_label_player_b"
             app:layout_constraintStart_toStartOf="@+id/game_text_score_a" />
 
@@ -84,24 +85,6 @@
             app:layout_constraintStart_toStartOf="@+id/game_label_remaining"
             app:layout_constraintTop_toBottomOf="@+id/game_label_remaining" />
 
-        <include
-            layout="@layout/layout_game_buttons"
-            android:id="@+id/frag_game_buttons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/frag_game_button"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/frag_game_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Go to Game Stats Fragment"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
         <TextView
             android:id="@+id/game_text_score_frames_a"
             android:layout_width="wrap_content"
@@ -118,6 +101,35 @@
             android:text="TextView"
             app:layout_constraintBottom_toBottomOf="@+id/game_text_score_b"
             app:layout_constraintStart_toStartOf="@+id/game_text_score_frames_a" />
+
+        <include
+            android:id="@+id/frag_game_actions"
+            layout="@layout/layout_game_actions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_large"
+            app:layout_constraintBottom_toTopOf="@+id/frag_game_balls"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <include
+            android:id="@+id/frag_game_balls"
+            layout="@layout/layout_game_balls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_large"
+            app:layout_constraintBottom_toTopOf="@+id/frag_game_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/frag_game_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Go to Game Stats Fragment"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

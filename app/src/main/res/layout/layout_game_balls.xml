@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="gameViewModel"
+            type="com.example.snookerscore.fragments.game.GameViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/game_btn_ball_white"-->
+        <!--            style="@style/temp_btn"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_black"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.5"-->
+        <!--            app:layout_constraintStart_toEndOf="@+id/game_btn_ball_black"-->
+        <!--            android:text="WHITE" />-->
+
+        <TextView
+            android:id="@+id/game_btn_ball_red"
+            style="@style/temp_btn"
+            android:layout_width="@dimen/margin_large"
+            android:onClick="@{() -> gameViewModel.onScored(1)}"
+            android:text="RED"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/game_btn_ball_yellow"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/game_btn_ball_yellow"
+            style="@style/temp_btn"
+            android:layout_width="@dimen/margin_large"
+            android:onClick="@{() -> gameViewModel.onScored(2)}"
+            android:text="YEL"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_red"
+            app:layout_constraintEnd_toStartOf="@+id/game_btn_ball_green"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_btn_ball_red" />
+
+        <TextView
+            android:id="@+id/game_btn_ball_green"
+            style="@style/temp_btn"
+            android:layout_width="@dimen/margin_large"
+            android:onClick="@{() -> gameViewModel.onScored(3)}"
+            android:text="GRE"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_red"
+            app:layout_constraintEnd_toStartOf="@+id/game_btn_ball_brown"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_btn_ball_yellow" />
+
+        <TextView
+            android:id="@+id/game_btn_ball_brown"
+            style="@style/temp_btn"
+            android:layout_width="@dimen/margin_large"
+            android:onClick="@{() -> gameViewModel.onScored(4)}"
+            android:text="BRO"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_red"
+
+            app:layout_constraintEnd_toStartOf="@+id/game_btn_ball_blue"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_btn_ball_green" />
+
+        <TextView
+            android:id="@+id/game_btn_ball_blue"
+            style="@style/temp_btn"
+            android:layout_width="@dimen/margin_large"
+            android:onClick="@{() -> gameViewModel.onScored(5)}"
+            android:text="BLU"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_red"
+            app:layout_constraintEnd_toStartOf="@+id/game_btn_ball_pink"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_btn_ball_brown" />
+
+        <TextView
+            android:id="@+id/game_btn_ball_pink"
+            style="@style/temp_btn"
+            android:layout_width="@dimen/margin_large"
+            android:onClick="@{() -> gameViewModel.onScored(6)}"
+            android:text="PIN"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_red"
+            app:layout_constraintEnd_toStartOf="@+id/game_btn_ball_black"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_btn_ball_blue" />
+
+        <TextView
+            android:id="@+id/game_btn_ball_black"
+            style="@style/temp_btn"
+            android:layout_width="@dimen/margin_large"
+            android:onClick="@{() -> gameViewModel.onScored(7)}"
+            android:text="BLA"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_red"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_btn_ball_pink" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

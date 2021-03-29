@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="gameViewModel"
+            type="com.example.snookerscore.fragments.game.GameViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/game_btn_act_miss"
+            style="@style/temp_btn"
+            android:layout_marginBottom="@dimen/margin_standard"
+            android:onClick="@{() -> gameViewModel.onMiss()}"
+            android:text="MISS"
+            app:layout_constraintBottom_toTopOf="@+id/game_btn_ball_red"
+            app:layout_constraintEnd_toStartOf="@+id/game_btn_act_foul"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/game_btn_act_foul"
+            style="@style/temp_btn"
+            android:text="FOUL"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_miss"
+            app:layout_constraintEnd_toStartOf="@+id/game_btn_act_rerack"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_btn_act_miss" />
+
+        <TextView
+            android:id="@+id/game_btn_act_undo"
+            style="@style/temp_btn"
+            android:text="UNDO"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_rerack"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_btn_act_rerack" />
+
+        <TextView
+            android:id="@+id/game_btn_act_remove_red"
+            style="@style/temp_btn"
+            android:layout_marginBottom="@dimen/margin_standard"
+            android:text="--RED"
+            app:layout_constraintBottom_toTopOf="@+id/game_btn_act_miss"
+            app:layout_constraintEnd_toStartOf="@+id/game_btn_act_safe"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/game_btn_act_rerack"
+            style="@style/temp_btn"
+            android:text="RERACK"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_foul"
+            app:layout_constraintEnd_toStartOf="@+id/game_btn_act_undo"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_btn_act_foul" />
+
+        <TextView
+            android:id="@+id/game_btn_act_safe"
+            style="@style/temp_btn"
+            android:text="SAFE"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_remove_red"
+            app:layout_constraintEnd_toStartOf="@+id/game_btn_act_end_frame"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_btn_act_remove_red" />
+
+        <TextView
+            android:id="@+id/game_btn_act_end_frame"
+            style="@style/temp_btn"
+            android:onClick="@{() -> gameViewModel.onFrameComplete()}"
+            android:text="END"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
+            app:layout_constraintEnd_toStartOf="@+id/game_btn_act_end_match"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_btn_act_safe" />
+
+        <TextView
+            android:id="@+id/game_btn_act_end_match"
+            style="@style/temp_btn"
+            android:text="FINISH"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_end_frame"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_btn_act_end_frame" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
