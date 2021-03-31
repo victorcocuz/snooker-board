@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 class GameViewModel : ViewModel() {
     var frame: Frame = Frame()
     private val _frameState = MutableLiveData(frame.frameState)
-    val frameState: LiveData<FrameState>
+    val frameState: LiveData<BallType>
         get() = _frameState
+    val pointsDiff = frame.pointsDiff
+    val pointsLeft = frame.pointsLeft
 
     fun onScored(points: Int) {
         frame.addScore(points)

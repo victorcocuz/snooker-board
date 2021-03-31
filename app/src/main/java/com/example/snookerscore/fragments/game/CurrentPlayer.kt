@@ -11,18 +11,18 @@ sealed class CurrentPlayer {
     }
 }
 
-sealed class FrameState {
-    object RED: FrameState()
-    object COLOR: FrameState()
-    object YELLOW: FrameState()
-    object GREEN: FrameState()
-    object BROWN: FrameState()
-    object BLUE: FrameState()
-    object PINK: FrameState()
-    object BLACK: FrameState()
-    object END: FrameState()
+sealed class BallType {
+    object RED: BallType()
+    object COLOR: BallType()
+    object YELLOW: BallType()
+    object GREEN: BallType()
+    object BROWN: BallType()
+    object BLUE: BallType()
+    object PINK: BallType()
+    object BLACK: BallType()
+    object END: BallType()
 
-    fun nextState() : FrameState = when (this) {
+    fun nextState() : BallType = when (this) {
         RED -> COLOR
         COLOR -> YELLOW
         YELLOW -> GREEN
@@ -34,8 +34,19 @@ sealed class FrameState {
         END -> RED
     }
 
-    fun alternate() : FrameState = when (this) {
+    fun alternate() : BallType = when (this) {
         RED -> COLOR
         else -> RED
     }
+}
+
+object Balls {
+    val RED = Pair(1, BallType.RED)
+    val COLOR = Pair(0, BallType.COLOR)
+    val YELLOW = Pair(2, BallType.YELLOW)
+    val GREEN = Pair(3, BallType.GREEN)
+    val BROWN = Pair(4, BallType.BROWN)
+    val BLUE = Pair(5, BallType.BLUE)
+    val PINK = Pair(6, BallType.PINK)
+    val BLACK = Pair(7, BallType.BLACK)
 }

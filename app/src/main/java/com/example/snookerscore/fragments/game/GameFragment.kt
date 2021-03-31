@@ -50,7 +50,6 @@ class GameFragment : androidx.fragment.app.Fragment() {
         }
 
         // Enable or disable buttons
-//        manageBallVisibility(FrameState.RED)
         viewModel.frameState.observe(viewLifecycleOwner, Observer { frameState ->
             manageBallVisibility(frameState)
         })
@@ -63,41 +62,42 @@ class GameFragment : androidx.fragment.app.Fragment() {
         inflater.inflate(R.menu.menu_game_overflow, menu)
     }
 
-    private fun manageBallVisibility(frameState: FrameState) {
+    private fun manageBallVisibility(frameState: BallType) {
+
         when (frameState) {
-            FrameState.RED -> {
+            BallType.RED -> {
                 balls.forEach { e -> e.visibility = View.GONE }
                 balls[0].visibility = View.VISIBLE
             }
-            FrameState.COLOR -> {
+            BallType.COLOR -> {
                 balls.forEach { e -> e.visibility = View.VISIBLE }
                 balls[0].visibility = View.GONE
             }
-            FrameState.YELLOW -> {
+            BallType.YELLOW -> {
                 balls.forEach { e -> e.visibility = View.GONE }
                 balls[1].visibility = View.VISIBLE
             }
-            FrameState.GREEN -> {
+            BallType.GREEN -> {
                 balls.forEach { e -> e.visibility = View.GONE }
                 balls[2].visibility = View.VISIBLE
             }
-            FrameState.BROWN -> {
+            BallType.BROWN -> {
                 balls.forEach { e -> e.visibility = View.GONE }
                 balls[3].visibility = View.VISIBLE
             }
-            FrameState.BLUE -> {
+            BallType.BLUE -> {
                 balls.forEach { e -> e.visibility = View.GONE }
                 balls[4].visibility = View.VISIBLE
             }
-            FrameState.PINK -> {
+            BallType.PINK -> {
                 balls.forEach { e -> e.visibility = View.GONE }
                 balls[5].visibility = View.VISIBLE
             }
-            FrameState.BLACK -> {
+            BallType.BLACK -> {
                 balls.forEach { e -> e.visibility = View.GONE }
                 balls[6].visibility = View.VISIBLE
             }
-            FrameState.END -> {
+            BallType.END -> {
                 balls.forEach { e -> e.visibility = View.GONE }
             }
         }
