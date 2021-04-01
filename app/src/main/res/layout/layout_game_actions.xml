@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="gameViewModel"
             type="com.example.snookerscore.fragments.game.GameViewModel" />
@@ -35,9 +36,11 @@
         <TextView
             android:id="@+id/game_btn_act_undo"
             style="@style/temp_btn"
+            android:onClick="@{() -> gameViewModel.onUndo()}"
             android:text="UNDO"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_rerack"
             app:layout_constraintEnd_toEndOf="parent"
+
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_btn_act_rerack" />
 
