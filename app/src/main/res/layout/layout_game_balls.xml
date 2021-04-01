@@ -3,10 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="gameViewModel"
             type="com.example.snookerscore.fragments.game.GameViewModel" />
+        <variable
+            name="balls"
+            type="com.example.snookerscore.fragments.game.Balls"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +28,7 @@
             android:id="@+id/game_btn_ball_red"
             style="@style/temp_btn"
             android:layout_width="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.onScored(1)}"
+            android:onClick="@{() -> gameViewModel.onScored(balls.RED)}"
             android:text="RED"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_ball_yellow"
@@ -37,7 +39,7 @@
             android:id="@+id/game_btn_ball_yellow"
             style="@style/temp_btn"
             android:layout_width="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.onScored(2)}"
+            android:onClick="@{() -> gameViewModel.onScored(balls.YELLOW)}"
             android:text="YEL"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_red"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_ball_green"
@@ -48,7 +50,7 @@
             android:id="@+id/game_btn_ball_green"
             style="@style/temp_btn"
             android:layout_width="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.onScored(3)}"
+            android:onClick="@{() -> gameViewModel.onScored(balls.GREEN)}"
             android:text="GRE"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_red"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_ball_brown"
@@ -59,7 +61,7 @@
             android:id="@+id/game_btn_ball_brown"
             style="@style/temp_btn"
             android:layout_width="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.onScored(4)}"
+            android:onClick="@{() -> gameViewModel.onScored(balls.BROWN)}"
             android:text="BRO"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_red"
 
@@ -71,7 +73,7 @@
             android:id="@+id/game_btn_ball_blue"
             style="@style/temp_btn"
             android:layout_width="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.onScored(5)}"
+            android:onClick="@{() -> gameViewModel.onScored(balls.BLUE)}"
             android:text="BLU"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_red"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_ball_pink"
@@ -82,7 +84,7 @@
             android:id="@+id/game_btn_ball_pink"
             style="@style/temp_btn"
             android:layout_width="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.onScored(6)}"
+            android:onClick="@{() -> gameViewModel.onScored(balls.PINK)}"
             android:text="PIN"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_red"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_ball_black"
@@ -93,7 +95,7 @@
             android:id="@+id/game_btn_ball_black"
             style="@style/temp_btn"
             android:layout_width="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.onScored(7)}"
+            android:onClick="@{() -> gameViewModel.onScored(balls.BLACK)}"
             android:text="BLA"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_red"
             app:layout_constraintEnd_toEndOf="parent"

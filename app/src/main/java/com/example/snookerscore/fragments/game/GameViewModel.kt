@@ -12,8 +12,8 @@ class GameViewModel : ViewModel() {
     val pointsDiff = frame.pointsDiff
     val pointsLeft = frame.pointsLeft
 
-    fun onScored(points: Int) {
-        frame.addScore(points)
+    fun onScored(ball: Ball) {
+        frame.addScore(ball)
         _frameState.value = frame.frameState
     }
 

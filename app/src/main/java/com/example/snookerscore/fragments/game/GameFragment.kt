@@ -8,11 +8,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameBinding
+import timber.log.Timber
 
 class GameFragment : androidx.fragment.app.Fragment() {
 
     private lateinit var viewModel: GameViewModel
-    private lateinit var balls: List<View>
+    private lateinit var viewBalls: List<View>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +33,8 @@ class GameFragment : androidx.fragment.app.Fragment() {
 
             fragGameBalls.gameViewModel = viewModel
             fragGameBalls.apply {
-                balls = listOf(
+                balls = Balls
+                viewBalls= listOf(
                     gameBtnBallRed,
                     gameBtnBallYellow,
                     gameBtnBallGreen,
@@ -66,40 +68,41 @@ class GameFragment : androidx.fragment.app.Fragment() {
 
         when (frameState) {
             BallType.RED -> {
-                balls.forEach { e -> e.visibility = View.GONE }
-                balls[0].visibility = View.VISIBLE
+                viewBalls.forEach { e -> e.visibility = View.GONE }
+                viewBalls[0].visibility = View.VISIBLE
             }
             BallType.COLOR -> {
-                balls.forEach { e -> e.visibility = View.VISIBLE }
-                balls[0].visibility = View.GONE
+                viewBalls.forEach { e -> e.visibility = View.VISIBLE }
+                viewBalls[0].visibility = View.GONE
             }
             BallType.YELLOW -> {
-                balls.forEach { e -> e.visibility = View.GONE }
-                balls[1].visibility = View.VISIBLE
+                viewBalls.forEach { e -> e.visibility = View.GONE }
+                viewBalls[1].visibility = View.VISIBLE
             }
             BallType.GREEN -> {
-                balls.forEach { e -> e.visibility = View.GONE }
-                balls[2].visibility = View.VISIBLE
+                viewBalls.forEach { e -> e.visibility = View.GONE }
+                viewBalls[2].visibility = View.VISIBLE
             }
             BallType.BROWN -> {
-                balls.forEach { e -> e.visibility = View.GONE }
-                balls[3].visibility = View.VISIBLE
+                viewBalls.forEach { e -> e.visibility = View.GONE }
+                viewBalls[3].visibility = View.VISIBLE
             }
             BallType.BLUE -> {
-                balls.forEach { e -> e.visibility = View.GONE }
-                balls[4].visibility = View.VISIBLE
+                viewBalls.forEach { e -> e.visibility = View.GONE }
+                viewBalls[4].visibility = View.VISIBLE
             }
             BallType.PINK -> {
-                balls.forEach { e -> e.visibility = View.GONE }
-                balls[5].visibility = View.VISIBLE
+                viewBalls.forEach { e -> e.visibility = View.GONE }
+                viewBalls[5].visibility = View.VISIBLE
             }
             BallType.BLACK -> {
-                balls.forEach { e -> e.visibility = View.GONE }
-                balls[6].visibility = View.VISIBLE
+                viewBalls.forEach { e -> e.visibility = View.GONE }
+                viewBalls[6].visibility = View.VISIBLE
             }
             BallType.END -> {
-                balls.forEach { e -> e.visibility = View.GONE }
+                viewBalls.forEach { e -> e.visibility = View.GONE }
             }
+            else -> Timber.e("Logic not implemented for frame state $frameState")
         }
     }
 }

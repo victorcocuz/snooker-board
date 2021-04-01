@@ -13,14 +13,15 @@ class Frame {
         private set
     var pointsDiff = MutableLiveData(0)
     val pointsLeft = MutableLiveData(0)
-    var ballStack = ArrayDeque<Pair<Int, BallType>>()
-    var frameStack = ArrayDeque<Pair<Int, BallType>>()
+    var ballStack = ArrayDeque<Ball>()
+    var frameStack = ArrayDeque<Ball>()
 
     init {
         resetFrame()
     }
 
     private fun rerack() {
+        ballStack.push(Balls.END)
         ballStack.push(Balls.BLACK)
         ballStack.push(Balls.PINK)
         ballStack.push(Balls.BLUE)
@@ -38,19 +39,19 @@ class Frame {
         if (frameState == BallType.COLOR) frameState = BallType.RED
     }
 
-    fun addScore(points: Int) {
+    fun addScore(ballPotted: Ball) {
+        val points = ballPotted.points
         val crtBall = removeBall()
-        val (crtScore, crtBallType) = crtBall
         frameStack.push(crtBall)
-        frameState =
-            if (ballStack.size > 6) crtBallType.alternate()
-            else crtBallType.nextState()
+        frameState = ballStack.peek()!!.ballType
         when (currentPlayer) {
             CurrentPlayer.PlayerA -> playerA.frameScore.value = playerA.frameScore.value?.plus(points)
             CurrentPlayer.PlayerB -> playerB.frameScore.value = playerB.frameScore.value?.plus(points)
         }
+
+        // Calculate diff and maximum points
         pointsDiff.value = kotlin.math.abs(playerA.frameScore.value!! - playerB.frameScore.value!!)
-        pointsLeft.value = when(crtBallType) {
+        pointsLeft.value = when(ballPotted.ballType) {
             BallType.RED -> pointsLeft.value?.minus(8)
             BallType.COLOR -> {return}
             else -> pointsLeft.value?.minus(points)
