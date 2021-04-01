@@ -64,15 +64,15 @@ class Frame {
         }
     }
 
-    fun addScore(ballPotted: Ball) {
+    fun addScore(ballPotted: Ball, polarity: Int) {
         // Record shot in frame stack and change frame state
         removeBall()
         frameStack.push(Shot(crtPlayer, ballPotted, ShotStatus.HIT))
         frameState.value = ballStack.peek()!!.ballType
 
         // Add points and calculate difference
-        calcPlayerPoints(ballPotted, 1)
-        calcPointsDiffAndRemain(ballPotted, 1)
+        calcPlayerPoints(ballPotted, polarity)
+        calcPointsDiffAndRemain(ballPotted, polarity)
     }
 
     fun onMiss() {

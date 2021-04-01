@@ -3,8 +3,8 @@ package com.example.snookerscore.fragments.game
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameBinding
@@ -12,7 +12,7 @@ import timber.log.Timber
 
 class GameFragment : androidx.fragment.app.Fragment() {
 
-    private lateinit var viewModel: GameViewModel
+    private val viewModel: GameViewModel by activityViewModels()
     private lateinit var viewBalls: List<View>
 
     override fun onCreateView(
@@ -24,8 +24,6 @@ class GameFragment : androidx.fragment.app.Fragment() {
             DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false)
         setHasOptionsMenu(true)
 
-        viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
-
         binding.apply {
             lifecycleOwner = this@GameFragment
             gameViewModel = viewModel
@@ -34,7 +32,9 @@ class GameFragment : androidx.fragment.app.Fragment() {
             fragGameBalls.gameViewModel = viewModel
             fragGameBalls.apply {
                 balls = Balls
-                viewBalls= listOf(
+                polarity = 1
+                viewBalls = listOf(
+                    gameBtnBallWhite,
                     gameBtnBallRed,
                     gameBtnBallYellow,
                     gameBtnBallGreen,
@@ -56,6 +56,11 @@ class GameFragment : androidx.fragment.app.Fragment() {
             manageBallVisibility(frameState)
         })
 
+        // Open foul dialog
+        viewModel.foulCheck.observe(viewLifecycleOwner, Observer { foulCheck ->
+            if (foulCheck) FoulDialogFragment().show(requireActivity().supportFragmentManager, "customDialog")
+        })
+
         return binding.root
     }
 
@@ -69,35 +74,36 @@ class GameFragment : androidx.fragment.app.Fragment() {
         when (frameState) {
             BallType.RED -> {
                 viewBalls.forEach { e -> e.visibility = View.GONE }
-                viewBalls[0].visibility = View.VISIBLE
+                viewBalls[1].visibility = View.VISIBLE
             }
             BallType.COLOR -> {
                 viewBalls.forEach { e -> e.visibility = View.VISIBLE }
                 viewBalls[0].visibility = View.GONE
+                viewBalls[1].visibility = View.GONE
             }
             BallType.YELLOW -> {
                 viewBalls.forEach { e -> e.visibility = View.GONE }
-                viewBalls[1].visibility = View.VISIBLE
+                viewBalls[2].visibility = View.VISIBLE
             }
             BallType.GREEN -> {
                 viewBalls.forEach { e -> e.visibility = View.GONE }
-                viewBalls[2].visibility = View.VISIBLE
+                viewBalls[3].visibility = View.VISIBLE
             }
             BallType.BROWN -> {
                 viewBalls.forEach { e -> e.visibility = View.GONE }
-                viewBalls[3].visibility = View.VISIBLE
+                viewBalls[4].visibility = View.VISIBLE
             }
             BallType.BLUE -> {
                 viewBalls.forEach { e -> e.visibility = View.GONE }
-                viewBalls[4].visibility = View.VISIBLE
+                viewBalls[5].visibility = View.VISIBLE
             }
             BallType.PINK -> {
                 viewBalls.forEach { e -> e.visibility = View.GONE }
-                viewBalls[5].visibility = View.VISIBLE
+                viewBalls[6].visibility = View.VISIBLE
             }
             BallType.BLACK -> {
                 viewBalls.forEach { e -> e.visibility = View.GONE }
-                viewBalls[6].visibility = View.VISIBLE
+                viewBalls[7].visibility = View.VISIBLE
             }
             BallType.END -> {
                 viewBalls.forEach { e -> e.visibility = View.GONE }

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="gameViewModel"
+            type="com.example.snookerscore.fragments.game.GameViewModel" />
+        <variable
+            name="foulActions"
+            type="com.example.snookerscore.fragments.game.FoulActions" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".fragments.game.FoulDialogFragment">
+
+        <TextView
+            android:id="@+id/foul_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="Foul"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/foul_label_balls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:text="Which ball?"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/foul_title" />
+
+        <include
+            android:id="@+id/foul_balls"
+            layout="@layout/layout_game_balls"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/foul_label_balls" />
+
+        <TextView
+            android:id="@+id/foul_label_choose_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Which action?"
+            app:layout_constraintStart_toStartOf="@+id/foul_label_balls"
+            app:layout_constraintTop_toBottomOf="@+id/foul_balls" />
+
+        <TextView
+            android:id="@+id/foul_action_continue"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="3dp"
+            android:onClick="@{() -> gameViewModel.onFoulAction(foulActions.CONTINUE)}"
+            android:text="Continue"
+            app:layout_constraintEnd_toStartOf="@+id/foul_action_continue_free_ball"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/foul_label_choose_action" />
+
+        <TextView
+            android:id="@+id/foul_action_continue_free_ball"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:onClick="@{() -> gameViewModel.onFoulAction(foulActions.CONTINUE_WITH_FREEBALL)}"
+            android:text="Continue FB"
+            app:layout_constraintBottom_toBottomOf="@+id/foul_action_continue"
+            app:layout_constraintEnd_toStartOf="@+id/foul_action_force_continue"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/foul_action_continue" />
+
+        <TextView
+            android:id="@+id/foul_action_force_continue"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:onClick="@{() -> gameViewModel.onFoulAction(foulActions.FORCE_CONTINUE)}"
+            android:text="Force Continue"
+            app:layout_constraintBottom_toBottomOf="@+id/foul_action_continue"
+            app:layout_constraintEnd_toStartOf="@+id/foul_action_force_retake"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/foul_action_continue_free_ball" />
+
+        <TextView
+            android:id="@+id/foul_action_force_retake"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:onClick="@{() -> gameViewModel.onFoulAction(foulActions.FORCE_RETAKE)}"
+            android:text="Force Retake"
+            app:layout_constraintBottom_toBottomOf="@+id/foul_action_continue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/foul_action_force_continue" />
+
+        <TextView
+            android:id="@+id/foul_label_remove_red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Remove Red?"
+            app:layout_constraintStart_toStartOf="@+id/foul_label_choose_action"
+            app:layout_constraintTop_toBottomOf="@+id/foul_action_continue" />
+
+        <TextView
+            android:id="@+id/foul_remove_red"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="32dp"
+            android:onClick="@{() -> gameViewModel.onRemoveRed(true)}"
+            android:text="Remove Red"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/foul_label_remove_red" />
+
+        <TextView
+            android:id="@+id/foul_cancel"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
+            android:text="Cancel"
+            android:onClick="@{() -> gameViewModel.onFoulCanceled()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/foul_ok"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/foul_remove_red" />
+
+        <TextView
+            android:id="@+id/foul_ok"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:text="OK"
+            android:onClick="@{() -> gameViewModel.onFoulConfirmed()}"
+            app:layout_constraintBottom_toBottomOf="@+id/foul_cancel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/foul_cancel" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

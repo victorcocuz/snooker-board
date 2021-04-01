@@ -8,40 +8,45 @@
             type="com.example.snookerscore.fragments.game.GameViewModel" />
         <variable
             name="balls"
-            type="com.example.snookerscore.fragments.game.Balls"/>
+            type="com.example.snookerscore.fragments.game.Balls" />
+        <variable
+            name="polarity"
+            type="int" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!--        <TextView-->
-        <!--            android:id="@+id/game_btn_ball_white"-->
-        <!--            style="@style/temp_btn"-->
-        <!--            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_black"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintHorizontal_bias="0.5"-->
-        <!--            app:layout_constraintStart_toEndOf="@+id/game_btn_ball_black"-->
-        <!--            android:text="WHITE" />-->
+        <TextView
+            android:id="@+id/game_btn_ball_white"
+            style="@style/temp_btn"
+            android:layout_width="@dimen/margin_large"
+            android:onClick="@{() -> gameViewModel.onScored(balls.WHITE, polarity)}"
+            android:text="WHI"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/game_btn_ball_red"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/game_btn_ball_red"
             style="@style/temp_btn"
             android:layout_width="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.onScored(balls.RED)}"
+            android:onClick="@{() -> gameViewModel.onScored(balls.RED, polarity)}"
             android:text="RED"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_white"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_ball_yellow"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/game_btn_ball_white" />
 
         <TextView
             android:id="@+id/game_btn_ball_yellow"
             style="@style/temp_btn"
             android:layout_width="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.onScored(balls.YELLOW)}"
+            android:onClick="@{() -> gameViewModel.onScored(balls.YELLOW, polarity)}"
             android:text="YEL"
-            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_red"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_white"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_ball_green"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_btn_ball_red" />
@@ -50,9 +55,9 @@
             android:id="@+id/game_btn_ball_green"
             style="@style/temp_btn"
             android:layout_width="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.onScored(balls.GREEN)}"
+            android:onClick="@{() -> gameViewModel.onScored(balls.GREEN, polarity)}"
             android:text="GRE"
-            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_red"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_white"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_ball_brown"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_btn_ball_yellow" />
@@ -61,9 +66,9 @@
             android:id="@+id/game_btn_ball_brown"
             style="@style/temp_btn"
             android:layout_width="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.onScored(balls.BROWN)}"
+            android:onClick="@{() -> gameViewModel.onScored(balls.BROWN, polarity)}"
             android:text="BRO"
-            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_red"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_white"
 
             app:layout_constraintEnd_toStartOf="@+id/game_btn_ball_blue"
             app:layout_constraintHorizontal_bias="0.5"
@@ -73,9 +78,9 @@
             android:id="@+id/game_btn_ball_blue"
             style="@style/temp_btn"
             android:layout_width="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.onScored(balls.BLUE)}"
+            android:onClick="@{() -> gameViewModel.onScored(balls.BLUE, polarity)}"
             android:text="BLU"
-            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_red"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_white"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_ball_pink"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_btn_ball_brown" />
@@ -84,9 +89,9 @@
             android:id="@+id/game_btn_ball_pink"
             style="@style/temp_btn"
             android:layout_width="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.onScored(balls.PINK)}"
+            android:onClick="@{() -> gameViewModel.onScored(balls.PINK, polarity)}"
             android:text="PIN"
-            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_red"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_white"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_ball_black"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_btn_ball_blue" />
@@ -95,9 +100,9 @@
             android:id="@+id/game_btn_ball_black"
             style="@style/temp_btn"
             android:layout_width="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.onScored(balls.BLACK)}"
+            android:onClick="@{() -> gameViewModel.onScored(balls.BLACK, polarity)}"
             android:text="BLA"
-            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_red"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_ball_white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_btn_ball_pink" />

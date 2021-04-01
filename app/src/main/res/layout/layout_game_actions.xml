@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="gameViewModel"
             type="com.example.snookerscore.fragments.game.GameViewModel" />
@@ -28,6 +27,7 @@
             android:id="@+id/game_btn_act_foul"
             style="@style/temp_btn"
             android:text="FOUL"
+            android:onClick="@{() -> gameViewModel.onFoul()}"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_miss"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_rerack"
             app:layout_constraintHorizontal_bias="0.5"

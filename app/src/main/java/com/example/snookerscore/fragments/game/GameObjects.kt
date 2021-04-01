@@ -27,6 +27,11 @@ sealed class BallType {
     object END : BallType()
 }
 
+data class Ball(
+    val points: Int,
+    val ballType: BallType
+)
+
 object Balls {
     val END = Ball(0, BallType.END)
     val MISS = Ball(0, BallType.MISS)
@@ -40,11 +45,6 @@ object Balls {
     val PINK = Ball(6, BallType.PINK)
     val BLACK = Ball(7, BallType.BLACK)
 }
-
-data class Ball(
-    val points: Int,
-    val ballType: BallType
-)
 
 class Player(
     var frameScore: MutableLiveData<Int> = MutableLiveData<Int>(0),
@@ -64,23 +64,16 @@ data class Shot(
     val shotStatus: ShotStatus
 )
 
+sealed class FoulAction {
+    object CONTINUE: FoulAction()
+    object FREEBALL: FoulAction()
+    object FORCE_CONTINUE: FoulAction()
+    object FORCE_RETAKE: FoulAction()
+}
 
-
-//fun nextType(): BallType = when (this) {
-//    BallType.NONE -> BallType.RED
-//    BallType.WHITE -> BallType.RED
-//    BallType.RED -> BallType.COLOR
-//    BallType.COLOR -> BallType.YELLOW
-//    BallType.YELLOW -> BallType.GREEN
-//    BallType.GREEN -> BallType.BROWN
-//    BallType.BROWN -> BallType.BLUE
-//    BallType.BLUE -> BallType.PINK
-//    BallType.PINK -> BallType.BLACK
-//    BallType.BLACK -> BallType.END
-//    BallType.END -> BallType.RED
-//}
-//
-//fun alternate(): BallType = when (this) {
-//    BallType.RED -> BallType.COLOR
-//    else -> BallType.RED
-//}
+object FoulActions {
+    val CONTINUE = FoulAction.CONTINUE
+    val CONTINUE_WITH_FREEBALL = FoulAction.FREEBALL
+    val FORCE_CONTINUE = FoulAction.FORCE_CONTINUE
+    val FORCE_RETAKE = FoulAction.FORCE_RETAKE
+}
