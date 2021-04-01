@@ -7,10 +7,10 @@ import com.example.snookerscore.fragments.game.Balls.BROWN
 import com.example.snookerscore.fragments.game.Balls.COLOR
 import com.example.snookerscore.fragments.game.Balls.END
 import com.example.snookerscore.fragments.game.Balls.GREEN
+import com.example.snookerscore.fragments.game.Balls.MISS
 import com.example.snookerscore.fragments.game.Balls.PINK
 import com.example.snookerscore.fragments.game.Balls.RED
 import com.example.snookerscore.fragments.game.Balls.YELLOW
-import timber.log.Timber
 import java.util.*
 import kotlin.math.abs
 
@@ -75,6 +75,11 @@ class Frame {
         calcPointsDiffAndRemain(ballPotted, 1)
     }
 
+    fun onMiss() {
+        frameStack.push(Shot(crtPlayer, MISS, ShotStatus.MISS))
+        switchPlayer()
+    }
+
     private fun calcPlayerPoints(ballPotted: Ball, polarity: Int) {
         crtPlayer.frameScore.value = crtPlayer.frameScore.value?.plus(polarity * ballPotted.points)
     }
@@ -94,17 +99,21 @@ class Frame {
 
     fun undo() {
         val lastShot = frameStack.pop()
-        calcPlayerPoints(lastShot.ball, -1)
-        calcPointsDiffAndRemain(lastShot.ball, -1)
-        Timber.e("size ${frameStack.size}")
-        ballStack.push(
-            when (ballStack.size) {
-                in arrayOf(7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35) -> COLOR
-                else -> lastShot.ball
+        when (lastShot.shotStatus) {
+            ShotStatus.HIT -> {
+                calcPlayerPoints(lastShot.ball, -1)
+                calcPointsDiffAndRemain(lastShot.ball, -1)
+                ballStack.push(
+                    when (ballStack.size) {
+                        in arrayOf(7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35) -> COLOR
+                        else -> lastShot.ball
+                    }
+                )
+                frameState.value = ballStack.peek()!!.ballType
+                crtPlayer = lastShot.player
             }
-        )
-        frameState.value = ballStack.peek()!!.ballType
-        crtPlayer = lastShot.player
+            ShotStatus.MISS -> switchPlayer()
+        }
     }
 }
 

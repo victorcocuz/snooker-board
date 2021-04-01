@@ -29,6 +29,7 @@ sealed class BallType {
 
 object Balls {
     val END = Ball(0, BallType.END)
+    val MISS = Ball(0, BallType.MISS)
     val WHITE = Ball(4, BallType.WHITE)
     val RED = Ball(1, BallType.RED)
     val COLOR = Ball(0, BallType.COLOR)

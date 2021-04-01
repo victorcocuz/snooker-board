@@ -16,7 +16,7 @@ class GameViewModel : ViewModel() {
     }
 
     fun onMiss() {
-        frame.switchPlayer()
+        frame.onMiss()
     }
 
     fun onFrameComplete() {
