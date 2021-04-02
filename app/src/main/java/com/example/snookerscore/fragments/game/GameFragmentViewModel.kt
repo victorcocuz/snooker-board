@@ -1,17 +1,19 @@
 package com.example.snookerscore.fragments.game
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import timber.log.Timber
+import com.example.snookerscore.utils.toast
 
-class GameFragmentViewModel : ViewModel() {
+class GameFragmentViewModel(application: Application) : AndroidViewModel(application) {
     var frame: Frame = Frame()
     private val _frameState = frame.frameState
     val frameState: LiveData<BallType>
         get() = _frameState
     val pointsDiff = frame.pointsDiff
     val pointsLeft = frame.pointsRemaining
+    val app = application
 
     val shotType = MutableLiveData<ShotType>()
     val isFoulDialogOpen = MutableLiveData(false)
@@ -60,12 +62,11 @@ class GameFragmentViewModel : ViewModel() {
     }
 
     fun onFoulCanceled() {
-        Timber.e("canceled")
         foulCheck.value = false
+        app.applicationContext.toast("CANCEL")
     }
 
     fun onScored(ball: Ball) {
-        Timber.e("score")
         if (foulCheck.value == false) frame.addScore(ball)
         else selectedBall = ball
     }

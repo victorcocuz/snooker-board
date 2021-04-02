@@ -10,7 +10,7 @@ class GameFragmentViewModelFactory(
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(GameFragmentViewModel::class.java)) {
-            return GameFragmentViewModel() as T
+            return GameFragmentViewModel(application) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

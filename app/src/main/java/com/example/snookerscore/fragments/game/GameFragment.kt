@@ -4,15 +4,15 @@ import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameBinding
+import com.example.snookerscore.fragments.game.dialog.FoulDialogFragment
 import timber.log.Timber
 
 class GameFragment : androidx.fragment.app.Fragment() {
 
-    private val viewModel: GameFragmentViewModel by activityViewModels()
+    private val viewModel: GameFragmentViewModel by activityViewModels { GameFragmentViewModelFactory(requireNotNull(this.activity).application) }
     private lateinit var viewBalls: List<View>
 
 
@@ -52,12 +52,12 @@ class GameFragment : androidx.fragment.app.Fragment() {
         }
 
         // Enable or disable buttons
-        viewModel.frameState.observe(viewLifecycleOwner, Observer { frameState ->
+        viewModel.frameState.observe(viewLifecycleOwner, { frameState ->
             manageBallVisibility(frameState)
         })
 
         // Open foul dialog
-        viewModel.foulCheck.observe(viewLifecycleOwner, Observer { foulCheck ->
+        viewModel.foulCheck.observe(viewLifecycleOwner, { foulCheck ->
             if (foulCheck) FoulDialogFragment().show(requireActivity().supportFragmentManager, "customDialog")
         })
 

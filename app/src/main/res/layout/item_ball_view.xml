@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="ball"
+            type="com.example.snookerscore.fragments.game.Ball" />
+        <variable
+            name="clickListener"
+            type="com.example.snookerscore.fragments.game.dialog.FoulDialogListener" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="36dp"
+        android:layout_height="36dp">
+            <ImageButton
+                android:id="@+id/item_button_ball"
+                app:ballImage="@{ball}"
+                android:onClick="@{() -> clickListener.onClick(ball)}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                app:ballValue="@{ball}"
+                android:id="@+id/item_button_points"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textSize="16sp" />
+    </FrameLayout>
+</layout>
