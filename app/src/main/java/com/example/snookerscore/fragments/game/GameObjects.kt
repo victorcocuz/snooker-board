@@ -51,17 +51,24 @@ class Player(
     var matchScore: MutableLiveData<Int> = MutableLiveData<Int>(0)
 )
 
-sealed class ShotStatus {
-    object HIT : ShotStatus()
-    object MISS : ShotStatus()
-    object FOUL : ShotStatus()
-    object FREEBALL : ShotStatus()
+sealed class ShotType {
+    object HIT : ShotType()
+    object MISS : ShotType()
+    object FOUL : ShotType()
+    object FREEBALL : ShotType()
+}
+
+object ShotTypes {
+    val HIT = ShotType.HIT
+    val MISS = ShotType.MISS
+    val FOUL = ShotType.FOUL
+    val FREEBALL = ShotType.FREEBALL
 }
 
 data class Shot(
     val player: Player,
     val ball: Ball,
-    val shotStatus: ShotStatus
+    val shotStatus: ShotType
 )
 
 sealed class FoulAction {

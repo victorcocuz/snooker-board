@@ -12,8 +12,9 @@ import timber.log.Timber
 
 class GameFragment : androidx.fragment.app.Fragment() {
 
-    private val viewModel: GameViewModel by activityViewModels()
+    private val viewModel: GameFragmentViewModel by activityViewModels()
     private lateinit var viewBalls: List<View>
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +33,6 @@ class GameFragment : androidx.fragment.app.Fragment() {
             fragGameBalls.gameViewModel = viewModel
             fragGameBalls.apply {
                 balls = Balls
-                polarity = 1
                 viewBalls = listOf(
                     gameBtnBallWhite,
                     gameBtnBallRed,

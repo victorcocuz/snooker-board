@@ -5,7 +5,7 @@
     <data>
         <variable
             name="gameViewModel"
-            type="com.example.snookerscore.fragments.game.GameViewModel" />
+            type="com.example.snookerscore.fragments.game.GameFragmentViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

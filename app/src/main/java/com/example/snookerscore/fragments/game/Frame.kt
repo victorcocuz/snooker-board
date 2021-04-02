@@ -64,19 +64,19 @@ class Frame {
         }
     }
 
-    fun addScore(ballPotted: Ball, polarity: Int) {
+    fun addScore(ballPotted: Ball) {
         // Record shot in frame stack and change frame state
         removeBall()
-        frameStack.push(Shot(crtPlayer, ballPotted, ShotStatus.HIT))
+        frameStack.push(Shot(crtPlayer, ballPotted, ShotType.HIT))
         frameState.value = ballStack.peek()!!.ballType
 
         // Add points and calculate difference
-        calcPlayerPoints(ballPotted, polarity)
-        calcPointsDiffAndRemain(ballPotted, polarity)
+        calcPlayerPoints(ballPotted, 1)
+        calcPointsDiffAndRemain(ballPotted, 1)
     }
 
     fun onMiss() {
-        frameStack.push(Shot(crtPlayer, MISS, ShotStatus.MISS))
+        frameStack.push(Shot(crtPlayer, MISS, ShotType.MISS))
         switchPlayer()
     }
 
@@ -100,7 +100,7 @@ class Frame {
     fun undo() {
         val lastShot = frameStack.pop()
         when (lastShot.shotStatus) {
-            ShotStatus.HIT -> {
+            ShotType.HIT -> {
                 calcPlayerPoints(lastShot.ball, -1)
                 calcPointsDiffAndRemain(lastShot.ball, -1)
                 ballStack.push(
@@ -112,7 +112,7 @@ class Frame {
                 frameState.value = ballStack.peek()!!.ballType
                 crtPlayer = lastShot.player
             }
-            ShotStatus.MISS -> switchPlayer()
+            ShotType.MISS -> switchPlayer()
         }
     }
 }

@@ -5,13 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import timber.log.Timber
 
-class GameViewModel : ViewModel() {
+class GameFragmentViewModel : ViewModel() {
     var frame: Frame = Frame()
     private val _frameState = frame.frameState
     val frameState: LiveData<BallType>
         get() = _frameState
     val pointsDiff = frame.pointsDiff
     val pointsLeft = frame.pointsRemaining
+
+    val shotType = MutableLiveData<ShotType>()
+    val isFoulDialogOpen = MutableLiveData(false)
 
     // Dialog stuff
     val foulCheck = MutableLiveData(false)
@@ -20,30 +23,38 @@ class GameViewModel : ViewModel() {
     private var foulRemoveRed = false
     val foulDataValidate = MutableLiveData<Boolean>()
 
+    fun onHit() {
+        shotType.value = ShotType.HIT
+    }
+
+    fun onMiss() {
+        frame.onMiss()
+        shotType.value = ShotType.MISS
+    }
+
     fun onFoul() {
         foulCheck.value = true
+        shotType.value = ShotType.FOUL
+    }
+
+    fun onFreeBall() {
+        shotType.value = ShotType.FREEBALL
     }
 
     fun onFoulAction(foulAction: FoulAction) {
-        Timber.e("foul action")
         this.foulAction = foulAction
     }
 
     fun onRemoveRed(removeRed: Boolean) {
-        Timber.e("onremovered")
         foulRemoveRed = removeRed
     }
 
     fun onFoulConfirmed() {
-        Timber.e("confirmed")
-        if ((selectedBall) != null) Timber.e("selectedball")
-        if ((foulAction) != null) Timber.e("foulAction")
         if (selectedBall != null && foulAction != null) {
-            Timber.e("whatever")
             manageFoulActions()
             if (foulRemoveRed) frame.removeBall()
             foulCheck.value = false
-            onScored(selectedBall!!, -1)
+            onScored(selectedBall!!)
         } else {
         }
     }
@@ -53,18 +64,14 @@ class GameViewModel : ViewModel() {
         foulCheck.value = false
     }
 
-    fun onScored(ball: Ball, polarity: Int) {
+    fun onScored(ball: Ball) {
         Timber.e("score")
-        if (foulCheck.value == false) frame.addScore(ball, polarity)
+        if (foulCheck.value == false) frame.addScore(ball)
         else selectedBall = ball
     }
 
     fun manageFoulActions() {
 
-    }
-
-    fun onMiss() {
-        frame.onMiss()
     }
 
     fun onFrameComplete() {

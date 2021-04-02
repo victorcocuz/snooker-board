@@ -6,7 +6,7 @@
     <data>
         <variable
             name="gameViewModel"
-            type="com.example.snookerscore.fragments.game.GameViewModel" />
+            type="com.example.snookerscore.fragments.game.GameFragmentViewModel" />
         <variable
             name="foulActions"
             type="com.example.snookerscore.fragments.game.FoulActions" />
