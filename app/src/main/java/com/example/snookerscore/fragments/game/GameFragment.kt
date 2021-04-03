@@ -5,45 +5,53 @@ import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameBinding
 import com.example.snookerscore.fragments.game.dialog.FoulDialogFragment
-import timber.log.Timber
+import java.util.*
 
 class GameFragment : androidx.fragment.app.Fragment() {
-
-    private val viewModel: GameFragmentViewModel by activityViewModels { GameFragmentViewModelFactory(requireNotNull(this.activity).application) }
-    private lateinit var viewBalls: List<View>
-
+    private lateinit var ballsList: List<Ball>
+    private val gameFragmentViewModel: GameFragmentViewModel by activityViewModels {
+        GameFragmentViewModelFactory(
+            requireNotNull(this.activity).application
+        )
+    }
+    private lateinit var ballAdapter: BallAdapter
+    private lateinit var binding: FragmentGameBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        val binding: FragmentGameBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false)
         setHasOptionsMenu(true)
+
+        val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        linearLayoutManager.apply {
+            canScrollHorizontally()
+
+        }
+        ballAdapter = BallAdapter(BallListener { ball ->
+            gameFragmentViewModel.onBallClicked(ball)
+        })
 
         binding.apply {
             lifecycleOwner = this@GameFragment
-            gameViewModel = viewModel
-            fragGameActions.gameViewModel = viewModel
-
-            fragGameBalls.gameViewModel = viewModel
-            fragGameBalls.apply {
-                balls = Balls
-                viewBalls = listOf(
-                    gameBtnBallWhite,
-                    gameBtnBallRed,
-                    gameBtnBallYellow,
-                    gameBtnBallGreen,
-                    gameBtnBallBrown,
-                    gameBtnBallBlue,
-                    gameBtnBallPink,
-                    gameBtnBallBlack
-                )
+            gameViewModel = gameFragmentViewModel
+            fragGameBallsList.apply {
+                layoutManager = linearLayoutManager
+                adapter = ballAdapter
+                viewTreeObserver.addOnGlobalLayoutListener {
+                    alpha = 1f
+                }
+//                addOnLayoutChangeListener { view, i, i2, i3, i4, i5, i6, i7, i8 ->
+//                    alpha = 1f
+//                }
             }
+            fragGameActions.gameViewModel = gameFragmentViewModel
 
             fragGameButton.setOnClickListener {
                 it.findNavController()
@@ -51,15 +59,18 @@ class GameFragment : androidx.fragment.app.Fragment() {
             }
         }
 
-        // Enable or disable buttons
-        viewModel.frameState.observe(viewLifecycleOwner, { frameState ->
-            manageBallVisibility(frameState)
-        })
+        // VM Observers
+        gameFragmentViewModel.apply {
+            // Enable or disable buttons
+            frameState.observe(viewLifecycleOwner, { frameState ->
+                manageBallVisibility(frameState)
+            })
 
-        // Open foul dialog
-        viewModel.foulCheck.observe(viewLifecycleOwner, { foulCheck ->
-            if (foulCheck) FoulDialogFragment().show(requireActivity().supportFragmentManager, "customDialog")
-        })
+            // Open foul dialog
+            foulCheck.observe(viewLifecycleOwner, { foulCheck ->
+                if (foulCheck) FoulDialogFragment().show(requireActivity().supportFragmentManager, "customDialog")
+            })
+        }
 
         return binding.root
     }
@@ -70,45 +81,20 @@ class GameFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun manageBallVisibility(frameState: BallType) {
-
-        when (frameState) {
-            BallType.RED -> {
-                viewBalls.forEach { e -> e.visibility = View.GONE }
-                viewBalls[1].visibility = View.VISIBLE
+//        binding.fragGameBallsList.alpha = 0f
+        Balls.apply {
+            ballsList = when (frameState) {
+                BallType.RED -> listOf(RED)
+                BallType.COLOR -> listOf(YELLOW, GREEN, BROWN, BLUE, PINK, BLACK)
+                BallType.YELLOW -> listOf(YELLOW)
+                BallType.GREEN -> listOf(GREEN)
+                BallType.BROWN -> listOf(BROWN)
+                BallType.BLUE -> listOf(BLUE)
+                BallType.PINK -> listOf(PINK)
+                BallType.BLACK -> listOf(BLACK)
+                else -> listOf()
             }
-            BallType.COLOR -> {
-                viewBalls.forEach { e -> e.visibility = View.VISIBLE }
-                viewBalls[0].visibility = View.GONE
-                viewBalls[1].visibility = View.GONE
-            }
-            BallType.YELLOW -> {
-                viewBalls.forEach { e -> e.visibility = View.GONE }
-                viewBalls[2].visibility = View.VISIBLE
-            }
-            BallType.GREEN -> {
-                viewBalls.forEach { e -> e.visibility = View.GONE }
-                viewBalls[3].visibility = View.VISIBLE
-            }
-            BallType.BROWN -> {
-                viewBalls.forEach { e -> e.visibility = View.GONE }
-                viewBalls[4].visibility = View.VISIBLE
-            }
-            BallType.BLUE -> {
-                viewBalls.forEach { e -> e.visibility = View.GONE }
-                viewBalls[5].visibility = View.VISIBLE
-            }
-            BallType.PINK -> {
-                viewBalls.forEach { e -> e.visibility = View.GONE }
-                viewBalls[6].visibility = View.VISIBLE
-            }
-            BallType.BLACK -> {
-                viewBalls.forEach { e -> e.visibility = View.GONE }
-                viewBalls[7].visibility = View.VISIBLE
-            }
-            BallType.END -> {
-                viewBalls.forEach { e -> e.visibility = View.GONE }
-            }
-            else -> Timber.e("Logic not implemented for frame state $frameState")
+            ballAdapter.submitList(ballsList)
         }
     }
 }

@@ -8,7 +8,7 @@
             type="com.example.snookerscore.fragments.game.Ball" />
         <variable
             name="clickListener"
-            type="com.example.snookerscore.fragments.game.dialog.FoulDialogListener" />
+            type="com.example.snookerscore.fragments.game.BallListener" />
     </data>
 
     <FrameLayout

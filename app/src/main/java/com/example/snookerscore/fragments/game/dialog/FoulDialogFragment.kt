@@ -8,61 +8,64 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentFoulDialogBinding
-import com.example.snookerscore.fragments.game.Balls
-import com.example.snookerscore.fragments.game.FoulActions
-import com.example.snookerscore.fragments.game.GameFragmentViewModel
-import com.example.snookerscore.fragments.game.GameFragmentViewModelFactory
+import com.example.snookerscore.fragments.game.*
+import com.example.snookerscore.utils.EventObserver
 import com.example.snookerscore.utils.toast
+import timber.log.Timber
 
 class FoulDialogFragment : DialogFragment() {
-    private val foulDialogViewModel: FoulDialogFragment by viewModels()
-    private val viewModel: GameFragmentViewModel by activityViewModels { GameFragmentViewModelFactory(requireNotNull(this.activity).application) }
+    private lateinit var ballsList: List<Ball>
+    private val foulDialogViewModel: FoulDialogViewModel by viewModels()
+    private val gameFragmentViewModel: GameFragmentViewModel by activityViewModels {
+        GameFragmentViewModelFactory(requireNotNull(this.activity).application)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding: FragmentFoulDialogBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_foul_dialog, container, false)
 
+        // Bind RV, VM, adapter
         val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        val ballAdapter = FoulDialogAdapter(FoulDialogListener { ballType ->
-            requireContext().toast("whatever $ballType")
+        val ballAdapter = BallAdapter(BallListener { ball ->
+            foulDialogViewModel.onBallClicked(ball)
         })
+        Balls.apply { ballsList = listOf(WHITE, RED, YELLOW, GREEN, BROWN, BLUE, PINK, BLACK) }
         binding.apply {
             lifecycleOwner = this@FoulDialogFragment
-            gameViewModel = viewModel
+            gameViewModel = gameFragmentViewModel
+            foulViewModel = foulDialogViewModel
             foulBallsList.apply {
                 layoutManager = linearLayoutManager
                 adapter = ballAdapter
-                ballAdapter.submitList(
-                    listOf(
-                        Balls.WHITE,
-                        Balls.RED,
-                        Balls.YELLOW,
-                        Balls.GREEN,
-                        Balls.BROWN,
-                        Balls.BLUE,
-                        Balls.PINK,
-                        Balls.BLACK
-                    )
-                )
+                ballAdapter.submitList(ballsList)
             }
             foulActions = FoulActions
         }
-        viewModel.isFoulDialogOpen.value = true
+        gameFragmentViewModel.isFoulDialogOpen.value = true
 
-        viewModel.foulCheck.observe(viewLifecycleOwner, Observer { foulCheck ->
-            if (!foulCheck) dismiss()
-        })
+        // VM Observers
+        foulDialogViewModel.apply {
+            eventCancelDialog.observe(viewLifecycleOwner, EventObserver {
+                dismiss()
+            })
+            eventFoulNotValid.observe(viewLifecycleOwner, EventObserver {
+                requireContext().toast("Select a ball and an action to continue")
+            })
+            foul.observe(viewLifecycleOwner, EventObserver {
+                Timber.e("foul logged")
+            })
+        }
+
         return binding.root
     }
 
     override fun onDetach() {
         super.onDetach()
-        viewModel.isFoulDialogOpen.value = false
+        gameFragmentViewModel.isFoulDialogOpen.value = false
     }
 }

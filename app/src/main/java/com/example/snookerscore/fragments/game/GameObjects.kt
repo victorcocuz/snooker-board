@@ -46,6 +46,17 @@ object Balls {
     val BLACK = Ball(7, BallType.BLACK)
 }
 
+val balls = listOf(
+    Balls.WHITE,
+    Balls.RED,
+    Balls.YELLOW,
+    Balls.GREEN,
+    Balls.BROWN,
+    Balls.BLUE,
+    Balls.PINK,
+    Balls.BLACK
+)
+
 class Player(
     var frameScore: MutableLiveData<Int> = MutableLiveData<Int>(0),
     var matchScore: MutableLiveData<Int> = MutableLiveData<Int>(0)
@@ -84,3 +95,9 @@ object FoulActions {
     val FORCE_CONTINUE = FoulAction.FORCE_CONTINUE
     val FORCE_RETAKE = FoulAction.FORCE_RETAKE
 }
+
+data class Foul(
+    val ball: Ball,
+    val foulAction: FoulAction,
+    val removeRed: Boolean
+)
