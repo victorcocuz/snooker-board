@@ -47,7 +47,7 @@ class FoulDialogFragment : DialogFragment() {
             }
             foulActions = Actions
         }
-        gameFragmentViewModel.isFoulDialogOpen.value = true
+//        gameFragmentViewModel.isFoulDialogOpen.value = true
 
         // VM Observers
         foulDialogViewModel.apply {
@@ -67,6 +67,6 @@ class FoulDialogFragment : DialogFragment() {
 
     override fun onDetach() {
         super.onDetach()
-        gameFragmentViewModel.isFoulDialogOpen.value = false
+//        gameFragmentViewModel.isFoulDialogOpen.value = false
     }
 }

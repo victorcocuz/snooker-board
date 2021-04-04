@@ -1,24 +1,23 @@
 package com.example.snookerscore.fragments.game
 
-import androidx.lifecycle.MutableLiveData
-
-class Player(
-    var frameScore: MutableLiveData<Int> = MutableLiveData<Int>(0),
-    var matchScore: MutableLiveData<Int> = MutableLiveData<Int>(0)
-)
-
-data class NewPlayer(
-    var frameScore: Int,
-    var matchScore: Int
-)
-
-sealed class CurrentPlayer {
-    object PlayerA : CurrentPlayer()
-    object PlayerB : CurrentPlayer()
+sealed class CurrentPlayer(var framePoints : Int, var matchPoints: Int) {
+    object PlayerA : CurrentPlayer(0, 0)
+    object PlayerB : CurrentPlayer(0, 0)
 
     fun switchPlayers() = when (this) {
         PlayerA -> PlayerB
         PlayerB -> PlayerA
+    }
+
+    fun getFirstPlayer() = PlayerA
+    fun getSecondPlayer() = PlayerB
+
+    fun addFramePoints(points: Int) {
+        this.framePoints += points
+    }
+
+    fun incrementMatchPoint() {
+        this.matchPoints += 1
     }
 }
 
@@ -45,7 +44,7 @@ data class Ball(
 
 object Balls {
     val END = Ball(0, BallType.END)
-    val MISS = Ball(0, BallType.MISS)
+    val NOBALL = Ball(0, BallType.MISS)
     val WHITE = Ball(4, BallType.WHITE)
     val RED = Ball(1, BallType.RED)
     val COLOR = Ball(0, BallType.COLOR)
@@ -60,9 +59,11 @@ object Balls {
 sealed class ShotType {
     object HIT : ShotType()
     object MISS : ShotType()
-    object SAFE: ShotType()
+    object SAFE : ShotType()
     object FOUL : ShotType()
     object FREEBALL : ShotType()
+    object REMOVERED : ShotType()
+    object ADDRED : ShotType()
 }
 
 object ShotTypes {
@@ -71,11 +72,13 @@ object ShotTypes {
     val MISS = ShotType.MISS
     val FOUL = ShotType.FOUL
     val FREEBALL = ShotType.FREEBALL
+    val REMOVERED = ShotType.REMOVERED
+    val ADDRED = ShotType.ADDRED
 }
 
 sealed class Action {
-    object Continue: Action()
-    object Switch: Action()
+    object Continue : Action()
+    object Switch : Action()
 }
 
 object Actions {
