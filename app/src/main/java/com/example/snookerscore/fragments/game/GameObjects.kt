@@ -2,12 +2,21 @@ package com.example.snookerscore.fragments.game
 
 import androidx.lifecycle.MutableLiveData
 
-sealed class CurrentPlayer {
+class Player(
+    var frameScore: MutableLiveData<Int> = MutableLiveData<Int>(0),
+    var matchScore: MutableLiveData<Int> = MutableLiveData<Int>(0)
+)
 
+data class NewPlayer(
+    var frameScore: Int,
+    var matchScore: Int
+)
+
+sealed class CurrentPlayer {
     object PlayerA : CurrentPlayer()
     object PlayerB : CurrentPlayer()
 
-    fun switchPlayer(): CurrentPlayer = when (this) {
+    fun switchPlayers() = when (this) {
         PlayerA -> PlayerB
         PlayerB -> PlayerA
     }
@@ -25,6 +34,8 @@ sealed class BallType {
     object PINK : BallType()
     object BLACK : BallType()
     object END : BallType()
+
+    fun resetToRed() = if (this == COLOR) RED else this
 }
 
 data class Ball(
@@ -46,58 +57,35 @@ object Balls {
     val BLACK = Ball(7, BallType.BLACK)
 }
 
-val balls = listOf(
-    Balls.WHITE,
-    Balls.RED,
-    Balls.YELLOW,
-    Balls.GREEN,
-    Balls.BROWN,
-    Balls.BLUE,
-    Balls.PINK,
-    Balls.BLACK
-)
-
-class Player(
-    var frameScore: MutableLiveData<Int> = MutableLiveData<Int>(0),
-    var matchScore: MutableLiveData<Int> = MutableLiveData<Int>(0)
-)
-
 sealed class ShotType {
     object HIT : ShotType()
     object MISS : ShotType()
+    object SAFE: ShotType()
     object FOUL : ShotType()
     object FREEBALL : ShotType()
 }
 
 object ShotTypes {
     val HIT = ShotType.HIT
+    val SAFE = ShotType.SAFE
     val MISS = ShotType.MISS
     val FOUL = ShotType.FOUL
     val FREEBALL = ShotType.FREEBALL
 }
 
+sealed class Action {
+    object Continue: Action()
+    object Switch: Action()
+}
+
+object Actions {
+    val CONTINUE = Action.Continue
+    val SWITCH = Action.Switch
+}
+
 data class Shot(
-    val player: Player,
+    val player: CurrentPlayer,
     val ball: Ball,
-    val shotStatus: ShotType
-)
-
-sealed class FoulAction {
-    object CONTINUE: FoulAction()
-    object FREEBALL: FoulAction()
-    object FORCE_CONTINUE: FoulAction()
-    object FORCE_RETAKE: FoulAction()
-}
-
-object FoulActions {
-    val CONTINUE = FoulAction.CONTINUE
-    val CONTINUE_WITH_FREEBALL = FoulAction.FREEBALL
-    val FORCE_CONTINUE = FoulAction.FORCE_CONTINUE
-    val FORCE_RETAKE = FoulAction.FORCE_RETAKE
-}
-
-data class Foul(
-    val ball: Ball,
-    val foulAction: FoulAction,
-    val removeRed: Boolean
+    val shotType: ShotType,
+    val action: Action
 )

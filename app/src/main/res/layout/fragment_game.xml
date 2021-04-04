@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_xlarge"
-            android:text="@{String.valueOf(gameViewModel.frame.playerA.frameScore)}"
+            android:text="@{String.valueOf(gameViewModel.frame.pointsPlayerA.toString())}"
             app:layout_constraintBottom_toBottomOf="@+id/game_label_player_a"
             app:layout_constraintStart_toEndOf="@+id/game_label_player_a" />
 
@@ -46,7 +46,7 @@
             android:id="@+id/game_text_score_b"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{String.valueOf(gameViewModel.frame.playerB.frameScore)}"
+            android:text="@{String.valueOf(gameViewModel.frame.pointsPlayerB.toString())}"
             app:layout_constraintBottom_toBottomOf="@+id/game_label_player_b"
             app:layout_constraintStart_toStartOf="@+id/game_text_score_a" />
 
@@ -54,7 +54,7 @@
             android:id="@+id/game_text_score_remaining"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{String.valueOf(gameViewModel.pointsLeft)}"
+            android:text="@{String.valueOf(gameViewModel.frame.pointsRemaining)}"
             app:layout_constraintBottom_toBottomOf="@+id/game_label_remaining"
             app:layout_constraintStart_toStartOf="@+id/game_text_score_b" />
 
@@ -62,7 +62,7 @@
             android:id="@+id/game_text_score_diff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{String.valueOf(gameViewModel.pointsDiff)}"
+            android:text="@{String.valueOf(gameViewModel.frame.pointsDiff)}"
             app:layout_constraintBottom_toBottomOf="@+id/game_label_diff"
             app:layout_constraintStart_toStartOf="@+id/game_text_score_remaining" />
 
@@ -107,12 +107,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_large"
-            app:layout_constraintBottom_toTopOf="@+id/frag_game_balls_list"
+            app:layout_constraintBottom_toTopOf="@+id/frag_game_balls_rv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/frag_game_balls_list"
+            android:id="@+id/frag_game_balls_rv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"

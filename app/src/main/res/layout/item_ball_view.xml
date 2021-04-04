@@ -4,6 +4,9 @@
 
     <data>
         <variable
+            name="shotType"
+            type="com.example.snookerscore.fragments.game.ShotType" />
+        <variable
             name="ball"
             type="com.example.snookerscore.fragments.game.Ball" />
         <variable
@@ -17,7 +20,7 @@
             <ImageButton
                 android:id="@+id/item_button_ball"
                 app:ballImage="@{ball}"
-                android:onClick="@{() -> clickListener.onClick(ball)}"
+                android:onClick="@{() -> clickListener.onClick(ball, shotType)}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

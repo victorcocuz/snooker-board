@@ -3,14 +3,13 @@ package com.example.snookerscore.fragments.game.dialog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.snookerscore.fragments.game.Ball
-import com.example.snookerscore.fragments.game.Foul
-import com.example.snookerscore.fragments.game.FoulAction
+import com.example.snookerscore.fragments.game.*
 import com.example.snookerscore.utils.Event
 
-class FoulDialogViewModel: ViewModel() {
+class FoulDialogViewModel : ViewModel() {
     private var ballClicked: Ball? = null
-    private var actionClicked: FoulAction? = null
+    private var actionClicked: Action? = null
+    private var freeBall = false
     private var removeRed = false
 
     private val _eventCancelDialog = MutableLiveData<Event<Unit>>()
@@ -19,19 +18,23 @@ class FoulDialogViewModel: ViewModel() {
     private val _eventFoulNotValid = MutableLiveData<Event<Unit>>()
     val eventFoulNotValid: LiveData<Event<Unit>> = _eventFoulNotValid
 
-    private val _foul = MutableLiveData<Event<Foul>>()
-    val foul: LiveData<Event<Foul>> = _foul
+    private val _foul = MutableLiveData<Event<Shot>>()
+    val foul: LiveData<Event<Shot>> = _foul
 
-    fun onBallClicked(ball: Ball) {
+    fun onBallClicked(ball: Ball, shotType: ShotType) {
         ballClicked = ball
     }
 
-    fun onActionClicked(action: FoulAction) {
+    fun onActionClicked(action: Action) {
         actionClicked = action
     }
 
     fun onRemoveRedClicked() {
         removeRed = !removeRed
+    }
+
+    fun onFreeballClicked() {
+        freeBall = !freeBall
     }
 
     fun onCancelClicked() {
@@ -40,7 +43,14 @@ class FoulDialogViewModel: ViewModel() {
 
     fun onConfirmClicked() {
         if (ballClicked != null && actionClicked != null) {
-            _foul.value = Event(Foul(ballClicked!!, actionClicked!!, removeRed))
+            _foul.value = Event(
+                Shot(
+                    CurrentPlayer.PlayerA,
+                    ballClicked!!,
+                    ShotType.FOUL,
+                    actionClicked!!
+                )
+            )
         } else {
             _eventFoulNotValid.value = Event(Unit)
         }

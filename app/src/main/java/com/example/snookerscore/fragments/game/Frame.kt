@@ -11,19 +11,23 @@ import com.example.snookerscore.fragments.game.Balls.MISS
 import com.example.snookerscore.fragments.game.Balls.PINK
 import com.example.snookerscore.fragments.game.Balls.RED
 import com.example.snookerscore.fragments.game.Balls.YELLOW
+import timber.log.Timber
 import java.util.*
 import kotlin.math.abs
 
 
 class Frame {
+
+    // Observables
     var frameState = MutableLiveData<BallType>()
-    var playerA = Player()
-        private set
-    var playerB = Player()
-        private set
-    private var crtPlayer = playerA
-    var pointsDiff = MutableLiveData(0)
+    val pointsPlayerB = MutableLiveData(0)
+    val pointsPlayerA = MutableLiveData(0)
+    val pointsDiff = MutableLiveData(0)
     val pointsRemaining = MutableLiveData(0)
+
+    // Variables
+    private var crtPlayer: CurrentPlayer = CurrentPlayer.PlayerA
+    var crtPoints = pointsPlayerA
     var ballStack = ArrayDeque<Ball>()
     var frameStack = ArrayDeque<Shot>()
 
@@ -33,8 +37,8 @@ class Frame {
 
     fun resetFrame() {
         rerack()
-        playerA.frameScore.value = 0
-        playerB.frameScore.value = 0
+        pointsPlayerA.value = 0
+        pointsPlayerB.value = 0
         pointsRemaining.value = 147
         frameState.value = BallType.RED
     }
@@ -54,20 +58,20 @@ class Frame {
     }
 
     fun switchPlayer() {
-        crtPlayer = when (crtPlayer) {
-            playerA -> playerB
-            else -> playerA
+        crtPlayer = crtPlayer.switchPlayers()
+        crtPoints = when (crtPlayer) {
+            CurrentPlayer.PlayerA -> pointsPlayerA
+            CurrentPlayer.PlayerB -> pointsPlayerB
         }
-        if (frameState.value == BallType.COLOR) {
-            frameState.value = BallType.RED
-            removeBall()
-        }
+        frameState.value = frameState.value!!.resetToRed()
+        if (ballStack.peek() == COLOR) removeBall()
     }
 
-    fun addScore(ballPotted: Ball) {
+    fun addScore(ballPotted: Ball, shotType: ShotType) {
+        Timber.e("shot type $shotType")
         // Record shot in frame stack and change frame state
         removeBall()
-        frameStack.push(Shot(crtPlayer, ballPotted, ShotType.HIT))
+        frameStack.push(Shot(crtPlayer, ballPotted, ShotType.HIT, Action.Continue))
         frameState.value = ballStack.peek()!!.ballType
 
         // Add points and calculate difference
@@ -76,18 +80,18 @@ class Frame {
     }
 
     fun onMiss() {
-        frameStack.push(Shot(crtPlayer, MISS, ShotType.MISS))
+        frameStack.push(Shot(crtPlayer, MISS, ShotType.MISS, Action.Switch))
         switchPlayer()
     }
 
     private fun calcPlayerPoints(ballPotted: Ball, polarity: Int) {
-        crtPlayer.frameScore.value = crtPlayer.frameScore.value?.plus(polarity * ballPotted.points)
+        crtPoints.value = crtPoints.value?.plus(polarity * ballPotted.points)
     }
 
     private fun calcPointsDiffAndRemain(ballPotted: Ball, polarity: Int) {
-        pointsDiff.value = abs(playerA.frameScore.value!! - playerB.frameScore.value!!)
-        pointsRemaining.value = when (ballPotted.ballType) {
-            BallType.RED -> pointsRemaining.value?.minus(polarity * RED.points)?.minus(polarity * BLACK.points)
+        pointsDiff.value = abs(pointsPlayerA.value!! - pointsPlayerB.value!!)
+        pointsRemaining.value = when (ballPotted) {
+            RED -> pointsRemaining.value?.minus(polarity * RED.points)?.minus(polarity * BLACK.points)
             else -> {
                 if (frameState.value != BallType.COLOR) pointsRemaining.value?.minus(polarity * ballPotted.points)
                 return
@@ -99,7 +103,7 @@ class Frame {
 
     fun undo() {
         val lastShot = frameStack.pop()
-        when (lastShot.shotStatus) {
+        when (lastShot.shotType) {
             ShotType.HIT -> {
                 calcPlayerPoints(lastShot.ball, -1)
                 calcPointsDiffAndRemain(lastShot.ball, -1)

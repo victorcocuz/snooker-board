@@ -12,12 +12,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentFoulDialogBinding
 import com.example.snookerscore.fragments.game.*
+import com.example.snookerscore.fragments.game.ShotType.FOUL
 import com.example.snookerscore.utils.EventObserver
 import com.example.snookerscore.utils.toast
 import timber.log.Timber
 
 class FoulDialogFragment : DialogFragment() {
-    private lateinit var ballsList: List<Ball>
+    private lateinit var ballsList: List<Pair<Ball, ShotType>>
     private val foulDialogViewModel: FoulDialogViewModel by viewModels()
     private val gameFragmentViewModel: GameFragmentViewModel by activityViewModels {
         GameFragmentViewModelFactory(requireNotNull(this.activity).application)
@@ -31,20 +32,20 @@ class FoulDialogFragment : DialogFragment() {
 
         // Bind RV, VM, adapter
         val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        val ballAdapter = BallAdapter(BallListener { ball ->
-            foulDialogViewModel.onBallClicked(ball)
+        val ballAdapter = BallAdapter(BallListener { ball, shotType ->
+            foulDialogViewModel.onBallClicked(ball, shotType)
         })
-        Balls.apply { ballsList = listOf(WHITE, RED, YELLOW, GREEN, BROWN, BLUE, PINK, BLACK) }
+        Balls.apply { ballsList = listOf(Pair(WHITE, FOUL), Pair(RED, FOUL), Pair(YELLOW, FOUL), Pair(GREEN, FOUL), Pair(BROWN, FOUL), Pair(BLUE, FOUL), Pair(PINK, FOUL), Pair(BLACK, FOUL)) }
         binding.apply {
             lifecycleOwner = this@FoulDialogFragment
             gameViewModel = gameFragmentViewModel
             foulViewModel = foulDialogViewModel
-            foulBallsList.apply {
+            foulBallsListRv.apply {
                 layoutManager = linearLayoutManager
                 adapter = ballAdapter
                 ballAdapter.submitList(ballsList)
             }
-            foulActions = FoulActions
+            foulActions = Actions
         }
         gameFragmentViewModel.isFoulDialogOpen.value = true
 

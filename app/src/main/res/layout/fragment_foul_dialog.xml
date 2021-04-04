@@ -12,7 +12,7 @@
             type="com.example.snookerscore.fragments.game.dialog.FoulDialogViewModel" />
         <variable
             name="foulActions"
-            type="com.example.snookerscore.fragments.game.FoulActions" />
+            type="com.example.snookerscore.fragments.game.Actions" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,16 +32,18 @@
 
         <TextView
             android:id="@+id/foul_label_balls"
-            android:layout_width="wrap_content"
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="32dp"
             android:layout_marginTop="16dp"
             android:text="Which ball?"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/foul_title" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/foul_balls_list"
+            android:id="@+id/foul_balls_list_rv"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -58,7 +60,7 @@
             android:layout_marginTop="32dp"
             android:text="Which action?"
             app:layout_constraintStart_toStartOf="@+id/foul_label_balls"
-            app:layout_constraintTop_toBottomOf="@+id/foul_balls_list" />
+            app:layout_constraintTop_toBottomOf="@+id/foul_balls_list_rv" />
 
         <TextView
             android:id="@+id/foul_action_continue"
@@ -67,53 +69,42 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="3dp"
-            android:onClick="@{() -> foulViewModel.onActionClicked(foulActions.CONTINUE)}"
+            android:onClick="@{() -> foulViewModel.onActionClicked(foulActions.SWITCH)}"
             android:text="Continue"
-            app:layout_constraintEnd_toStartOf="@+id/foul_action_continue_free_ball"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/foul_label_choose_action" />
-
-        <TextView
-            android:id="@+id/foul_action_continue_free_ball"
-            style="@style/temp_btn"
-            android:layout_width="wrap_content"
-            android:onClick="@{() -> foulViewModel.onActionClicked(foulActions.CONTINUE_WITH_FREEBALL)}"
-            android:text="Continue FB"
-            app:layout_constraintBottom_toBottomOf="@+id/foul_action_continue"
             app:layout_constraintEnd_toStartOf="@+id/foul_action_force_continue"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/foul_action_continue" />
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/foul_label_choose_action" />
 
         <TextView
             android:id="@+id/foul_action_force_continue"
             style="@style/temp_btn"
             android:layout_width="wrap_content"
-            android:onClick="@{() -> foulViewModel.onActionClicked(foulActions.FORCE_CONTINUE)}"
+            android:onClick="@{() -> foulViewModel.onActionClicked(foulActions.CONTINUE)}"
             android:text="Force Continue"
-            app:layout_constraintBottom_toBottomOf="@+id/foul_action_continue"
-            app:layout_constraintEnd_toStartOf="@+id/foul_action_force_retake"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/foul_action_continue_free_ball" />
-
-        <TextView
-            android:id="@+id/foul_action_force_retake"
-            style="@style/temp_btn"
-            android:layout_width="wrap_content"
-            android:layout_marginEnd="32dp"
-            android:onClick="@{() -> foulViewModel.onActionClicked(foulActions.FORCE_RETAKE)}"
-            android:text="Force Retake"
             app:layout_constraintBottom_toBottomOf="@+id/foul_action_continue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/foul_action_force_continue" />
+            app:layout_constraintStart_toEndOf="@+id/foul_action_continue" />
+
+        <TextView
+            android:id="@+id/foul_action_free_ball"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:onClick="@{() -> foulViewModel.onFreeballClicked()}"
+            android:text=" FB"
+            app:layout_constraintBottom_toBottomOf="@+id/foul_remove_red"
+            app:layout_constraintEnd_toStartOf="@+id/foul_remove_red"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/foul_label_remove_red"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="Remove Red?"
+            android:text="Other actions"
             app:layout_constraintStart_toStartOf="@+id/foul_label_choose_action"
             app:layout_constraintTop_toBottomOf="@+id/foul_action_continue" />
 
@@ -125,7 +116,8 @@
             android:onClick="@{() -> foulViewModel.onRemoveRedClicked()}"
             android:text="Remove Red"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/foul_action_free_ball"
             app:layout_constraintTop_toBottomOf="@+id/foul_label_remove_red" />
 
         <TextView
@@ -134,8 +126,8 @@
             android:layout_width="wrap_content"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="32dp"
-            android:text="Cancel"
             android:onClick="@{() -> foulViewModel.onCancelClicked()}"
+            android:text="Cancel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/foul_ok"
             app:layout_constraintHorizontal_bias="0.5"
@@ -146,8 +138,8 @@
             android:id="@+id/foul_ok"
             style="@style/temp_btn"
             android:layout_width="wrap_content"
-            android:text="OK"
             android:onClick="@{() -> foulViewModel.onConfirmClicked()}"
+            android:text="OK"
             app:layout_constraintBottom_toBottomOf="@+id/foul_cancel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
