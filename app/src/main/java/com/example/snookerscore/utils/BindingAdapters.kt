@@ -8,7 +8,7 @@ import com.example.snookerscore.fragments.game.Ball
 import com.example.snookerscore.fragments.game.Balls
 import com.example.snookerscore.fragments.game.PotAction
 
-// Game Fragment
+// Ball Item View
 @BindingAdapter("ballValue")
 fun TextView.setPointsValue(item: Ball?) {
     item?.let {
@@ -34,9 +34,17 @@ fun ImageView.setBallImage(item: Ball?) {
     }
 }
 
-// Game Dialog
-@BindingAdapter("dialogRemoveRedEnabled")
-fun TextView.setDialogRemoveRedEnabled(size: Int) {
+// Game fragment and dialog
+@BindingAdapter("undoEnabled")
+fun TextView.setUndoEnabled(size: Int) {
+    isEnabled = when(size) {
+        37 -> false
+        else -> true
+    }
+}
+
+@BindingAdapter("redEnabled")
+fun TextView.setRedEnabled(size: Int) {
     isEnabled = when(size) {
         in 0..8 -> false
         else -> true
@@ -52,4 +60,9 @@ fun TextView.setDialogFreeballEnabled(size: Int, potAction: PotAction?) {
             else -> true
         }
     }
+}
+
+@BindingAdapter("dialogCannotForceDiff", "dialogCannotForceRemaining")
+fun TextView.setDialogForceContinueEnabled(diff: Int, remaining: Int) {
+    isEnabled = (remaining - diff) > 0
 }

@@ -62,7 +62,7 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
             ballStack.push(Balls.RED)
         }
         getFrameStatus()
-        calcPointsDiffandRemain()
+        calcPointsDiffAndRemain()
     }
 
     // Handler functions
@@ -81,9 +81,9 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
                 false -> Shot(crtPlayer, _frameState.value!!, Pot(pot.ball, pot.potType, PotAction.Continue))
             }
         )
-        if (freeBall) freeBall = !freeBall
-        removeBall()
+        freeBall = false
         calcPoints(crtPlayer, pot.ball, pot.potType, 1)
+        removeBall()
     }
 
     fun onSafeClicked() {
@@ -141,7 +141,7 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
         ballStack.push(Balls.RED)
         freeBall = true
         getFrameStatus()
-        calcPointsDiffandRemain()
+        calcPointsDiffAndRemain()
     }
 
     private fun cancelFreeBall() {
@@ -167,7 +167,8 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
         if (ballStack.peek() == Balls.COLOR) removeBall()
     }
 
-    private fun removeBall() {
+    private fun removeBall() { // Remove ball unless there is a tie on the black
+        if (ballStack.size == 2 && crtPlayer.framePoints == crtPlayer.switchPlayers().framePoints) return
         ballStack.pop()
         getFrameStatus()
     }
@@ -175,7 +176,6 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
     private fun getFrameStatus() {
         _frameState.value = ballStack.peek()!!.ballType
         _ballStackSize.value = ballStack.size
-
     }
 
     private fun calcPoints(crtPlayer: CurrentPlayer, ballPotted: Ball, potType: PotType, pol: Int) {
@@ -189,10 +189,10 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
         }
         crtPlayer.addFramePoints(pol * points)
         _displayPlayer.value = crtPlayer
-        calcPointsDiffandRemain()
+        calcPointsDiffAndRemain()
     }
 
-    private fun calcPointsDiffandRemain() {
+    private fun calcPointsDiffAndRemain() {
         _pointsDiff.value = abs(crtPlayer.getFirstPlayer().framePoints - crtPlayer.getSecondPlayer().framePoints)
         _pointsRemaining.value = when (ballStack.size) {
             in 0..6 -> _pointsRemaining.value?.minus(8 - ballStack.size)

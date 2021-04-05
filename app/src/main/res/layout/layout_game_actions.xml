@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="gameViewModel"
             type="com.example.snookerscore.fragments.game.GameFragmentViewModel" />
@@ -51,7 +52,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_btn_act_foul" />
+            app:layout_constraintStart_toEndOf="@+id/game_btn_act_foul"
+            app:redEnabled="@{gameViewModel.ballStackSize}" />
 
         <TextView
             android:id="@+id/game_btn_act_rerack"
@@ -77,8 +79,8 @@
         <TextView
             android:id="@+id/game_btn_act_end_match"
             style="@style/temp_btn"
-            android:text="FINISH"
             android:onClick="@{() -> gameViewModel.onEndMatchClicked()}"
+            android:text="FINISH"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_rerack"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_undo"
             app:layout_constraintHorizontal_bias="0.5"
@@ -92,7 +94,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_rerack"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_btn_act_end_match" />
+            app:layout_constraintStart_toEndOf="@+id/game_btn_act_end_match"
+            app:undoEnabled="@{gameViewModel.ballStackSize}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

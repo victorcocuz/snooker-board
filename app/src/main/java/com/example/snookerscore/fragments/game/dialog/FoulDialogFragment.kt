@@ -33,7 +33,6 @@ class FoulDialogFragment : DialogFragment() {
         val ballAdapter = BallAdapter(BallListener { ball ->
             foulDialogViewModel.onBallClicked(ball)
         })
-        Balls.apply { ballsList = listOf(WHITE, RED, YELLOW, GREEN, BROWN, BLUE, PINK, BLACK) }
         binding.apply {
             lifecycleOwner = this@FoulDialogFragment
             foulViewModel = foulDialogViewModel
@@ -41,7 +40,7 @@ class FoulDialogFragment : DialogFragment() {
             foulBallsListRv.apply {
                 layoutManager = linearLayoutManager
                 adapter = ballAdapter
-                ballAdapter.submitList(ballsList)
+
             }
             foulActions = ShotActions
         }
@@ -59,6 +58,20 @@ class FoulDialogFragment : DialogFragment() {
                 dismiss()
             })
         }
+        gameFragmentViewModel.ballStackSize.observe(viewLifecycleOwner, { ballStackSize ->
+            Balls.apply {
+                ballsList = when(ballStackSize) {
+                    2 -> listOf(WHITE, BLACK)
+                    3 -> listOf(WHITE, PINK, BLACK)
+                    4 -> listOf(WHITE, BLUE, PINK, BLACK)
+                    5 -> listOf(WHITE, BROWN, BLUE, PINK, BLACK)
+                    6 -> listOf(WHITE, GREEN, BROWN, BLUE, PINK, BLACK)
+                    7 -> listOf(WHITE, YELLOW, GREEN, BROWN, BLUE, PINK, BLACK)
+                    else -> listOf(WHITE, RED, YELLOW, GREEN, BROWN, BLUE, PINK, BLACK)
+                }
+            }
+            ballAdapter.submitList(ballsList)
+        })
 
         return binding.root
     }
