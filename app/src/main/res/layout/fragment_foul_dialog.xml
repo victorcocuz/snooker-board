@@ -4,15 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="gameViewModel"
             type="com.example.snookerscore.fragments.game.GameFragmentViewModel" />
+
         <variable
             name="foulViewModel"
             type="com.example.snookerscore.fragments.game.dialog.FoulDialogViewModel" />
+
         <variable
             name="foulActions"
-            type="com.example.snookerscore.fragments.game.Actions" />
+            type="com.example.snookerscore.fragments.game.ShotActions" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,10 +37,10 @@
             android:id="@+id/foul_label_balls"
             android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
             android:layout_gravity="center"
-            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
             android:text="Which ball?"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/foul_title" />
@@ -70,7 +73,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="3dp"
             android:onClick="@{() -> foulViewModel.onActionClicked(foulActions.SWITCH)}"
-            android:text="Continue"
+            android:text="SWITCH PLAYERS"
             app:layout_constraintEnd_toStartOf="@+id/foul_action_force_continue"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread"
@@ -82,7 +85,7 @@
             style="@style/temp_btn"
             android:layout_width="wrap_content"
             android:onClick="@{() -> foulViewModel.onActionClicked(foulActions.CONTINUE)}"
-            android:text="Force Continue"
+            android:text="FORCE CONTINUE/RETAKE"
             app:layout_constraintBottom_toBottomOf="@+id/foul_action_continue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -94,6 +97,8 @@
             android:layout_width="wrap_content"
             android:onClick="@{() -> foulViewModel.onFreeballClicked()}"
             android:text=" FB"
+            app:dialogFreeBallEnabledAction="@{foulViewModel.actionClicked}"
+            app:dialogFreeBallEnabledSize="@{gameViewModel.ballStackSize}"
             app:layout_constraintBottom_toBottomOf="@+id/foul_remove_red"
             app:layout_constraintEnd_toStartOf="@+id/foul_remove_red"
             app:layout_constraintHorizontal_bias="0.5"
@@ -115,6 +120,7 @@
             android:layout_marginTop="32dp"
             android:onClick="@{() -> foulViewModel.onRemoveRedClicked()}"
             android:text="Remove Red"
+            app:dialogRemoveRedEnabled="@{gameViewModel.ballStackSize}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/foul_action_free_ball"

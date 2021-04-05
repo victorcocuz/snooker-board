@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snookerscore.databinding.ItemBallViewBinding
 
-class BallAdapter(private val clickListener: BallListener): ListAdapter<Pair<Ball, ShotType>, BallAdapter.ViewHolder>(BallAdapterCallback()) {
+class BallAdapter(private val clickListener: BallListener): ListAdapter<Ball, BallAdapter.ViewHolder>(BallAdapterCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -18,10 +18,9 @@ class BallAdapter(private val clickListener: BallListener): ListAdapter<Pair<Bal
     }
 
     class ViewHolder private constructor(val binding: ItemBallViewBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Pair<Ball, ShotType>, clickListener: BallListener) {
+        fun bind(item: Ball, clickListener: BallListener) {
             binding.apply {
-                ball = item.first
-                shotType = item.second
+                ball = item
                 this.clickListener = clickListener
                 executePendingBindings()
             }
@@ -36,16 +35,16 @@ class BallAdapter(private val clickListener: BallListener): ListAdapter<Pair<Bal
     }
 }
 
-class BallAdapterCallback : DiffUtil.ItemCallback<Pair<Ball, ShotType>>() {
-    override fun areItemsTheSame(oldItem: Pair<Ball, ShotType>, newItem: Pair<Ball, ShotType>): Boolean {
-        return oldItem.first.ballType == newItem.first.ballType
+class BallAdapterCallback : DiffUtil.ItemCallback<Ball>() {
+    override fun areItemsTheSame(oldItem: Ball, newItem: Ball): Boolean {
+        return oldItem.ballType == newItem.ballType
     }
 
-    override fun areContentsTheSame(oldItem: Pair<Ball, ShotType>, newItem: Pair<Ball, ShotType>): Boolean {
+    override fun areContentsTheSame(oldItem: Ball, newItem: Ball): Boolean {
         return oldItem == newItem
     }
 }
 
-class BallListener(val clickListener: (ball: Ball, shotType: ShotType) -> Unit) {
-    fun onClick(ball: Ball, shotType: ShotType) = clickListener(ball, shotType)
+class BallListener(val clickListener: (ball: Ball) -> Unit) {
+    fun onClick(ball: Ball) = clickListener(ball)
 }

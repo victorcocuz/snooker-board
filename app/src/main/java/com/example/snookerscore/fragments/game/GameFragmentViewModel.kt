@@ -23,12 +23,16 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
     val eventFoul: LiveData<Event<Unit>> = _eventFoul
 
     private val _displayPlayer = MutableLiveData<CurrentPlayer>()
-    val displayPlayer : LiveData<CurrentPlayer> = _displayPlayer
+    val displayPlayer: LiveData<CurrentPlayer> = _displayPlayer
+
+    private val _ballStackSize = MutableLiveData<Int>()
+    val ballStackSize: LiveData<Int> = _ballStackSize
 
     // Variables
     private lateinit var crtPlayer: CurrentPlayer
     private var ballStack = ArrayDeque<Ball>()
     private var frameStack = ArrayDeque<Shot>()
+    private var freeBall = false
 
     // Init
     init {
@@ -37,19 +41,16 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
 
     private fun resetFrame() {
         frameStack.clear()
-        rerack()
-        _pointsRemaining.value = 147
-        _frameState.value = BallType.RED
         crtPlayer = CurrentPlayer.PlayerA
         crtPlayer.getFirstPlayer().framePoints = 0
         crtPlayer.getSecondPlayer().framePoints = 0
         _displayPlayer.value = crtPlayer
-        calcPointsdiff()
+        rerack()
     }
 
     private fun rerack() {
         ballStack.clear()
-        ballStack.push(Balls.END)
+        ballStack.push(Balls.NOBALL)
         ballStack.push(Balls.BLACK)
         ballStack.push(Balls.PINK)
         ballStack.push(Balls.BLUE)
@@ -60,27 +61,40 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
             ballStack.push(Balls.COLOR)
             ballStack.push(Balls.RED)
         }
+        getFrameStatus()
+        calcPointsDiffandRemain()
     }
 
     // Handler functions
-    fun onBallClicked(ball: Ball, shotType: ShotType) {
-        // Record shot in frame stack and change frame state
-        removeBall()
-        frameStack.push(Shot(crtPlayer, ball, shotType, Action.Continue))
-        _frameState.value = ballStack.peek()!!.ballType
+    fun handleFoulDialog(pot: Pot, removeRed: Boolean, freeBall: Boolean) {
+        calcPoints(crtPlayer.switchPlayers(), pot.ball, pot.potType, 1)
+        if (pot.potAction == PotAction.Switch) switchPlayers() else switchToRed()
+        if (removeRed) removeOrAddRed(PotType.REMOVE_RED)
+        cancelFreeBall()
+        if (freeBall) addFreeBall()
+    }
 
-        // Add points and calculate difference
-        calcPlayerPoints(ball, 1)
-        calcPointsdiff()
-        calcPointsRemain(ball, 1)
+    fun onBallClicked(pot: Pot) {
+        frameStack.push(
+            when (freeBall) {
+                true -> Shot(crtPlayer, _frameState.value!!, Pot(pot.ball, PotType.FREEBALL, PotAction.Continue))
+                false -> Shot(crtPlayer, _frameState.value!!, Pot(pot.ball, pot.potType, PotAction.Continue))
+            }
+        )
+        if (freeBall) freeBall = !freeBall
+        removeBall()
+        calcPoints(crtPlayer, pot.ball, pot.potType, 1)
     }
 
     fun onSafeClicked() {
-
+        cancelFreeBall()
+        frameStack.push(Shot(crtPlayer, _frameState.value!!, Pot(Balls.NOBALL, PotType.SAFE, PotAction.Switch)))
+        switchPlayers()
     }
 
     fun onMissClicked() {
-        frameStack.push(Shot(crtPlayer, Balls.NOBALL, ShotType.MISS, Action.Switch))
+        cancelFreeBall()
+        frameStack.push(Shot(crtPlayer, _frameState.value!!, Pot(Balls.NOBALL, PotType.MISS, PotAction.Switch)))
         switchPlayers()
     }
 
@@ -88,12 +102,9 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
         _eventFoul.value = Event(Unit)
     }
 
-    fun onRemoveRedClicked() {
-        if (ballStack.peek() == Balls.COLOR) removeBall()
-        if (ballStack.peek() == Balls.RED) {
-            removeBall()
-            _pointsRemaining.value = pointsRemaining.value?.minus( Balls.RED.points)?.minus(Balls.BLACK.points)
-        }
+    fun onAddRedClicked() {
+        switchToRed()
+        removeOrAddRed(PotType.ADD_RED)
     }
 
     fun onRerackClicked() = resetFrame()
@@ -108,47 +119,84 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
 
     fun onUndoClicked() {
         val lastShot = frameStack.pop()
-        when (lastShot.shotType) {
-            ShotType.HIT -> {
-                calcPlayerPoints(lastShot.ball, -1)
-                calcPointsRemain(lastShot.ball, -1)
+        when (lastShot.pot.potType) {
+            PotType.HIT -> {
+                calcPoints(crtPlayer, lastShot.pot.ball, lastShot.pot.potType, -1)
                 ballStack.push(
                     when (ballStack.size) {
                         in arrayOf(7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35) -> Balls.COLOR
-                        else -> lastShot.ball
+                        else -> lastShot.pot.ball
                     }
                 )
                 _frameState.value = ballStack.peek()!!.ballType
                 crtPlayer = lastShot.player
             }
-            ShotType.MISS -> switchPlayers()
+            PotType.MISS -> switchPlayers()
         }
     }
 
     // Helpers
-    private fun switchPlayers() {
-        crtPlayer = crtPlayer.switchPlayers()
-        _frameState.value = frameState.value!!.resetToRed()
-        if (ballStack.peek() == Balls.COLOR) removeBall()
-    }
-    private fun calcPlayerPoints(ballPotted: Ball, polarity: Int) {
-        crtPlayer.addFramePoints(polarity * ballPotted.points)
-        _displayPlayer.value = crtPlayer
+    private fun addFreeBall() {
+        ballStack.push(Balls.COLOR)
+        ballStack.push(Balls.RED)
+        freeBall = true
+        getFrameStatus()
+        calcPointsDiffandRemain()
     }
 
-    private fun calcPointsdiff() {
-        _pointsDiff.value = abs(crtPlayer.getFirstPlayer().framePoints - crtPlayer.getSecondPlayer().framePoints)
-    }
-
-    private fun calcPointsRemain(ballPotted: Ball, polarity: Int) {
-        _pointsRemaining.value = when (ballPotted) {
-            Balls.RED -> pointsRemaining.value?.minus(polarity * Balls.RED.points)?.minus(polarity * Balls.BLACK.points)
-            else -> {
-                if (frameState.value != BallType.COLOR) pointsRemaining.value?.minus(polarity * ballPotted.points)
-                return
-            }
+    private fun cancelFreeBall() {
+        if (freeBall) {
+            freeBall = !freeBall
+            removeOrAddRed(PotType.REMOVE_RED)
         }
     }
 
-    private fun removeBall() = ballStack.pop()
+    private fun removeOrAddRed(potType: PotType) {
+        removeBall()
+        if (potType == PotType.REMOVE_RED) switchToRed()
+        calcPoints(crtPlayer, Balls.RED, potType, 1)
+        frameStack.push(Shot(crtPlayer, _frameState.value!!, Pot(Balls.RED, potType, PotAction.Continue)))
+    }
+
+    private fun switchPlayers() {
+        crtPlayer = crtPlayer.switchPlayers()
+        switchToRed()
+    }
+
+    private fun switchToRed() {
+        if (ballStack.peek() == Balls.COLOR) removeBall()
+    }
+
+    private fun removeBall() {
+        ballStack.pop()
+        getFrameStatus()
+    }
+
+    private fun getFrameStatus() {
+        _frameState.value = ballStack.peek()!!.ballType
+        _ballStackSize.value = ballStack.size
+
+    }
+
+    private fun calcPoints(crtPlayer: CurrentPlayer, ballPotted: Ball, potType: PotType, pol: Int) {
+        val points = when (potType) {
+            PotType.FOUL -> when (ballPotted.points) {
+                in 1..4 -> 4
+                else -> ballPotted.points
+            }
+            PotType.REMOVE_RED -> 0
+            else -> ballPotted.points
+        }
+        crtPlayer.addFramePoints(pol * points)
+        _displayPlayer.value = crtPlayer
+        calcPointsDiffandRemain()
+    }
+
+    private fun calcPointsDiffandRemain() {
+        _pointsDiff.value = abs(crtPlayer.getFirstPlayer().framePoints - crtPlayer.getSecondPlayer().framePoints)
+        _pointsRemaining.value = when (ballStack.size) {
+            in 0..6 -> _pointsRemaining.value?.minus(8 - ballStack.size)
+            else -> 27 + ((ballStack.size - 7) / 2) * 8
+        }
+    }
 }

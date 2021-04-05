@@ -39,15 +39,15 @@
             android:onClick="@{() -> gameViewModel.onFoulClicked()}"
             android:text="FOUL"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
-            app:layout_constraintEnd_toStartOf="@+id/game_btn_act_remove_red"
+            app:layout_constraintEnd_toStartOf="@+id/game_btn_act_add_red"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_btn_act_miss" />
 
         <TextView
-            android:id="@+id/game_btn_act_remove_red"
+            android:id="@+id/game_btn_act_add_red"
             style="@style/temp_btn"
-            android:onClick="@{() -> gameViewModel.onRemoveRedClicked()}"
-            android:text="--RED"
+            android:onClick="@{() -> gameViewModel.onAddRedClicked()}"
+            android:text="++RED"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

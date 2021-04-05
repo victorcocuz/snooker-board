@@ -6,7 +6,9 @@ import androidx.databinding.BindingAdapter
 import com.example.snookerscore.R
 import com.example.snookerscore.fragments.game.Ball
 import com.example.snookerscore.fragments.game.Balls
+import com.example.snookerscore.fragments.game.PotAction
 
+// Game Fragment
 @BindingAdapter("ballValue")
 fun TextView.setPointsValue(item: Ball?) {
     item?.let {
@@ -29,5 +31,25 @@ fun ImageView.setBallImage(item: Ball?) {
                 else -> R.drawable.ball_white
             }
         )
+    }
+}
+
+// Game Dialog
+@BindingAdapter("dialogRemoveRedEnabled")
+fun TextView.setDialogRemoveRedEnabled(size: Int) {
+    isEnabled = when(size) {
+        in 0..8 -> false
+        else -> true
+    }
+}
+
+@BindingAdapter("dialogFreeBallEnabledSize", "dialogFreeBallEnabledAction")
+fun TextView.setDialogFreeballEnabled(size: Int, potAction: PotAction?) {
+    isEnabled = when(potAction) {
+        PotAction.Continue -> false
+        else -> when(size) {
+            in 0..8 -> false
+            else -> true
+        }
     }
 }

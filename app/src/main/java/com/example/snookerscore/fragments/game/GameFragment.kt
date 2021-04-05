@@ -8,13 +8,12 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameBinding
-import com.example.snookerscore.fragments.game.ShotType.HIT
 import com.example.snookerscore.fragments.game.dialog.FoulDialogFragment
 import com.example.snookerscore.utils.EventObserver
 import java.util.*
 
 class GameFragment : androidx.fragment.app.Fragment() {
-    private lateinit var ballsList: List<Pair<Ball, ShotType>>
+    private lateinit var ballsList: List<Ball>
     private val gameFragmentViewModel: GameFragmentViewModel by activityViewModels {
         GameFragmentViewModelFactory(
             requireNotNull(this.activity).application
@@ -36,8 +35,8 @@ class GameFragment : androidx.fragment.app.Fragment() {
             canScrollHorizontally()
 
         }
-        ballAdapter = BallAdapter(BallListener { ball, shotType ->
-            gameFragmentViewModel.onBallClicked(ball, shotType)
+        ballAdapter = BallAdapter(BallListener { ball ->
+            gameFragmentViewModel.onBallClicked(Pot(ball, PotType.HIT, ShotActions.CONTINUE))
         })
 
         binding.apply {
@@ -80,14 +79,14 @@ class GameFragment : androidx.fragment.app.Fragment() {
     private fun manageBallVisibility(frameState: BallType) {
         Balls.apply {
             ballsList = when (frameState) {
-                BallType.RED -> listOf(Pair(RED, HIT))
-                BallType.COLOR -> listOf(Pair(YELLOW, HIT) , Pair(GREEN, HIT), Pair(BROWN, HIT), Pair(BLUE, HIT), Pair(PINK, HIT), Pair(BLACK, HIT))
-                BallType.YELLOW -> listOf(Pair(YELLOW, HIT))
-                BallType.GREEN -> listOf(Pair(GREEN, HIT))
-                BallType.BROWN -> listOf(Pair(BROWN, HIT))
-                BallType.BLUE -> listOf(Pair(BLUE, HIT))
-                BallType.PINK -> listOf(Pair(PINK, HIT))
-                BallType.BLACK -> listOf(Pair(BLACK, HIT))
+                BallType.RED -> listOf(RED)
+                BallType.COLOR -> listOf(YELLOW, GREEN, BROWN, BLUE, PINK, BLACK)
+                BallType.YELLOW -> listOf(YELLOW)
+                BallType.GREEN -> listOf(GREEN)
+                BallType.BROWN -> listOf(BROWN)
+                BallType.BLUE -> listOf(BLUE)
+                BallType.PINK -> listOf(PINK)
+                BallType.BLACK -> listOf(BLACK)
                 else -> listOf()
             }
             ballAdapter.submitList(ballsList)
