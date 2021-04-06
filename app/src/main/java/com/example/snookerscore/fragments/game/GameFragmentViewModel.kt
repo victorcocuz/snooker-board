@@ -44,8 +44,9 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
         crtPlayer = CurrentPlayer.PlayerA
         crtPlayer.getFirstPlayer().framePoints = 0
         crtPlayer.getSecondPlayer().framePoints = 0
-        _displayPlayer.value = crtPlayer
         rerack()
+        getFrameStatus()
+        calcPointsDiffAndRemain()
     }
 
     private fun rerack() {
@@ -61,8 +62,6 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
             ballStack.push(Balls.COLOR)
             ballStack.push(Balls.RED)
         }
-        getFrameStatus()
-        calcPointsDiffAndRemain()
     }
 
     // Handler functions
@@ -119,6 +118,7 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
 
     fun onUndoClicked() {
         val lastShot = frameStack.pop()
+        crtPlayer = lastShot.player
         when (lastShot.pot.potType) {
             PotType.HIT -> {
                 calcPoints(crtPlayer, lastShot.pot.ball, lastShot.pot.potType, -1)
@@ -128,8 +128,10 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
                         else -> lastShot.pot.ball
                     }
                 )
-                _frameState.value = ballStack.peek()!!.ballType
-                crtPlayer = lastShot.player
+               getFrameStatus()
+            }
+            PotType.FOUL -> {
+
             }
             PotType.MISS -> switchPlayers()
         }
@@ -161,6 +163,7 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
     private fun switchPlayers() {
         crtPlayer = crtPlayer.switchPlayers()
         switchToRed()
+        getFrameStatus()
     }
 
     private fun switchToRed() {
@@ -176,6 +179,7 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
     private fun getFrameStatus() {
         _frameState.value = ballStack.peek()!!.ballType
         _ballStackSize.value = ballStack.size
+        _displayPlayer.value = crtPlayer
     }
 
     private fun calcPoints(crtPlayer: CurrentPlayer, ballPotted: Ball, potType: PotType, pol: Int) {

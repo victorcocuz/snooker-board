@@ -32,8 +32,6 @@ sealed class BallType {
     object PINK : BallType()
     object BLACK : BallType()
     object COLOR : BallType()
-
-    fun resetToRed() = if (this == COLOR) RED else this
 }
 
 data class Ball(

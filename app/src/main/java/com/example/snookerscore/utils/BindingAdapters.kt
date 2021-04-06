@@ -2,10 +2,12 @@ package com.example.snookerscore.utils
 
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.example.snookerscore.R
 import com.example.snookerscore.fragments.game.Ball
 import com.example.snookerscore.fragments.game.Balls
+import com.example.snookerscore.fragments.game.CurrentPlayer
 import com.example.snookerscore.fragments.game.PotAction
 
 // Ball Item View
@@ -35,9 +37,29 @@ fun ImageView.setBallImage(item: Ball?) {
 }
 
 // Game fragment and dialog
+@BindingAdapter("crtPlayerA")
+fun TextView.setCurrentPlayerA(crtPlayer: CurrentPlayer) {
+    setBackgroundColor(
+        when (crtPlayer) {
+            crtPlayer.getFirstPlayer() -> ContextCompat.getColor(context, R.color.design_default_color_primary)
+            else -> 0x00000000
+        }
+    )
+}
+
+@BindingAdapter("crtPlayerB")
+fun TextView.setCurrentPlayerB(crtPlayer: CurrentPlayer) {
+    setBackgroundColor(
+        when (crtPlayer) {
+            crtPlayer.getFirstPlayer() -> 0x00000000
+            else -> ContextCompat.getColor(context, R.color.design_default_color_primary)
+        }
+    )
+}
+
 @BindingAdapter("undoEnabled")
 fun TextView.setUndoEnabled(size: Int) {
-    isEnabled = when(size) {
+    isEnabled = when (size) {
         37 -> false
         else -> true
     }
@@ -45,7 +67,7 @@ fun TextView.setUndoEnabled(size: Int) {
 
 @BindingAdapter("redEnabled")
 fun TextView.setRedEnabled(size: Int) {
-    isEnabled = when(size) {
+    isEnabled = when (size) {
         in 0..8 -> false
         else -> true
     }
@@ -53,9 +75,9 @@ fun TextView.setRedEnabled(size: Int) {
 
 @BindingAdapter("dialogFreeBallEnabledSize", "dialogFreeBallEnabledAction")
 fun TextView.setDialogFreeballEnabled(size: Int, potAction: PotAction?) {
-    isEnabled = when(potAction) {
+    isEnabled = when (potAction) {
         PotAction.Continue -> false
-        else -> when(size) {
+        else -> when (size) {
             in 0..8 -> false
             else -> true
         }
