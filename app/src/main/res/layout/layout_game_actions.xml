@@ -53,7 +53,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_btn_act_foul"
-            app:redEnabled="@{gameViewModel.ballStackSize}" />
+            app:addRedEnabled="@{gameViewModel.ballStackSize}" />
 
         <TextView
             android:id="@+id/game_btn_act_rerack"

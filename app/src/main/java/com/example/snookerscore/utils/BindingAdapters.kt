@@ -57,6 +57,8 @@ fun TextView.setCurrentPlayerB(crtPlayer: CurrentPlayer) {
     )
 }
 
+
+// Actions
 @BindingAdapter("undoEnabled")
 fun TextView.setUndoEnabled(size: Int) {
     isEnabled = when (size) {
@@ -65,8 +67,18 @@ fun TextView.setUndoEnabled(size: Int) {
     }
 }
 
-@BindingAdapter("redEnabled")
-fun TextView.setRedEnabled(size: Int) {
+@BindingAdapter("addRedEnabled")
+fun TextView.setAddRedEnabled(size: Int) {
+    isEnabled = when (size) {
+        in arrayOf(10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36) -> true
+        else -> false
+    }
+}
+
+
+// Dialog
+@BindingAdapter("dialogSetRedEnabled")
+fun TextView.dialogSetRedEnabled(size: Int) {
     isEnabled = when (size) {
         in 0..8 -> false
         else -> true
