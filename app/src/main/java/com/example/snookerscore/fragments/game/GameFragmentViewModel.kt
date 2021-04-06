@@ -32,7 +32,6 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
     private lateinit var crtPlayer: CurrentPlayer
     private var ballStack = ArrayDeque<Ball>()
     private var frameStack = ArrayDeque<Shot>()
-    private var freeBall = false
 
     // Init
     init {
@@ -49,18 +48,12 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
         calcPointsDiffAndRemain()
     }
 
-    private fun rerack() {
-        ballStack.clear()
-        ballStack.push(Balls.NOBALL)
-        ballStack.push(Balls.BLACK)
-        ballStack.push(Balls.PINK)
-        ballStack.push(Balls.BLUE)
-        ballStack.push(Balls.BROWN)
-        ballStack.push(Balls.GREEN)
-        ballStack.push(Balls.YELLOW)
+    private fun rerack() = ballStack.apply {
+        clear()
+        for (ball in listOf(Balls.NOBALL, Balls.BLACK, Balls.PINK, Balls.BLUE, Balls.BROWN, Balls.GREEN, Balls.YELLOW)) push(ball)
         for (i in 0..14) {
-            ballStack.push(Balls.COLOR)
-            ballStack.push(Balls.RED)
+            push(Balls.COLOR)
+            push(Balls.RED)
         }
     }
 
@@ -68,16 +61,21 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
     fun handleFoulDialog(pot: Pot, removeRed: Boolean, freeBall: Boolean) {
         if (removeRed) updateFrameStatus(crtPlayer, Balls.RED, PotType.REMOVE_RED, 1, PotAction.Continue)
         updateFrameStatus(crtPlayer, pot.ball, pot.potType, 1, pot.potAction)
-        if (freeBall) addFreeBall()
+        if (freeBall) {
+            if (inColors()) ballStack.push(Balls.FREE)
+            else {
+                ballStack.push(Balls.COLOR)
+                ballStack.push(Balls.FREE)
+            }
+            calcPointsDiffAndRemain()
+            getFrameStatus()
+        }
     }
 
     fun onBallClicked(pot: Pot) {
-        if (freeBall) {
+        if (ballStack.peek() == Balls.FREE)
             updateFrameStatus(crtPlayer, pot.ball, PotType.FREEBALL, 1, PotAction.Continue)
-            freeBall = false
-        } else {
-            updateFrameStatus(crtPlayer, pot.ball, pot.potType, 1, PotAction.Continue)
-        }
+        else updateFrameStatus(crtPlayer, pot.ball, pot.potType, 1, PotAction.Continue)
     }
 
     fun onSafeClicked() = updateFrameStatus(crtPlayer, Balls.NOBALL, PotType.SAFE, 1, PotAction.Switch)
@@ -102,36 +100,27 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
 
     // Helpers
     private fun addFreeBall() {
-        ballStack.push(Balls.COLOR)
-        ballStack.push(Balls.RED)
-        freeBall = true
-        calcPointsDiffAndRemain()
-        getFrameStatus()
+
     }
 
-    private fun switchToRed(potAction: PotAction) {
-        if (freeBall) {
-            freeBall = false
-            updateFrameStatus(crtPlayer, Balls.RED, PotType.REMOVE_RED, 1, PotAction.Continue)
+    private fun updateFrameStatus(currentPlayer: CurrentPlayer, ballPotted: Ball, potType: PotType, pol: Int, potAction: PotAction) {
+        fun removeBalls(count: Int) { // Remove ball unless there is a tie on the black
+            if (ballStack.size == 2 && crtPlayer.framePoints == crtPlayer.otherPlayer().framePoints) return
+            for (i in 1..count) ballStack.pop()
+            getFrameStatus()
         }
-        if (potAction == PotAction.Switch) crtPlayer = crtPlayer.otherPlayer()
-        if (ballStack.peek() == Balls.COLOR) removeBalls(1)
-    }
 
-    private fun removeBalls(count: Int) { // Remove ball unless there is a tie on the black
-        if (ballStack.size == 2 && crtPlayer.framePoints == crtPlayer.otherPlayer().framePoints) return
-        for (i in 1..count) ballStack.pop()
-        getFrameStatus()
-    }
-
-    private fun updateFrameStatus(crtPlayer: CurrentPlayer, ballPotted: Ball, potType: PotType, pol: Int, potAction: PotAction) {
         when (potType) {
             in listOf(PotType.HIT, PotType.FREEBALL) -> removeBalls(1)
             in listOf(PotType.REMOVE_RED, PotType.ADD_RED) -> removeBalls(2)
-            else -> switchToRed(potAction)
+            else -> {
+                if (potAction == PotAction.Switch) crtPlayer = crtPlayer.otherPlayer() // Switch players
+                if (ballStack.peek() == Balls.FREE) removeBalls(if (inColors()) 1 else 2)
+                if (ballStack.peek() == Balls.COLOR) removeBalls(1)
+            }
         }
-        calcPoints(crtPlayer, ballPotted, potType, pol)
-        frameStack.push(Shot(crtPlayer, _frameState.value!!, Pot(ballPotted, potType, potAction)))
+        calcPoints(currentPlayer, ballPotted, potType, pol)
+        frameStack.push(Shot(currentPlayer, _frameState.value!!, Pot(ballPotted, potType, potAction)))
         getFrameStatus()
     }
 
@@ -140,7 +129,8 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
             PotType.FOUL ->
                 if (ballStack.size in 1..4 && ball == Balls.WHITE) ballStack.peek()!!.foulPoints
                 else ball.foulPoints
-            PotType.REMOVE_RED -> 0
+            PotType.REMOVE_RED -> 1
+            PotType.FREEBALL -> if (inColors()) 1 else ballStack.peek()!!.points
             else -> ball.points
         }
         if (potType == PotType.FOUL) crtPlayer.otherPlayer().addFramePoints(pol * points)
@@ -148,12 +138,14 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
         calcPointsDiffAndRemain()
     }
 
+    private fun inColors(): Boolean = ballStack.size <= 7
+
     private fun calcPointsDiffAndRemain() {
         _pointsDiff.value = abs(crtPlayer.getFirstPlayer().framePoints - crtPlayer.getSecondPlayer().framePoints)
-        _pointsRemaining.value = when (ballStack.size) {
-            in 1..7 -> (-(8 - ballStack.size) * (8 - ballStack.size) - (8 - ballStack.size) + 56) / 2
-            else -> 27 + ((ballStack.size - 7) / 2) * 8
-        }
+        _pointsRemaining.value =
+            if (inColors()) (-(8 - ballStack.size) * (8 - ballStack.size) - (8 - ballStack.size) + 56) / 2
+            else 27 + ((ballStack.size - 7) / 2) * 8
+
         if (pointsRemaining.value == 0) onEndFrameClicked()
     }
 

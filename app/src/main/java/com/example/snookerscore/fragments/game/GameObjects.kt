@@ -32,6 +32,7 @@ sealed class BallType {
     object PINK : BallType()
     object BLACK : BallType()
     object COLOR : BallType()
+    object FREE: BallType()
 }
 
 data class Ball(
@@ -51,6 +52,7 @@ object Balls {
     val PINK = Ball(6, 6, BallType.PINK)
     val BLACK = Ball(7, 7, BallType.BLACK)
     val COLOR = Ball(7, 7, BallType.COLOR)
+    val FREE = Ball(1, 4, BallType.FREE)
 }
 
 sealed class PotType {

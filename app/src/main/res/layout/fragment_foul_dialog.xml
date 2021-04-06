@@ -100,7 +100,6 @@
             android:onClick="@{() -> foulViewModel.onFreeballClicked()}"
             android:text=" FB"
             app:dialogFreeBallEnabledAction="@{foulViewModel.actionClicked}"
-            app:dialogFreeBallEnabledSize="@{gameViewModel.ballStackSize}"
             app:layout_constraintBottom_toBottomOf="@+id/foul_remove_red"
             app:layout_constraintEnd_toStartOf="@+id/foul_remove_red"
             app:layout_constraintHorizontal_bias="0.5"

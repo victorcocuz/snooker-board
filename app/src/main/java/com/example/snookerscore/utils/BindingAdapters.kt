@@ -85,18 +85,15 @@ fun TextView.dialogSetRedEnabled(size: Int) {
     }
 }
 
-@BindingAdapter("dialogFreeBallEnabledSize", "dialogFreeBallEnabledAction")
-fun TextView.setDialogFreeballEnabled(size: Int, potAction: PotAction?) {
+@BindingAdapter("dialogFreeBallEnabledAction")
+fun TextView.setDialogFreeballEnabled(potAction: PotAction?) {
     isEnabled = when (potAction) {
         PotAction.Continue -> false
-        else -> when (size) {
-            in 0..8 -> false
-            else -> true
-        }
+        else -> true
     }
 }
 
 @BindingAdapter("dialogCannotForceDiff", "dialogCannotForceRemaining")
 fun TextView.setDialogForceContinueEnabled(diff: Int, remaining: Int) {
-    isEnabled = (remaining - diff) > 0
+    isEnabled = (remaining - diff) >= 0
 }
