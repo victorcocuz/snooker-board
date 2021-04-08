@@ -57,7 +57,7 @@ object Balls {
 
 sealed class PotType {
     object HIT : PotType()
-    object FREEBALL : PotType()
+    object FREE : PotType()
     object SAFE : PotType()
     object MISS : PotType()
     object FOUL : PotType()
@@ -86,22 +86,3 @@ data class Shot(
     val frameState: BallType,
     val pot: Pot
 )
-
-//val lastShot = frameStack.pop()
-//crtPlayer = lastShot.player
-//when (lastShot.pot.potType) {
-//    PotType.HIT -> {
-//        calcPoints(crtPlayer, lastShot.pot.ball, lastShot.pot.potType, -1)
-//        ballStack.push(
-//            when (ballStack.size) {
-//                in arrayOf(7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35) -> Balls.COLOR
-//                else -> lastShot.pot.ball
-//            }
-//        )
-//        getFrameStatus()
-//    }
-//    PotType.FOUL -> {
-//
-//    }
-//    PotType.MISS -> switchPlayers()
-//}

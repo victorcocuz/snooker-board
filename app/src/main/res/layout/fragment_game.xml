@@ -56,7 +56,8 @@
             android:id="@+id/game_text_score_remaining"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{String.valueOf(gameViewModel.pointsRemaining)}"
+            app:gamePointsDiffPlayer="@{gameViewModel.displayPlayer}"
+            app:gamePointsDiffSize="@{gameViewModel.ballStackSize}"
             app:layout_constraintBottom_toBottomOf="@+id/game_label_remaining"
             app:layout_constraintStart_toStartOf="@+id/game_text_score_b" />
 
@@ -64,7 +65,7 @@
             android:id="@+id/game_text_score_diff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{String.valueOf(gameViewModel.pointsDiff)}"
+            app:gamePointsRemaining="@{gameViewModel.displayPlayer}"
             app:layout_constraintBottom_toBottomOf="@+id/game_label_diff"
             app:layout_constraintStart_toStartOf="@+id/game_text_score_remaining" />
 

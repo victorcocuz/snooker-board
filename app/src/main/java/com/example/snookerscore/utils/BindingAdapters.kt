@@ -9,6 +9,7 @@ import com.example.snookerscore.fragments.game.Ball
 import com.example.snookerscore.fragments.game.Balls
 import com.example.snookerscore.fragments.game.CurrentPlayer
 import com.example.snookerscore.fragments.game.PotAction
+import kotlin.math.abs
 
 // Ball Item View
 @BindingAdapter("ballValue")
@@ -57,12 +58,22 @@ fun TextView.setCurrentPlayerB(crtPlayer: CurrentPlayer) {
     )
 }
 
+@BindingAdapter("gamePointsDiffPlayer", "gamePointsDiffSize")
+fun TextView.setGamePointsRemaining(crtPlayer: CurrentPlayer, size: Int) {
+    text = if (size <= 7) ((-(8 - size) * (8 - size) - (8 - size) + 56) / 2).toString()
+    else (27 + ((size - 7) / 2) * 8).toString()
+}
+
+@BindingAdapter("gamePointsRemaining")
+fun TextView.setGamePointsDiff(crtPlayer: CurrentPlayer) {
+    text = abs(crtPlayer.getFirstPlayer().framePoints - crtPlayer.getSecondPlayer().framePoints).toString()
+}
 
 // Actions
 @BindingAdapter("undoEnabled")
 fun TextView.setUndoEnabled(size: Int) {
     isEnabled = when (size) {
-        37 -> false
+        0 -> false
         else -> true
     }
 }
@@ -74,7 +85,6 @@ fun TextView.setAddRedEnabled(size: Int) {
         else -> false
     }
 }
-
 
 // Dialog
 @BindingAdapter("dialogSetRedEnabled")
@@ -88,12 +98,16 @@ fun TextView.dialogSetRedEnabled(size: Int) {
 @BindingAdapter("dialogFreeBallEnabledAction")
 fun TextView.setDialogFreeballEnabled(potAction: PotAction?) {
     isEnabled = when (potAction) {
-        PotAction.Continue -> false
-        else -> true
+        PotAction.Switch -> true
+        else -> false
     }
 }
 
 @BindingAdapter("dialogCannotForceDiff", "dialogCannotForceRemaining")
-fun TextView.setDialogForceContinueEnabled(diff: Int, remaining: Int) {
+fun TextView.setDialogForceContinueEnabled(crtPlayer: CurrentPlayer, size: Int) {
+    val diff = abs(crtPlayer.getFirstPlayer().framePoints - crtPlayer.getSecondPlayer().framePoints)
+    val remaining =
+        if (size <= 7) (-(8 - size) * (8 - size) - (8 - size) + 56) / 2
+        else 27 + ((size - 7) / 2) * 8
     isEnabled = (remaining - diff) >= 0
 }
