@@ -5,10 +5,11 @@ import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameBinding
-import com.example.snookerscore.fragments.game.dialog.FoulDialogFragment
+import com.example.snookerscore.fragments.game.dialogs.GameFoulDialogFragment
 import com.example.snookerscore.utils.EventObserver
 import java.util.*
 
@@ -64,7 +65,10 @@ class GameFragment : androidx.fragment.app.Fragment() {
 
             // Open foul dialog
             eventFoul.observe(viewLifecycleOwner, EventObserver {
-                FoulDialogFragment().show(requireActivity().supportFragmentManager, "customDialog")
+                GameFoulDialogFragment().show(requireActivity().supportFragmentManager, "foulDialog")
+            })
+            eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
+                findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameGenericDialogFragment(matchAction))
             })
         }
 

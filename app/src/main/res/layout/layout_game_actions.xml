@@ -49,11 +49,11 @@
             style="@style/temp_btn"
             android:onClick="@{() -> gameViewModel.onAddRedClicked()}"
             android:text="++RED"
+            app:addRedEnabled="@{gameViewModel.ballStackSize}"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_btn_act_foul"
-            app:addRedEnabled="@{gameViewModel.ballStackSize}" />
+            app:layout_constraintStart_toEndOf="@+id/game_btn_act_foul" />
 
         <TextView
             android:id="@+id/game_btn_act_rerack"
@@ -71,6 +71,7 @@
             style="@style/temp_btn"
             android:onClick="@{() -> gameViewModel.onEndFrameClicked()}"
             android:text="END"
+            app:endFrameEnabled="@{gameViewModel.displayPlayer}"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_rerack"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_end_match"
             app:layout_constraintHorizontal_bias="0.5"
@@ -81,6 +82,7 @@
             style="@style/temp_btn"
             android:onClick="@{() -> gameViewModel.onEndMatchClicked()}"
             android:text="FINISH"
+            app:endMatchEnabled="@{gameViewModel.displayPlayer}"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_rerack"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_undo"
             app:layout_constraintHorizontal_bias="0.5"
@@ -96,6 +98,15 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_btn_act_end_match"
             app:undoEnabled="@{gameViewModel.frameStackSize}" />
+
+        <TextView
+            android:id="@+id/game_btn_act_cancel"
+            style="@style/temp_btn"
+            android:layout_marginBottom="32dp"
+            android:onClick="@{() -> gameViewModel.onCancelMatchClicked()}"
+            android:text="CANCEL"
+            app:layout_constraintBottom_toTopOf="@+id/game_btn_act_rerack"
+            app:layout_constraintStart_toStartOf="@+id/game_btn_act_rerack" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

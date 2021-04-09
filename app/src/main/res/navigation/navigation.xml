@@ -45,6 +45,9 @@
             app:destination="@id/gameStatsFragment"
             app:popUpTo="@id/playFragment"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_gameFragment_to_gameGenericDialogFragment"
+            app:destination="@id/gameGenericDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/gameStatsFragment"
@@ -56,4 +59,18 @@
             app:popUpTo="@id/gameStatsFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <dialog
+        android:id="@+id/gameGenericDialogFragment"
+        android:name="com.example.snookerscore.fragments.game.dialogs.GameGenericDialogFragment"
+        android:label="GameGenericDialogFragment" >
+        <argument
+            android:name="matchAction"
+            app:argType="com.example.snookerscore.fragments.game.MatchAction" />
+        <action
+            android:id="@+id/action_gameGenericDialogFragment_to_playFragment"
+            app:destination="@id/playFragment" />
+        <action
+            android:id="@+id/action_gameGenericDialogFragment_to_gameStatsFragment"
+            app:destination="@id/gameStatsFragment" />
+    </dialog>
 </navigation>

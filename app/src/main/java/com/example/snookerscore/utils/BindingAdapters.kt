@@ -5,10 +5,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.example.snookerscore.R
-import com.example.snookerscore.fragments.game.Ball
-import com.example.snookerscore.fragments.game.Balls
-import com.example.snookerscore.fragments.game.CurrentPlayer
-import com.example.snookerscore.fragments.game.PotAction
+import com.example.snookerscore.fragments.game.*
 import kotlin.math.abs
 
 // Ball Item View
@@ -37,12 +34,12 @@ fun ImageView.setBallImage(item: Ball?) {
     }
 }
 
-// Game fragment and dialog
+// Game Display
 @BindingAdapter("crtPlayerA")
 fun TextView.setCurrentPlayerA(crtPlayer: CurrentPlayer) {
     setBackgroundColor(
         when (crtPlayer) {
-            crtPlayer.getFirstPlayer() -> ContextCompat.getColor(context, R.color.design_default_color_primary)
+            crtPlayer.getFirst() -> ContextCompat.getColor(context, R.color.design_default_color_primary)
             else -> 0x00000000
         }
     )
@@ -52,7 +49,7 @@ fun TextView.setCurrentPlayerA(crtPlayer: CurrentPlayer) {
 fun TextView.setCurrentPlayerB(crtPlayer: CurrentPlayer) {
     setBackgroundColor(
         when (crtPlayer) {
-            crtPlayer.getFirstPlayer() -> 0x00000000
+            crtPlayer.getFirst() -> 0x00000000
             else -> ContextCompat.getColor(context, R.color.design_default_color_primary)
         }
     )
@@ -66,10 +63,10 @@ fun TextView.setGamePointsRemaining(crtPlayer: CurrentPlayer, size: Int) {
 
 @BindingAdapter("gamePointsRemaining")
 fun TextView.setGamePointsDiff(crtPlayer: CurrentPlayer) {
-    text = abs(crtPlayer.getFirstPlayer().framePoints - crtPlayer.getSecondPlayer().framePoints).toString()
+    text = abs(crtPlayer.getFirst().framePoints - crtPlayer.getSecond().framePoints).toString()
 }
 
-// Actions
+// Game Actions
 @BindingAdapter("undoEnabled")
 fun TextView.setUndoEnabled(size: Int) {
     isEnabled = when (size) {
@@ -86,7 +83,18 @@ fun TextView.setAddRedEnabled(size: Int) {
     }
 }
 
-// Dialog
+@BindingAdapter("endFrameEnabled")
+fun TextView.setEndFrameEnabled(crtPlayer: CurrentPlayer) {
+    isEnabled = crtPlayer.getFirst().framePoints != crtPlayer.getSecond().framePoints
+}
+
+@BindingAdapter("endMatchEnabled")
+fun TextView.setEndMatchEnabled(crtPlayer: CurrentPlayer) {
+    isEnabled = (crtPlayer.getFirst().framePoints != crtPlayer.getSecond().framePoints)
+            || (crtPlayer.getFirst().matchPoints != crtPlayer.getSecond().matchPoints)
+}
+
+// Game Foul Dialog
 @BindingAdapter("dialogSetRedEnabled")
 fun TextView.dialogSetRedEnabled(size: Int) {
     isEnabled = when (size) {
@@ -105,9 +113,19 @@ fun TextView.setDialogFreeballEnabled(potAction: PotAction?) {
 
 @BindingAdapter("dialogCannotForceDiff", "dialogCannotForceRemaining")
 fun TextView.setDialogForceContinueEnabled(crtPlayer: CurrentPlayer, size: Int) {
-    val diff = abs(crtPlayer.getFirstPlayer().framePoints - crtPlayer.getSecondPlayer().framePoints)
+    val diff = abs(crtPlayer.getFirst().framePoints - crtPlayer.getSecond().framePoints)
     val remaining =
         if (size <= 7) (-(8 - size) * (8 - size) - (8 - size) + 56) / 2
         else 27 + ((size - 7) / 2) * 8
     isEnabled = (remaining - diff) >= 0
+}
+
+// Game Gen Dialog
+@BindingAdapter("dialogGameGenQuestion")
+fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
+    text = when(matchAction) {
+        MatchAction.CANCEL_MATCH -> "Are you sure you want to cancel the current match? You will lose all match progress"
+        MatchAction.END_FRAME -> "Are you sure you want to end this frame?"
+        MatchAction.END_MATCH -> "Are you sure you want to end this match?"
+    }
 }

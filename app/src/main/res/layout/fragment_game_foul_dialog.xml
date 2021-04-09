@@ -11,7 +11,7 @@
 
         <variable
             name="foulViewModel"
-            type="com.example.snookerscore.fragments.game.dialog.FoulDialogViewModel" />
+            type="com.example.snookerscore.fragments.game.dialogs.GameFoulDialogViewModel" />
 
         <variable
             name="foulActions"
@@ -21,7 +21,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragments.game.dialog.FoulDialogFragment">
+        tools:context=".fragments.game.dialogs.GameFoulDialogFragment">
 
         <TextView
             android:id="@+id/foul_title"
@@ -133,7 +133,7 @@
             android:layout_width="wrap_content"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="32dp"
-            android:onClick="@{() -> foulViewModel.onCancelClicked()}"
+            android:onClick="@{() -> gameViewModel.onCancelClicked()}"
             android:text="Cancel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/foul_ok"

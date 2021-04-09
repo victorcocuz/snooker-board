@@ -1,4 +1,4 @@
-package com.example.snookerscore.fragments.game.dialog
+package com.example.snookerscore.fragments.game.dialogs
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,11 +9,8 @@ import com.example.snookerscore.fragments.game.PotAction
 import com.example.snookerscore.fragments.game.PotType
 import com.example.snookerscore.utils.Event
 
-class FoulDialogViewModel : ViewModel() {
+class GameFoulDialogViewModel : ViewModel() {
     // Observables
-    private val _eventCancelDialog = MutableLiveData<Event<Unit>>()
-    val eventCancelDialog: LiveData<Event<Unit>> = _eventCancelDialog
-
     private val _eventFoulNotValid = MutableLiveData<Event<Unit>>()
     val eventFoulNotValid: LiveData<Event<Unit>> = _eventFoulNotValid
 
@@ -43,10 +40,6 @@ class FoulDialogViewModel : ViewModel() {
 
     fun onFreeballClicked() {
         freeBall = !freeBall
-    }
-
-    fun onCancelClicked() {
-        _eventCancelDialog.value = Event(Unit)
     }
 
     fun onConfirmClicked() {

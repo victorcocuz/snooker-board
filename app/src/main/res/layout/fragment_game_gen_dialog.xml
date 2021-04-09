@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="matchAction"
+            type="com.example.snookerscore.fragments.game.MatchAction" />
+        <variable
+            name="gameViewModel"
+            type="com.example.snookerscore.fragments.game.GameFragmentViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".GameDialogFragment">
+
+        <TextView
+            android:id="@+id/game_dialog_gen_q"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            app:dialogGameGenQuestion="@{matchAction}"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:text="@string/hello_blank_fragment"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/game_dialog_gen_no"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="64dp"
+            android:layout_marginBottom="32dp"
+            android:onClick="@{() -> gameViewModel.onCancelClicked()}"
+            android:text="NO"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/game_dialog_gen_yes"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/game_dialog_gen_q" />
+
+        <TextView
+            android:id="@+id/game_dialog_gen_yes"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:text="YES"
+            android:onClick="@{() -> gameViewModel.onGenDialogConfirmed(matchAction)}"
+            app:layout_constraintBottom_toBottomOf="@+id/game_dialog_gen_no"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_dialog_gen_no" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

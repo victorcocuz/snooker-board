@@ -1,5 +1,9 @@
 package com.example.snookerscore.fragments.game
 
+enum class MatchAction {
+    CANCEL_MATCH, END_FRAME, END_MATCH
+}
+
 sealed class CurrentPlayer(var framePoints: Int, var matchPoints: Int) {
     object PlayerA : CurrentPlayer(0, 0)
     object PlayerB : CurrentPlayer(0, 0)
@@ -9,8 +13,8 @@ sealed class CurrentPlayer(var framePoints: Int, var matchPoints: Int) {
         PlayerB -> PlayerA
     }
 
-    fun getFirstPlayer() = PlayerA
-    fun getSecondPlayer() = PlayerB
+    fun getFirst() = PlayerA
+    fun getSecond() = PlayerB
 
     fun addFramePoints(points: Int) {
         this.framePoints += points

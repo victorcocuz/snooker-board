@@ -8,7 +8,7 @@ import com.example.snookerscore.utils.Event
 import java.util.*
 
 class GameFragmentViewModel(application: Application) : AndroidViewModel(application) {
-    // Observables
+    // Frame Observables
     private val _frameState = MutableLiveData<BallType>()
     val frameState: LiveData<BallType> = _frameState
 
@@ -24,6 +24,16 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
     private val _frameStackSize = MutableLiveData<Int>()
     val frameStackSize: LiveData<Int> = _frameStackSize
 
+    // Match Observables
+    private val _eventMatchAction = MutableLiveData<Event<MatchAction>>()
+    val eventMatchAction: LiveData<Event<MatchAction>> = _eventMatchAction
+
+    private val _eventMatchActionConfirmed = MutableLiveData<Event<MatchAction>>()
+    val eventMatchActionConfirmed: LiveData<Event<MatchAction>> = _eventMatchActionConfirmed
+
+    private val _eventCancelDialog = MutableLiveData<Event<Unit>>()
+    val eventCancelDialog: LiveData<Event<Unit>> = _eventCancelDialog
+
     // Variables
     private lateinit var crtPlayer: CurrentPlayer
     private var ballStack = ArrayDeque<Ball>()
@@ -34,19 +44,25 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
         resetFrame()
     }
 
-    private fun resetFrame() {
-        frameStack.clear()
-        crtPlayer = CurrentPlayer.PlayerA
-        crtPlayer.getFirstPlayer().framePoints = 0
-        crtPlayer.getSecondPlayer().framePoints = 0
-        rerack()
-        getFrameStatus()
+    // Match Handler Functions
+    fun onCancelClicked() {
+        _eventCancelDialog.value = Event(Unit)
     }
 
-    private fun rerack() = ballStack.apply {
-        clear()
-        for (ball in listOf(Balls.NOBALL, Balls.BLACK, Balls.PINK, Balls.BLUE, Balls.BROWN, Balls.GREEN, Balls.YELLOW)) push(ball)
-        repeat(15) { for (ball in listOf(Balls.COLOR, Balls.RED)) push(ball) }
+    fun onCancelMatchClicked() {
+        _eventMatchAction.value = Event(MatchAction.CANCEL_MATCH)
+    }
+
+    fun onEndFrameClicked() {
+        _eventMatchAction.value = Event(MatchAction.END_FRAME)
+    }
+
+    fun onEndMatchClicked() {
+        _eventMatchAction.value = Event(MatchAction.END_MATCH)
+    }
+
+    fun onGenDialogConfirmed(matchAction: MatchAction) {
+        _eventMatchActionConfirmed.value = Event(matchAction)
     }
 
     // Handler functions
@@ -73,10 +89,6 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
 
     fun onRerackClicked() = resetFrame()
 
-    fun onEndFrameClicked() = resetFrame()
-
-    fun onEndMatchClicked() = endMatch()
-
     fun onUndoClicked() {
         val lastShot = frameStack.pop()
         crtPlayer = lastShot.player
@@ -100,7 +112,29 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
         getFrameStatus()
     }
 
-    // Helpers
+    // Match Helpers
+    fun endFrame() {
+        if(crtPlayer.getFirst().framePoints > crtPlayer.getSecond().framePoints) crtPlayer.getFirst().incrementMatchPoint()
+        else crtPlayer.getSecond().incrementMatchPoint()
+        resetFrame()
+    }
+
+    private fun resetFrame() {
+        crtPlayer = CurrentPlayer.PlayerA
+        crtPlayer.getFirst().framePoints = 0
+        crtPlayer.getSecond().framePoints = 0
+        rerack()
+        getFrameStatus()
+    }
+
+    private fun rerack() = ballStack.apply {
+        frameStack.clear()
+        clear()
+        for (ball in listOf(Balls.NOBALL, Balls.BLACK, Balls.PINK, Balls.BLUE, Balls.BROWN, Balls.GREEN, Balls.YELLOW)) push(ball)
+        repeat(15) { for (ball in listOf(Balls.COLOR, Balls.RED)) push(ball) }
+    }
+
+    // Frame Helpers
     private fun updateFrame(currentPlayer: CurrentPlayer, ball: Ball, potType: PotType, pol: Int, potAction: PotAction) {
         when (potType) {
             in listOf(PotType.HIT, PotType.FREE) -> ballStack.pop()
@@ -130,17 +164,14 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
         else crtPlayer.addFramePoints(pol * points)
     }
 
-    private fun inColors(): Boolean = ballStack.size <= 7
-    private fun isColor(): Boolean = ballStack.size in listOf(7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35)
-
     private fun getFrameStatus() {
-        if (ballStack.size == 1) onEndFrameClicked()
+        if (ballStack.size == 1) endFrame()
         _frameState.value = ballStack.peek()!!.ballType
         _ballStackSize.value = ballStack.size
         _frameStackSize.value = frameStack.size
         _displayPlayer.value = crtPlayer
     }
 
-    private fun endMatch() {
-    }
+    private fun inColors(): Boolean = ballStack.size <= 7
+    private fun isColor(): Boolean = ballStack.size in listOf(7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35)
 }

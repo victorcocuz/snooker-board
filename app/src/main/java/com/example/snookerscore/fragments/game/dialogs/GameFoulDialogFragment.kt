@@ -1,4 +1,4 @@
-package com.example.snookerscore.fragments.game.dialog
+package com.example.snookerscore.fragments.game.dialogs
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,14 +10,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snookerscore.R
-import com.example.snookerscore.databinding.FragmentFoulDialogBinding
+import com.example.snookerscore.databinding.FragmentGameFoulDialogBinding
 import com.example.snookerscore.fragments.game.*
 import com.example.snookerscore.utils.EventObserver
 import com.example.snookerscore.utils.toast
 
-class FoulDialogFragment : DialogFragment() {
+class GameFoulDialogFragment : DialogFragment() {
     private lateinit var ballsList: List<Ball>
-    private val foulDialogViewModel: FoulDialogViewModel by viewModels()
+    private val foulDialogViewModel: GameFoulDialogViewModel by viewModels()
     private val gameFragmentViewModel: GameFragmentViewModel by activityViewModels {
         GameFragmentViewModelFactory(requireNotNull(this.activity).application)
     }
@@ -25,8 +25,8 @@ class FoulDialogFragment : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        val binding: FragmentFoulDialogBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_foul_dialog, container, false)
+        val binding: FragmentGameFoulDialogBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_game_foul_dialog, container, false)
 
         // Bind RV, VM, adapter
         val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
@@ -34,7 +34,7 @@ class FoulDialogFragment : DialogFragment() {
             foulDialogViewModel.onBallClicked(ball)
         })
         binding.apply {
-            lifecycleOwner = this@FoulDialogFragment
+            lifecycleOwner = this@GameFoulDialogFragment
             foulViewModel = foulDialogViewModel
             gameViewModel = gameFragmentViewModel
             foulBallsListRv.apply {
@@ -47,9 +47,6 @@ class FoulDialogFragment : DialogFragment() {
 
         // VM Observers
         foulDialogViewModel.apply {
-            eventCancelDialog.observe(viewLifecycleOwner, EventObserver {
-                dismiss()
-            })
             eventFoulNotValid.observe(viewLifecycleOwner, EventObserver {
                 requireContext().toast("Select a ball and an action to continue")
             })
@@ -58,21 +55,25 @@ class FoulDialogFragment : DialogFragment() {
                 dismiss()
             })
         }
-        gameFragmentViewModel.ballStackSize.observe(viewLifecycleOwner, { ballStackSize ->
-            Balls.apply {
-                ballsList = when(ballStackSize) {
-                    2 -> listOf(WHITE, BLACK)
-                    3 -> listOf(WHITE, PINK, BLACK)
-                    4 -> listOf(WHITE, BLUE, PINK, BLACK)
-                    5 -> listOf(WHITE, BROWN, BLUE, PINK, BLACK)
-                    6 -> listOf(WHITE, GREEN, BROWN, BLUE, PINK, BLACK)
-                    7 -> listOf(WHITE, YELLOW, GREEN, BROWN, BLUE, PINK, BLACK)
-                    else -> listOf(WHITE, RED, YELLOW, GREEN, BROWN, BLUE, PINK, BLACK)
+        gameFragmentViewModel.apply{
+            eventCancelDialog.observe(viewLifecycleOwner, EventObserver {
+                dismiss()
+            })
+            ballStackSize.observe(viewLifecycleOwner, { ballStackSize ->
+                Balls.apply {
+                    ballsList = when(ballStackSize) {
+                        2 -> listOf(WHITE, BLACK)
+                        3 -> listOf(WHITE, PINK, BLACK)
+                        4 -> listOf(WHITE, BLUE, PINK, BLACK)
+                        5 -> listOf(WHITE, BROWN, BLUE, PINK, BLACK)
+                        6 -> listOf(WHITE, GREEN, BROWN, BLUE, PINK, BLACK)
+                        7 -> listOf(WHITE, YELLOW, GREEN, BROWN, BLUE, PINK, BLACK)
+                        else -> listOf(WHITE, RED, YELLOW, GREEN, BROWN, BLUE, PINK, BLACK)
+                    }
                 }
-            }
-            ballAdapter.submitList(ballsList)
-        })
-
+                ballAdapter.submitList(ballsList)
+            })
+        }
         return binding.root
     }
 }
