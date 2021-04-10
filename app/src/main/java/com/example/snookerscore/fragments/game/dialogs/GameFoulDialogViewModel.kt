@@ -14,15 +14,19 @@ class GameFoulDialogViewModel : ViewModel() {
     private val _eventFoulNotValid = MutableLiveData<Event<Unit>>()
     val eventFoulNotValid: LiveData<Event<Unit>> = _eventFoulNotValid
 
-    private val _foul = MutableLiveData<Event<Pot>>()
-    val foul: LiveData<Event<Pot>> = _foul
+    private val _foulConfirmed = MutableLiveData<Event<Pot>>()
+    val foul: LiveData<Event<Pot>> = _foulConfirmed
 
     private val _actionClicked = MutableLiveData<PotAction?>(null)
     val actionClicked: LiveData<PotAction?> = _actionClicked
 
+    private val _freeBall = MutableLiveData(false)
+    val freeBall: LiveData<Boolean> = _freeBall
+
+    private val _removeRed = MutableLiveData(false)
+    val removeRed: LiveData<Boolean> = _removeRed
+
     // Variables
-    var freeBall = false
-    var removeRed = false
     private var ballClicked: Ball? = null
 
     // Handlers
@@ -32,19 +36,20 @@ class GameFoulDialogViewModel : ViewModel() {
 
     fun onActionClicked(action: PotAction) {
         _actionClicked.value = action
+        if (action == PotAction.Continue) _freeBall.value = false
     }
 
     fun onRemoveRedClicked() {
-        removeRed = !removeRed
+        _removeRed.value = !_removeRed.value!!
     }
 
     fun onFreeballClicked() {
-        freeBall = !freeBall
+        _freeBall.value = !_freeBall.value!!
     }
 
     fun onConfirmClicked() {
         if (ballClicked != null && actionClicked.value != null) {
-            _foul.value = Event(Pot(ballClicked!!, PotType.FOUL, actionClicked.value!!))
+            _foulConfirmed.value = Event(Pot(ballClicked!!, PotType.FOUL, actionClicked.value!!))
         } else {
             _eventFoulNotValid.value = Event(Unit)
         }

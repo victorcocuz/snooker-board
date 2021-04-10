@@ -38,18 +38,27 @@ class GameFoulDialogFragment : DialogFragment() {
             foulBallsListRv.apply {
                 layoutManager = linearLayoutManager
                 adapter = ballAdapter
-
             }
             foulActions = ShotActions
         }
 
         // VM Observers
         foulDialogViewModel.apply {
+            actionClicked.observe(viewLifecycleOwner, {
+                binding.foulActionContinue.isSelected = it == PotAction.Switch
+                binding.foulActionForceContinue.isSelected = it == PotAction.Continue
+            })
+            freeBall.observe(viewLifecycleOwner, {
+                binding.foulActionFreeBall.isSelected = it
+            })
+            removeRed.observe(viewLifecycleOwner, {
+                binding.foulActionRemoveRed.isSelected = it
+            })
             eventFoulNotValid.observe(viewLifecycleOwner, EventObserver {
                 requireContext().toast("Select a ball and an action to continue")
             })
             foul.observe(viewLifecycleOwner, EventObserver { pot -> // If foul confirms, send foul to gameFragmentViewModel
-                gameFragmentViewModel.handleFoulDialog(pot, foulDialogViewModel.removeRed, foulDialogViewModel.freeBall)
+                gameFragmentViewModel.handleFoulDialog(pot, foulDialogViewModel.removeRed.value!!, foulDialogViewModel.freeBall.value!!)
                 dismiss()
             })
         }
