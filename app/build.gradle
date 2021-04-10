@@ -59,6 +59,7 @@ dependencies {
 
     // Others
     implementation "com.jakewharton.timber:timber:$version_timber" // Timber
+    implementation 'com.shawnlin:number-picker:2.4.12' // Number Picker
 
     // Test Implementations
     testImplementation "junit:junit:$version_junit"

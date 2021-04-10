@@ -7,7 +7,13 @@ import androidx.lifecycle.MutableLiveData
 import com.example.snookerscore.utils.Event
 import java.util.*
 
-class GameFragmentViewModel(application: Application, val matchFrames: Int, val matchReds: Int, val matchFoulModifier: Int) :
+class GameFragmentViewModel(
+    application: Application,
+    val matchFrames: Int,
+    private val matchReds: Int,
+    private val matchFoulModifier: Int,
+    private val matchBreaksFirst: Int
+) :
     AndroidViewModel(application) {
 
     // Frame Observables
@@ -175,13 +181,14 @@ class GameFragmentViewModel(application: Application, val matchFrames: Int, val 
     }
 
     fun resetMatch() {
-        crtPlayer = CurrentPlayer.PlayerA
+        crtPlayer = if (matchBreaksFirst == 0) CurrentPlayer.PlayerA else CurrentPlayer.PlayerB
         crtPlayer.getFirst().matchPoints = 0
         crtPlayer.getSecond().matchPoints = 0
         resetFrame()
     }
 
     private fun resetFrame() {
+        if (crtPlayer.getFirst().matchPoints != 0 || crtPlayer.getSecond().matchPoints != 0) crtPlayer = crtPlayer.otherPlayer()
         crtPlayer.getFirst().framePoints = 0
         crtPlayer.getSecond().framePoints = 0
         ballStack.apply {

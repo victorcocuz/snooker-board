@@ -45,13 +45,19 @@ class PlayFragment : Fragment() {
                     fragPlayBtnFoulThree.isSelected = it == -1
                     fragPlayBtnFoulFour.isSelected = it == 0
                 })
+                eventBreaksFirst.observe(viewLifecycleOwner, EventObserver {
+                    fragPlayBtnBreakPlayerA.isSelected = it == 0
+                    fragPlayBtnBreakPlayerB.isSelected = it == 1
+                })
             }
+
             fragPlayBtnPlay.setOnClickListener {
                 it.findNavController().navigate(
                     PlayFragmentDirections.actionPlayFragmentToGameFragment(
                         viewModel!!.eventFrames.value!!.peekContent(),
                         viewModel!!.eventReds.value!!.peekContent(),
-                        viewModel!!.eventFoulModifier.value!!.peekContent()
+                        viewModel!!.eventFoulModifier.value!!.peekContent(),
+                        viewModel!!.eventBreaksFirst.value!!.peekContent()
                     )
                 )
             }

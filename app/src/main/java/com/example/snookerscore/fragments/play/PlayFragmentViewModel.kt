@@ -16,10 +16,14 @@ class PlayFragmentViewModel: ViewModel() {
     private val _eventFoulModifier = MutableLiveData<Event<Int>>()
     val eventFoulModifier: LiveData<Event<Int>> = _eventFoulModifier
 
+    private val _eventBreaksFirst = MutableLiveData<Event<Int>>()
+    val eventBreaksFirst: LiveData<Event<Int>> = _eventBreaksFirst
+
     init {
         setFrames(2)
         setReds(15)
         setFoulModifier(0)
+        setBreaksFirst(0)
     }
 
     fun setFrames(number: Int) {
@@ -32,5 +36,9 @@ class PlayFragmentViewModel: ViewModel() {
 
     fun setFoulModifier(number: Int) {
         _eventFoulModifier.value = Event(number)
+    }
+
+    fun setBreaksFirst(position: Int) {
+        _eventBreaksFirst.value = Event(if (position == 2) (0..1).random() else position)
     }
 }

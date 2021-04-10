@@ -7,8 +7,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.snookerscore.databinding.ActivityMainBinding
 import timber.log.Timber
@@ -17,7 +15,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val setOfPrimaryFragments = setOf(R.id.rankingsFragment, R.id.friendsFragment, R.id.playFragment, R.id.historyFragment, R.id.statisticsFragment)
-    private val appBarConfiguration = AppBarConfiguration(setOfPrimaryFragments)
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +26,6 @@ class MainActivity : AppCompatActivity() {
 
         binding.apply {
             navBottom.setupWithNavController(navController)
-            setupActionBarWithNavController(navController, appBarConfiguration)
 
             // Hide bottom navigation when not needed
             navController.addOnDestinationChangedListener { _, nd: NavDestination, _ ->

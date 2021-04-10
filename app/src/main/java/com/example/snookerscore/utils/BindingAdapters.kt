@@ -55,6 +55,11 @@ fun TextView.setCurrentPlayerB(crtPlayer: CurrentPlayer) {
     )
 }
 
+@BindingAdapter("setTotalScore")
+fun TextView.setTotalScore(frames: Int) {
+    text = context.getString(R.string.game_total_score, (frames * 2 - 1))
+}
+
 @BindingAdapter("gamePointsDiffPlayer", "gamePointsDiffSize")
 fun TextView.setGamePointsRemaining(crtPlayer: CurrentPlayer, size: Int) {
     text = if (size <= 7) ((-(8 - size) * (8 - size) - (8 - size) + 56) / 2).toString()

@@ -18,10 +18,13 @@
             android:id="@+id/game_label_player_a"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_large"
-            app:crtPlayerA="@{gameViewModel.displayPlayer}"
+            android:layout_marginStart="64dp"
             android:layout_marginTop="@dimen/margin_large"
             android:text="Player A"
+            app:crtPlayerA="@{gameViewModel.displayPlayer}"
+            app:layout_constraintEnd_toStartOf="@+id/game_label_player_b"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,45 +32,88 @@
             android:id="@+id/game_label_player_b"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:crtPlayerB="@{gameViewModel.displayPlayer}"
-            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginEnd="64dp"
             android:text="Player B"
-            app:layout_constraintStart_toStartOf="@+id/game_label_player_a"
-            app:layout_constraintTop_toBottomOf="@+id/game_label_player_a" />
+            app:crtPlayerB="@{gameViewModel.displayPlayer}"
+            app:layout_constraintBottom_toBottomOf="@+id/game_label_player_a"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_label_player_a" />
 
         <TextView
             android:id="@+id/game_text_score_a"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_xlarge"
             android:text="@{String.valueOf(gameViewModel.displayPlayer.getFirst().framePoints)}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_label_player_a"
-            app:layout_constraintStart_toEndOf="@+id/game_label_player_a" />
+            app:layout_constraintBottom_toBottomOf="@+id/game_text_score_total"
+            app:layout_constraintEnd_toStartOf="@+id/game_text_score_frames_a"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="123" />
 
         <TextView
             android:id="@+id/game_text_score_b"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{String.valueOf(gameViewModel.displayPlayer.getSecond().framePoints)}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_label_player_b"
-            app:layout_constraintStart_toStartOf="@+id/game_text_score_a" />
+            app:layout_constraintBottom_toBottomOf="@+id/game_text_score_total"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_text_score_frames_b"
+            tools:text="147" />
 
         <TextView
             android:id="@+id/game_text_score_frames_a"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_xlarge"
             android:text="@{String.valueOf(gameViewModel.displayPlayer.getFirst().matchPoints)}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_text_score_a"
-            app:layout_constraintStart_toEndOf="@+id/game_text_score_a" />
+            app:layout_constraintBottom_toBottomOf="@+id/game_text_score_total"
+            app:layout_constraintEnd_toStartOf="@+id/game_text_score_total"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_text_score_a"
+            tools:text="13" />
 
         <TextView
             android:id="@+id/game_text_score_frames_b"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{String.valueOf(gameViewModel.displayPlayer.getSecond().matchPoints)}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_text_score_b"
-            app:layout_constraintStart_toStartOf="@+id/game_text_score_frames_a" />
+            app:layout_constraintBottom_toBottomOf="@+id/game_text_score_total"
+            app:layout_constraintEnd_toStartOf="@+id/game_text_score_b"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_text_score_total"
+            tools:text="15" />
+
+        <TextView
+            android:id="@+id/game_text_score_total"
+            android:layout_width="wrap_content"
+            tools:text = "(37)"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            app:setTotalScore="@{gameViewModel.matchFrames}"
+            app:layout_constraintEnd_toStartOf="@+id/game_text_score_frames_b"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_text_score_frames_a"
+            app:layout_constraintTop_toBottomOf="@+id/game_label_player_a" />
+
+        <TextView
+            android:id="@+id/game_label_remaining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:text="Remaining"
+            app:layout_constraintBottom_toTopOf="@+id/game_label_diff"
+            app:layout_constraintStart_toStartOf="@+id/game_label_diff" />
+
+        <TextView
+            android:id="@+id/game_label_diff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginBottom="64dp"
+            android:text="Difference"
+            app:layout_constraintBottom_toTopOf="@+id/frag_game_actions"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/game_text_score_remaining"
@@ -76,33 +122,18 @@
             app:gamePointsDiffPlayer="@{gameViewModel.displayPlayer}"
             app:gamePointsDiffSize="@{gameViewModel.ballStackSize}"
             app:layout_constraintBottom_toBottomOf="@+id/game_label_remaining"
-            app:layout_constraintStart_toStartOf="@+id/game_text_score_b" />
+            app:layout_constraintStart_toStartOf="@+id/game_text_score_diff"
+            tools:text="72" />
 
         <TextView
             android:id="@+id/game_text_score_diff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
             app:gamePointsRemaining="@{gameViewModel.displayPlayer}"
             app:layout_constraintBottom_toBottomOf="@+id/game_label_diff"
-            app:layout_constraintStart_toStartOf="@+id/game_text_score_remaining" />
-
-        <TextView
-            android:id="@+id/game_label_remaining"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
-            android:text="Remaining"
-            app:layout_constraintStart_toStartOf="@+id/game_label_player_b"
-            app:layout_constraintTop_toBottomOf="@+id/game_label_player_b" />
-
-        <TextView
-            android:id="@+id/game_label_diff"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
-            android:text="Difference"
-            app:layout_constraintStart_toStartOf="@+id/game_label_remaining"
-            app:layout_constraintTop_toBottomOf="@+id/game_label_remaining" />
+            app:layout_constraintStart_toEndOf="@+id/game_label_diff"
+            tools:text="54" />
 
         <include
             android:id="@+id/frag_game_actions"
@@ -118,9 +149,9 @@
             android:id="@+id/frag_game_balls_rv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
-            android:layout_gravity="center"
             android:layout_marginBottom="@dimen/margin_large"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

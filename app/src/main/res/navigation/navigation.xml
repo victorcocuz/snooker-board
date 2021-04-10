@@ -58,6 +58,9 @@
         <action
             android:id="@+id/action_gameFragment_to_gameFoulDialogFragment"
             app:destination="@id/gameFoulDialogFragment" />
+        <argument
+            android:name="matchBreaksFirst"
+            android:defaultValue="0" />
     </fragment>
     <fragment
         android:id="@+id/gameStatsFragment"

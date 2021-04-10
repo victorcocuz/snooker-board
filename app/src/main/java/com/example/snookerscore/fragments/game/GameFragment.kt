@@ -18,7 +18,8 @@ class GameFragment : androidx.fragment.app.Fragment() {
             requireNotNull(this.activity).application,
             GameFragmentArgs.fromBundle(requireArguments()).matchFrames,
             GameFragmentArgs.fromBundle(requireArguments()).matchReds,
-            GameFragmentArgs.fromBundle(requireArguments()).matchFoulModifier
+            GameFragmentArgs.fromBundle(requireArguments()).matchFoulModifier,
+            GameFragmentArgs.fromBundle(requireArguments()).matchBreaksFirst
         )
     }
     private lateinit var ballAdapter: BallAdapter

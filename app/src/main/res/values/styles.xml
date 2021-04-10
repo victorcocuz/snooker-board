@@ -5,6 +5,7 @@
         <item name="android:layout_width">@dimen/temp_btn_width</item>
         <item name="android:layout_height">@dimen/temp_btn_height</item>
         <item name="android:background">@drawable/temp_custom_ripple</item>
+        <item name="android:padding">8dp</item>
         <item name="android:gravity">center</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
