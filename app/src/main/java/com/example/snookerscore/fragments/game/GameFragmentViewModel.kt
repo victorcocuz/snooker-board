@@ -7,7 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import com.example.snookerscore.utils.Event
 import java.util.*
 
-class GameFragmentViewModel(application: Application) : AndroidViewModel(application) {
+class GameFragmentViewModel(application: Application, val matchFrames: Int, val matchReds: Int, val matchFoulModifier: Int) :
+    AndroidViewModel(application) {
+
     // Frame Observables
     private val _frameState = MutableLiveData<BallType>()
     val frameState: LiveData<BallType> = _frameState
@@ -41,51 +43,30 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
 
     // Init
     init {
-        resetFrame()
-    }
-
-    // Match Handler Functions
-    fun onCancelClicked() {
-        _eventCancelDialog.value = Event(Unit)
-    }
-
-    fun onCancelMatchClicked() {
-        _eventMatchAction.value = Event(MatchAction.CANCEL_MATCH)
-    }
-
-    fun onEndFrameClicked() {
-        _eventMatchAction.value = Event(MatchAction.END_FRAME)
-    }
-
-    fun onEndMatchClicked() {
-        _eventMatchAction.value = Event(MatchAction.END_MATCH)
-    }
-
-    fun onGenDialogConfirmed(matchAction: MatchAction) {
-        _eventMatchActionConfirmed.value = Event(matchAction)
+        resetMatch()
     }
 
     // Handler functions
     fun handleFoulDialog(pot: Pot, removeRed: Boolean, freeBall: Boolean) {
-        updateFrame(crtPlayer, pot.ball, pot.potType, 1, pot.potAction)
-        if (removeRed) updateFrame(crtPlayer, (if (inColors()) ballStack.peek() else Balls.RED), PotType.REMOVE_RED, 1, PotAction.Continue)
+        updateFrame(crtPlayer, pot.ball, pot.potType, pot.potAction)
+        if (removeRed) updateFrame(crtPlayer, (if (inColors()) ballStack.peek() else Balls.RED), PotType.REMOVE_RED, PotAction.Continue)
         if (freeBall) {
             if (inColors()) ballStack.push(Balls.FREE) else for (ball in listOf(Balls.COLOR, Balls.FREE)) ballStack.push(ball)
             getFrameStatus()
         }
     }
 
-    fun onBallClicked(pot: Pot) = updateFrame(crtPlayer, pot.ball, pot.potType, 1, PotAction.Continue)
+    fun onBallClicked(pot: Pot) = updateFrame(crtPlayer, pot.ball, pot.potType, PotAction.Continue)
 
-    fun onSafeClicked() = updateFrame(crtPlayer, Balls.NOBALL, PotType.SAFE, 1, PotAction.Switch)
+    fun onSafeClicked() = updateFrame(crtPlayer, Balls.NOBALL, PotType.SAFE, PotAction.Switch)
 
-    fun onMissClicked() = updateFrame(crtPlayer, Balls.NOBALL, PotType.MISS, 1, PotAction.Switch)
+    fun onMissClicked() = updateFrame(crtPlayer, Balls.NOBALL, PotType.MISS, PotAction.Switch)
 
     fun onFoulClicked() {
         _eventFoul.value = Event(Unit)
     }
 
-    fun onAddRedClicked() = updateFrame(crtPlayer, Balls.RED, PotType.ADD_RED, 1, PotAction.Continue)
+    fun onAddRedClicked() = updateFrame(crtPlayer, Balls.RED, PotType.ADD_RED, PotAction.Continue)
 
     fun onRerackClicked() = resetFrame()
 
@@ -106,36 +87,15 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
                     false -> listOf(Balls.RED, Balls.COLOR)
                 }) ballStack.push(ball)
             }
-            else -> {  }
+            else -> {
+            }
         }
         calcPoints(crtPlayer, lastShot.pot.ball, lastShot.pot.potType, -1)
         getFrameStatus()
     }
 
-    // Match Helpers
-    fun endFrame() {
-        if(crtPlayer.getFirst().framePoints > crtPlayer.getSecond().framePoints) crtPlayer.getFirst().incrementMatchPoint()
-        else crtPlayer.getSecond().incrementMatchPoint()
-        resetFrame()
-    }
-
-    private fun resetFrame() {
-        crtPlayer = CurrentPlayer.PlayerA
-        crtPlayer.getFirst().framePoints = 0
-        crtPlayer.getSecond().framePoints = 0
-        rerack()
-        getFrameStatus()
-    }
-
-    private fun rerack() = ballStack.apply {
-        frameStack.clear()
-        clear()
-        for (ball in listOf(Balls.NOBALL, Balls.BLACK, Balls.PINK, Balls.BLUE, Balls.BROWN, Balls.GREEN, Balls.YELLOW)) push(ball)
-        repeat(15) { for (ball in listOf(Balls.COLOR, Balls.RED)) push(ball) }
-    }
-
     // Frame Helpers
-    private fun updateFrame(currentPlayer: CurrentPlayer, ball: Ball, potType: PotType, pol: Int, potAction: PotAction) {
+    private fun updateFrame(currentPlayer: CurrentPlayer, ball: Ball, potType: PotType, potAction: PotAction) {
         when (potType) {
             in listOf(PotType.HIT, PotType.FREE) -> ballStack.pop()
             in listOf(PotType.REMOVE_RED, PotType.ADD_RED) -> repeat(2) { ballStack.pop() }
@@ -145,7 +105,7 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
                 if (ballStack.peek() == Balls.COLOR) ballStack.pop()
             }
         }
-        calcPoints(currentPlayer, ball, potType, pol)
+        calcPoints(currentPlayer, ball, potType, 1)
         if (ballStack.size == 1 && crtPlayer.framePoints == crtPlayer.otherPlayer().framePoints) ballStack.push(Balls.BLACK)
         frameStack.push(Shot(currentPlayer, _frameState.value!!, Pot(ball, potType, potAction)))
         getFrameStatus()
@@ -154,8 +114,8 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
     private fun calcPoints(crtPlayer: CurrentPlayer, ball: Ball, potType: PotType, pol: Int) {
         val points = when (potType) { // foul from sinking the white should equal min ball foul on the table
             PotType.FOUL ->
-                if (ballStack.size in 1..4 && ball == Balls.WHITE) ballStack.peek()!!.foulPoints
-                else ball.foulPoints
+                if (ballStack.size in 1..4 && ball == Balls.WHITE) ballStack.peek()!!.foulPoints + matchFoulModifier
+                else ball.foulPoints + matchFoulModifier
             PotType.REMOVE_RED -> 0
             PotType.FREE -> if (inColors()) 1 else ballStack.peek()!!.points
             else -> ball.points
@@ -172,6 +132,64 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
         _displayPlayer.value = crtPlayer
     }
 
+    private fun assignMatchAction(matchAction: MatchAction) {
+        _eventMatchAction.value = Event(matchAction)
+    }
+
     private fun inColors(): Boolean = ballStack.size <= 7
-    private fun isColor(): Boolean = ballStack.size in listOf(7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35)
+    private fun isColor(): Boolean = ballStack.size in (7..35).filter { it % 2 != 0 }
+
+    // Match Handler Functions
+    fun onCancelClicked() {
+        _eventCancelDialog.value = Event(Unit)
+    }
+
+    fun onCancelMatchClicked() = assignMatchAction(MatchAction.CANCEL_MATCH)
+
+    fun onEndFrameClicked() = endFrame()
+
+    fun onEndMatchClicked() = assignMatchAction(MatchAction.END_MATCH)
+
+    fun onGenDialogConfirmed(matchAction: MatchAction) {
+        _eventMatchActionConfirmed.value = Event(matchAction)
+    }
+
+    // Match Helpers
+    fun matchEnded() {
+        frameEnded()
+        resetMatch()
+    }
+
+    fun frameEnded() {
+        if (crtPlayer.getFirst().framePoints > crtPlayer.getSecond().framePoints) crtPlayer.getFirst().incrementMatchPoint()
+        else crtPlayer.getSecond().incrementMatchPoint()
+        resetFrame()
+    }
+
+    private fun endFrame() {
+        val player =
+            if (crtPlayer.getFirst().framePoints > crtPlayer.getSecond().framePoints) crtPlayer.getFirst()
+            else crtPlayer.getSecond()
+        if (player.matchPoints + 1 == matchFrames) assignMatchAction(MatchAction.MATCH_ENDED)
+        else assignMatchAction(if (ballStack.size == 1) MatchAction.FRAME_ENDED else MatchAction.END_FRAME)
+    }
+
+    fun resetMatch() {
+        crtPlayer = CurrentPlayer.PlayerA
+        crtPlayer.getFirst().matchPoints = 0
+        crtPlayer.getSecond().matchPoints = 0
+        resetFrame()
+    }
+
+    private fun resetFrame() {
+        crtPlayer.getFirst().framePoints = 0
+        crtPlayer.getSecond().framePoints = 0
+        ballStack.apply {
+            frameStack.clear()
+            clear()
+            for (ball in listOf(Balls.NOBALL, Balls.BLACK, Balls.PINK, Balls.BLUE, Balls.BROWN, Balls.GREEN, Balls.YELLOW)) push(ball)
+            repeat(matchReds) { for (ball in listOf(Balls.COLOR, Balls.RED)) push(ball) }
+        }
+        getFrameStatus()
+    }
 }

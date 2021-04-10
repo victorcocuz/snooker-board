@@ -5,30 +5,214 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.example.snookerscore.fragments.play.PlayFragmentViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="fragments.main.PlayFragment">
+        tools:context=".fragments.play.PlayFragment">
 
         <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
+            android:id="@+id/frag_play_label_players"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="FRAGMENT PLAY"
+            android:layout_marginTop="32dp"
+            android:text="Choose Players:"
+            app:layout_constraintBottom_toTopOf="@+id/frag_play_label_frames"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.235"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="0dp" />
+            app:layout_constraintVertical_chainStyle="spread_inside" />
 
-        <Button
-            android:id="@+id/frag_play_btn"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/frag_play_btn_player_A"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="GO TO GAME ACTIVITY"
+            android:layout_marginTop="16dp"
+            android:padding="8dp"
+            android:text="You"
+            app:layout_constraintEnd_toStartOf="@+id/frag_play_label_vs"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frag_play_label_players" />
+
+        <TextView
+            android:id="@+id/frag_play_label_vs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="VS"
+            app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_player_A"
+            app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_player_B"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/frag_play_btn_player_A" />
+
+        <TextView
+            android:id="@+id/frag_play_btn_player_B"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Guest"
+            app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_player_A"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/frag_play_label_vs" />
+
+        <TextView
+            android:id="@+id/frag_play_label_frames"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="80dp"
+            android:text="Choose Frames:"
+            app:layout_constraintBottom_toTopOf="@+id/frag_play_label_reds"
+            app:layout_constraintStart_toStartOf="@+id/frag_play_label_players"
+            app:layout_constraintTop_toBottomOf="@+id/frag_play_label_players" />
+
+        <NumberPicker
+            android:id="@+id/numberPicker"
+            android:layout_width="wrap_content"
+            android:onValueChange="@{(picker,oldv,newv) -> viewModel.setFrames(newv)}"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frag_play_label_frames"
+            tools:orientation="horizontal" />
+
+        <TextView
+            android:id="@+id/frag_play_label_reds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose Reds:"
+            app:layout_constraintBottom_toTopOf="@+id/frag_play_label_foul_modifier"
+            app:layout_constraintStart_toStartOf="@+id/frag_play_label_players"
+            app:layout_constraintTop_toBottomOf="@+id/frag_play_label_frames" />
+
+        <TextView
+            android:id="@+id/frag_play_reds_six"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:onClick="@{() -> viewModel.setReds(6)}"
+            android:padding="8dp"
+            android:text="6"
+            app:layout_constraintEnd_toStartOf="@+id/frag_play_reds_ten"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frag_play_label_reds" />
+
+        <TextView
+            android:id="@+id/frag_play_reds_ten"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> viewModel.setReds(10)}"
+            android:padding="8dp"
+            android:text="10"
+            app:layout_constraintBottom_toBottomOf="@+id/frag_play_reds_six"
+            app:layout_constraintEnd_toStartOf="@+id/frag_play_reds_fifteen"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/frag_play_reds_six" />
+
+        <TextView
+            android:id="@+id/frag_play_reds_fifteen"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:onClick="@{() -> viewModel.setReds(15)}"
+            android:padding="8dp"
+            android:text="15"
+            app:layout_constraintBottom_toBottomOf="@+id/frag_play_reds_six"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/frag_play_reds_ten" />
+
+        <TextView
+            android:id="@+id/frag_play_label_foul_modifier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Default Foul Points:"
+            app:layout_constraintBottom_toTopOf="@+id/frag_play_btn_play"
+            app:layout_constraintStart_toStartOf="@+id/frag_play_label_players"
+            app:layout_constraintTop_toBottomOf="@+id/frag_play_label_reds" />
+
+        <TextView
+            android:id="@+id/frag_play_btn_foul_one"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:padding="8dp"
+            android:text="1"
+            app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_foul_two"
+            android:onClick="@{() -> viewModel.setFoulModifier(-3)}"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frag_play_label_foul_modifier" />
+
+        <TextView
+            android:id="@+id/frag_play_btn_foul_two"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> viewModel.setFoulModifier(-2)}"
+            android:layout_marginStart="32dp"
+            android:padding="8dp"
+            android:text="2"
+            app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_foul_one"
+            app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_foul_three"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/frag_play_btn_foul_one" />
+
+        <TextView
+            android:id="@+id/frag_play_btn_foul_three"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> viewModel.setFoulModifier(-1)}"
+            android:layout_marginStart="32dp"
+            android:padding="8dp"
+            android:text="3"
+            app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_foul_two"
+            app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_foul_four"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/frag_play_btn_foul_two" />
+
+        <TextView
+            android:id="@+id/frag_play_btn_foul_four"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> viewModel.setFoulModifier(0)}"
+            android:layout_marginStart="32dp"
+            android:padding="8dp"
+            android:text="4"
+            app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_foul_three"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/frag_play_btn_foul_three" />
+
+        <TextView
+            android:id="@+id/frag_play_btn_play"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:padding="8dp"
+            android:text="PLAY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frag_play_label_foul_modifier" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

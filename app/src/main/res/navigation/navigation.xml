@@ -14,7 +14,7 @@
         android:label="FriendsFragment" />
     <fragment
         android:id="@+id/playFragment"
-        android:name="com.example.snookerscore.fragments.main.PlayFragment"
+        android:name="com.example.snookerscore.fragments.play.PlayFragment"
         android:label="PlayFragment" >
         <action
             android:id="@+id/action_playFragment_to_gameFragment"
@@ -41,13 +41,23 @@
         android:name="com.example.snookerscore.fragments.game.GameFragment"
         android:label="GameFragment" >
         <action
-            android:id="@+id/action_gameFragment_to_gameStatsFragment"
-            app:destination="@id/gameStatsFragment"
-            app:popUpTo="@id/playFragment"
-            app:popUpToInclusive="false" />
-        <action
             android:id="@+id/action_gameFragment_to_gameGenericDialogFragment"
             app:destination="@id/gameGenericDialogFragment" />
+        <argument
+            android:name="matchFrames"
+            app:argType="integer"
+            android:defaultValue="3" />
+        <argument
+            android:name="matchReds"
+            app:argType="integer"
+            android:defaultValue="15" />
+        <argument
+            android:name="matchFoulModifier"
+            app:argType="integer"
+            android:defaultValue="4" />
+        <action
+            android:id="@+id/action_gameFragment_to_gameFoulDialogFragment"
+            app:destination="@id/gameFoulDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/gameStatsFragment"
@@ -73,4 +83,8 @@
             android:id="@+id/action_gameGenericDialogFragment_to_gameStatsFragment"
             app:destination="@id/gameStatsFragment" />
     </dialog>
+    <dialog
+        android:id="@+id/gameFoulDialogFragment"
+        android:name="com.example.snookerscore.fragments.game.dialogs.GameFoulDialogFragment"
+        android:label="GameFoulDialogFragment" />
 </navigation>

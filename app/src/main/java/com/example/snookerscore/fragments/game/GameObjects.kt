@@ -1,7 +1,7 @@
 package com.example.snookerscore.fragments.game
 
 enum class MatchAction {
-    CANCEL_MATCH, END_FRAME, END_MATCH
+    CANCEL_MATCH, END_FRAME, FRAME_ENDED, END_MATCH, MATCH_ENDED
 }
 
 sealed class CurrentPlayer(var framePoints: Int, var matchPoints: Int) {

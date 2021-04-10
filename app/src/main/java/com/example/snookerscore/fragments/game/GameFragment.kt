@@ -4,12 +4,10 @@ import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameBinding
-import com.example.snookerscore.fragments.game.dialogs.GameFoulDialogFragment
 import com.example.snookerscore.utils.EventObserver
 import java.util.*
 
@@ -17,7 +15,10 @@ class GameFragment : androidx.fragment.app.Fragment() {
     private lateinit var ballsList: List<Ball>
     private val gameFragmentViewModel: GameFragmentViewModel by activityViewModels {
         GameFragmentViewModelFactory(
-            requireNotNull(this.activity).application
+            requireNotNull(this.activity).application,
+            GameFragmentArgs.fromBundle(requireArguments()).matchFrames,
+            GameFragmentArgs.fromBundle(requireArguments()).matchReds,
+            GameFragmentArgs.fromBundle(requireArguments()).matchFoulModifier
         )
     }
     private lateinit var ballAdapter: BallAdapter
@@ -49,11 +50,6 @@ class GameFragment : androidx.fragment.app.Fragment() {
                 adapter = ballAdapter
             }
             fragGameActions.gameViewModel = gameFragmentViewModel
-
-            fragGameButton.setOnClickListener {
-                it.findNavController()
-                    .navigate(GameFragmentDirections.actionGameFragmentToGameStatsFragment())
-            }
         }
 
         // VM Observers
@@ -65,7 +61,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
 
             // Open foul dialog
             eventFoul.observe(viewLifecycleOwner, EventObserver {
-                GameFoulDialogFragment().show(requireActivity().supportFragmentManager, "foulDialog")
+                findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameFoulDialogFragment())
             })
             eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                 findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameGenericDialogFragment(matchAction))

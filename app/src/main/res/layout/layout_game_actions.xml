@@ -22,7 +22,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_miss"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:setMissSafeFoulEnabled="@{gameViewModel.ballStackSize}" />
 
         <TextView
             android:id="@+id/game_btn_act_miss"
@@ -32,7 +33,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_foul"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_btn_act_safe" />
+            app:layout_constraintStart_toEndOf="@+id/game_btn_act_safe"
+            app:setMissSafeFoulEnabled="@{gameViewModel.ballStackSize}" />
 
         <TextView
             android:id="@+id/game_btn_act_foul"
@@ -42,7 +44,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_add_red"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_btn_act_miss" />
+            app:layout_constraintStart_toEndOf="@+id/game_btn_act_miss"
+            app:setMissSafeFoulEnabled="@{gameViewModel.ballStackSize}" />
 
         <TextView
             android:id="@+id/game_btn_act_add_red"

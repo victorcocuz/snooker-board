@@ -67,6 +67,14 @@ fun TextView.setGamePointsDiff(crtPlayer: CurrentPlayer) {
 }
 
 // Game Actions
+@BindingAdapter("setMissSafeFoulEnabled")
+fun TextView.setMissSafeFoulEnabled(size: Int) {
+    isEnabled = when (size) {
+        in (0..1) -> false
+        else -> true
+    }
+}
+
 @BindingAdapter("undoEnabled")
 fun TextView.setUndoEnabled(size: Int) {
     isEnabled = when (size) {
@@ -78,7 +86,7 @@ fun TextView.setUndoEnabled(size: Int) {
 @BindingAdapter("addRedEnabled")
 fun TextView.setAddRedEnabled(size: Int) {
     isEnabled = when (size) {
-        in arrayOf(10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36) -> true
+        in (10..36).filter { it % 2 == 0 } -> true
         else -> false
     }
 }
@@ -127,5 +135,7 @@ fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
         MatchAction.CANCEL_MATCH -> "Are you sure you want to cancel the current match? You will lose all match progress"
         MatchAction.END_FRAME -> "Are you sure you want to end this frame?"
         MatchAction.END_MATCH -> "Are you sure you want to end this match?"
+        MatchAction.FRAME_ENDED -> "This frame will end. Would you like to proceed?"
+        MatchAction.MATCH_ENDED -> "This match will end. Would you like to proceed?"
     }
 }

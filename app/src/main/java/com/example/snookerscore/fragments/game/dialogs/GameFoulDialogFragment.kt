@@ -18,9 +18,7 @@ import com.example.snookerscore.utils.toast
 class GameFoulDialogFragment : DialogFragment() {
     private lateinit var ballsList: List<Ball>
     private val foulDialogViewModel: GameFoulDialogViewModel by viewModels()
-    private val gameFragmentViewModel: GameFragmentViewModel by activityViewModels {
-        GameFragmentViewModelFactory(requireNotNull(this.activity).application)
-    }
+    private val gameFragmentViewModel: GameFragmentViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
