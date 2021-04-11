@@ -12,4 +12,5 @@
 
     <!-- Binding -->
     <string name="game_total_score">(%1$d)</string>
+    <string name="game_percentage">%1$d%</string>
 </resources>

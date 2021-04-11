@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.example.snookerscore.R
 import com.example.snookerscore.fragments.game.*
+import java.text.DecimalFormat
 import kotlin.math.abs
 
 // Ball Item View
@@ -37,20 +38,20 @@ fun ImageView.setBallImage(item: Ball?) {
 
 // Game Display
 @BindingAdapter("crtPlayerA")
-fun TextView.setCurrentPlayerA(crtPlayer: CurrentPlayer) {
+fun TextView.setCurrentPlayerA(crtPlayer: CurrentFrame) {
     setBackgroundColor(
         when (crtPlayer) {
-            crtPlayer.getFirst() -> ContextCompat.getColor(context, R.color.design_default_color_primary)
+            crtPlayer.getFirstPlayer() -> ContextCompat.getColor(context, R.color.design_default_color_primary)
             else -> 0x00000000
         }
     )
 }
 
 @BindingAdapter("crtPlayerB")
-fun TextView.setCurrentPlayerB(crtPlayer: CurrentPlayer) {
+fun TextView.setCurrentPlayerB(crtPlayer: CurrentFrame) {
     setBackgroundColor(
         when (crtPlayer) {
-            crtPlayer.getFirst() -> 0x00000000
+            crtPlayer.getFirstPlayer() -> 0x00000000
             else -> ContextCompat.getColor(context, R.color.design_default_color_primary)
         }
     )
@@ -61,15 +62,21 @@ fun TextView.setTotalScore(frames: Int) {
     text = context.getString(R.string.game_total_score, (frames * 2 - 1))
 }
 
-@BindingAdapter("gamePointsDiffPlayer", "gamePointsDiffSize")
-fun TextView.setGamePointsRemaining(crtPlayer: CurrentPlayer, size: Int) {
+@BindingAdapter("gamePointsDiffSize")
+fun TextView.setGamePointsRemaining(size: Int) {
     text = if (size <= 7) ((-(8 - size) * (8 - size) - (8 - size) + 56) / 2).toString()
     else (27 + ((size - 7) / 2) * 8).toString()
 }
 
 @BindingAdapter("gamePointsRemaining")
-fun TextView.setGamePointsDiff(crtPlayer: CurrentPlayer) {
-    text = abs(crtPlayer.getFirst().framePoints - crtPlayer.getSecond().framePoints).toString()
+fun TextView.setGamePointsDiff(crtPlayer: CurrentFrame) {
+    text = abs(crtPlayer.getFirstPlayer().framePoints - crtPlayer.getSecondPlayer().framePoints).toString()
+}
+
+@BindingAdapter("shotSuccess", "shotMiss")
+fun TextView.setShotPercentage(success: Double, miss: Double) {
+    val df = DecimalFormat("##%")
+    text =  if (success + miss > 0) df.format((success / (success + miss))) else "0"
 }
 
 // Game Actions
@@ -98,14 +105,14 @@ fun TextView.setAddRedEnabled(size: Int) {
 }
 
 @BindingAdapter("endFrameEnabled")
-fun TextView.setEndFrameEnabled(crtPlayer: CurrentPlayer) {
-    isEnabled = crtPlayer.getFirst().framePoints != crtPlayer.getSecond().framePoints
+fun TextView.setEndFrameEnabled(crtPlayer: CurrentFrame) {
+    isEnabled = crtPlayer.getFirstPlayer().framePoints != crtPlayer.getSecondPlayer().framePoints
 }
 
 @BindingAdapter("endMatchEnabled")
-fun TextView.setEndMatchEnabled(crtPlayer: CurrentPlayer) {
-    isEnabled = (crtPlayer.getFirst().framePoints != crtPlayer.getSecond().framePoints)
-            || (crtPlayer.getFirst().matchPoints != crtPlayer.getSecond().matchPoints)
+fun TextView.setEndMatchEnabled(crtPlayer: CurrentFrame) {
+    isEnabled = (crtPlayer.getFirstPlayer().framePoints != crtPlayer.getSecondPlayer().framePoints)
+            || (crtPlayer.getFirstPlayer().matchPoints != crtPlayer.getSecondPlayer().matchPoints)
 }
 
 // Game Foul Dialog
@@ -126,8 +133,8 @@ fun TextView.setDialogFreeballEnabled(potAction: PotAction?) {
 }
 
 @BindingAdapter("dialogCannotForceDiff", "dialogCannotForceRemaining")
-fun TextView.setDialogForceContinueEnabled(crtPlayer: CurrentPlayer, size: Int) {
-    val diff = abs(crtPlayer.getFirst().framePoints - crtPlayer.getSecond().framePoints)
+fun TextView.setDialogForceContinueEnabled(crtPlayer: CurrentFrame, size: Int) {
+    val diff = abs(crtPlayer.getFirstPlayer().framePoints - crtPlayer.getSecondPlayer().framePoints)
     val remaining =
         if (size <= 7) (-(8 - size) * (8 - size) - (8 - size) + 56) / 2
         else 27 + ((size - 7) / 2) * 8

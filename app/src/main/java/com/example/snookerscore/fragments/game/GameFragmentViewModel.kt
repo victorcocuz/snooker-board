@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.snookerscore.utils.Event
 import java.util.*
+import kotlin.collections.ArrayList
 
 class GameFragmentViewModel(
     application: Application,
@@ -23,8 +24,8 @@ class GameFragmentViewModel(
     private val _eventFoul = MutableLiveData<Event<Unit>>()
     val eventFoul: LiveData<Event<Unit>> = _eventFoul
 
-    private val _displayPlayer = MutableLiveData<CurrentPlayer>()
-    val displayPlayer: LiveData<CurrentPlayer> = _displayPlayer
+    private val _displayPlayer = MutableLiveData<CurrentFrame>()
+    val displayPlayer: LiveData<CurrentFrame> = _displayPlayer
 
     private val _ballStackSize = MutableLiveData<Int>()
     val ballStackSize: LiveData<Int> = _ballStackSize
@@ -43,9 +44,11 @@ class GameFragmentViewModel(
     val eventCancelDialog: LiveData<Event<Unit>> = _eventCancelDialog
 
     // Variables
-    private lateinit var crtPlayer: CurrentPlayer
+    private lateinit var crtMatch: CurrentMatch
+    private lateinit var crtFrame: CurrentFrame
     private var ballStack = ArrayDeque<Ball>()
     private var frameStack = ArrayDeque<Shot>()
+    private var highBreak = 0
 
     // Init
     init {
@@ -54,31 +57,31 @@ class GameFragmentViewModel(
 
     // Handler functions
     fun handleFoulDialog(pot: Pot, removeRed: Boolean, freeBall: Boolean) {
-        updateFrame(crtPlayer, pot.ball, pot.potType, pot.potAction)
-        if (removeRed) updateFrame(crtPlayer, (if (inColors()) ballStack.peek() else Balls.RED), PotType.REMOVE_RED, PotAction.Continue)
+        updateFrame(crtFrame, pot.ball, pot.potType, pot.potAction)
+        if (removeRed) updateFrame(crtFrame, (if (inColors()) ballStack.peek() else Balls.RED), PotType.REMOVE_RED, PotAction.Continue)
         if (freeBall) {
             if (inColors()) ballStack.push(Balls.FREE) else for (ball in listOf(Balls.COLOR, Balls.FREE)) ballStack.push(ball)
             getFrameStatus()
         }
     }
 
-    fun onBallClicked(pot: Pot) = updateFrame(crtPlayer, pot.ball, pot.potType, PotAction.Continue)
+    fun onBallClicked(pot: Pot) = updateFrame(crtFrame, pot.ball, pot.potType, PotAction.Continue)
 
-    fun onSafeClicked() = updateFrame(crtPlayer, Balls.NOBALL, PotType.SAFE, PotAction.Switch)
+    fun onSafeClicked() = updateFrame(crtFrame, Balls.NOBALL, PotType.SAFE, PotAction.Switch)
 
-    fun onMissClicked() = updateFrame(crtPlayer, Balls.NOBALL, PotType.MISS, PotAction.Switch)
+    fun onMissClicked() = updateFrame(crtFrame, Balls.NOBALL, PotType.MISS, PotAction.Switch)
 
     fun onFoulClicked() {
         _eventFoul.value = Event(Unit)
     }
 
-    fun onAddRedClicked() = updateFrame(crtPlayer, Balls.RED, PotType.ADD_RED, PotAction.Continue)
+    fun onAddRedClicked() = updateFrame(crtFrame, Balls.RED, PotType.ADD_RED, PotAction.Continue)
 
     fun onRerackClicked() = resetFrame()
 
     fun onUndoClicked() {
         val lastShot = frameStack.pop()
-        crtPlayer = lastShot.player
+        crtFrame = lastShot.player
         when (lastShot.pot.potType) {
             PotType.HIT -> ballStack.push(if (isColor()) Balls.COLOR else lastShot.pot.ball)
             PotType.ADD_RED -> for (ball in listOf(Balls.RED, Balls.COLOR)) ballStack.push(ball)
@@ -96,28 +99,28 @@ class GameFragmentViewModel(
             else -> {
             }
         }
-        calcPoints(crtPlayer, lastShot.pot.ball, lastShot.pot.potType, -1)
+        calcPoints(crtFrame, lastShot.pot.ball, lastShot.pot.potType, -1)
         getFrameStatus()
     }
 
     // Frame Helpers
-    private fun updateFrame(currentPlayer: CurrentPlayer, ball: Ball, potType: PotType, potAction: PotAction) {
+    private fun updateFrame(currentPlayer: CurrentFrame, ball: Ball, potType: PotType, potAction: PotAction) {
         when (potType) {
             in listOf(PotType.HIT, PotType.FREE) -> ballStack.pop()
             in listOf(PotType.REMOVE_RED, PotType.ADD_RED) -> repeat(2) { ballStack.pop() }
             else -> {
-                if (potAction == PotAction.Switch) crtPlayer = crtPlayer.otherPlayer() // Switch players
+                if (potAction == PotAction.Switch) crtFrame = crtFrame.otherPlayer() // Switch players
                 if (ballStack.peek() == Balls.FREE) repeat(if (inColors()) 1 else 2) { ballStack.pop() }
                 if (ballStack.peek() == Balls.COLOR) ballStack.pop()
             }
         }
         calcPoints(currentPlayer, ball, potType, 1)
-        if (ballStack.size == 1 && crtPlayer.framePoints == crtPlayer.otherPlayer().framePoints) ballStack.push(Balls.BLACK)
+        if (ballStack.size == 1 && crtFrame.framePoints == crtFrame.otherPlayer().framePoints) ballStack.push(Balls.BLACK)
         frameStack.push(Shot(currentPlayer, _frameState.value!!, Pot(ball, potType, potAction)))
         getFrameStatus()
     }
 
-    private fun calcPoints(crtPlayer: CurrentPlayer, ball: Ball, potType: PotType, pol: Int) {
+    private fun calcPoints(crtPlayer: CurrentFrame, ball: Ball, potType: PotType, pol: Int) {
         val points = when (potType) { // foul from sinking the white should equal min ball foul on the table
             PotType.FOUL ->
                 if (ballStack.size in 1..4 && ball == Balls.WHITE) ballStack.peek()!!.foulPoints + matchFoulModifier
@@ -126,8 +129,31 @@ class GameFragmentViewModel(
             PotType.FREE -> if (inColors()) 1 else ballStack.peek()!!.points
             else -> ball.points
         }
-        if (potType == PotType.FOUL) crtPlayer.otherPlayer().addFramePoints(pol * points)
-        else crtPlayer.addFramePoints(pol * points)
+        when (potType) {
+            in listOf(PotType.HIT, PotType.FREE, PotType.ADD_RED) -> {
+                highBreak += points
+                if (highBreak > crtPlayer.highestBreak) crtPlayer.replaceHighestBreak(highBreak)
+                crtPlayer.addFramePoints(pol * points)
+                crtPlayer.incrementSuccessShots(pol)
+            }
+            PotType.FOUL -> {
+                crtPlayer.otherPlayer().addFramePoints(pol * points)
+                crtPlayer.incrementMissedShots(pol)
+                if (highBreak > crtPlayer.highestBreak) crtPlayer.replaceHighestBreak(highBreak)
+                highBreak = 0
+            }
+            PotType.MISS -> {
+                crtPlayer.incrementMissedShots(pol)
+                if (highBreak > crtPlayer.highestBreak) crtPlayer.replaceHighestBreak(highBreak)
+                highBreak = 0
+            }
+            PotType.SAFE -> {
+                if (highBreak > crtPlayer.highestBreak) crtPlayer.replaceHighestBreak(highBreak)
+                highBreak = 0
+            }
+            else -> {
+            }
+        }
     }
 
     private fun getFrameStatus() {
@@ -135,7 +161,7 @@ class GameFragmentViewModel(
         _frameState.value = ballStack.peek()!!.ballType
         _ballStackSize.value = ballStack.size
         _frameStackSize.value = frameStack.size
-        _displayPlayer.value = crtPlayer
+        _displayPlayer.value = crtFrame
     }
 
     private fun assignMatchAction(matchAction: MatchAction) {
@@ -167,30 +193,32 @@ class GameFragmentViewModel(
     }
 
     fun frameEnded() {
-        if (crtPlayer.getFirst().framePoints > crtPlayer.getSecond().framePoints) crtPlayer.getFirst().incrementMatchPoint()
-        else crtPlayer.getSecond().incrementMatchPoint()
+        if (crtFrame.getFirstPlayer().framePoints > crtFrame.getSecondPlayer().framePoints) crtFrame.getFirstPlayer().incrementMatchPoint()
+        else crtFrame.getSecondPlayer().incrementMatchPoint()
+        crtMatch.frames.add(crtFrame)
         resetFrame()
     }
 
     private fun endFrame() {
         val player =
-            if (crtPlayer.getFirst().framePoints > crtPlayer.getSecond().framePoints) crtPlayer.getFirst()
-            else crtPlayer.getSecond()
+            if (crtFrame.getFirstPlayer().framePoints > crtFrame.getSecondPlayer().framePoints) crtFrame.getFirstPlayer()
+            else crtFrame.getSecondPlayer()
         if (player.matchPoints + 1 == matchFrames) assignMatchAction(MatchAction.MATCH_ENDED)
         else assignMatchAction(if (ballStack.size == 1) MatchAction.FRAME_ENDED else MatchAction.END_FRAME)
     }
 
     fun resetMatch() {
-        crtPlayer = if (matchBreaksFirst == 0) CurrentPlayer.PlayerA else CurrentPlayer.PlayerB
-        crtPlayer.getFirst().matchPoints = 0
-        crtPlayer.getSecond().matchPoints = 0
+        crtMatch = CurrentMatch(ArrayList())
+        crtFrame = if (matchBreaksFirst == 0) CurrentFrame.PlayerA else CurrentFrame.PlayerB
+        crtFrame.getFirstPlayer().matchPoints = 0
+        crtFrame.getSecondPlayer().matchPoints = 0
         resetFrame()
     }
 
     private fun resetFrame() {
-        if (crtPlayer.getFirst().matchPoints != 0 || crtPlayer.getSecond().matchPoints != 0) crtPlayer = crtPlayer.otherPlayer()
-        crtPlayer.getFirst().framePoints = 0
-        crtPlayer.getSecond().framePoints = 0
+        if (crtFrame.getFirstPlayer().matchPoints != 0 || crtFrame.getSecondPlayer().matchPoints != 0) crtFrame = crtFrame.otherPlayer()
+        crtFrame.getFirstPlayer().framePoints = 0
+        crtFrame.getSecondPlayer().framePoints = 0
         ballStack.apply {
             frameStack.clear()
             clear()

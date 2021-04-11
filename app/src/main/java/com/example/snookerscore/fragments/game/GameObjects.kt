@@ -4,20 +4,39 @@ enum class MatchAction {
     CANCEL_MATCH, END_FRAME, FRAME_ENDED, END_MATCH, MATCH_ENDED
 }
 
-sealed class CurrentPlayer(var framePoints: Int, var matchPoints: Int) {
-    object PlayerA : CurrentPlayer(0, 0)
-    object PlayerB : CurrentPlayer(0, 0)
+data class CurrentMatch(var frames: ArrayList<CurrentFrame>)
+
+sealed class CurrentFrame(
+    var framePoints: Int,
+    var matchPoints: Int,
+    var successShots: Int,
+    var missedShots: Int,
+    var highestBreak: Int) {
+    object PlayerA : CurrentFrame(0, 0, 0, 0, 0)
+    object PlayerB : CurrentFrame(0, 0, 0, 0, 0)
 
     fun otherPlayer() = when (this) {
         PlayerA -> PlayerB
         PlayerB -> PlayerA
     }
 
-    fun getFirst() = PlayerA
-    fun getSecond() = PlayerB
+    fun getFirstPlayer() = PlayerA
+    fun getSecondPlayer() = PlayerB
 
     fun addFramePoints(points: Int) {
         this.framePoints += points
+    }
+
+    fun incrementSuccessShots(pol: Int) {
+        this.successShots += pol
+    }
+
+    fun incrementMissedShots(pol: Int) {
+        this.missedShots += pol
+    }
+
+    fun replaceHighestBreak(points: Int){
+        this.highestBreak = points
     }
 
     fun incrementMatchPoint() {
@@ -36,7 +55,7 @@ sealed class BallType {
     object PINK : BallType()
     object BLACK : BallType()
     object COLOR : BallType()
-    object FREE: BallType()
+    object FREE : BallType()
 }
 
 data class Ball(
@@ -86,7 +105,7 @@ data class Pot(
 )
 
 data class Shot(
-    val player: CurrentPlayer,
+    val player: CurrentFrame,
     val frameState: BallType,
     val pot: Pot
 )
