@@ -31,7 +31,6 @@ class GameFragment : androidx.fragment.app.Fragment() {
     ): View {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false)
-        setHasOptionsMenu(true)
 
         val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         linearLayoutManager.apply {
@@ -40,7 +39,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
         }
         ballAdapter = BallAdapter(BallListener { ball ->
             gameFragmentViewModel.onBallClicked(Pot(ball, PotType.HIT, ShotActions.CONTINUE))
-        })
+        }, gameFragmentViewModel.ballStackSize)
 
         binding.apply {
             lifecycleOwner = this@GameFragment

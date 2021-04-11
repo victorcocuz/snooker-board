@@ -14,7 +14,8 @@ import timber.log.Timber
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
-    private val setOfPrimaryFragments = setOf(R.id.rankingsFragment, R.id.friendsFragment, R.id.playFragment, R.id.historyFragment, R.id.statisticsFragment)
+    private val setOfPrimaryFragments =
+        setOf(R.id.rankingsFragment, R.id.friendsFragment, R.id.playFragment, R.id.historyFragment, R.id.statisticsFragment)
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         Timber.plant(Timber.DebugTree());
 
         navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
-
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         binding.apply {
             navBottom.setupWithNavController(navController)
 

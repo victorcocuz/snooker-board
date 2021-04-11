@@ -4,6 +4,9 @@
 
     <data>
         <variable
+            name="ballStackSize"
+            type="int" />
+        <variable
             name="ball"
             type="com.example.snookerscore.fragments.game.Ball" />
         <variable
@@ -23,6 +26,7 @@
 
             <TextView
                 app:ballValue="@{ball}"
+                app:stackSize="@{ballStackSize}"
                 android:id="@+id/item_button_points"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

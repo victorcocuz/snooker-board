@@ -9,10 +9,11 @@ import com.example.snookerscore.fragments.game.*
 import kotlin.math.abs
 
 // Ball Item View
-@BindingAdapter("ballValue")
-fun TextView.setPointsValue(item: Ball?) {
+@BindingAdapter("ballValue", "stackSize")
+fun TextView.setPointsValue(item: Ball?, stackSize: Int) {
+    val reds = (stackSize - 7) / 2
     item?.let {
-        text = item.points.toString()
+        if (reds > 0 && it.ballType == BallType.RED) text = reds.toString()
     }
 }
 
@@ -136,7 +137,7 @@ fun TextView.setDialogForceContinueEnabled(crtPlayer: CurrentPlayer, size: Int) 
 // Game Gen Dialog
 @BindingAdapter("dialogGameGenQuestion")
 fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
-    text = when(matchAction) {
+    text = when (matchAction) {
         MatchAction.CANCEL_MATCH -> "Are you sure you want to cancel the current match? You will lose all match progress"
         MatchAction.END_FRAME -> "Are you sure you want to end this frame?"
         MatchAction.END_MATCH -> "Are you sure you want to end this match?"

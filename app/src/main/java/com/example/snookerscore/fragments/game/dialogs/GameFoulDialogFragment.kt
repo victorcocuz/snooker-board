@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameFoulDialogBinding
@@ -30,7 +31,8 @@ class GameFoulDialogFragment : DialogFragment() {
         val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         val ballAdapter = BallAdapter(BallListener { ball ->
             foulDialogViewModel.onBallClicked(ball)
-        })
+        }, MutableLiveData(0))
+
         binding.apply {
             lifecycleOwner = this@GameFoulDialogFragment
             foulViewModel = foulDialogViewModel
