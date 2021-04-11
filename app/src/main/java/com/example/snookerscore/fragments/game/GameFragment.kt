@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameBinding
 import com.example.snookerscore.utils.EventObserver
+import timber.log.Timber
 import java.util.*
 
 class GameFragment : androidx.fragment.app.Fragment() {
@@ -77,6 +78,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun manageBallVisibility(frameState: BallType) {
+        Timber.e("framestate $frameState")
         Balls.apply {
             ballsList = when (frameState) {
                 BallType.FREE -> listOf(FREE)

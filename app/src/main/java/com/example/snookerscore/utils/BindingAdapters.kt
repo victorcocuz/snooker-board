@@ -11,11 +11,9 @@ import kotlin.math.abs
 
 // Ball Item View
 @BindingAdapter("ballValue", "stackSize")
-fun TextView.setPointsValue(item: Ball?, stackSize: Int) {
+fun TextView.setPointsValue(item: Ball, stackSize: Int) {
     val reds = (stackSize - 7) / 2
-    item?.let {
-        if (reds > 0 && it.ballType == BallType.RED) text = reds.toString()
-    }
+    text = if (reds > 0 && item.ballType == BallType.RED) reds.toString() else ""
 }
 
 @BindingAdapter("ballImage")
@@ -76,7 +74,7 @@ fun TextView.setGamePointsDiff(crtPlayer: CurrentFrame) {
 @BindingAdapter("shotSuccess", "shotMiss")
 fun TextView.setShotPercentage(success: Double, miss: Double) {
     val df = DecimalFormat("##%")
-    text =  if (success + miss > 0) df.format((success / (success + miss))) else "0"
+    text = if (success + miss > 0) df.format((success / (success + miss))) else "N/A"
 }
 
 // Game Actions

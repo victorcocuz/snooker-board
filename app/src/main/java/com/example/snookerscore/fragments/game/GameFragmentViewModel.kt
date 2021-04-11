@@ -48,7 +48,6 @@ class GameFragmentViewModel(
     private lateinit var crtFrame: CurrentFrame
     private var ballStack = ArrayDeque<Ball>()
     private var frameStack = ArrayDeque<Shot>()
-    private var highBreak = 0
 
     // Init
     init {
@@ -131,28 +130,16 @@ class GameFragmentViewModel(
         }
         when (potType) {
             in listOf(PotType.HIT, PotType.FREE, PotType.ADD_RED) -> {
-                highBreak += points
-                if (highBreak > crtPlayer.highestBreak) crtPlayer.replaceHighestBreak(highBreak)
                 crtPlayer.addFramePoints(pol * points)
                 crtPlayer.incrementSuccessShots(pol)
             }
             PotType.FOUL -> {
                 crtPlayer.otherPlayer().addFramePoints(pol * points)
                 crtPlayer.incrementMissedShots(pol)
-                if (highBreak > crtPlayer.highestBreak) crtPlayer.replaceHighestBreak(highBreak)
-                highBreak = 0
+                crtPlayer.incrementFouls(pol)
             }
-            PotType.MISS -> {
-                crtPlayer.incrementMissedShots(pol)
-                if (highBreak > crtPlayer.highestBreak) crtPlayer.replaceHighestBreak(highBreak)
-                highBreak = 0
-            }
-            PotType.SAFE -> {
-                if (highBreak > crtPlayer.highestBreak) crtPlayer.replaceHighestBreak(highBreak)
-                highBreak = 0
-            }
-            else -> {
-            }
+            PotType.MISS -> crtPlayer.incrementMissedShots(pol)
+            else -> { }
         }
     }
 

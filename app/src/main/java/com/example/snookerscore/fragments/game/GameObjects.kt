@@ -11,9 +11,10 @@ sealed class CurrentFrame(
     var matchPoints: Int,
     var successShots: Int,
     var missedShots: Int,
+    var fouls: Int,
     var highestBreak: Int) {
-    object PlayerA : CurrentFrame(0, 0, 0, 0, 0)
-    object PlayerB : CurrentFrame(0, 0, 0, 0, 0)
+    object PlayerA : CurrentFrame(0, 0, 0, 0, 0, 0)
+    object PlayerB : CurrentFrame(0, 0, 0, 0, 0,0)
 
     fun otherPlayer() = when (this) {
         PlayerA -> PlayerB
@@ -35,8 +36,8 @@ sealed class CurrentFrame(
         this.missedShots += pol
     }
 
-    fun replaceHighestBreak(points: Int){
-        this.highestBreak = points
+    fun incrementFouls(pol: Int) {
+        this.fouls += pol
     }
 
     fun incrementMatchPoint() {
