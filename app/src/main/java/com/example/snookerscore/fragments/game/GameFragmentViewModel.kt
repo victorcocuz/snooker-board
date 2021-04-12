@@ -80,7 +80,6 @@ class GameFragmentViewModel(
 
     fun onUndoClicked() {
         val lastPot = removeFromFrameStack()
-        Timber.e("last pot $lastPot")
         when (lastPot.potType) {
             PotType.HIT -> ballStack.push(if (isColor()) Balls.COLOR else lastPot.ball)
             PotType.ADD_RED -> for (ball in listOf(Balls.RED, Balls.COLOR)) ballStack.push(ball)
@@ -95,8 +94,8 @@ class GameFragmentViewModel(
                     false -> listOf(Balls.RED, Balls.COLOR)
                 }) ballStack.push(ball)
             }
-            else -> {
-            }
+            in listOf(PotType.MISS, PotType.SAFE) -> if (isColor()) ballStack.push(Balls.COLOR)
+            else -> {}
         }
         calcPoints(crtFrame, lastPot.ball, lastPot.potType, -1)
         getFrameStatus()
