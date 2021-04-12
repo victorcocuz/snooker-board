@@ -6,7 +6,10 @@ enum class MatchAction {
     CANCEL_MATCH, END_FRAME, FRAME_ENDED, END_MATCH, MATCH_ENDED
 }
 
-data class CurrentMatch(var frames: ArrayList<CurrentFrame>)
+data class CurrentMatch(
+    val frames: ArrayList<CurrentFrame>,
+    val frameStack: ArrayList<ArrayDeque<Break>>
+)
 
 sealed class CurrentFrame(
     var framePoints: Int,
@@ -45,6 +48,14 @@ sealed class CurrentFrame(
 
     fun incrementMatchPoint() {
         this.matchPoints += 1
+    }
+
+    fun findMaxBreak(frameStack: ArrayDeque<Break>) {
+        var highestBreak = 0
+        frameStack.forEach{  crtBreak ->
+            if (this == crtBreak.player && crtBreak.breakSize > highestBreak) highestBreak = crtBreak.breakSize
+        }
+        this.highestBreak = highestBreak
     }
 }
 
@@ -110,5 +121,6 @@ data class Pot(
 
 data class Break(
     val player: CurrentFrame,
-    val pots: ArrayDeque<Pot>
+    val pots: ArrayDeque<Pot>,
+    var breakSize: Int
 )

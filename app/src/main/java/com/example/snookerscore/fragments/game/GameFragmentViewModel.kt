@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.snookerscore.utils.Event
-import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -152,30 +151,21 @@ class GameFragmentViewModel(
     }
 
     private fun addToFrameStack(player: CurrentFrame, pot: Pot) {
-        when (pot.potType) {
-            in listOf(PotType.HIT, PotType.FREE, PotType.ADD_RED) -> {
-                if (frameStack.size == 0) frameStack.push(Break(player, ArrayDeque<Pot>()))
-                else frameStack.peek()!!.pots.peek()?.let { crtPot ->
-                    if (crtPot.potType !in listOf(PotType.HIT, PotType.FREE, PotType.ADD_RED)) {
-                        frameStack.push(Break(player, ArrayDeque<Pot>()))
-                    }
-                }
-                frameStack.peek()!!.pots.push(pot)
-            }
-            else -> {
-                frameStack.push(Break(player, ArrayDeque<Pot>()))
-                frameStack.peek()!!.pots.push(pot)
-            }
-        }
-        frameStack.forEach {
-            Timber.e("break $it")
-        }
+        if (pot.potType !in listOf(PotType.HIT, PotType.FREE, PotType.ADD_RED)
+            || frameStack.size == 0
+            || frameStack.peek()!!.pots.peek()?.potType !in listOf(PotType.HIT, PotType.FREE, PotType.ADD_RED)
+        ) frameStack.push(Break(player, ArrayDeque<Pot>(), 0))
+        frameStack.peek()!!.pots.push(pot)
+        frameStack.peek()!!.breakSize += pot.ball.points
+        player.findMaxBreak(frameStack)
     }
 
     private fun removeFromFrameStack(): Pot {
         if (frameStack.peek()!!.pots.size == 0) frameStack.pop()
         crtFrame = frameStack.peek()!!.player
         val crtPot: Pot = frameStack.peek()!!.pots.pop()
+        frameStack.peek()!!.breakSize -= crtPot.ball.points
+        crtFrame.findMaxBreak(frameStack)
         if (frameStack.size == 1 && frameStack.peek()!!.pots.size == 0) frameStack.pop()
         return crtPot
     }
@@ -212,6 +202,7 @@ class GameFragmentViewModel(
         if (crtFrame.getFirstPlayer().framePoints > crtFrame.getSecondPlayer().framePoints) crtFrame.getFirstPlayer().incrementMatchPoint()
         else crtFrame.getSecondPlayer().incrementMatchPoint()
         crtMatch.frames.add(crtFrame)
+        crtMatch.frameStack.add(frameStack)
         resetFrame()
     }
 
@@ -224,7 +215,7 @@ class GameFragmentViewModel(
     }
 
     fun resetMatch() {
-        crtMatch = CurrentMatch(ArrayList())
+        crtMatch = CurrentMatch(ArrayList(), ArrayList())
         crtFrame = if (matchBreaksFirst == 0) CurrentFrame.PlayerA else CurrentFrame.PlayerB
         crtFrame.getFirstPlayer().matchPoints = 0
         crtFrame.getSecondPlayer().matchPoints = 0
