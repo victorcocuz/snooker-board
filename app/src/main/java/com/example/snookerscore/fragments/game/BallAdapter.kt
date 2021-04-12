@@ -20,10 +20,10 @@ class BallAdapter(private val clickListener: BallListener, private val ballStack
     }
 
     class ViewHolder private constructor(val binding: ItemBallViewBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Ball, clickListener: BallListener, ballStackSize: LiveData<Int>) {
+        fun bind(item: Ball, clickListener: BallListener, ballStack: LiveData<Int>) {
             binding.apply {
                 ball = item
-                this.ballStackSize = ballStackSize.value!!
+                this.ballStackSize = ballStack.value!!
                 this.clickListener = clickListener
                 executePendingBindings()
             }

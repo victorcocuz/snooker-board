@@ -1,5 +1,7 @@
 package com.example.snookerscore.fragments.game
 
+import java.util.*
+
 enum class MatchAction {
     CANCEL_MATCH, END_FRAME, FRAME_ENDED, END_MATCH, MATCH_ENDED
 }
@@ -12,9 +14,10 @@ sealed class CurrentFrame(
     var successShots: Int,
     var missedShots: Int,
     var fouls: Int,
-    var highestBreak: Int) {
+    var highestBreak: Int
+) {
     object PlayerA : CurrentFrame(0, 0, 0, 0, 0, 0)
-    object PlayerB : CurrentFrame(0, 0, 0, 0, 0,0)
+    object PlayerB : CurrentFrame(0, 0, 0, 0, 0, 0)
 
     fun otherPlayer() = when (this) {
         PlayerA -> PlayerB
@@ -105,8 +108,7 @@ data class Pot(
     val potAction: PotAction
 )
 
-data class Shot(
+data class Break(
     val player: CurrentFrame,
-    val frameState: BallType,
-    val pot: Pot
+    val pots: ArrayDeque<Pot>
 )

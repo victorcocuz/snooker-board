@@ -100,7 +100,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_btn_act_end_match"
-            app:undoEnabled="@{gameViewModel.frameStackSize}" />
+            app:undoEnabled="@{gameViewModel.displayFrameStack.size()}" />
 
         <TextView
             android:id="@+id/game_btn_act_cancel"

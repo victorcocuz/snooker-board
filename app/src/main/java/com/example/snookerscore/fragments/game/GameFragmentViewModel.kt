@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.snookerscore.utils.Event
+import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -14,8 +15,7 @@ class GameFragmentViewModel(
     private val matchReds: Int,
     private val matchFoulModifier: Int,
     private val matchBreaksFirst: Int
-) :
-    AndroidViewModel(application) {
+) : AndroidViewModel(application) {
 
     // Frame Observables
     private val _frameState = MutableLiveData<BallType>()
@@ -30,8 +30,8 @@ class GameFragmentViewModel(
     private val _ballStackSize = MutableLiveData<Int>()
     val ballStackSize: LiveData<Int> = _ballStackSize
 
-    private val _frameStackSize = MutableLiveData<Int>()
-    val frameStackSize: LiveData<Int> = _frameStackSize
+    private val _displayFrameStack = MutableLiveData<ArrayDeque<Break>>()
+    val displayFrameStack: LiveData<ArrayDeque<Break>> = _displayFrameStack
 
     // Match Observables
     private val _eventMatchAction = MutableLiveData<Event<MatchAction>>()
@@ -47,7 +47,7 @@ class GameFragmentViewModel(
     private lateinit var crtMatch: CurrentMatch
     private lateinit var crtFrame: CurrentFrame
     private var ballStack = ArrayDeque<Ball>()
-    private var frameStack = ArrayDeque<Shot>()
+    private val frameStack = ArrayDeque<Break>()
 
     // Init
     init {
@@ -79,10 +79,10 @@ class GameFragmentViewModel(
     fun onRerackClicked() = resetFrame()
 
     fun onUndoClicked() {
-        val lastShot = frameStack.pop()
-        crtFrame = lastShot.player
-        when (lastShot.pot.potType) {
-            PotType.HIT -> ballStack.push(if (isColor()) Balls.COLOR else lastShot.pot.ball)
+        val lastPot = removeFromFrameStack()
+        Timber.e("last pot $lastPot")
+        when (lastPot.potType) {
+            PotType.HIT -> ballStack.push(if (isColor()) Balls.COLOR else lastPot.ball)
             PotType.ADD_RED -> for (ball in listOf(Balls.RED, Balls.COLOR)) ballStack.push(ball)
             PotType.FOUL -> {
                 if (ballStack.peek()!!.ballType == BallType.FREE) repeat(if (inColors()) 1 else 2) { ballStack.pop() }
@@ -98,7 +98,7 @@ class GameFragmentViewModel(
             else -> {
             }
         }
-        calcPoints(crtFrame, lastShot.pot.ball, lastShot.pot.potType, -1)
+        calcPoints(crtFrame, lastPot.ball, lastPot.potType, -1)
         getFrameStatus()
     }
 
@@ -115,7 +115,7 @@ class GameFragmentViewModel(
         }
         calcPoints(currentPlayer, ball, potType, 1)
         if (ballStack.size == 1 && crtFrame.framePoints == crtFrame.otherPlayer().framePoints) ballStack.push(Balls.BLACK)
-        frameStack.push(Shot(currentPlayer, _frameState.value!!, Pot(ball, potType, potAction)))
+        addToFrameStack(currentPlayer, Pot(ball, potType, potAction))
         getFrameStatus()
     }
 
@@ -139,7 +139,8 @@ class GameFragmentViewModel(
                 crtPlayer.incrementFouls(pol)
             }
             PotType.MISS -> crtPlayer.incrementMissedShots(pol)
-            else -> { }
+            else -> {
+            }
         }
     }
 
@@ -147,8 +148,37 @@ class GameFragmentViewModel(
         if (ballStack.size == 1) endFrame()
         _frameState.value = ballStack.peek()!!.ballType
         _ballStackSize.value = ballStack.size
-        _frameStackSize.value = frameStack.size
+        _displayFrameStack.value = frameStack
         _displayPlayer.value = crtFrame
+    }
+
+    private fun addToFrameStack(player: CurrentFrame, pot: Pot) {
+        when (pot.potType) {
+            in listOf(PotType.HIT, PotType.FREE, PotType.ADD_RED) -> {
+                if (frameStack.size == 0) frameStack.push(Break(player, ArrayDeque<Pot>()))
+                else frameStack.peek()!!.pots.peek()?.let { crtPot ->
+                    if (crtPot.potType !in listOf(PotType.HIT, PotType.FREE, PotType.ADD_RED)) {
+                        frameStack.push(Break(player, ArrayDeque<Pot>()))
+                    }
+                }
+                frameStack.peek()!!.pots.push(pot)
+            }
+            else -> {
+                frameStack.push(Break(player, ArrayDeque<Pot>()))
+                frameStack.peek()!!.pots.push(pot)
+            }
+        }
+        frameStack.forEach {
+            Timber.e("break $it")
+        }
+    }
+
+    private fun removeFromFrameStack(): Pot {
+        if (frameStack.peek()!!.pots.size == 0) frameStack.pop()
+        crtFrame = frameStack.peek()!!.player
+        val crtPot: Pot = frameStack.peek()!!.pots.pop()
+        if (frameStack.size == 1 && frameStack.peek()!!.pots.size == 0) frameStack.pop()
+        return crtPot
     }
 
     private fun assignMatchAction(matchAction: MatchAction) {
