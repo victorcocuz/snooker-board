@@ -15,7 +15,6 @@ class StatisticsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         val binding: FragmentStatisticsBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_statistics, container, false)
         return binding.root

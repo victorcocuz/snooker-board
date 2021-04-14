@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameStatsBinding
+import timber.log.Timber
 
 class GameStatsFragment : Fragment() {
 
@@ -16,9 +17,12 @@ class GameStatsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         val binding: FragmentGameStatsBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_game_stats, container, false)
+        val args = GameStatsFragmentArgs.fromBundle(requireArguments()).match
+        Timber.e("args $args")
+
+        // Listeners
         binding.fragGameStatsBtn.setOnClickListener {
             it.findNavController().navigate(GameStatsFragmentDirections.actionGameStatsFragmentToPlayFragment())
         }

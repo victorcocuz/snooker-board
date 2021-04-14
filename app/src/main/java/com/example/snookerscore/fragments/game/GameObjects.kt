@@ -1,15 +1,19 @@
 package com.example.snookerscore.fragments.game
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
 import java.util.*
 
 enum class MatchAction {
     CANCEL_MATCH, END_FRAME, FRAME_ENDED, END_MATCH, MATCH_ENDED
 }
 
+@Parcelize
 data class CurrentMatch(
-    val frames: ArrayList<CurrentFrame>,
-    val frameStack: ArrayList<ArrayDeque<Break>>
-)
+    val frames: @RawValue ArrayList<CurrentFrame>,
+    val frameStacks: @RawValue ArrayList<ArrayDeque<Break>>
+) : Parcelable
 
 sealed class CurrentFrame(
     var framePoints: Int,

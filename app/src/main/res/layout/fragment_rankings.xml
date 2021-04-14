@@ -1,21 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.example.snookerscore.fragments.rankings.RankingsFragmentViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="fragments.main.RankingsFragment">
+        tools:context=".fragments.rankings.RankingsFragment">
 
-        <!-- TODO: Update blank fragment layout -->
         <TextView
+            android:id="@+id/rankings_label_position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:text="POSITION"
+            app:layout_constraintEnd_toStartOf="@+id/rankings_label_name"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/rankings_label_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NAME"
+            app:layout_constraintBottom_toBottomOf="@+id/rankings_label_position"
+            app:layout_constraintEnd_toStartOf="@+id/rankings_label_points"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/rankings_label_position" />
+
+        <TextView
+            android:id="@+id/rankings_label_points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:text="POINTS"
+            app:layout_constraintBottom_toBottomOf="@+id/rankings_label_position"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/rankings_label_name" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rankings_rv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="RANKINGS FRAGMENT" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:padding="16dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rankings_label_position"
+            app:listData="@{viewModel.rankings}"
+            tools:itemCount="16"
+            tools:listitem="@layout/item_ranking_view"
+            tools:text="whatever" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

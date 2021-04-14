@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-android-extensions'
     id 'kotlin-kapt'    // Data binding
     id 'androidx.navigation.safeargs.kotlin'
 }
@@ -48,14 +49,25 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
 
     // Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$version_lifecycle"
-    implementation "androidx.navigation:navigation-ui-ktx:$version_lifecycle"
+    implementation "androidx.navigation:navigation-fragment-ktx:$version_navigation"
+    implementation "androidx.navigation:navigation-ui-ktx:$version_navigation"
 
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version_lifecycle"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$version_lifecycle"
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$version_lifecycle"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$version_lifecycle"
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$version_retrofit"
+    implementation "com.squareup.retrofit2:converter-scalars:$version_retrofit"
+    implementation "com.squareup.moshi:moshi:$version_moshi"
+    implementation "com.squareup.moshi:moshi-kotlin:$version_moshi"
+    implementation "com.squareup.retrofit2:converter-moshi:$version_retrofit"
+
+    // Room
+    implementation "androidx.room:room-runtime:$version_room"
+    kapt "androidx.room:room-compiler:$version_room"
 
     // Others
     implementation "com.jakewharton.timber:timber:$version_timber" // Timber
@@ -67,4 +79,5 @@ dependencies {
     // Android Test Implementations
     androidTestImplementation "androidx.test.ext:junit:$version_test_junit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$version_test_espresso_core"
+    annotationProcessor 'androidx.room:room-compiler:2.2.6'
 }

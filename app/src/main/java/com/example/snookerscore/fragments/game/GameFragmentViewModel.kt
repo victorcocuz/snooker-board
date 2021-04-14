@@ -23,11 +23,11 @@ class GameFragmentViewModel(
     private val _eventFoul = MutableLiveData<Event<Unit>>()
     val eventFoul: LiveData<Event<Unit>> = _eventFoul
 
-    private val _displayPlayer = MutableLiveData<CurrentFrame>()
-    val displayPlayer: LiveData<CurrentFrame> = _displayPlayer
-
     private val _ballStackSize = MutableLiveData<Int>()
     val ballStackSize: LiveData<Int> = _ballStackSize
+
+    private val _displayPlayer = MutableLiveData<CurrentFrame>()
+    val displayPlayer: LiveData<CurrentFrame> = _displayPlayer
 
     private val _displayFrameStack = MutableLiveData<ArrayDeque<Break>>()
     val displayFrameStack: LiveData<ArrayDeque<Break>> = _displayFrameStack
@@ -41,6 +41,9 @@ class GameFragmentViewModel(
 
     private val _eventCancelDialog = MutableLiveData<Event<Unit>>()
     val eventCancelDialog: LiveData<Event<Unit>> = _eventCancelDialog
+
+    private val _currentMatch = MutableLiveData<CurrentMatch>()
+    val currentMatch: LiveData<CurrentMatch> = _currentMatch
 
     // Variables
     private lateinit var crtMatch: CurrentMatch
@@ -142,14 +145,6 @@ class GameFragmentViewModel(
         }
     }
 
-    private fun getFrameStatus() {
-        if (ballStack.size == 1) endFrame()
-        _frameState.value = ballStack.peek()!!.ballType
-        _ballStackSize.value = ballStack.size
-        _displayFrameStack.value = frameStack
-        _displayPlayer.value = crtFrame
-    }
-
     private fun addToFrameStack(player: CurrentFrame, pot: Pot) {
         if (pot.potType !in listOf(PotType.HIT, PotType.FREE, PotType.ADD_RED)
             || frameStack.size == 0
@@ -170,8 +165,12 @@ class GameFragmentViewModel(
         return crtPot
     }
 
-    private fun assignMatchAction(matchAction: MatchAction) {
-        _eventMatchAction.value = Event(matchAction)
+    private fun getFrameStatus() {
+        if (ballStack.size == 1) endFrame()
+        _frameState.value = ballStack.peek()!!.ballType
+        _ballStackSize.value = ballStack.size
+        _displayFrameStack.value = frameStack
+        _displayPlayer.value = crtFrame
     }
 
     private fun inColors(): Boolean = ballStack.size <= 7
@@ -193,8 +192,17 @@ class GameFragmentViewModel(
     }
 
     // Match Helpers
+    private fun endFrame() {
+        val player =
+            if (crtFrame.getFirstPlayer().framePoints > crtFrame.getSecondPlayer().framePoints) crtFrame.getFirstPlayer()
+            else crtFrame.getSecondPlayer()
+        if (player.matchPoints + 1 == matchFrames) assignMatchAction(MatchAction.MATCH_ENDED)
+        else assignMatchAction(if (ballStack.size == 1) MatchAction.FRAME_ENDED else MatchAction.END_FRAME)
+    }
+
     fun matchEnded() {
         frameEnded()
+        _currentMatch.value = crtMatch
         resetMatch()
     }
 
@@ -202,16 +210,8 @@ class GameFragmentViewModel(
         if (crtFrame.getFirstPlayer().framePoints > crtFrame.getSecondPlayer().framePoints) crtFrame.getFirstPlayer().incrementMatchPoint()
         else crtFrame.getSecondPlayer().incrementMatchPoint()
         crtMatch.frames.add(crtFrame)
-        crtMatch.frameStack.add(frameStack)
+        crtMatch.frameStacks.add(frameStack)
         resetFrame()
-    }
-
-    private fun endFrame() {
-        val player =
-            if (crtFrame.getFirstPlayer().framePoints > crtFrame.getSecondPlayer().framePoints) crtFrame.getFirstPlayer()
-            else crtFrame.getSecondPlayer()
-        if (player.matchPoints + 1 == matchFrames) assignMatchAction(MatchAction.MATCH_ENDED)
-        else assignMatchAction(if (ballStack.size == 1) MatchAction.FRAME_ENDED else MatchAction.END_FRAME)
     }
 
     fun resetMatch() {
@@ -233,5 +233,9 @@ class GameFragmentViewModel(
             repeat(matchReds) { for (ball in listOf(Balls.COLOR, Balls.RED)) push(ball) }
         }
         getFrameStatus()
+    }
+
+    private fun assignMatchAction(matchAction: MatchAction) {
+        _eventMatchAction.value = Event(matchAction)
     }
 }
