@@ -10,8 +10,8 @@ data class NetworkRankingContainer(val rankings: List<NetworkRanking>)
 @JsonClass(generateAdapter = true)
 data class NetworkRanking(
     @Json(name = "Position") val position: Int,
-    @Json(name = "PlayerID") var id: String,
-    @Json(name = "Sum") val points: String
+    @Json(name = "PlayerID") var id: Int,
+    @Json(name = "Sum") val points: Int
 )
 
 @JsonClass(generateAdapter = true)
@@ -25,8 +25,8 @@ fun NetworkRankingContainer.asDatabaseModel(listPlayers: List<NetworkPlayer>): A
     return rankings.map { networkRanking ->
         DatabaseRanking(
             position = networkRanking.position,
-            name = listPlayers.find { it.id == networkRanking.id.toInt() }?.firstName + " " + listPlayers.find { it.id == networkRanking.id.toInt() }?.lastName,
-            points = networkRanking.position
+            name = listPlayers.find { it.id == networkRanking.id }?.firstName + " " + listPlayers.find { it.id == networkRanking.id }?.lastName,
+            points = networkRanking.points
         )
     }.toTypedArray()
 }
