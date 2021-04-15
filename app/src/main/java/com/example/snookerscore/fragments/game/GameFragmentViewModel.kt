@@ -9,7 +9,6 @@ import com.example.snookerscore.database.SnookerDatabase
 import com.example.snookerscore.repository.SnookerRepository
 import com.example.snookerscore.utils.Event
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.*
 
 class GameFragmentViewModel(application: Application) : AndroidViewModel(application) {
@@ -208,7 +207,6 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
 
     fun matchEnded() {
         frameEnded()
-        resetMatch()
     }
 
     fun frameEnded() {
@@ -228,7 +226,6 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
         frameCount = 0
         resetFrame()
         viewModelScope.launch {
-            Timber.e("deleeeeeeete")
             snookerRepository.removeFrames()
         }
     }

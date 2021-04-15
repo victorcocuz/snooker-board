@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-<variable
-    name="viewModel"
-    type="com.example.snookerscore.fragments.gamestatistics.GameStatsViewModel" />
+        <variable
+            name="viewModel"
+            type="com.example.snookerscore.fragments.gamestatistics.GameStatsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,16 +14,20 @@
         android:layout_height="match_parent"
         tools:context=".fragments.gamestatistics.GameStatsFragment">
 
-        <TextView
-            android:layout_width="0dp"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/game_stats_rv"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.frames.toString()}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:listGameStatsData="@{viewModel.frames}"
+            tools:itemCount="16"
+            tools:listitem="@layout/item_game_statistics_view"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintBottom_toTopOf="@+id/game_stats_btn"
+            tools:layout_editor_absoluteX="0dp" />
 
         <Button
-            android:id="@+id/frag_game_stats_btn"
+            android:id="@+id/game_stats_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="GO TO PLAY FRAGMENT"

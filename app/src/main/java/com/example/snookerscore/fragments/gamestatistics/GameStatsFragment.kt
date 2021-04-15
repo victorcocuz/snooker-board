@@ -26,11 +26,12 @@ class GameStatsFragment : Fragment() {
 
         // Listeners
         binding.apply {
-            fragGameStatsBtn.setOnClickListener {
+            gameStatsBtn.setOnClickListener {
                 it.findNavController().navigate(GameStatsFragmentDirections.actionGameStatsFragmentToPlayFragment())
             }
             lifecycleOwner = this@GameStatsFragment
             viewModel = gameStatsViewModel
+            gameStatsRv.adapter = GameStatsAdapter()
         }
 
 //        gameStatsViewModel.frames.observe(viewLifecycleOwner, {
