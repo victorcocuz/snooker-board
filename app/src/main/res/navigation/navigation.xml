@@ -64,20 +64,17 @@
     </fragment>
     <fragment
         android:id="@+id/gameStatsFragment"
-        android:name="com.example.snookerscore.fragments.game.GameStatsFragment"
+        android:name="com.example.snookerscore.fragments.gamestatistics.GameStatsFragment"
         android:label="GameStatsFragment" >
         <action
             android:id="@+id/action_gameStatsFragment_to_playFragment"
             app:destination="@id/playFragment"
             app:popUpTo="@id/gameStatsFragment"
             app:popUpToInclusive="true" />
-        <argument
-            android:name="match"
-            app:argType="com.example.snookerscore.fragments.game.CurrentMatch" />
     </fragment>
     <dialog
         android:id="@+id/gameGenericDialogFragment"
-        android:name="com.example.snookerscore.fragments.game.dialogs.GameGenericDialogFragment"
+        android:name="com.example.snookerscore.fragments.gamedialogs.GameGenericDialogFragment"
         android:label="GameGenericDialogFragment" >
         <argument
             android:name="matchAction"
@@ -91,6 +88,6 @@
     </dialog>
     <dialog
         android:id="@+id/gameFoulDialogFragment"
-        android:name="com.example.snookerscore.fragments.game.dialogs.GameFoulDialogFragment"
+        android:name="com.example.snookerscore.fragments.gamedialogs.GameFoulDialogFragment"
         android:label="GameFoulDialogFragment" />
 </navigation>

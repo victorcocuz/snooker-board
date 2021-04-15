@@ -9,3 +9,6 @@ fun bindRankingsRv(recyclerView: RecyclerView, data: List<DomainRanking>?) {
     val adapter = recyclerView.adapter as RankingsAdapter
     adapter.submitList(data)
 }
+
+//@BindingAdapter("listFrame")
+//fun TextView.listFrame

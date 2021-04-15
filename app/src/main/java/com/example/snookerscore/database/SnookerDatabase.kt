@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [DatabaseRanking::class], version = 1, exportSchema = false)
+@Database(entities = [DatabaseRanking::class, DatabaseFrame::class], version = 2, exportSchema = false)
 abstract class SnookerDatabase : RoomDatabase() {
     abstract val snookerDatabaseDao: SnookerDatabaseDao
 

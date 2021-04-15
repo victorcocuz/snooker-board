@@ -1,4 +1,4 @@
-package com.example.snookerscore.fragments.game.dialogs
+package com.example.snookerscore.fragments.gamedialogs
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -47,8 +47,9 @@ class GameGenericDialogFragment : DialogFragment() {
                     in listOf(MatchAction.END_FRAME, MatchAction.FRAME_ENDED) -> frameEnded()
                     in listOf(MatchAction.END_MATCH, MatchAction.MATCH_ENDED) -> {
                         matchEnded()
-                        findNavController().navigate(GameGenericDialogFragmentDirections.actionGameGenericDialogFragmentToGameStatsFragment(gameFragmentViewModel.currentMatch.value!!))
+                        findNavController().navigate(GameGenericDialogFragmentDirections.actionGameGenericDialogFragmentToGameStatsFragment())
                     }
+                    else -> {}
                 }
             })
         }

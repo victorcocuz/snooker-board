@@ -1,4 +1,4 @@
-package com.example.snookerscore.fragments.game.dialogs
+package com.example.snookerscore.fragments.gamedialogs
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

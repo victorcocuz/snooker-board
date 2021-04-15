@@ -4,17 +4,15 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.example.snookerscore.database.SnookerDatabase
+import com.example.snookerscore.repository.SnookerRepository
 import com.example.snookerscore.utils.Event
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
-import kotlin.collections.ArrayList
 
-class GameFragmentViewModel(
-    application: Application,
-    val matchFrames: Int,
-    private val matchReds: Int,
-    private val matchFoulModifier: Int,
-    private val matchBreaksFirst: Int
-) : AndroidViewModel(application) {
+class GameFragmentViewModel(application: Application) : AndroidViewModel(application) {
 
     // Frame Observables
     private val _frameState = MutableLiveData<BallType>()
@@ -42,41 +40,49 @@ class GameFragmentViewModel(
     private val _eventCancelDialog = MutableLiveData<Event<Unit>>()
     val eventCancelDialog: LiveData<Event<Unit>> = _eventCancelDialog
 
-    private val _currentMatch = MutableLiveData<CurrentMatch>()
-    val currentMatch: LiveData<CurrentMatch> = _currentMatch
+    // Init variables
+    var matchFrames = 0
+    private var matchReds = 0
+    private var matchFoulModifier = 0
+    private var matchBreaksFirst = 0
 
-    // Variables
-    private lateinit var crtMatch: CurrentMatch
-    private lateinit var crtFrame: CurrentFrame
-    private var ballStack = ArrayDeque<Ball>()
-    private val frameStack = ArrayDeque<Break>()
-
-    // Init
-    init {
+    fun setMatchRules(matchFrames: Int, matchReds: Int, matchFoulModifier: Int, matchBreaksFirst: Int) {
+        this.matchFrames = matchFrames
+        this.matchReds = matchReds
+        this.matchFoulModifier = matchFoulModifier
+        this.matchBreaksFirst = matchBreaksFirst
         resetMatch()
     }
 
+    // Variables
+    private val database = SnookerDatabase.getDatabase(application)
+    private val snookerRepository = SnookerRepository(database)
+    private var ballStack = ArrayDeque<Ball>()
+    private var frameCount = 0
+    private lateinit var frameScore: CurrentFrame
+    private val frameStack = ArrayDeque<Break>()
+
     // Handler functions
     fun handleFoulDialog(pot: Pot, removeRed: Boolean, freeBall: Boolean) {
-        updateFrame(crtFrame, pot.ball, pot.potType, pot.potAction)
-        if (removeRed) updateFrame(crtFrame, (if (inColors()) ballStack.peek() else Balls.RED), PotType.REMOVE_RED, PotAction.Continue)
+        updateFrame(frameScore, pot.ball, pot.potType, pot.potAction)
+        if (removeRed) updateFrame(frameScore, (if (inColors()) ballStack.peek() else Balls.RED), PotType.REMOVE_RED, PotAction.Continue)
         if (freeBall) {
             if (inColors()) ballStack.push(Balls.FREE) else for (ball in listOf(Balls.COLOR, Balls.FREE)) ballStack.push(ball)
             getFrameStatus()
         }
     }
 
-    fun onBallClicked(pot: Pot) = updateFrame(crtFrame, pot.ball, pot.potType, PotAction.Continue)
+    fun onBallClicked(pot: Pot) = updateFrame(frameScore, pot.ball, pot.potType, PotAction.Continue)
 
-    fun onSafeClicked() = updateFrame(crtFrame, Balls.NOBALL, PotType.SAFE, PotAction.Switch)
+    fun onSafeClicked() = updateFrame(frameScore, Balls.NOBALL, PotType.SAFE, PotAction.Switch)
 
-    fun onMissClicked() = updateFrame(crtFrame, Balls.NOBALL, PotType.MISS, PotAction.Switch)
+    fun onMissClicked() = updateFrame(frameScore, Balls.NOBALL, PotType.MISS, PotAction.Switch)
 
     fun onFoulClicked() {
         _eventFoul.value = Event(Unit)
     }
 
-    fun onAddRedClicked() = updateFrame(crtFrame, Balls.RED, PotType.ADD_RED, PotAction.Continue)
+    fun onAddRedClicked() = updateFrame(frameScore, Balls.RED, PotType.ADD_RED, PotAction.Continue)
 
     fun onRerackClicked() = resetFrame()
 
@@ -99,7 +105,7 @@ class GameFragmentViewModel(
             in listOf(PotType.MISS, PotType.SAFE) -> if (isColor()) ballStack.push(Balls.COLOR)
             else -> {}
         }
-        calcPoints(crtFrame, lastPot.ball, lastPot.potType, -1)
+        calcPoints(frameScore, lastPot.ball, lastPot.potType, -1)
         getFrameStatus()
     }
 
@@ -109,13 +115,13 @@ class GameFragmentViewModel(
             in listOf(PotType.HIT, PotType.FREE) -> ballStack.pop()
             in listOf(PotType.REMOVE_RED, PotType.ADD_RED) -> repeat(2) { ballStack.pop() }
             else -> {
-                if (potAction == PotAction.Switch) crtFrame = crtFrame.otherPlayer() // Switch players
+                if (potAction == PotAction.Switch) frameScore = frameScore.otherPlayer() // Switch players
                 if (ballStack.peek() == Balls.FREE) repeat(if (inColors()) 1 else 2) { ballStack.pop() }
                 if (ballStack.peek() == Balls.COLOR) ballStack.pop()
             }
         }
         calcPoints(currentPlayer, ball, potType, 1)
-        if (ballStack.size == 1 && crtFrame.framePoints == crtFrame.otherPlayer().framePoints) ballStack.push(Balls.BLACK)
+        if (ballStack.size == 1 && frameScore.framePoints == frameScore.otherPlayer().framePoints) ballStack.push(Balls.BLACK)
         addToFrameStack(currentPlayer, Pot(ball, potType, potAction))
         getFrameStatus()
     }
@@ -157,10 +163,10 @@ class GameFragmentViewModel(
 
     private fun removeFromFrameStack(): Pot {
         if (frameStack.peek()!!.pots.size == 0) frameStack.pop()
-        crtFrame = frameStack.peek()!!.player
+        frameScore = frameStack.peek()!!.player
         val crtPot: Pot = frameStack.peek()!!.pots.pop()
         frameStack.peek()!!.breakSize -= crtPot.ball.points
-        crtFrame.findMaxBreak(frameStack)
+        frameScore.findMaxBreak(frameStack)
         if (frameStack.size == 1 && frameStack.peek()!!.pots.size == 0) frameStack.pop()
         return crtPot
     }
@@ -170,7 +176,7 @@ class GameFragmentViewModel(
         _frameState.value = ballStack.peek()!!.ballType
         _ballStackSize.value = ballStack.size
         _displayFrameStack.value = frameStack
-        _displayPlayer.value = crtFrame
+        _displayPlayer.value = frameScore
     }
 
     private fun inColors(): Boolean = ballStack.size <= 7
@@ -194,38 +200,43 @@ class GameFragmentViewModel(
     // Match Helpers
     private fun endFrame() {
         val player =
-            if (crtFrame.getFirstPlayer().framePoints > crtFrame.getSecondPlayer().framePoints) crtFrame.getFirstPlayer()
-            else crtFrame.getSecondPlayer()
+            if (frameScore.getFirstPlayer().framePoints > frameScore.getSecondPlayer().framePoints) frameScore.getFirstPlayer()
+            else frameScore.getSecondPlayer()
         if (player.matchPoints + 1 == matchFrames) assignMatchAction(MatchAction.MATCH_ENDED)
         else assignMatchAction(if (ballStack.size == 1) MatchAction.FRAME_ENDED else MatchAction.END_FRAME)
     }
 
     fun matchEnded() {
         frameEnded()
-        _currentMatch.value = crtMatch
         resetMatch()
     }
 
     fun frameEnded() {
-        if (crtFrame.getFirstPlayer().framePoints > crtFrame.getSecondPlayer().framePoints) crtFrame.getFirstPlayer().incrementMatchPoint()
-        else crtFrame.getSecondPlayer().incrementMatchPoint()
-        crtMatch.frames.add(crtFrame)
-        crtMatch.frameStacks.add(frameStack)
+        if (frameScore.getFirstPlayer().framePoints > frameScore.getSecondPlayer().framePoints) frameScore.getFirstPlayer().incrementMatchPoint()
+        else frameScore.getSecondPlayer().incrementMatchPoint()
+        viewModelScope.launch {
+            snookerRepository.addFrames(Frame(frameCount, frameScore.getFirstPlayer().asFrameScore()))
+        }
         resetFrame()
+        frameCount += 1
     }
 
     fun resetMatch() {
-        crtMatch = CurrentMatch(ArrayList(), ArrayList())
-        crtFrame = if (matchBreaksFirst == 0) CurrentFrame.PlayerA else CurrentFrame.PlayerB
-        crtFrame.getFirstPlayer().matchPoints = 0
-        crtFrame.getSecondPlayer().matchPoints = 0
+        frameScore = if (matchBreaksFirst == 0) CurrentFrame.PlayerA else CurrentFrame.PlayerB
+        frameScore.getFirstPlayer().matchPoints = 0
+        frameScore.getSecondPlayer().matchPoints = 0
+        frameCount = 0
         resetFrame()
+        viewModelScope.launch {
+            Timber.e("deleeeeeeete")
+            snookerRepository.removeFrames()
+        }
     }
 
     private fun resetFrame() {
-        if (crtFrame.getFirstPlayer().matchPoints != 0 || crtFrame.getSecondPlayer().matchPoints != 0) crtFrame = crtFrame.otherPlayer()
-        crtFrame.getFirstPlayer().framePoints = 0
-        crtFrame.getSecondPlayer().framePoints = 0
+        if (frameScore.getFirstPlayer().matchPoints != 0 || frameScore.getSecondPlayer().matchPoints != 0) frameScore = frameScore.otherPlayer()
+        frameScore.getFirstPlayer().framePoints = 0
+        frameScore.getSecondPlayer().framePoints = 0
         ballStack.apply {
             frameStack.clear()
             clear()

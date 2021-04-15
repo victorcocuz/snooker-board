@@ -11,7 +11,7 @@
 
         <variable
             name="foulViewModel"
-            type="com.example.snookerscore.fragments.game.dialogs.GameFoulDialogViewModel" />
+            type="com.example.snookerscore.fragments.gamedialogs.GameFoulDialogViewModel" />
 
         <variable
             name="foulActions"
@@ -21,7 +21,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragments.game.dialogs.GameFoulDialogFragment">
+        tools:context=".fragments.gamedialogs.GameFoulDialogFragment">
 
         <TextView
             android:id="@+id/foul_title"

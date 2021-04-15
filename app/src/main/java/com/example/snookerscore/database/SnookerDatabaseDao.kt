@@ -5,21 +5,33 @@ import androidx.room.*
 
 @Dao
 interface SnookerDatabaseDao {
+
+    // Ranking
     @Insert
-    fun insert(ranking: DatabaseRanking)
+    fun insertRanking(ranking: DatabaseRanking)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(vararg rankings: DatabaseRanking)
+    fun insertAllRankings(vararg rankings: DatabaseRanking)
 
     @Update
-    fun update(ranking: DatabaseRanking)
+    fun updateRanking(ranking: DatabaseRanking)
 
     @Query("SELECT * from rankings_table WHERE position = :id")
-    fun get (id: Int): DatabaseRanking
+    fun getRanking (id: Int): DatabaseRanking
 
     @Query("DELETE FROM rankings_table")
-    fun clear()
+    fun clearRanking()
 
     @Query("SELECT * FROM rankings_table ORDER BY position ASC")
-    fun getRankings(): LiveData<List<DatabaseRanking>>
+    fun getAllRankings(): LiveData<List<DatabaseRanking>>
+
+    // Frames
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertFrame(vararg frame: DatabaseFrame)
+
+    @Query("SELECT * FROM frames_table ORDER BY frameCount ASC")
+    fun getAllFrames(): LiveData<List<DatabaseFrame>>
+
+    @Query("DELETE FROM frames_table")
+    fun deleteFrames()
 }

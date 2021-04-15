@@ -1,19 +1,43 @@
 package com.example.snookerscore.fragments.game
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.RawValue
+import com.example.snookerscore.database.DatabaseFrame
 import java.util.*
 
 enum class MatchAction {
     CANCEL_MATCH, END_FRAME, FRAME_ENDED, END_MATCH, MATCH_ENDED
 }
 
-@Parcelize
-data class CurrentMatch(
-    val frames: @RawValue ArrayList<CurrentFrame>,
-    val frameStacks: @RawValue ArrayList<ArrayDeque<Break>>
-) : Parcelable
+data class Frame(
+    val frameCount: Int,
+    val frameScore: FrameScore
+)
+
+fun Frame.asDatabaseFrame() : DatabaseFrame {
+    return DatabaseFrame(
+        frameCount = this.frameCount,
+        frameScore = this.frameScore
+    )
+}
+
+data class FrameScore(
+    val framePoints: Int,
+    val matchPoints: Int,
+    val successShots: Int,
+    val missedShots: Int,
+    val fouls: Int,
+    val highestBreak: Int
+)
+
+fun CurrentFrame.asFrameScore() : FrameScore {
+    return FrameScore(
+        framePoints = this.framePoints,
+        matchPoints = this.matchPoints,
+        successShots = this.successShots,
+        missedShots = this.missedShots,
+        fouls = this.fouls,
+        highestBreak = this.highestBreak
+    )
+}
 
 sealed class CurrentFrame(
     var framePoints: Int,

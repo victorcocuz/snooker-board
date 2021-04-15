@@ -37,6 +37,12 @@ android {
     buildFeatures {
         dataBinding true
     }
+    configurations.all {
+        resolutionStrategy {
+            force("org.antlr:antlr4-runtime:4.9.1")
+            force("org.antlr:antlr4-tool:4.9.1")
+        }
+    }
 }
 
 dependencies {
@@ -67,6 +73,7 @@ dependencies {
 
     // Room
     implementation "androidx.room:room-runtime:$version_room"
+    implementation "androidx.room:room-ktx:$version_room"
     kapt "androidx.room:room-compiler:$version_room"
 
     // Work

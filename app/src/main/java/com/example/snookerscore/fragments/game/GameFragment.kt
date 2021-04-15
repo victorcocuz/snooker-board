@@ -12,16 +12,8 @@ import com.example.snookerscore.utils.EventObserver
 import java.util.*
 
 class GameFragment : androidx.fragment.app.Fragment() {
+    private val gameFragmentViewModel: GameFragmentViewModel by activityViewModels()
     private lateinit var ballsList: List<Ball>
-    private val gameFragmentViewModel: GameFragmentViewModel by activityViewModels {
-        GameFragmentViewModelFactory(
-            requireNotNull(this.activity).application,
-            GameFragmentArgs.fromBundle(requireArguments()).matchFrames,
-            GameFragmentArgs.fromBundle(requireArguments()).matchReds,
-            GameFragmentArgs.fromBundle(requireArguments()).matchFoulModifier,
-            GameFragmentArgs.fromBundle(requireArguments()).matchBreaksFirst
-        )
-    }
     private lateinit var ballAdapter: BallAdapter
     private lateinit var binding: FragmentGameBinding
 

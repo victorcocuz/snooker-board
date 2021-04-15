@@ -6,16 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import com.example.snookerscore.GenericViewModelFactory
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentPlayBinding
+import com.example.snookerscore.fragments.game.GameFragmentViewModel
 import com.example.snookerscore.utils.EventObserver
 
 class PlayFragment : Fragment() {
 
     private val playFragmentViewModel: PlayFragmentViewModel by viewModels()
-
+    private val gameFragmentViewModel: GameFragmentViewModel by activityViewModels {
+        GenericViewModelFactory(requireNotNull(this.activity).application)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,6 +57,12 @@ class PlayFragment : Fragment() {
             }
 
             fragPlayBtnPlay.setOnClickListener {
+                gameFragmentViewModel.setMatchRules(
+                    viewModel!!.eventFrames.value!!.peekContent(),
+                    viewModel!!.eventReds.value!!.peekContent(),
+                    viewModel!!.eventFoulModifier.value!!.peekContent(),
+                    viewModel!!.eventBreaksFirst.value!!.peekContent()
+                )
                 it.findNavController().navigate(
                     PlayFragmentDirections.actionPlayFragmentToGameFragment(
                         viewModel!!.eventFrames.value!!.peekContent(),

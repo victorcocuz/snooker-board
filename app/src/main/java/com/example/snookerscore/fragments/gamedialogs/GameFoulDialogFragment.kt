@@ -1,4 +1,4 @@
-package com.example.snookerscore.fragments.game.dialogs
+package com.example.snookerscore.fragments.gamedialogs
 
 import android.os.Bundle
 import android.view.LayoutInflater
