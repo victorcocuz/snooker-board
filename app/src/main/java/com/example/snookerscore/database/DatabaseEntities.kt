@@ -1,8 +1,8 @@
 package com.example.snookerscore.database
 
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
 import com.example.snookerscore.domain.DomainRanking
 import com.example.snookerscore.fragments.game.Frame
 import com.example.snookerscore.fragments.game.FrameScore
@@ -10,7 +10,7 @@ import com.example.snookerscore.fragments.game.FrameScore
 @Entity(tableName = "rankings_table")
 data class DatabaseRanking constructor(
     @PrimaryKey
-    var position: Int = 0,
+    val position: Int = 0,
     val name: String = "",
     val points: Int = 0
 )
@@ -18,10 +18,9 @@ data class DatabaseRanking constructor(
 @Entity(tableName = "frames_table")
 data class DatabaseFrame constructor(
     @PrimaryKey
-    var frameCount: Int = 0,
+    val frameCount: Int = 0,
 
-    @Embedded
-    var frameScore: FrameScore
+    val frameScore: List<FrameScore>
 )
 
 fun List<DatabaseRanking>.asDomainRankings(): List<DomainRanking> {

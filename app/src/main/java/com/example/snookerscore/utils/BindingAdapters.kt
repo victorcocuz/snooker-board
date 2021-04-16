@@ -77,6 +77,11 @@ fun TextView.setShotPercentage(success: Double, miss: Double) {
     text = if (success + miss > 0) df.format((success / (success + miss))) else "N/A"
 }
 
+@BindingAdapter("matchPointsPlayerA", "matchPointsPlayerB")
+fun TextView.setMatchPoints(matchPointsPlayerA: Int, matchPointsPlayerB: Int) {
+    text = context.getString(R.string.game_match_score, matchPointsPlayerA, matchPointsPlayerB)
+}
+
 // Game Actions
 @BindingAdapter("setMissSafeFoulEnabled")
 fun TextView.setMissSafeFoulEnabled(size: Int) {

@@ -57,7 +57,7 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
     private val database = SnookerDatabase.getDatabase(application)
     private val snookerRepository = SnookerRepository(database)
     private var ballStack = ArrayDeque<Ball>()
-    private var frameCount = 0
+    private var frameCount = 1
     private lateinit var frameScore: CurrentFrame
     private val frameStack = ArrayDeque<Break>()
 
@@ -213,7 +213,7 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
         if (frameScore.getFirstPlayer().framePoints > frameScore.getSecondPlayer().framePoints) frameScore.getFirstPlayer().incrementMatchPoint()
         else frameScore.getSecondPlayer().incrementMatchPoint()
         viewModelScope.launch {
-            snookerRepository.addFrames(Frame(frameCount, frameScore.getFirstPlayer().asFrameScore()))
+            snookerRepository.addFrames(Frame(frameCount, listOf(frameScore.getFirstPlayer().asFrameScore(), frameScore.getSecondPlayer().asFrameScore())))
         }
         resetFrame()
         frameCount += 1
@@ -221,9 +221,9 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
 
     fun resetMatch() {
         frameScore = if (matchBreaksFirst == 0) CurrentFrame.PlayerA else CurrentFrame.PlayerB
-        frameScore.getFirstPlayer().matchPoints = 0
-        frameScore.getSecondPlayer().matchPoints = 0
-        frameCount = 0
+        frameScore.getFirstPlayer().resetMatchScore()
+        frameScore.getSecondPlayer().resetMatchScore()
+        frameCount = 1
         resetFrame()
         viewModelScope.launch {
             snookerRepository.removeFrames()
@@ -232,8 +232,8 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
 
     private fun resetFrame() {
         if (frameScore.getFirstPlayer().matchPoints != 0 || frameScore.getSecondPlayer().matchPoints != 0) frameScore = frameScore.otherPlayer()
-        frameScore.getFirstPlayer().framePoints = 0
-        frameScore.getSecondPlayer().framePoints = 0
+        frameScore.getFirstPlayer().resetFrameScore()
+        frameScore.getSecondPlayer().resetFrameScore()
         ballStack.apply {
             frameStack.clear()
             clear()

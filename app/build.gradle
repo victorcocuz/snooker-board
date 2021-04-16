@@ -76,12 +76,14 @@ dependencies {
     implementation "androidx.room:room-ktx:$version_room"
     kapt "androidx.room:room-compiler:$version_room"
 
+
     // Work
     implementation "android.arch.work:work-runtime-ktx:$version_work"
 
     // Others
     implementation "com.jakewharton.timber:timber:$version_timber" // Timber
     implementation 'com.shawnlin:number-picker:2.4.12' // Number Picker
+    implementation 'com.google.code.gson:gson:2.8.6' // Gson
 
     // Test Implementations
     testImplementation "junit:junit:$version_junit"

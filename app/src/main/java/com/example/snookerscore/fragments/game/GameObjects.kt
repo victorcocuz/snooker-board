@@ -9,7 +9,7 @@ enum class MatchAction {
 
 data class Frame(
     val frameCount: Int,
-    val frameScore: FrameScore
+    val frameScore: List<FrameScore>
 )
 
 fun Frame.asDatabaseFrame() : DatabaseFrame {
@@ -84,6 +84,18 @@ sealed class CurrentFrame(
             if (this == crtBreak.player && crtBreak.breakSize > highestBreak) highestBreak = crtBreak.breakSize
         }
         this.highestBreak = highestBreak
+    }
+
+    fun resetFrameScore() {
+        this.framePoints = 0
+        this.highestBreak = 0
+        this.missedShots = 0
+        this.successShots = 0
+    }
+
+    fun resetMatchScore() {
+        this.matchPoints = 0
+        resetFrameScore()
     }
 }
 
