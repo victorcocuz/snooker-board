@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="viewModel"
             type="com.example.snookerscore.fragments.play.PlayFragmentViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.motion.widget.MotionLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragments.play.PlayFragment">
+        tools:context=".fragments.play.PlayFragment"
+        app:layoutDescription="@xml/fragment_play_scene">
 
         <TextView
             android:id="@+id/frag_play_label_players"
@@ -23,10 +23,22 @@
             android:text="Choose Players:"
             app:layout_constraintBottom_toTopOf="@+id/frag_play_label_frames"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.154"
+            app:layout_constraintHorizontal_bias="0.2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="spread_inside" />
+
+
+        <ImageView
+            android:id="@+id/frag_play_ball_first_player"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_player_A"
+            app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_player_A"
+            app:layout_constraintTop_toTopOf="@+id/frag_play_btn_player_A"
+            app:srcCompat="@drawable/ball_red"
+            android:contentDescription="Ball to click to choose who goes first" />
 
         <TextView
             android:id="@+id/frag_play_btn_player_A"
@@ -260,5 +272,5 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/frag_play_label_foul_modifier" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.motion.widget.MotionLayout>
 </layout>
