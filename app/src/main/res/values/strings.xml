@@ -14,4 +14,11 @@
     <string name="game_total_score">(%1$d)</string>
     <string name="game_match_score">(%1$d - %2$d)</string>
     <string name="game_percentage">%1$d%</string>
+
+    <!-- Notifications -->
+    <string name="game_notification_channel_id" translatable="false">game_channel</string>
+    <string name="game_notification_channel_name" translatable="false">Snooker</string>
+    <string name="notification_title">Snooker Score</string>
+    <string name="notification_text">Congratulations! You finished the game!</string>
+
 </resources>

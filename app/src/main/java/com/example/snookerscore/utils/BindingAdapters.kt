@@ -4,8 +4,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.example.snookerscore.R
+import com.example.snookerscore.domain.DomainRanking
 import com.example.snookerscore.fragments.game.*
+import com.example.snookerscore.fragments.gamestatistics.GameStatsAdapter
+import com.example.snookerscore.fragments.rankings.RankingsAdapter
 import java.text.DecimalFormat
 import kotlin.math.abs
 
@@ -154,4 +158,18 @@ fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
         MatchAction.FRAME_ENDED -> "This frame will end. Would you like to proceed?"
         MatchAction.MATCH_ENDED -> "This match will end. Would you like to proceed?"
     }
+}
+
+// RV Adapters
+@BindingAdapter("listRankingsData")
+fun bindRankingsRv(recyclerView: RecyclerView, data: List<DomainRanking>?) {
+    val adapter = recyclerView.adapter as RankingsAdapter
+    adapter.submitList(data)
+}
+
+
+@BindingAdapter("listGameStatsData")
+fun bindGameStatsRv(recyclerView: RecyclerView, data: List<Frame>?) {
+    val adapter = recyclerView.adapter as GameStatsAdapter
+    adapter.submitList(data)
 }

@@ -4,108 +4,92 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-<variable
-    name="frame"
-    type="com.example.snookerscore.fragments.game.Frame" />
+
+        <variable
+            name="frame"
+            type="com.example.snookerscore.fragments.game.Frame" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="4dp">
 
         <TextView
             android:id="@+id/item_gamestats_frame_number"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            tools:text="1"
+            android:layout_weight="1"
+            android:gravity="center"
             android:text="@{String.valueOf(frame.frameCount)}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/item_gamestats_player_a_break"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            tools:text="1" />
 
         <TextView
             android:id="@+id/item_gamestats_player_a_break"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
             android:text="@{String.valueOf(frame.frameScore[0].highestBreak)}"
-            app:layout_constraintBottom_toBottomOf="@+id/item_gamestats_frame_number"
-            app:layout_constraintEnd_toStartOf="@+id/item_gamestats_player_a_percentage"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/item_gamestats_frame_number"
             tools:text="120" />
 
         <TextView
             android:id="@+id/item_gamestats_player_a_percentage"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/item_gamestats_frame_number"
-            app:layout_constraintEnd_toStartOf="@+id/item_gamestats_player_a_frame_points"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/item_gamestats_player_a_break"
+            android:layout_weight="1"
+            android:gravity="center"
             app:shotMiss="@{frame.frameScore[0].missedShots}"
             app:shotSuccess="@{frame.frameScore[0].successShots}"
             tools:text="50%" />
 
         <TextView
             android:id="@+id/item_gamestats_player_a_frame_points"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
             android:text="@{String.valueOf(frame.frameScore[0].framePoints)}"
-            app:layout_constraintBottom_toBottomOf="@+id/item_gamestats_frame_number"
-            app:layout_constraintEnd_toStartOf="@+id/item_gamestats_match_points"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/item_gamestats_player_a_percentage"
             tools:text="12" />
 
         <TextView
             android:id="@+id/item_gamestats_match_points"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
             app:matchPointsPlayerA="@{frame.frameScore[0].matchPoints}"
             app:matchPointsPlayerB="@{frame.frameScore[1].matchPoints}"
-            app:layout_constraintBottom_toBottomOf="@+id/item_gamestats_frame_number"
-            app:layout_constraintEnd_toStartOf="@+id/item_gamestats_player_b_frame_points"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/item_gamestats_player_a_frame_points"
             tools:text="(1-0)" />
 
         <TextView
             android:id="@+id/item_gamestats_player_b_frame_points"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
             android:text="@{String.valueOf(frame.frameScore[1].framePoints)}"
-            app:layout_constraintBottom_toBottomOf="@+id/item_gamestats_frame_number"
-            app:layout_constraintEnd_toStartOf="@+id/item_gamestats_player_b_percentage"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/item_gamestats_match_points"
             tools:text="18" />
 
         <TextView
             android:id="@+id/item_gamestats_player_b_percentage"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/item_gamestats_frame_number"
-            app:layout_constraintEnd_toStartOf="@+id/item_gamestats_player_b_break"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/item_gamestats_player_b_frame_points"
+            android:layout_weight="1"
+            android:gravity="center"
             app:shotMiss="@{frame.frameScore[1].missedShots}"
             app:shotSuccess="@{frame.frameScore[1].successShots}"
             tools:text="48%" />
 
         <TextView
             android:id="@+id/item_gamestats_player_b_break"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
             android:text="@{String.valueOf(frame.frameScore[1].highestBreak)}"
-            app:layout_constraintBottom_toBottomOf="@+id/item_gamestats_frame_number"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/item_gamestats_player_b_percentage"
             tools:text="138" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </layout>

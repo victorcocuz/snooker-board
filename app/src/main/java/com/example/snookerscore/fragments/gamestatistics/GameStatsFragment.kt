@@ -11,12 +11,16 @@ import androidx.navigation.findNavController
 import com.example.snookerscore.GenericViewModelFactory
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameStatsBinding
+import com.example.snookerscore.utils.setupGameNotification
 
 class GameStatsFragment : Fragment() {
+
+//    private val application = requireNotNull(this.activity).application
 
     private val gameStatsViewModel: GameStatsViewModel by lazy {
         ViewModelProvider(this, GenericViewModelFactory(requireNotNull(this.activity).application)).get(GameStatsViewModel::class.java)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,9 +38,7 @@ class GameStatsFragment : Fragment() {
             gameStatsRv.adapter = GameStatsAdapter()
         }
 
-//        gameStatsViewModel.frames.observe(viewLifecycleOwner, {
-//            Timber.e("test ${it}")
-//        })
+        setupGameNotification(requireActivity())
 
         return binding.root
     }
