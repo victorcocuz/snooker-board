@@ -7,13 +7,18 @@
     <string name="menu_bottom_play">Play</string>
     <string name="menu_bottom_statistics">Statistics</string>
     <string name="menu_bottom_history">History</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Menu Items -->
+    <string name="menu_item_undo">Undo</string>
+    <string name="menu_item_rerack">Rerack</string>
+    <string name="menu_item_remove_red">Remove Red</string>
+    <string name="menu_item_concede_frame">Concede Frame</string>
+    <string name="menu_item_concede_match">Concede Match</string>
 
     <!-- Binding -->
     <string name="game_total_score">(%1$d)</string>
     <string name="game_match_score">(%1$d - %2$d)</string>
-    <string name="game_percentage">%1$d%</string>
 
     <!-- Notifications -->
     <string name="game_notification_channel_id" translatable="false">game_channel</string>
@@ -21,4 +26,82 @@
     <string name="notification_title">Snooker Score</string>
     <string name="notification_text">Congratulations! You finished the game!</string>
 
+    <!-- Dialogs -->
+    <string name="dialog_gen_no">NO</string>
+    <string name="dialog_gen_yes">YES</string>
+
+    <!-- Actions -->
+    <string name="action_safe">SAFE</string>
+    <string name="action_miss">MISS</string>
+    <string name="action_foul">FOUL</string>
+    <string name="action_add_red">++RED</string>
+    <string name="action_rerack">RERACK</string>
+    <string name="action_end">END</string>
+    <string name="action_finish">FINISH</string>
+    <string name="action_undo">UNDO</string>
+    <string name="action_cancel">Cancel</string>
+
+    <!-- Items -->
+    <string name="item_ball_view_ball">Ball to be clicked</string>
+
+    <!-- Fragment Login -->
+    <string name="fragment_login_title">FRAGMENT LOGIN</string>
+
+    <!-- Fragment Rankings -->
+    <string name="fragment_rankings_label_position">POSITION</string>
+    <string name="fragment_rankings_label_name">NAME</string>
+    <string name="fragment_rankings_label_points">POINTS</string>
+    <string name="fragment_statistics_title">FRAGMENT STATISTICS</string>
+
+    <!-- Fragment Game Stats -->
+    <string name="fragment_game_stats_btn_go_to_play">GO TO PLAY FRAGMENT</string>
+
+    <!-- Fragment History -->
+    <string name="fragment_history_title">HISTORY FRAGMENT</string>
+
+    <!-- Fragment Friends -->
+    <string name="fragment_friends_title">FRIENDS FRAGMENT</string>
+
+    <!-- Fragment Play -->
+    <string name="fragment_play_label_players">Choose Players:</string>
+    <string name="fragment_play_contentd_desc_ball_first">Ball to click to choose who goes first</string>
+    <string name="fragment_play_btn_player_a">You</string>
+    <string name="fragment_play_label_vs">VS</string>
+    <string name="fragment_play_btn_player_b">Guest</string>
+    <string name="fragment_play_label_frames">Choose Frames:</string>
+    <string name="fragment_play_label_breaks_first">Choose who breaks:</string>
+    <string name="fragment_play_btn_break_player_a">You</string>
+    <string name="fragment_play_btn_break_random">Random</string>
+    <string name="fragment_play_btn_break_player_b">Guest</string>
+    <string name="fragment_play_label_reds">Choose Reds:</string>
+    <string name="fragment_play_btn_reds_six">6</string>
+    <string name="fragment_play_btn_reds_ten">10</string>
+    <string name="fragment_play_btn_reds_fifteen">15</string>
+    <string name="fragment_play_label_foul_modifier">Default Foul Points:</string>
+    <string name="fragment_play_btn_foul_one">-3</string>
+    <string name="fragment_play_btn_foul_two">-2</string>
+    <string name="fragment_play_btn_foul_three">-1</string>
+    <string name="fragment_play_btn_foul_four">0</string>
+    <string name="fragment_play_btn_play">PLAY</string>
+
+    <!-- Fragment Game -->
+    <string name="fragment_game_label_player_a">Player A</string>
+    <string name="fragment_game_label_player_b">Player B</string>
+    <string name="fragment_game_label_remaining">Remaining</string>
+    <string name="fragment_game_label_difference">Difference</string>
+
+    <!-- Fragment Foul -->
+    <string name="foul_label_title">Foul</string>
+    <string name="foul_label_choose_ball">Which ball?</string>
+    <string name="fragment_foul_label_choose_action">Which action?</string>
+    <string name="fragment_game_foul_action_continue">I\'LL PLAY</string>
+    <string name="fragment_foul_action_force_continue">FORCE CONTINUE/RETAKE</string>
+    <string name="fragment_foul_action_free_ball">Free Ball</string>
+    <string name="fragment_foul_label_other_actions">Other actions</string>
+    <string name="fragment_foul_action_remove_red">Remove Red</string>
+    <string name="fragment_foul_cancel">Cancel</string>
+    <string name="fragment_foul_ok">OK</string>
+    <string name="fragment_statistics_header_break">Break</string>
+    <string name="fragment_statistics_header_points">Points</string>
+    <string name="fragment_statistics_header_score">Score</string>
 </resources>

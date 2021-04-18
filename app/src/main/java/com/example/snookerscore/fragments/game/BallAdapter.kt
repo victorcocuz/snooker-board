@@ -7,8 +7,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snookerscore.databinding.ItemBallViewBinding
+import java.util.*
 
-class BallAdapter(private val clickListener: BallListener, private val ballStackSize: LiveData<Int>): ListAdapter<Ball, BallAdapter.ViewHolder>(BallAdapterCallback()) {
+class BallAdapter(private val clickListener: BallListener, private val ballStackSize: LiveData<ArrayDeque<Ball>>): ListAdapter<Ball, BallAdapter.ViewHolder>(BallAdapterCallback()) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -20,10 +21,10 @@ class BallAdapter(private val clickListener: BallListener, private val ballStack
     }
 
     class ViewHolder private constructor(val binding: ItemBallViewBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Ball, clickListener: BallListener, ballStack: LiveData<Int>) {
+        fun bind(item: Ball, clickListener: BallListener, ballStack: LiveData<ArrayDeque<Ball>>) {
             binding.apply {
                 ball = item
-                this.ballStackSize = ballStack.value!!
+                this.ballStackSize = ballStack.value!!.size
                 this.clickListener = clickListener
                 executePendingBindings()
             }

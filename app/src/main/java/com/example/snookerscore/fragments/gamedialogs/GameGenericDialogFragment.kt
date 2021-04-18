@@ -20,7 +20,7 @@ class GameGenericDialogFragment : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding: FragmentGameGenDialogBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_game_gen_dialog, container, false)
         val action = GameGenericDialogFragmentArgs.fromBundle(requireArguments()).matchAction

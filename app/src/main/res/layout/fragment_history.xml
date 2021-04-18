@@ -11,11 +11,10 @@
         android:layout_height="match_parent"
         tools:context=".fragments.main.HistoryFragment">
 
-        <!-- TODO: Update blank fragment layout -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="HISTORY FRAGMENT" />
+            android:text="@string/fragment_history_title" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

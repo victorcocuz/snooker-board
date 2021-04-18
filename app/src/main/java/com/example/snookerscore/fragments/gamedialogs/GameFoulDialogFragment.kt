@@ -15,6 +15,7 @@ import com.example.snookerscore.databinding.FragmentGameFoulDialogBinding
 import com.example.snookerscore.fragments.game.*
 import com.example.snookerscore.utils.EventObserver
 import com.example.snookerscore.utils.toast
+import java.util.*
 
 class GameFoulDialogFragment : DialogFragment() {
     private lateinit var ballsList: List<Ball>
@@ -31,7 +32,7 @@ class GameFoulDialogFragment : DialogFragment() {
         val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         val ballAdapter = BallAdapter(BallListener { ball ->
             foulDialogViewModel.onBallClicked(ball)
-        }, MutableLiveData(0))
+        }, MutableLiveData(ArrayDeque<Ball>()))
 
         binding.apply {
             lifecycleOwner = this@GameFoulDialogFragment
@@ -68,9 +69,9 @@ class GameFoulDialogFragment : DialogFragment() {
             eventCancelDialog.observe(viewLifecycleOwner, EventObserver {
                 dismiss()
             })
-            ballStackSize.observe(viewLifecycleOwner, { ballStackSize ->
+            displayBallStack.observe(viewLifecycleOwner, { ballStack ->
                 Balls.apply {
-                    ballsList = when(ballStackSize) {
+                    ballsList = when(ballStack.size) {
                         2 -> listOf(WHITE, BLACK)
                         3 -> listOf(WHITE, PINK, BLACK)
                         4 -> listOf(WHITE, BLUE, PINK, BLACK)

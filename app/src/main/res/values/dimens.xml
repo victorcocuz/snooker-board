@@ -4,8 +4,25 @@
     <dimen name="temp_btn_height">32dp</dimen>
 
     <!-- Margins -->
-    <dimen name="margin_standard">16dp</dimen>
+    <dimen name="margin_xsmall">4dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_medium">16dp</dimen>
     <dimen name="margin_large">32dp</dimen>
-    <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_xlarge">64dp</dimen>
+
+    <!-- Padding -->
+    <dimen name="padding_xsmall">4dp</dimen>
+    <dimen name="padding_button">8dp</dimen>
+    <dimen name="padding_medium">16dp</dimen>
+
+    <!-- Icons -->
+    <dimen name="ball_size">36dp</dimen>
+    <dimen name="icon_bottom_nav_size">24dp</dimen>
+    <dimen name="icon_launcher">108dp</dimen>
+
+    <!-- Strokes -->
+    <dimen name="stroke_single">1dp</dimen>
+
+    <!-- Text -->
+    <dimen name="text_regular">16sp</dimen>
 </resources>

@@ -2,14 +2,18 @@
   <dictionary name="victo">
     <words>
       <w>addred</w>
+      <w>contentd</w>
       <w>freeball</w>
+      <w>gamedialogs</w>
       <w>gamestatistics</w>
       <w>gamestats</w>
+      <w>gson</w>
       <w>moshi</w>
       <w>noball</w>
       <w>removered</w>
       <w>rerack</w>
       <w>snookerscore</w>
+      <w>xsmall</w>
     </words>
   </dictionary>
 </component>

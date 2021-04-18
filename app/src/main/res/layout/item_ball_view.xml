@@ -15,9 +15,10 @@
     </data>
 
     <FrameLayout
-        android:layout_width="36dp"
-        android:layout_height="36dp">
+        android:layout_width="@dimen/ball_size"
+        android:layout_height="@dimen/ball_size">
             <ImageButton
+                android:contentDescription="@string/item_ball_view_ball"
                 android:id="@+id/item_button_ball"
                 app:ballImage="@{ball}"
                 android:onClick="@{() -> clickListener.onClick(ball)}"
@@ -31,6 +32,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:textSize="16sp" />
+                android:textSize="@dimen/text_regular" />
     </FrameLayout>
 </layout>

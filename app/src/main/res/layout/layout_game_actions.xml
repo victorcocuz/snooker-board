@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -18,41 +17,41 @@
             android:id="@+id/game_btn_act_safe"
             style="@style/temp_btn"
             android:onClick="@{() -> gameViewModel.onSafeClicked()}"
-            android:text="SAFE"
+            android:text="@string/action_safe"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_miss"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:setMissSafeFoulEnabled="@{gameViewModel.ballStackSize}" />
+            app:setMissSafeFoulEnabled="@{gameViewModel.displayBallStack.size()}" />
 
         <TextView
             android:id="@+id/game_btn_act_miss"
             style="@style/temp_btn"
             android:onClick="@{() -> gameViewModel.onMissClicked()}"
-            android:text="MISS"
+            android:text="@string/action_miss"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_foul"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_btn_act_safe"
-            app:setMissSafeFoulEnabled="@{gameViewModel.ballStackSize}" />
+            app:setMissSafeFoulEnabled="@{gameViewModel.displayBallStack.size()}" />
 
         <TextView
             android:id="@+id/game_btn_act_foul"
             style="@style/temp_btn"
             android:onClick="@{() -> gameViewModel.onFoulClicked()}"
-            android:text="FOUL"
+            android:text="@string/action_foul"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_add_red"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_btn_act_miss"
-            app:setMissSafeFoulEnabled="@{gameViewModel.ballStackSize}" />
+            app:setMissSafeFoulEnabled="@{gameViewModel.displayBallStack.size()}" />
 
         <TextView
             android:id="@+id/game_btn_act_add_red"
             style="@style/temp_btn"
             android:onClick="@{() -> gameViewModel.onAddRedClicked()}"
-            android:text="++RED"
-            app:addRedEnabled="@{gameViewModel.ballStackSize}"
+            android:text="@string/action_add_red"
+            app:addRedEnabled="@{gameViewModel.displayBallStack.size()}"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -61,9 +60,9 @@
         <TextView
             android:id="@+id/game_btn_act_rerack"
             style="@style/temp_btn"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="@dimen/margin_large"
             android:onClick="@{() -> gameViewModel.onRerackClicked()}"
-            android:text="RERACK"
+            android:text="@string/action_rerack"
             app:layout_constraintBottom_toTopOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_end_frame"
             app:layout_constraintHorizontal_bias="0.5"
@@ -73,7 +72,7 @@
             android:id="@+id/game_btn_act_end_frame"
             style="@style/temp_btn"
             android:onClick="@{() -> gameViewModel.onEndFrameClicked()}"
-            android:text="END"
+            android:text="@string/action_end"
             app:endFrameEnabled="@{gameViewModel.displayPlayer}"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_rerack"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_end_match"
@@ -84,7 +83,7 @@
             android:id="@+id/game_btn_act_end_match"
             style="@style/temp_btn"
             android:onClick="@{() -> gameViewModel.onEndMatchClicked()}"
-            android:text="FINISH"
+            android:text="@string/action_finish"
             app:endMatchEnabled="@{gameViewModel.displayPlayer}"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_rerack"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_undo"
@@ -95,7 +94,7 @@
             android:id="@+id/game_btn_act_undo"
             style="@style/temp_btn"
             android:onClick="@{() -> gameViewModel.onUndoClicked()}"
-            android:text="UNDO"
+            android:text="@string/action_undo"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_rerack"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -105,9 +104,9 @@
         <TextView
             android:id="@+id/game_btn_act_cancel"
             style="@style/temp_btn"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="@dimen/margin_large"
             android:onClick="@{() -> gameViewModel.onCancelMatchClicked()}"
-            android:text="CANCEL"
+            android:text="@string/action_cancel"
             app:layout_constraintBottom_toTopOf="@+id/game_btn_act_rerack"
             app:layout_constraintStart_toStartOf="@+id/game_btn_act_rerack" />
 

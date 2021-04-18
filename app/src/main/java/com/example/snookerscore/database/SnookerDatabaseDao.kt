@@ -34,4 +34,14 @@ interface SnookerDatabaseDao {
 
     @Query("DELETE FROM frames_table")
     fun deleteFrames()
+
+    // Current Match
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    fun insertCrtMatch(crtMatch: DatabaseCrtMatch)
+//
+//    @Query( "Select * FROM current_match_table LIMIT 1")
+//    fun getCurrentMatch(): LiveData<DatabaseCrtMatch>
+//
+//    @Query("DELETE FROM current_match_table")
+//    fun deleteCrtMatch()
 }

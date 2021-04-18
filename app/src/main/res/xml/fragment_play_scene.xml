@@ -5,9 +5,9 @@
     <ConstraintSet android:id="@+id/start">
         <Constraint
             android:id="@+id/frag_play_ball_first_player"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="8dp"
+            android:layout_width="@dimen/margin_large"
+            android:layout_height="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_small"
             android:onClick="@{() -> viewModel.setBreaksFirst(0)}"
             app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_player_A"
             app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_player_A"
@@ -17,9 +17,9 @@
     <ConstraintSet android:id="@+id/end">
         <Constraint
             android:id="@+id/frag_play_ball_first_player"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="8dp"
+            android:layout_width="@dimen/margin_large"
+            android:layout_height="@dimen/margin_large"
+            android:layout_marginStart="@dimen/margin_small"
             android:onClick="@{() -> viewModel.setBreaksFirst(1)}"
             app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_player_A"
             app:layout_constraintStart_toEndOf="@+id/frag_play_btn_player_B"

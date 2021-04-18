@@ -10,9 +10,9 @@ import androidx.core.content.ContextCompat
 import com.example.snookerscore.R
 
 // Notification ID.
-private val NOTIFICATION_ID = 0
-private val REQUEST_CODE = 0
-private val FLAGS = 0
+private const val NOTIFICATION_ID = 0
+//private val REQUEST_CODE = 0
+//private val FLAGS = 0
 
 fun NotificationManager.sendNotification(messageBody: String, applicationContext: Context) {
     val builder = NotificationCompat.Builder(

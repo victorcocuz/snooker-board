@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="ranking"
             type="com.example.snookerscore.domain.DomainRanking" />
@@ -18,9 +17,9 @@
             android:id="@+id/item_ranking_position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_xsmall"
+            android:layout_marginBottom="@dimen/margin_xsmall"
             android:text="@{String.valueOf(ranking.position)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
@@ -43,7 +42,7 @@
             android:id="@+id/item_ranking_points"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="@dimen/margin_medium"
             android:text="@{String.valueOf(ranking.points)}"
             app:layout_constraintBottom_toBottomOf="@+id/item_ranking_position"
             app:layout_constraintEnd_toEndOf="parent"

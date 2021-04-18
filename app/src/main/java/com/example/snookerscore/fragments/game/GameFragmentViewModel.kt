@@ -20,8 +20,8 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
     private val _eventFoul = MutableLiveData<Event<Unit>>()
     val eventFoul: LiveData<Event<Unit>> = _eventFoul
 
-    private val _ballStackSize = MutableLiveData<Int>()
-    val ballStackSize: LiveData<Int> = _ballStackSize
+    private val _displayBallStack = MutableLiveData<ArrayDeque<Ball>>()
+    val displayBallStack: LiveData<ArrayDeque<Ball>> = _displayBallStack
 
     private val _displayPlayer = MutableLiveData<CurrentFrame>()
     val displayPlayer: LiveData<CurrentFrame> = _displayPlayer
@@ -56,15 +56,15 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
     // Variables
     private val database = SnookerDatabase.getDatabase(application)
     private val snookerRepository = SnookerRepository(database)
-    private var ballStack = ArrayDeque<Ball>()
     private var frameCount = 1
+    private var ballStack = ArrayDeque<Ball>()
     private lateinit var frameScore: CurrentFrame
     private val frameStack = ArrayDeque<Break>()
 
     // Handler functions
     fun handleFoulDialog(pot: Pot, removeRed: Boolean, freeBall: Boolean) {
         updateFrame(frameScore, pot.ball, pot.potType, pot.potAction)
-        if (removeRed) updateFrame(frameScore, (if (inColors()) ballStack.peek() else Balls.RED), PotType.REMOVE_RED, PotAction.Continue)
+        if (removeRed) updateFrame(frameScore, (if (inColors()) ballStack.peek() else Balls.RED), PotType.REMOVERED, PotAction.Continue)
         if (freeBall) {
             if (inColors()) ballStack.push(Balls.FREE) else for (ball in listOf(Balls.COLOR, Balls.FREE)) ballStack.push(ball)
             getFrameStatus()
@@ -81,7 +81,7 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
         _eventFoul.value = Event(Unit)
     }
 
-    fun onAddRedClicked() = updateFrame(frameScore, Balls.RED, PotType.ADD_RED, PotAction.Continue)
+    fun onAddRedClicked() = updateFrame(frameScore, Balls.RED, PotType.ADDRED, PotAction.Continue)
 
     fun onRerackClicked() = resetFrame()
 
@@ -89,12 +89,12 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
         val lastPot = removeFromFrameStack()
         when (lastPot.potType) {
             PotType.HIT -> ballStack.push(if (isColor()) Balls.COLOR else lastPot.ball)
-            PotType.ADD_RED -> for (ball in listOf(Balls.RED, Balls.COLOR)) ballStack.push(ball)
+            PotType.ADDRED -> for (ball in listOf(Balls.RED, Balls.COLOR)) ballStack.push(ball)
             PotType.FOUL -> {
                 if (ballStack.peek()!!.ballType == BallType.FREE) repeat(if (inColors()) 1 else 2) { ballStack.pop() }
                 if (isColor()) ballStack.push(Balls.COLOR)
             }
-            PotType.REMOVE_RED -> {
+            PotType.REMOVERED -> {
                 onUndoClicked()
                 for (ball in when (isColor()) {
                     true -> listOf(Balls.COLOR, Balls.RED)
@@ -112,7 +112,7 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
     private fun updateFrame(currentPlayer: CurrentFrame, ball: Ball, potType: PotType, potAction: PotAction) {
         when (potType) {
             in listOf(PotType.HIT, PotType.FREE) -> ballStack.pop()
-            in listOf(PotType.REMOVE_RED, PotType.ADD_RED) -> repeat(2) { ballStack.pop() }
+            in listOf(PotType.REMOVERED, PotType.ADDRED) -> repeat(2) { ballStack.pop() }
             else -> {
                 if (potAction == PotAction.Switch) frameScore = frameScore.otherPlayer() // Switch players
                 if (ballStack.peek() == Balls.FREE) repeat(if (inColors()) 1 else 2) { ballStack.pop() }
@@ -130,12 +130,12 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
             PotType.FOUL ->
                 if (ballStack.size in 1..4 && ball == Balls.WHITE) ballStack.peek()!!.foulPoints + matchFoulModifier
                 else ball.foulPoints + matchFoulModifier
-            PotType.REMOVE_RED -> 0
+            PotType.REMOVERED -> 0
             PotType.FREE -> if (inColors()) 1 else ballStack.peek()!!.points
             else -> ball.points
         }
         when (potType) {
-            in listOf(PotType.HIT, PotType.FREE, PotType.ADD_RED) -> {
+            in listOf(PotType.HIT, PotType.FREE, PotType.ADDRED) -> {
                 crtPlayer.addFramePoints(pol * points)
                 crtPlayer.incrementSuccessShots(pol)
             }
@@ -151,9 +151,9 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
     }
 
     private fun addToFrameStack(player: CurrentFrame, pot: Pot) {
-        if (pot.potType !in listOf(PotType.HIT, PotType.FREE, PotType.ADD_RED)
+        if (pot.potType !in listOf(PotType.HIT, PotType.FREE, PotType.ADDRED)
             || frameStack.size == 0
-            || frameStack.peek()!!.pots.peek()?.potType !in listOf(PotType.HIT, PotType.FREE, PotType.ADD_RED)
+            || frameStack.peek()!!.pots.peek()?.potType !in listOf(PotType.HIT, PotType.FREE, PotType.ADDRED)
         ) frameStack.push(Break(player, ArrayDeque<Pot>(), 0))
         frameStack.peek()!!.pots.push(pot)
         frameStack.peek()!!.breakSize += pot.ball.points
@@ -173,7 +173,7 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
     private fun getFrameStatus() {
         if (ballStack.size == 1) endFrame()
         _frameState.value = ballStack.peek()!!.ballType
-        _ballStackSize.value = ballStack.size
+        _displayBallStack.value = ballStack
         _displayFrameStack.value = frameStack
         _displayPlayer.value = frameScore
     }

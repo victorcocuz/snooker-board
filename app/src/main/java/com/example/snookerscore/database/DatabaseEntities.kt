@@ -2,7 +2,6 @@ package com.example.snookerscore.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
 import com.example.snookerscore.domain.DomainRanking
 import com.example.snookerscore.fragments.game.Frame
 import com.example.snookerscore.fragments.game.FrameScore
@@ -15,14 +14,6 @@ data class DatabaseRanking constructor(
     val points: Int = 0
 )
 
-@Entity(tableName = "frames_table")
-data class DatabaseFrame constructor(
-    @PrimaryKey
-    val frameCount: Int = 0,
-
-    val frameScore: List<FrameScore>
-)
-
 fun List<DatabaseRanking>.asDomainRankings(): List<DomainRanking> {
     return map {
         DomainRanking(
@@ -33,6 +24,13 @@ fun List<DatabaseRanking>.asDomainRankings(): List<DomainRanking> {
     }
 }
 
+@Entity(tableName = "frames_table")
+data class DatabaseFrame constructor(
+    @PrimaryKey
+    val frameCount: Int = 0,
+    val frameScore: List<FrameScore>
+)
+
 fun List<DatabaseFrame>.asDomainFrames(): List<Frame> {
     return map {
         Frame(
@@ -41,3 +39,17 @@ fun List<DatabaseFrame>.asDomainFrames(): List<Frame> {
         )
     }
 }
+
+//@Entity(tableName = "current_match_table")
+//data class DatabaseCrtMatch constructor(
+//    @PrimaryKey
+//    val crtMatch: Int = 0,
+//    val matchFrames: Int,
+//    val matchReds: Int,
+//    val matchFoulModifier: Int,
+//    val matchBreaksFirst: Int,
+//    val frameCount: Int,
+//    val ballStack: ArrayDeque<Ball>,
+//    val frameScore: CurrentFrame,
+//    val frameStack: ArrayDeque<Break>
+//)

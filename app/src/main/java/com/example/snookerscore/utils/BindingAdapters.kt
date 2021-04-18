@@ -32,6 +32,7 @@ fun ImageView.setBallImage(item: Ball?) {
                 Balls.BLUE -> R.drawable.ball_blue
                 Balls.PINK -> R.drawable.ball_pink
                 Balls.BLACK -> R.drawable.ball_black
+                Balls.FREE -> R.drawable.ball_grey
                 else -> R.drawable.ball_white
             }
         )
@@ -172,4 +173,14 @@ fun bindRankingsRv(recyclerView: RecyclerView, data: List<DomainRanking>?) {
 fun bindGameStatsRv(recyclerView: RecyclerView, data: List<Frame>?) {
     val adapter = recyclerView.adapter as GameStatsAdapter
     adapter.submitList(data)
+}
+
+// Game Statistics Fragment
+@BindingAdapter("gameStatsFrameNumber")
+fun TextView.bindGameStatsFrameNumber(frame: Frame) {
+    text = when(frame.frameCount) {
+        0 -> "#"
+        100 -> "Total"
+        else -> frame.frameCount.toString()
+    }
 }

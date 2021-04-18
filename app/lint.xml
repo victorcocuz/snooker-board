@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="IconLocation">
+        <ignore path="src/main/res/drawable/btn_grey_normal.png" />
+        <ignore path="src/main/res/drawable/btn_grey_normal.png" />
+        <ignore path="src/main/res/drawable/btn_grey_normal.png" />
+        <ignore path="src/main/res/drawable/btn_grey_normal.png" />
+        <ignore path="src/main/res/drawable/btn_grey_normal.png" />
+        <ignore path="src/main/res/drawable/btn_grey_normal.png" />
+        <ignore path="src/main/res/drawable/btn_red_normal.png" />
+    </issue>
+</lint>

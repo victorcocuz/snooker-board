@@ -40,9 +40,9 @@ class PlayFragment : Fragment() {
 
             playFragmentViewModel.apply {
                 eventReds.observe(viewLifecycleOwner, EventObserver {
-                    fragPlayRedsSix.isSelected = it == 6
-                    fragPlayRedsTen.isSelected = it == 10
-                    fragPlayRedsFifteen.isSelected = it == 15
+                    fragPlayBtnRedsSix.isSelected = it == 6
+                    fragPlayBtnRedsTen.isSelected = it == 10
+                    fragPlayBtnRedsFifteen.isSelected = it == 15
                 })
                 eventFoulModifier.observe(viewLifecycleOwner, EventObserver {
                     fragPlayBtnFoulOne.isSelected = it == -3

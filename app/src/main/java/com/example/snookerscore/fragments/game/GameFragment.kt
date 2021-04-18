@@ -31,7 +31,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
         }
         ballAdapter = BallAdapter(BallListener { ball ->
             gameFragmentViewModel.onBallClicked(Pot(ball, PotType.HIT, ShotActions.CONTINUE))
-        }, gameFragmentViewModel.ballStackSize)
+        }, gameFragmentViewModel.displayBallStack)
 
         binding.apply {
             lifecycleOwner = this@GameFragment

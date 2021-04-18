@@ -139,8 +139,8 @@ sealed class PotType {
     object SAFE : PotType()
     object MISS : PotType()
     object FOUL : PotType()
-    object REMOVE_RED : PotType()
-    object ADD_RED : PotType()
+    object REMOVERED : PotType()
+    object ADDRED : PotType()
 }
 
 sealed class PotAction {

@@ -1,3 +1,7 @@
+@file:Suppress("MemberVisibilityCanBePrivate", "MemberVisibilityCanBePrivate", "MemberVisibilityCanBePrivate",
+    "MemberVisibilityCanBePrivate"
+)
+
 package com.example.snookerscore.utils
 
 import androidx.lifecycle.Observer
