@@ -79,12 +79,45 @@ fun TextView.setGamePointsDiff(crtPlayer: CurrentFrame) {
 @BindingAdapter("shotSuccess", "shotMiss")
 fun TextView.setShotPercentage(success: Double, miss: Double) {
     val df = DecimalFormat("##%")
-    text = if (success + miss > 0) df.format((success / (success + miss))) else "N/A"
+    text = when (success + miss) {
+        in (0.1..10000.0) -> df.format((success / (success + miss)))
+        -2.0 -> "%"
+        else -> "N/A"
+    }
 }
 
 @BindingAdapter("matchPointsPlayerA", "matchPointsPlayerB")
 fun TextView.setMatchPoints(matchPointsPlayerA: Int, matchPointsPlayerB: Int) {
-    text = context.getString(R.string.game_match_score, matchPointsPlayerA, matchPointsPlayerB)
+    text = when (matchPointsPlayerA) {
+        -1 -> context.getString(R.string.fragment_statistics_header_score)
+        else -> context.getString(R.string.game_match_score, matchPointsPlayerA, matchPointsPlayerB)
+    }
+}
+
+// Game Statistics Fragment
+@BindingAdapter("gameStatsFrameNumber")
+fun TextView.bindGameStatsFrameNumber(frameCount: Int) {
+    text = when (frameCount) {
+        -1 -> "#"
+        -2 -> context.getString(R.string.fragment_statistics_footer_total)
+        else -> frameCount.toString()
+    }
+}
+
+@BindingAdapter("gameStatsBreak")
+fun TextView.bindGameStatsBreak(highestBreak: Int) {
+    text = when(highestBreak) {
+        -1 -> context.getString(R.string.fragment_statistics_header_break)
+        else -> highestBreak.toString()
+    }
+}
+
+@BindingAdapter("gameStatsPoints")
+fun TextView.bindGameStatsPoints(framePoints: Int) {
+    text = when(framePoints) {
+        -1 -> context.getString(R.string.fragment_statistics_header_points)
+        else -> framePoints.toString()
+    }
 }
 
 // Game Actions
@@ -170,17 +203,7 @@ fun bindRankingsRv(recyclerView: RecyclerView, data: List<DomainRanking>?) {
 
 
 @BindingAdapter("listGameStatsData")
-fun bindGameStatsRv(recyclerView: RecyclerView, data: List<Frame>?) {
+fun bindGameStatsRv(recyclerView: RecyclerView, data: ArrayList<Pair<FrameScore, FrameScore>>?) {
     val adapter = recyclerView.adapter as GameStatsAdapter
     adapter.submitList(data)
-}
-
-// Game Statistics Fragment
-@BindingAdapter("gameStatsFrameNumber")
-fun TextView.bindGameStatsFrameNumber(frame: Frame) {
-    text = when(frame.frameCount) {
-        0 -> "#"
-        100 -> "Total"
-        else -> frame.frameCount.toString()
-    }
 }

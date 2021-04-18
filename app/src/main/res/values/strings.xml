@@ -104,4 +104,5 @@
     <string name="fragment_statistics_header_break">Break</string>
     <string name="fragment_statistics_header_points">Points</string>
     <string name="fragment_statistics_header_score">Score</string>
+    <string name="fragment_statistics_footer_total">Total</string>
 </resources>

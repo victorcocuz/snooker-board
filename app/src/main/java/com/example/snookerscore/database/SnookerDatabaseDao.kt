@@ -27,13 +27,31 @@ interface SnookerDatabaseDao {
 
     // Frames
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertFrame(vararg frame: DatabaseFrame)
+    fun insertFrame(vararg frame: DatabaseFrameScore)
 
     @Query("SELECT * FROM frames_table ORDER BY frameCount ASC")
-    fun getAllFrames(): LiveData<List<DatabaseFrame>>
+    fun getAllFrames(): LiveData<List<DatabaseFrameScore>>
 
     @Query("DELETE FROM frames_table")
     fun deleteFrames()
+
+    @Query("SELECT SUM(framePoints) FROM frames_table WHERE playerId = :id")
+    fun getSumOfFramePoints(id: Int) : Int
+
+    @Query("SELECT MAX(matchPoints) FROM frames_table WHERE playerId = :id")
+    fun getMaxMatchPoints(id: Int) : Int
+
+    @Query("SELECT SUM(successShots) FROM frames_table WHERE playerId = :id")
+    fun getSumOfSuccessShots(id: Int) : Int
+
+    @Query("SELECT SUM(missedShots) FROM frames_table WHERE playerId = :id")
+    fun getSumOfMissedShots(id: Int) : Int
+
+    @Query("SELECT SUM(fouls) FROM frames_table WHERE playerId = :id")
+    fun getSumOfFouls(id: Int) : Int
+
+    @Query("SELECT MAX(highestBreak) FROM frames_table WHERE playerId = :id")
+    fun getMaxBreak(id: Int) : Int
 
     // Current Match
 //    @Insert(onConflict = OnConflictStrategy.REPLACE)

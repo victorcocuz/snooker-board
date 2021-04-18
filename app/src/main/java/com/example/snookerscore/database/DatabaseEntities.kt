@@ -3,7 +3,6 @@ package com.example.snookerscore.database
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.snookerscore.domain.DomainRanking
-import com.example.snookerscore.fragments.game.Frame
 import com.example.snookerscore.fragments.game.FrameScore
 
 @Entity(tableName = "rankings_table")
@@ -25,19 +24,45 @@ fun List<DatabaseRanking>.asDomainRankings(): List<DomainRanking> {
 }
 
 @Entity(tableName = "frames_table")
-data class DatabaseFrame constructor(
-    @PrimaryKey
-    val frameCount: Int = 0,
-    val frameScore: List<FrameScore>
+data class DatabaseFrameScore constructor(
+    @PrimaryKey(autoGenerate = true)
+    val scoreId: Int = 0,
+    val frameCount: Int,
+    val playerId: Int,
+    val framePoints: Int,
+    val matchPoints: Int,
+    val successShots: Int,
+    val missedShots: Int,
+    val fouls: Int,
+    val highestBreak: Int
 )
 
-fun List<DatabaseFrame>.asDomainFrames(): List<Frame> {
-    return map {
-        Frame(
-            frameCount = it.frameCount,
-            frameScore = it.frameScore
+fun List<DatabaseFrameScore>.asDomainFrameScoreList(): ArrayList<Pair<FrameScore, FrameScore>> {
+    val frameScoreList = ArrayList<Pair<FrameScore, FrameScore>>()
+    for (i in this.indices step 2) {
+        val frameScoreA = FrameScore(
+            frameCount = this[i].frameCount,
+            playerId = this[i].playerId,
+            framePoints = this[i].framePoints,
+            matchPoints = this[i].matchPoints,
+            successShots = this[i].successShots,
+            missedShots = this[i].missedShots,
+            fouls = this[i].fouls,
+            highestBreak = this[i].highestBreak,
         )
+        val frameScoreB = FrameScore(
+            frameCount = this[i + 1].frameCount,
+            playerId = this[i + 1].playerId,
+            framePoints = this[i + 1].framePoints,
+            matchPoints = this[i + 1].matchPoints,
+            successShots = this[i + 1].successShots,
+            missedShots = this[i + 1].missedShots,
+            fouls = this[i + 1].fouls,
+            highestBreak = this[i + 1].highestBreak,
+        )
+        frameScoreList.add(Pair(frameScoreA, frameScoreB))
     }
+    return frameScoreList
 }
 
 //@Entity(tableName = "current_match_table")

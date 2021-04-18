@@ -212,11 +212,13 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
     fun frameEnded() {
         if (frameScore.getFirstPlayer().framePoints > frameScore.getSecondPlayer().framePoints) frameScore.getFirstPlayer().incrementMatchPoint()
         else frameScore.getSecondPlayer().incrementMatchPoint()
+        frameScore.getFirstPlayer().incrementFrameCount()
+        frameScore.getSecondPlayer().incrementFrameCount()
         viewModelScope.launch {
-            snookerRepository.addFrames(Frame(frameCount, listOf(frameScore.getFirstPlayer().asFrameScore(), frameScore.getSecondPlayer().asFrameScore())))
+            snookerRepository.addFrames(frameScore)
+            resetFrame()
+            frameCount += 1
         }
-        resetFrame()
-        frameCount += 1
     }
 
     fun resetMatch() {

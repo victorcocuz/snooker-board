@@ -5,8 +5,11 @@
 
     <data>
         <variable
-            name="frame"
-            type="com.example.snookerscore.fragments.game.Frame" />
+            name="frameScoreA"
+            type="com.example.snookerscore.fragments.game.FrameScore" />
+        <variable
+            name="frameScoreB"
+            type="com.example.snookerscore.fragments.game.FrameScore" />
     </data>
 
     <LinearLayout
@@ -22,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            app:gameStatsFrameNumber="@{frame}"
+            app:gameStatsFrameNumber="@{frameScoreA.frameCount}"
             tools:text="1" />
 
         <TextView
@@ -31,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@{String.valueOf(frame.frameScore[0].highestBreak)}"
+            app:gameStatsBreak="@{frameScoreA.highestBreak}"
             tools:text="120" />
 
         <TextView
@@ -40,8 +43,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            app:shotMiss="@{frame.frameScore[0].missedShots}"
-            app:shotSuccess="@{frame.frameScore[0].successShots}"
+            app:shotMiss="@{frameScoreA.missedShots}"
+            app:shotSuccess="@{frameScoreA.successShots}"
             tools:text="50%" />
 
         <TextView
@@ -50,7 +53,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@{String.valueOf(frame.frameScore[0].framePoints)}"
+            app:gameStatsPoints="@{frameScoreA.framePoints}"
+
             tools:text="12" />
 
         <TextView
@@ -59,8 +63,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            app:matchPointsPlayerA="@{frame.frameScore[0].matchPoints}"
-            app:matchPointsPlayerB="@{frame.frameScore[1].matchPoints}"
+            app:matchPointsPlayerA="@{frameScoreA.matchPoints}"
+            app:matchPointsPlayerB="@{frameScoreB.matchPoints}"
             tools:text="(1-0)" />
 
         <TextView
@@ -69,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@{String.valueOf(frame.frameScore[1].framePoints)}"
+            app:gameStatsPoints="@{frameScoreB.framePoints}"
             tools:text="18" />
 
         <TextView
@@ -78,8 +82,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            app:shotMiss="@{frame.frameScore[1].missedShots}"
-            app:shotSuccess="@{frame.frameScore[1].successShots}"
+            app:shotMiss="@{frameScoreB.missedShots}"
+            app:shotSuccess="@{frameScoreB.successShots}"
             tools:text="48%" />
 
         <TextView
@@ -88,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@{String.valueOf(frame.frameScore[1].highestBreak)}"
+            app:gameStatsBreak="@{frameScoreB.highestBreak}"
             tools:text="138" />
 
     </LinearLayout>

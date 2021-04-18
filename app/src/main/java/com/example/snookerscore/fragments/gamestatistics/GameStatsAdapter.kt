@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snookerscore.databinding.ItemGameStatisticsViewBinding
-import com.example.snookerscore.fragments.game.Frame
+import com.example.snookerscore.fragments.game.FrameScore
 
 class GameStatsAdapter:
-    ListAdapter<Frame, GameStatsAdapter.ViewHolder>(DiffCallback) {
+    ListAdapter<Pair<FrameScore, FrameScore>, GameStatsAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -21,8 +21,9 @@ class GameStatsAdapter:
     }
 
     class ViewHolder private constructor(private val binding: ItemGameStatisticsViewBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(frame: Frame) {
-            binding.frame = frame
+        fun bind(frameScores: Pair<FrameScore, FrameScore>) {
+            binding.frameScoreA = frameScores.first
+            binding.frameScoreB = frameScores.second
             binding.executePendingBindings()
         }
 
@@ -34,13 +35,13 @@ class GameStatsAdapter:
         }
     }
 
-    companion object DiffCallback : DiffUtil.ItemCallback<Frame>() {
-        override fun areItemsTheSame(oldItem: Frame, newItem: Frame): Boolean {
+    companion object DiffCallback : DiffUtil.ItemCallback<Pair<FrameScore, FrameScore>>() {
+        override fun areItemsTheSame(oldItem: Pair<FrameScore, FrameScore>, newItem: Pair<FrameScore, FrameScore>): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: Frame, newItem: Frame): Boolean {
-            return oldItem.frameCount == newItem.frameCount
+        override fun areContentsTheSame(oldItem: Pair<FrameScore, FrameScore>, newItem: Pair<FrameScore, FrameScore>): Boolean {
+            return oldItem.first.frameCount == newItem.first.frameCount
         }
     }
 }

@@ -1,25 +1,15 @@
 package com.example.snookerscore.fragments.game
 
-import com.example.snookerscore.database.DatabaseFrame
+import com.example.snookerscore.database.DatabaseFrameScore
 import java.util.*
 
 enum class MatchAction {
     CANCEL_MATCH, END_FRAME, FRAME_ENDED, END_MATCH, MATCH_ENDED
 }
 
-data class Frame(
-    val frameCount: Int,
-    val frameScore: List<FrameScore>
-)
-
-fun Frame.asDatabaseFrame() : DatabaseFrame {
-    return DatabaseFrame(
-        frameCount = this.frameCount,
-        frameScore = this.frameScore
-    )
-}
-
 data class FrameScore(
+    val frameCount: Int,
+    val playerId: Int,
     val framePoints: Int,
     val matchPoints: Int,
     val successShots: Int,
@@ -28,8 +18,13 @@ data class FrameScore(
     val highestBreak: Int
 )
 
-fun CurrentFrame.asFrameScore() : FrameScore {
-    return FrameScore(
+fun CurrentFrame.asDatabaseFrameScore(): DatabaseFrameScore {
+    return DatabaseFrameScore(
+        frameCount = this.frameCount,
+        playerId = when (this) {
+            CurrentFrame.PlayerA -> 0
+            CurrentFrame.PlayerB -> 1
+        },
         framePoints = this.framePoints,
         matchPoints = this.matchPoints,
         successShots = this.successShots,
@@ -40,6 +35,7 @@ fun CurrentFrame.asFrameScore() : FrameScore {
 }
 
 sealed class CurrentFrame(
+    var frameCount: Int,
     var framePoints: Int,
     var matchPoints: Int,
     var successShots: Int,
@@ -47,8 +43,8 @@ sealed class CurrentFrame(
     var fouls: Int,
     var highestBreak: Int
 ) {
-    object PlayerA : CurrentFrame(0, 0, 0, 0, 0, 0)
-    object PlayerB : CurrentFrame(0, 0, 0, 0, 0, 0)
+    object PlayerA : CurrentFrame(0, 0, 0, 0, 0, 0, 0)
+    object PlayerB : CurrentFrame(0, 0, 0, 0, 0, 0, 0)
 
     fun otherPlayer() = when (this) {
         PlayerA -> PlayerB
@@ -74,13 +70,17 @@ sealed class CurrentFrame(
         this.fouls += pol
     }
 
+    fun incrementFrameCount() {
+        this.frameCount += 1
+    }
+
     fun incrementMatchPoint() {
         this.matchPoints += 1
     }
 
     fun findMaxBreak(frameStack: ArrayDeque<Break>) {
         var highestBreak = 0
-        frameStack.forEach{  crtBreak ->
+        frameStack.forEach { crtBreak ->
             if (this == crtBreak.player && crtBreak.breakSize > highestBreak) highestBreak = crtBreak.breakSize
         }
         this.highestBreak = highestBreak
@@ -95,6 +95,7 @@ sealed class CurrentFrame(
 
     fun resetMatchScore() {
         this.matchPoints = 0
+        this.frameCount = 0
         resetFrameScore()
     }
 }
