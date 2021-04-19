@@ -14,15 +14,56 @@
         android:layout_height="match_parent"
         tools:context=".fragments.gamestatistics.GameStatsFragment">
 
+        <TextView
+            android:id="@+id/game_stats_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="Match Results"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/game_stats_player_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:text="You"
+            app:layout_constraintEnd_toStartOf="@+id/game_stats_vs"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/game_stats_label" />
+
+        <TextView
+            android:id="@+id/game_stats_player_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Guest"
+            app:layout_constraintBottom_toBottomOf="@+id/game_stats_player_a"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_stats_vs" />
+
+        <TextView
+            android:id="@+id/game_stats_vs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="VS"
+            app:layout_constraintBottom_toBottomOf="@+id/game_stats_player_a"
+            app:layout_constraintEnd_toStartOf="@+id/game_stats_player_b"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_stats_player_a" />
+
         <include
             android:id="@+id/game_stats_header"
             layout="@layout/item_game_statistics_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
+            android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/game_stats_player_a" />
 
 
         <androidx.recyclerview.widget.RecyclerView
