@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameFoulDialogBinding
 import com.example.snookerscore.fragments.game.*
+import com.example.snookerscore.fragments.game.Ball.*
 import com.example.snookerscore.utils.EventObserver
 import com.example.snookerscore.utils.toast
 import java.util.*
@@ -42,14 +43,13 @@ class GameFoulDialogFragment : DialogFragment() {
                 layoutManager = linearLayoutManager
                 adapter = ballAdapter
             }
-            foulActions = ShotActions
         }
 
         // VM Observers
         foulDialogViewModel.apply {
             actionClicked.observe(viewLifecycleOwner, {
-                binding.foulActionContinue.isSelected = it == PotAction.Switch
-                binding.foulActionForceContinue.isSelected = it == PotAction.Continue
+                binding.foulActionContinue.isSelected = it == PotAction.SWITCH
+                binding.foulActionForceContinue.isSelected = it == PotAction.CONTINUE
             })
             freeBall.observe(viewLifecycleOwner, {
                 binding.foulActionFreeBall.isSelected = it
@@ -65,21 +65,19 @@ class GameFoulDialogFragment : DialogFragment() {
                 dismiss()
             })
         }
-        gameFragmentViewModel.apply{
+        gameFragmentViewModel.apply {
             eventCancelDialog.observe(viewLifecycleOwner, EventObserver {
                 dismiss()
             })
             displayBallStack.observe(viewLifecycleOwner, { ballStack ->
-                Balls.apply {
-                    ballsList = when(ballStack.size) {
-                        2 -> listOf(WHITE, BLACK)
-                        3 -> listOf(WHITE, PINK, BLACK)
-                        4 -> listOf(WHITE, BLUE, PINK, BLACK)
-                        5 -> listOf(WHITE, BROWN, BLUE, PINK, BLACK)
-                        6 -> listOf(WHITE, GREEN, BROWN, BLUE, PINK, BLACK)
-                        7 -> listOf(WHITE, YELLOW, GREEN, BROWN, BLUE, PINK, BLACK)
-                        else -> listOf(WHITE, RED, YELLOW, GREEN, BROWN, BLUE, PINK, BLACK)
-                    }
+                ballsList = when (ballStack.size) {
+                    2 -> listOf(WHITE, BLACK)
+                    3 -> listOf(WHITE, PINK, BLACK)
+                    4 -> listOf(WHITE, BLUE, PINK, BLACK)
+                    5 -> listOf(WHITE, BROWN, BLUE, PINK, BLACK)
+                    6 -> listOf(WHITE, GREEN, BROWN, BLUE, PINK, BLACK)
+                    7 -> listOf(WHITE, YELLOW, GREEN, BROWN, BLUE, PINK, BLACK)
+                    else -> listOf(WHITE, RED, YELLOW, GREEN, BROWN, BLUE, PINK, BLACK)
                 }
                 ballAdapter.submitList(ballsList)
             })

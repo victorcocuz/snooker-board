@@ -41,11 +41,11 @@ class BallAdapter(private val clickListener: BallListener, private val ballStack
 
 class BallAdapterCallback : DiffUtil.ItemCallback<Ball>() {
     override fun areItemsTheSame(oldItem: Ball, newItem: Ball): Boolean {
-        return oldItem.ballType == newItem.ballType
+        return oldItem == newItem
     }
 
     override fun areContentsTheSame(oldItem: Ball, newItem: Ball): Boolean {
-        return oldItem == newItem
+        return oldItem.points == newItem.points
     }
 }
 

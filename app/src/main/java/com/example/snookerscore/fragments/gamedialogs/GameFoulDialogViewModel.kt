@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import com.example.snookerscore.fragments.game.Ball
 import com.example.snookerscore.fragments.game.Pot
 import com.example.snookerscore.fragments.game.PotAction
-import com.example.snookerscore.fragments.game.PotType
 import com.example.snookerscore.utils.Event
 
 class GameFoulDialogViewModel : ViewModel() {
@@ -36,7 +35,7 @@ class GameFoulDialogViewModel : ViewModel() {
 
     fun onActionClicked(action: PotAction) {
         _actionClicked.value = action
-        if (action == PotAction.Continue) _freeBall.value = false
+        if (action == PotAction.CONTINUE) _freeBall.value = false
     }
 
     fun onRemoveRedClicked() {
@@ -49,7 +48,7 @@ class GameFoulDialogViewModel : ViewModel() {
 
     fun onConfirmClicked() {
         if (ballClicked != null && actionClicked.value != null) {
-            _foulConfirmed.value = Event(Pot(ballClicked!!, PotType.FOUL, actionClicked.value!!))
+            _foulConfirmed.value = Event(Pot.FOUL(ballClicked!!, actionClicked.value!!))
         } else {
             _eventFoulNotValid.value = Event(Unit)
         }

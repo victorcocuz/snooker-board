@@ -4,18 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="gameViewModel"
             type="com.example.snookerscore.fragments.game.GameFragmentViewModel" />
-
         <variable
             name="foulViewModel"
             type="com.example.snookerscore.fragments.gamedialogs.GameFoulDialogViewModel" />
-
-        <variable
-            name="foulActions"
-            type="com.example.snookerscore.fragments.game.ShotActions" />
+        <import type="com.example.snookerscore.fragments.game.PotAction"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -72,7 +67,7 @@
             android:layout_marginStart="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_xsmall"
-            android:onClick="@{() -> foulViewModel.onActionClicked(foulActions.SWITCH)}"
+            android:onClick="@{() -> foulViewModel.onActionClicked(PotAction.SWITCH)}"
             android:text="@string/fragment_game_foul_action_continue"
             app:layout_constraintEnd_toStartOf="@+id/foul_action_force_continue"
             app:layout_constraintHorizontal_bias="0.5"
@@ -84,7 +79,7 @@
             android:id="@+id/foul_action_force_continue"
             style="@style/temp_btn"
             android:layout_width="wrap_content"
-            android:onClick="@{() -> foulViewModel.onActionClicked(foulActions.CONTINUE)}"
+            android:onClick="@{() -> foulViewModel.onActionClicked(PotAction.CONTINUE)}"
             android:text="@string/fragment_foul_action_force_continue"
             app:dialogCannotForceDiff="@{gameViewModel.displayPlayer}"
             app:dialogCannotForceRemaining="@{gameViewModel.displayBallStack.size()}"

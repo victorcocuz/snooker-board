@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameBinding
+import com.example.snookerscore.fragments.game.Ball.*
 import com.example.snookerscore.utils.EventObserver
 import java.util.*
 
@@ -30,7 +31,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
 
         }
         ballAdapter = BallAdapter(BallListener { ball ->
-            gameFragmentViewModel.onBallClicked(Pot(ball, PotType.HIT, ShotActions.CONTINUE))
+            gameFragmentViewModel.updateFrame(Pot.HIT(ball))
         }, gameFragmentViewModel.displayBallStack)
 
         binding.apply {
@@ -41,14 +42,19 @@ class GameFragment : androidx.fragment.app.Fragment() {
                 itemAnimator = null
                 adapter = ballAdapter
             }
-            fragGameActions.gameViewModel = gameFragmentViewModel
+            fragGameActions.apply {
+                gameViewModel = gameFragmentViewModel
+                potSafe = Pot.SAFE
+                potMiss = Pot.MISS
+                potAddRed = Pot.ADDRED
+            }
         }
 
         // VM Observers
         gameFragmentViewModel.apply {
             // Enable or disable buttons
-            frameState.observe(viewLifecycleOwner, { frameState ->
-                manageBallVisibility(frameState)
+            displayBallStack.observe(viewLifecycleOwner, { ballStack ->
+                manageBallVisibility(ballStack.peek()!!)
             })
 
             // Open foul dialog
@@ -68,21 +74,19 @@ class GameFragment : androidx.fragment.app.Fragment() {
         inflater.inflate(R.menu.menu_game_overflow, menu)
     }
 
-    private fun manageBallVisibility(frameState: BallType) {
-        Balls.apply {
-            ballsList = when (frameState) {
-                BallType.FREE -> listOf(FREE)
-                BallType.RED -> listOf(RED)
-                BallType.COLOR -> listOf(YELLOW, GREEN, BROWN, BLUE, PINK, BLACK)
-                BallType.YELLOW -> listOf(YELLOW)
-                BallType.GREEN -> listOf(GREEN)
-                BallType.BROWN -> listOf(BROWN)
-                BallType.BLUE -> listOf(BLUE)
-                BallType.PINK -> listOf(PINK)
-                BallType.BLACK -> listOf(BLACK)
-                else -> listOf()
-            }
-            ballAdapter.submitList(ballsList)
+    private fun manageBallVisibility(frameState: Ball) {
+        ballsList = when (frameState) {
+            FREE -> listOf(FREE)
+            RED -> listOf(RED)
+            COLOR -> listOf(YELLOW, GREEN, BROWN, BLUE, PINK, BLACK)
+            YELLOW -> listOf(YELLOW)
+            GREEN -> listOf(GREEN)
+            BROWN -> listOf(BROWN)
+            BLUE -> listOf(BLUE)
+            PINK -> listOf(PINK)
+            BLACK -> listOf(BLACK)
+            else -> listOf()
         }
+        ballAdapter.submitList(ballsList)
     }
 }

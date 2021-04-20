@@ -5,6 +5,9 @@
     <data>
 
         <variable
+            name="pot"
+            type="com.example.snookerscore.fragments.game.Pot" />
+        <variable
             name="gameViewModel"
             type="com.example.snookerscore.fragments.game.GameFragmentViewModel" />
     </data>
@@ -16,7 +19,7 @@
         <TextView
             android:id="@+id/game_btn_act_safe"
             style="@style/temp_btn"
-            android:onClick="@{() -> gameViewModel.onSafeClicked()}"
+            android:onClick="@{() -> gameViewModel.updateFrame(pot.SAFE)}"
             android:text="@string/action_safe"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_miss"
@@ -27,7 +30,7 @@
         <TextView
             android:id="@+id/game_btn_act_miss"
             style="@style/temp_btn"
-            android:onClick="@{() -> gameViewModel.onMissClicked()}"
+            android:onClick="@{() -> gameViewModel.updateFrame(pot.MISS)}"
             android:text="@string/action_miss"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_foul"
@@ -49,7 +52,7 @@
         <TextView
             android:id="@+id/game_btn_act_add_red"
             style="@style/temp_btn"
-            android:onClick="@{() -> gameViewModel.onAddRedClicked()}"
+            android:onClick="@{() -> gameViewModel.updateFrame(pot.ADDRED)}"
             android:text="@string/action_add_red"
             app:addRedEnabled="@{gameViewModel.displayBallStack.size()}"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
@@ -61,7 +64,7 @@
             android:id="@+id/game_btn_act_rerack"
             style="@style/temp_btn"
             android:layout_marginBottom="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.onRerackClicked()}"
+            android:onClick="@{() -> gameViewModel.resetFrame()}"
             android:text="@string/action_rerack"
             app:layout_constraintBottom_toTopOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_end_frame"

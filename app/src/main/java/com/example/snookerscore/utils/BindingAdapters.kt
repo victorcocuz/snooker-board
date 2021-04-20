@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.snookerscore.R
 import com.example.snookerscore.domain.DomainRanking
 import com.example.snookerscore.fragments.game.*
+import com.example.snookerscore.fragments.game.Ball.*
 import com.example.snookerscore.fragments.gamestatistics.GameStatsAdapter
 import com.example.snookerscore.fragments.rankings.RankingsAdapter
 import java.text.DecimalFormat
@@ -17,7 +18,7 @@ import kotlin.math.abs
 @BindingAdapter("ballValue", "stackSize")
 fun TextView.setPointsValue(item: Ball, stackSize: Int) {
     val reds = (stackSize - 7) / 2
-    text = if (reds > 0 && item.ballType == BallType.RED) reds.toString() else ""
+    text = if (reds > 0 && item == RED) reds.toString() else ""
 }
 
 @BindingAdapter("ballImage")
@@ -25,14 +26,14 @@ fun ImageView.setBallImage(item: Ball?) {
     item?.let {
         setBackgroundResource(
             when (item) {
-                Balls.RED -> R.drawable.ball_red
-                Balls.YELLOW -> R.drawable.ball_yellow
-                Balls.GREEN -> R.drawable.ball_green
-                Balls.BROWN -> R.drawable.ball_brown
-                Balls.BLUE -> R.drawable.ball_blue
-                Balls.PINK -> R.drawable.ball_pink
-                Balls.BLACK -> R.drawable.ball_black
-                Balls.FREE -> R.drawable.ball_grey
+                RED -> R.drawable.ball_red
+                YELLOW -> R.drawable.ball_yellow
+                GREEN -> R.drawable.ball_green
+                BROWN -> R.drawable.ball_brown
+                BLUE -> R.drawable.ball_blue
+                PINK -> R.drawable.ball_pink
+                BLACK -> R.drawable.ball_black
+                FREE -> R.drawable.ball_grey
                 else -> R.drawable.ball_white
             }
         )
@@ -168,7 +169,7 @@ fun TextView.dialogSetRedEnabled(size: Int) {
 @BindingAdapter("dialogFreeBallEnabledAction")
 fun TextView.setDialogFreeballEnabled(potAction: PotAction?) {
     isEnabled = when (potAction) {
-        PotAction.Switch -> true
+        PotAction.SWITCH -> true
         else -> false
     }
 }

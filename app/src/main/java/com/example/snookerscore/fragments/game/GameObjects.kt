@@ -18,22 +18,6 @@ data class FrameScore(
     val highestBreak: Int
 )
 
-fun CurrentFrame.asDatabaseFrameScore(): DatabaseFrameScore {
-    return DatabaseFrameScore(
-        frameCount = this.frameCount,
-        playerId = when (this) {
-            CurrentFrame.PlayerA -> 0
-            CurrentFrame.PlayerB -> 1
-        },
-        framePoints = this.framePoints,
-        matchPoints = this.matchPoints,
-        successShots = this.successShots,
-        missedShots = this.missedShots,
-        fouls = this.fouls,
-        highestBreak = this.highestBreak
-    )
-}
-
 sealed class CurrentFrame(
     var frameCount: Int,
     var framePoints: Int,
@@ -100,65 +84,55 @@ sealed class CurrentFrame(
     }
 }
 
-sealed class BallType {
-    object NOBALL : BallType()
-    object WHITE : BallType()
-    object RED : BallType()
-    object YELLOW : BallType()
-    object GREEN : BallType()
-    object BROWN : BallType()
-    object BLUE : BallType()
-    object PINK : BallType()
-    object BLACK : BallType()
-    object COLOR : BallType()
-    object FREE : BallType()
+fun CurrentFrame.asDatabaseFrameScore(): DatabaseFrameScore {
+    return DatabaseFrameScore(
+        frameCount = this.frameCount,
+        playerId = when (this) {
+            CurrentFrame.PlayerA -> 0
+            CurrentFrame.PlayerB -> 1
+        },
+        framePoints = this.framePoints,
+        matchPoints = this.matchPoints,
+        successShots = this.successShots,
+        missedShots = this.missedShots,
+        fouls = this.fouls,
+        highestBreak = this.highestBreak
+    )
 }
 
-data class Ball(
+enum class Ball(
     val points: Int,
-    val foulPoints: Int,
-    val ballType: BallType
-)
-
-object Balls {
-    val NOBALL = Ball(0, 0, BallType.NOBALL)
-    val WHITE = Ball(4, 4, BallType.WHITE)
-    val RED = Ball(1, 4, BallType.RED)
-    val YELLOW = Ball(2, 4, BallType.YELLOW)
-    val GREEN = Ball(3, 4, BallType.GREEN)
-    val BROWN = Ball(4, 4, BallType.BROWN)
-    val BLUE = Ball(5, 5, BallType.BLUE)
-    val PINK = Ball(6, 6, BallType.PINK)
-    val BLACK = Ball(7, 7, BallType.BLACK)
-    val COLOR = Ball(7, 7, BallType.COLOR)
-    val FREE = Ball(1, 4, BallType.FREE)
+    val foulPoints: Int
+) {
+    NOBALL(0, 0),
+    WHITE(4, 4),
+    RED(1, 4),
+    YELLOW(2, 4),
+    GREEN(3, 4),
+    BROWN(4, 4),
+    BLUE(5, 5),
+    PINK(6, 6),
+    BLACK(7, 7),
+    COLOR(7, 7),
+    FREE(1, 4)
 }
 
-sealed class PotType {
-    object HIT : PotType()
-    object FREE : PotType()
-    object SAFE : PotType()
-    object MISS : PotType()
-    object FOUL : PotType()
-    object REMOVERED : PotType()
-    object ADDRED : PotType()
-}
+enum class PotType { HIT, FREE, SAFE, MISS, FOUL, REMOVERED, ADDRED }
+enum class PotAction { CONTINUE, SWITCH }
 
-sealed class PotAction {
-    object Continue : PotAction()
-    object Switch : PotAction()
-}
-
-object ShotActions {
-    val CONTINUE = PotAction.Continue
-    val SWITCH = PotAction.Switch
-}
-
-data class Pot(
+sealed class Pot(
     val ball: Ball,
     val potType: PotType,
     val potAction: PotAction
-)
+) {
+    class HIT(hitBall: Ball) : Pot(hitBall, PotType.HIT, PotAction.CONTINUE)
+    object SAFE : Pot(Ball.NOBALL, PotType.SAFE, PotAction.SWITCH)
+    object MISS : Pot(Ball.NOBALL, PotType.MISS, PotAction.SWITCH)
+    object FREEMISS: Pot(Ball.NOBALL, PotType.FREE, PotAction.SWITCH)
+    class FOUL(foulBall: Ball, foulAction: PotAction): Pot(foulBall, PotType.FOUL, foulAction)
+    class REMOVERED(removeBall: Ball): Pot(removeBall, PotType.REMOVERED, PotAction.CONTINUE)
+    object ADDRED: Pot(Ball.RED, PotType.ADDRED, PotAction.CONTINUE)
+}
 
 data class Break(
     val player: CurrentFrame,
