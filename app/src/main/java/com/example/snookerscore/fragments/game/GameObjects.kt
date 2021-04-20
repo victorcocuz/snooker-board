@@ -125,12 +125,12 @@ sealed class Pot(
     val potType: PotType,
     val potAction: PotAction
 ) {
-    class HIT(hitBall: Ball) : Pot(hitBall, PotType.HIT, PotAction.CONTINUE)
+    class HIT(ball: Ball) : Pot(ball, PotType.HIT, PotAction.CONTINUE)
     object SAFE : Pot(Ball.NOBALL, PotType.SAFE, PotAction.SWITCH)
     object MISS : Pot(Ball.NOBALL, PotType.MISS, PotAction.SWITCH)
-    object FREEMISS: Pot(Ball.NOBALL, PotType.FREE, PotAction.SWITCH)
-    class FOUL(foulBall: Ball, foulAction: PotAction): Pot(foulBall, PotType.FOUL, foulAction)
-    class REMOVERED(removeBall: Ball): Pot(removeBall, PotType.REMOVERED, PotAction.CONTINUE)
+    object FREEMISS: Pot(Ball.NOBALL, PotType.FREE, PotAction.CONTINUE)
+    class FOUL(ball: Ball, action: PotAction): Pot(ball, PotType.FOUL, action)
+    class REMOVERED(ball: Ball): Pot(ball, PotType.REMOVERED, PotAction.CONTINUE)
     object ADDRED: Pot(Ball.RED, PotType.ADDRED, PotAction.CONTINUE)
 }
 

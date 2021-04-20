@@ -44,9 +44,6 @@ class GameFragment : androidx.fragment.app.Fragment() {
             }
             fragGameActions.apply {
                 gameViewModel = gameFragmentViewModel
-                potSafe = Pot.SAFE
-                potMiss = Pot.MISS
-                potAddRed = Pot.ADDRED
             }
         }
 

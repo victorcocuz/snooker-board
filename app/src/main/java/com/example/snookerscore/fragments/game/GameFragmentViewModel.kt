@@ -89,12 +89,13 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
             }
             PotType.REMOVERED -> {
                 onUndoClicked()
-                for (ball in when (isColor()) {
-                    true -> listOf(COLOR, RED)
-                    false -> listOf(RED, COLOR)
-                }) ballStack.push(ball)
+                for (ball in if (isColor()) listOf(COLOR, RED) else listOf(RED, COLOR)) ballStack.push(ball)
             }
             in listOf(PotType.MISS, PotType.SAFE) -> if (isColor()) ballStack.push(COLOR)
+            PotType.FREE -> {
+                if (inColors()) ballStack.push(FREE) else for (ball in listOf(COLOR, FREE)) ballStack.push(ball)
+                onUndoClicked()
+            }
             else -> {}
         }
         calcPoints(lastPot.ball, lastPot.potType, -1)
@@ -103,16 +104,19 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
 
     // Frame Helpers
     fun updateFrame(pot: Pot) {
+        addToFrameStack(score, pot)
         when (pot.potType) {
             in listOf(PotType.HIT, PotType.FREE) -> ballStack.pop()
             in listOf(PotType.REMOVERED, PotType.ADDRED) -> repeat(2) { ballStack.pop() }
             else -> {
-                if (ballStack.peek() == FREE) repeat(if (inColors()) 1 else 2) { ballStack.pop() }
+                if (ballStack.peek() == FREE) {
+                    addToFrameStack(score, Pot.FREEMISS)
+                    repeat(if (inColors()) 1 else 2) { ballStack.pop() }
+                }
                 if (ballStack.peek() == COLOR) ballStack.pop()
             }
         }
         calcPoints(pot.ball, pot.potType, 1)
-        addToFrameStack(score, pot)
 
         if (ballStack.size == 1 && score.framePoints == score.otherPlayer().framePoints) ballStack.push(BLACK)
         if (pot.potAction == PotAction.SWITCH) score = score.otherPlayer() // Switch players
@@ -125,7 +129,7 @@ class GameFragmentViewModel(application: Application) : AndroidViewModel(applica
                 if (ballStack.size in 1..4 && ball == WHITE) ballStack.peek()!!.foulPoints + matchFoulModifier
                 else ball.foulPoints + matchFoulModifier
             PotType.REMOVERED -> 0
-            PotType.FREE -> if (inColors()) 1 else ballStack.peek()!!.points
+            PotType.FREE -> if (ball == NOBALL) 0 else if (inColors()) 1 else ballStack.peek()!!.points
             else -> ball.points
         }
         when (potType) {

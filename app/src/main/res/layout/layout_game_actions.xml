@@ -3,10 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
-        <variable
-            name="pot"
-            type="com.example.snookerscore.fragments.game.Pot" />
+        <import type="com.example.snookerscore.fragments.game.Pot" />
         <variable
             name="gameViewModel"
             type="com.example.snookerscore.fragments.game.GameFragmentViewModel" />
@@ -19,7 +16,7 @@
         <TextView
             android:id="@+id/game_btn_act_safe"
             style="@style/temp_btn"
-            android:onClick="@{() -> gameViewModel.updateFrame(pot.SAFE)}"
+            android:onClick="@{() -> gameViewModel.updateFrame(Pot.SAFE.INSTANCE)}"
             android:text="@string/action_safe"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_miss"
@@ -30,7 +27,7 @@
         <TextView
             android:id="@+id/game_btn_act_miss"
             style="@style/temp_btn"
-            android:onClick="@{() -> gameViewModel.updateFrame(pot.MISS)}"
+            android:onClick="@{() -> gameViewModel.updateFrame(Pot.MISS.INSTANCE)}"
             android:text="@string/action_miss"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_foul"
@@ -52,7 +49,7 @@
         <TextView
             android:id="@+id/game_btn_act_add_red"
             style="@style/temp_btn"
-            android:onClick="@{() -> gameViewModel.updateFrame(pot.ADDRED)}"
+            android:onClick="@{() -> gameViewModel.updateFrame(Pot.ADDRED.INSTANCE)}"
             android:text="@string/action_add_red"
             app:addRedEnabled="@{gameViewModel.displayBallStack.size()}"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
