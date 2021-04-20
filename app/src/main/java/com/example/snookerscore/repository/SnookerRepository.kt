@@ -6,7 +6,7 @@ import com.example.snookerscore.database.SnookerDatabase
 import com.example.snookerscore.database.asDomainFrameScoreList
 import com.example.snookerscore.database.asDomainRankings
 import com.example.snookerscore.domain.DomainRanking
-import com.example.snookerscore.fragments.game.CurrentFrame
+import com.example.snookerscore.fragments.game.CurrentScore
 import com.example.snookerscore.fragments.game.FrameScore
 import com.example.snookerscore.fragments.game.asDatabaseFrameScore
 import com.example.snookerscore.network.NetworkRankingContainer
@@ -40,10 +40,10 @@ class SnookerRepository(private val database: SnookerDatabase) {
         it.asDomainFrameScoreList()
     }
 
-    suspend fun addFrames(frameScore: CurrentFrame) {
+    suspend fun addFrames(frameScore: CurrentScore) {
         withContext(Dispatchers.IO) {
-            database.snookerDatabaseDao.insertFrame(frameScore.getFirstPlayer().asDatabaseFrameScore())
-            database.snookerDatabaseDao.insertFrame(frameScore.getSecondPlayer().asDatabaseFrameScore())
+            database.snookerDatabaseDao.insertFrame(frameScore.getFirst().asDatabaseFrameScore())
+            database.snookerDatabaseDao.insertFrame(frameScore.getSecond().asDatabaseFrameScore())
         }
     }
 

@@ -128,7 +128,7 @@
             android:layout_width="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
             android:layout_marginBottom="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.onCancelClicked()}"
+            android:onClick="@{() -> gameViewModel.onGenDialogCancelClicked()}"
             android:text="@string/fragment_foul_cancel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/foul_ok"

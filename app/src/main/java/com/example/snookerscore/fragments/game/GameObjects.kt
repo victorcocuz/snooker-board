@@ -18,7 +18,7 @@ data class FrameScore(
     val highestBreak: Int
 )
 
-sealed class CurrentFrame(
+sealed class CurrentScore(
     var frameCount: Int,
     var framePoints: Int,
     var matchPoints: Int,
@@ -27,18 +27,25 @@ sealed class CurrentFrame(
     var fouls: Int,
     var highestBreak: Int
 ) {
-    object PlayerA : CurrentFrame(0, 0, 0, 0, 0, 0, 0)
-    object PlayerB : CurrentFrame(0, 0, 0, 0, 0, 0, 0)
+    object PlayerA : CurrentScore(0, 0, 0, 0, 0, 0, 0)
+    object PlayerB : CurrentScore(0, 0, 0, 0, 0, 0, 0)
 
-    fun otherPlayer() = when (this) {
+    fun getOther() = when (this) {
         PlayerA -> PlayerB
         PlayerB -> PlayerA
     }
 
-    fun getFirstPlayer() = PlayerA
-    fun getSecondPlayer() = PlayerB
+    fun getFirst() = PlayerA
+    fun getSecond() = PlayerB
 
-    fun addFramePoints(points: Int) {
+    fun getPlayerAsInt(): Int = when (this) {
+        PlayerA -> 0
+        PlayerB -> 1
+    }
+
+    fun getPlayerFromInt(player: Int) = if (player == 0) PlayerA else PlayerB
+
+    fun incrementFramePoints(points: Int) {
         this.framePoints += points
     }
 
@@ -65,7 +72,9 @@ sealed class CurrentFrame(
     fun findMaxBreak(frameStack: ArrayDeque<Break>) {
         var highestBreak = 0
         frameStack.forEach { crtBreak ->
-            if (this == crtBreak.player && crtBreak.breakSize > highestBreak) highestBreak = crtBreak.breakSize
+            if (this.getPlayerAsInt() == crtBreak.player && crtBreak.breakSize > highestBreak) {
+                highestBreak = crtBreak.breakSize
+            }
         }
         this.highestBreak = highestBreak
     }
@@ -84,12 +93,12 @@ sealed class CurrentFrame(
     }
 }
 
-fun CurrentFrame.asDatabaseFrameScore(): DatabaseFrameScore {
+fun CurrentScore.asDatabaseFrameScore(): DatabaseFrameScore {
     return DatabaseFrameScore(
         frameCount = this.frameCount,
         playerId = when (this) {
-            CurrentFrame.PlayerA -> 0
-            CurrentFrame.PlayerB -> 1
+            CurrentScore.PlayerA -> 0
+            CurrentScore.PlayerB -> 1
         },
         framePoints = this.framePoints,
         matchPoints = this.matchPoints,
@@ -135,7 +144,7 @@ sealed class Pot(
 }
 
 data class Break(
-    val player: CurrentFrame,
+    val player: Int,
     val pots: ArrayDeque<Pot>,
     var breakSize: Int
 )

@@ -4,6 +4,7 @@
 
     <data>
         <import type="com.example.snookerscore.fragments.game.Pot" />
+        <import type="com.example.snookerscore.fragments.game.MatchAction"/>
         <variable
             name="gameViewModel"
             type="com.example.snookerscore.fragments.game.GameFragmentViewModel" />
@@ -71,7 +72,7 @@
         <TextView
             android:id="@+id/game_btn_act_end_frame"
             style="@style/temp_btn"
-            android:onClick="@{() -> gameViewModel.onEndFrameClicked()}"
+            android:onClick="@{() -> gameViewModel.endFrame()}"
             android:text="@string/action_end"
             app:endFrameEnabled="@{gameViewModel.displayPlayer}"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_rerack"
@@ -82,7 +83,7 @@
         <TextView
             android:id="@+id/game_btn_act_end_match"
             style="@style/temp_btn"
-            android:onClick="@{() -> gameViewModel.onEndMatchClicked()}"
+            android:onClick="@{() -> gameViewModel.assignMatchAction(MatchAction.END_MATCH)}"
             android:text="@string/action_finish"
             app:endMatchEnabled="@{gameViewModel.displayPlayer}"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_rerack"
@@ -93,7 +94,7 @@
         <TextView
             android:id="@+id/game_btn_act_undo"
             style="@style/temp_btn"
-            android:onClick="@{() -> gameViewModel.onUndoClicked()}"
+            android:onClick="@{() -> gameViewModel.undo()}"
             android:text="@string/action_undo"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_rerack"
             app:layout_constraintEnd_toEndOf="parent"
@@ -105,7 +106,7 @@
             android:id="@+id/game_btn_act_cancel"
             style="@style/temp_btn"
             android:layout_marginBottom="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.onCancelMatchClicked()}"
+            android:onClick="@{() -> gameViewModel.assignMatchAction(MatchAction.CANCEL_MATCH)}"
             android:text="@string/action_cancel"
             app:layout_constraintBottom_toTopOf="@+id/game_btn_act_rerack"
             app:layout_constraintStart_toStartOf="@+id/game_btn_act_rerack" />

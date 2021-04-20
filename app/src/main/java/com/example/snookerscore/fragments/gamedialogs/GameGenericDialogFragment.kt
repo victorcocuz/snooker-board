@@ -46,7 +46,7 @@ class GameGenericDialogFragment : DialogFragment() {
                     }
                     in listOf(MatchAction.END_FRAME, MatchAction.FRAME_ENDED) -> frameEnded()
                     in listOf(MatchAction.END_MATCH, MatchAction.MATCH_ENDED) -> {
-                        matchEnded()
+                        frameEnded()
                         findNavController().navigate(GameGenericDialogFragmentDirections.actionGameGenericDialogFragmentToGameStatsFragment())
                     }
                     else -> {}

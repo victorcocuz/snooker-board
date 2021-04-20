@@ -42,20 +42,20 @@ fun ImageView.setBallImage(item: Ball?) {
 
 // Game Display
 @BindingAdapter("crtPlayerA")
-fun TextView.setCurrentPlayerA(crtPlayer: CurrentFrame) {
+fun TextView.setCurrentPlayerA(crtPlayer: CurrentScore) {
     setBackgroundColor(
         when (crtPlayer) {
-            crtPlayer.getFirstPlayer() -> ContextCompat.getColor(context, R.color.design_default_color_primary)
+            crtPlayer.getFirst() -> ContextCompat.getColor(context, R.color.design_default_color_primary)
             else -> 0x00000000
         }
     )
 }
 
 @BindingAdapter("crtPlayerB")
-fun TextView.setCurrentPlayerB(crtPlayer: CurrentFrame) {
+fun TextView.setCurrentPlayerB(crtPlayer: CurrentScore) {
     setBackgroundColor(
         when (crtPlayer) {
-            crtPlayer.getFirstPlayer() -> 0x00000000
+            crtPlayer.getFirst() -> 0x00000000
             else -> ContextCompat.getColor(context, R.color.design_default_color_primary)
         }
     )
@@ -73,8 +73,8 @@ fun TextView.setGamePointsRemaining(size: Int) {
 }
 
 @BindingAdapter("gamePointsRemaining")
-fun TextView.setGamePointsDiff(crtPlayer: CurrentFrame) {
-    text = abs(crtPlayer.getFirstPlayer().framePoints - crtPlayer.getSecondPlayer().framePoints).toString()
+fun TextView.setGamePointsDiff(crtPlayer: CurrentScore) {
+    text = abs(crtPlayer.getFirst().framePoints - crtPlayer.getSecond().framePoints).toString()
 }
 
 @BindingAdapter("shotSuccess", "shotMiss")
@@ -147,14 +147,14 @@ fun TextView.setAddRedEnabled(size: Int) {
 }
 
 @BindingAdapter("endFrameEnabled")
-fun TextView.setEndFrameEnabled(crtPlayer: CurrentFrame) {
-    isEnabled = crtPlayer.getFirstPlayer().framePoints != crtPlayer.getSecondPlayer().framePoints
+fun TextView.setEndFrameEnabled(crtPlayer: CurrentScore) {
+    isEnabled = crtPlayer.getFirst().framePoints != crtPlayer.getSecond().framePoints
 }
 
 @BindingAdapter("endMatchEnabled")
-fun TextView.setEndMatchEnabled(crtPlayer: CurrentFrame) {
-    isEnabled = (crtPlayer.getFirstPlayer().framePoints != crtPlayer.getSecondPlayer().framePoints)
-            || (crtPlayer.getFirstPlayer().matchPoints != crtPlayer.getSecondPlayer().matchPoints)
+fun TextView.setEndMatchEnabled(crtPlayer: CurrentScore) {
+    isEnabled = (crtPlayer.getFirst().framePoints != crtPlayer.getSecond().framePoints)
+            || (crtPlayer.getFirst().matchPoints != crtPlayer.getSecond().matchPoints)
 }
 
 // Game Foul Dialog
@@ -175,8 +175,8 @@ fun TextView.setDialogFreeballEnabled(potAction: PotAction?) {
 }
 
 @BindingAdapter("dialogCannotForceDiff", "dialogCannotForceRemaining")
-fun TextView.setDialogForceContinueEnabled(crtPlayer: CurrentFrame, size: Int) {
-    val diff = abs(crtPlayer.getFirstPlayer().framePoints - crtPlayer.getSecondPlayer().framePoints)
+fun TextView.setDialogForceContinueEnabled(crtPlayer: CurrentScore, size: Int) {
+    val diff = abs(crtPlayer.getFirst().framePoints - crtPlayer.getSecond().framePoints)
     val remaining =
         if (size <= 7) (-(8 - size) * (8 - size) - (8 - size) + 56) / 2
         else 27 + ((size - 7) / 2) * 8

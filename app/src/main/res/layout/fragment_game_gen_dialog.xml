@@ -38,7 +38,7 @@
             android:layout_marginStart="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_xlarge"
             android:layout_marginBottom="@dimen/margin_xlarge"
-            android:onClick="@{() -> gameViewModel.onCancelClicked()}"
+            android:onClick="@{() -> gameViewModel.onGenDialogCancelClicked()}"
             android:text="@string/dialog_gen_no"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/game_dialog_gen_yes"

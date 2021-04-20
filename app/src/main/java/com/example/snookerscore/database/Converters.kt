@@ -2,6 +2,7 @@ package com.example.snookerscore.database
 
 import androidx.room.TypeConverter
 import com.example.snookerscore.fragments.game.FrameScore
+import com.example.snookerscore.fragments.game.Pot
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
@@ -37,4 +38,10 @@ class Converters {
 //    fun ballStackToString(someObjects: ArrayDeque<Ball>): String {
 //        return gson.toJson(someObjects)
 //    }
+//
+//    @TypeConverter
+//    fun sealedClassToString(sealedClass: Pot) : String = gson.toJson(sealedClass)
+//
+//    @TypeConverter
+//    fun sealedClassFromString(sealedClass: String) : Pot = sealedClass.let { gson.fromJson(it) }
 }
