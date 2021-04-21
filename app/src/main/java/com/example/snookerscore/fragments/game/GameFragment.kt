@@ -73,7 +73,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
 
     private fun manageBallVisibility(frameState: Ball) {
         ballsList = when (frameState) {
-            FREE -> listOf(FREE)
+            FREEBALL -> listOf(FREEBALL)
             RED -> listOf(RED)
             COLOR -> listOf(YELLOW, GREEN, BROWN, BLUE, PINK, BLACK)
             YELLOW -> listOf(YELLOW)

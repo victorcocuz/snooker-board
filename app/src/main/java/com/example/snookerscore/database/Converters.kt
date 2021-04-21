@@ -1,8 +1,8 @@
 package com.example.snookerscore.database
 
 import androidx.room.TypeConverter
+import com.example.snookerscore.fragments.game.Break
 import com.example.snookerscore.fragments.game.FrameScore
-import com.example.snookerscore.fragments.game.Pot
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
@@ -25,19 +25,19 @@ class Converters {
         return gson.toJson(someObjects)
     }
 
-//    @TypeConverter
-//    fun stringToBallStack(data: String?): ArrayDeque<Ball> {
-//        if (data == null) {
-//            return ArrayDeque()
-//        }
-//        val listType: Type = object : TypeToken<ArrayDeque<Ball>>() {}.type
-//        return gson.fromJson(data, listType)
-//    }
-//
-//    @TypeConverter
-//    fun ballStackToString(someObjects: ArrayDeque<Ball>): String {
-//        return gson.toJson(someObjects)
-//    }
+    @TypeConverter
+    fun stringToFrameStack(data: String?): ArrayDeque<Break> {
+        if (data == null) {
+            return ArrayDeque()
+        }
+        val listType: Type = object : TypeToken<ArrayDeque<Break>>() {}.type
+        return gson.fromJson(data, listType)
+    }
+
+    @TypeConverter
+    fun ballStackToString(someObjects: ArrayDeque<Break>): String {
+        return gson.toJson(someObjects)
+    }
 //
 //    @TypeConverter
 //    fun sealedClassToString(sealedClass: Pot) : String = gson.toJson(sealedClass)

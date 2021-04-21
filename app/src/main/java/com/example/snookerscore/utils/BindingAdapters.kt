@@ -33,7 +33,7 @@ fun ImageView.setBallImage(item: Ball?) {
                 BLUE -> R.drawable.ball_blue
                 PINK -> R.drawable.ball_pink
                 BLACK -> R.drawable.ball_black
-                FREE -> R.drawable.ball_grey
+                FREEBALL -> R.drawable.ball_grey
                 else -> R.drawable.ball_white
             }
         )
@@ -130,8 +130,8 @@ fun TextView.setMissSafeFoulEnabled(size: Int) {
     }
 }
 
-@BindingAdapter("undoEnabled")
-fun TextView.setUndoEnabled(size: Int) {
+@BindingAdapter("undoAndRerackEnabled")
+fun TextView.setUndoAndRerackEnabled(size: Int) {
     isEnabled = when (size) {
         0 -> false
         else -> true
@@ -147,14 +147,13 @@ fun TextView.setAddRedEnabled(size: Int) {
 }
 
 @BindingAdapter("endFrameEnabled")
-fun TextView.setEndFrameEnabled(crtPlayer: CurrentScore) {
-    isEnabled = crtPlayer.getFirst().framePoints != crtPlayer.getSecond().framePoints
+fun TextView.setEndFrameEnabled(isFrameEqual: Boolean) {
+    isEnabled = !isFrameEqual
 }
 
-@BindingAdapter("endMatchEnabled")
-fun TextView.setEndMatchEnabled(crtPlayer: CurrentScore) {
-    isEnabled = (crtPlayer.getFirst().framePoints != crtPlayer.getSecond().framePoints)
-            || (crtPlayer.getFirst().matchPoints != crtPlayer.getSecond().matchPoints)
+@BindingAdapter("endMatchEnabledFrameEqual", "endMatchEnabledMatchEqual")
+fun TextView.setEndMatchEnabled(isFrameEqual: Boolean, isMatchEqual: Boolean) {
+    isEnabled = !(isFrameEqual && isMatchEqual)
 }
 
 // Game Foul Dialog

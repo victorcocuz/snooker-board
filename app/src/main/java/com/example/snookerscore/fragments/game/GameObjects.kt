@@ -30,13 +30,13 @@ sealed class CurrentScore(
     object PlayerA : CurrentScore(0, 0, 0, 0, 0, 0, 0)
     object PlayerB : CurrentScore(0, 0, 0, 0, 0, 0, 0)
 
+    fun getFirst() = PlayerA
+    fun getSecond() = PlayerB
+
     fun getOther() = when (this) {
         PlayerA -> PlayerB
         PlayerB -> PlayerA
     }
-
-    fun getFirst() = PlayerA
-    fun getSecond() = PlayerB
 
     fun getPlayerAsInt(): Int = when (this) {
         PlayerA -> 0
@@ -45,27 +45,33 @@ sealed class CurrentScore(
 
     fun getPlayerFromInt(player: Int) = if (player == 0) PlayerA else PlayerB
 
-    fun incrementFramePoints(points: Int) {
+    fun getWinner() = if (this.framePoints > this.getOther().framePoints) this else this.getOther()
+
+    fun isFrameEqual() = this.framePoints == this.getOther().framePoints
+
+    fun isMatchEqual() = this.matchPoints == this.getOther().matchPoints
+
+    fun addFramePoints(points: Int) {
         this.framePoints += points
     }
 
-    fun incrementSuccessShots(pol: Int) {
+    fun addSuccessShots(pol: Int) {
         this.successShots += pol
     }
 
-    fun incrementMissedShots(pol: Int) {
+    fun addMissedShots(pol: Int) {
         this.missedShots += pol
     }
 
-    fun incrementFouls(pol: Int) {
+    fun addFouls(pol: Int) {
         this.fouls += pol
     }
 
-    fun incrementFrameCount() {
+    fun addFrameCount() {
         this.frameCount += 1
     }
 
-    fun incrementMatchPoint() {
+    fun addMatchPoint() {
         this.matchPoints += 1
     }
 
@@ -89,7 +95,6 @@ sealed class CurrentScore(
     fun resetMatchScore() {
         this.matchPoints = 0
         this.frameCount = 0
-        resetFrameScore()
     }
 }
 
@@ -111,7 +116,7 @@ fun CurrentScore.asDatabaseFrameScore(): DatabaseFrameScore {
 
 enum class Ball(
     val points: Int,
-    val foulPoints: Int
+    val foul: Int
 ) {
     NOBALL(0, 0),
     WHITE(4, 4),
@@ -122,8 +127,8 @@ enum class Ball(
     BLUE(5, 5),
     PINK(6, 6),
     BLACK(7, 7),
-    COLOR(7, 7),
-    FREE(1, 4)
+    COLOR(1, 4),
+    FREEBALL(1, 4)
 }
 
 enum class PotType { HIT, FREE, SAFE, MISS, FOUL, REMOVERED, ADDRED }
@@ -139,7 +144,7 @@ sealed class Pot(
     object MISS : Pot(Ball.NOBALL, PotType.MISS, PotAction.SWITCH)
     object FREEMISS: Pot(Ball.NOBALL, PotType.FREE, PotAction.CONTINUE)
     class FOUL(ball: Ball, action: PotAction): Pot(ball, PotType.FOUL, action)
-    class REMOVERED(ball: Ball): Pot(ball, PotType.REMOVERED, PotAction.CONTINUE)
+    object REMOVERED: Pot(Ball.NOBALL, PotType.REMOVERED, PotAction.CONTINUE)
     object ADDRED: Pot(Ball.RED, PotType.ADDRED, PotAction.CONTINUE)
 }
 
