@@ -181,7 +181,7 @@
             android:layout_marginStart="@dimen/margin_large"
             android:layout_marginBottom="@dimen/margin_xlarge"
             android:text="@string/fragment_game_label_difference"
-            app:layout_constraintBottom_toTopOf="@+id/frag_game_actions"
+            app:layout_constraintBottom_toTopOf="@+id/frag_game_action_btns"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
@@ -204,7 +204,7 @@
             tools:text="54" />
 
         <include
-            android:id="@+id/frag_game_actions"
+            android:id="@+id/frag_game_action_btns"
             layout="@layout/layout_game_actions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

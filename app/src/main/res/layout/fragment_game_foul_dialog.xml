@@ -10,7 +10,7 @@
         <variable
             name="foulViewModel"
             type="com.example.snookerscore.fragments.gamedialogs.GameFoulDialogViewModel" />
-        <import type="com.example.snookerscore.fragments.game.PotAction"/>
+        <import type="com.example.snookerscore.domain.PotAction"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="matchAction"
-            type="com.example.snookerscore.fragments.game.MatchAction" />
+            type="com.example.snookerscore.domain.MatchAction" />
         <variable
             name="gameViewModel"
             type="com.example.snookerscore.fragments.game.GameFragmentViewModel" />

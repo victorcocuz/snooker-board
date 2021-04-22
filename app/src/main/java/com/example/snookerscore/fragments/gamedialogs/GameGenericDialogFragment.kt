@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameGenDialogBinding
 import com.example.snookerscore.fragments.game.GameFragmentViewModel
-import com.example.snookerscore.fragments.game.MatchAction
+import com.example.snookerscore.domain.MatchAction
 import com.example.snookerscore.utils.EventObserver
 
 class GameGenericDialogFragment : DialogFragment() {

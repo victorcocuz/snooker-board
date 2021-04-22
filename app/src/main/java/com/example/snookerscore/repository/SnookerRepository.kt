@@ -6,9 +6,9 @@ import com.example.snookerscore.database.SnookerDatabase
 import com.example.snookerscore.database.asDomainFrameScoreList
 import com.example.snookerscore.database.asDomainRankings
 import com.example.snookerscore.domain.DomainRanking
-import com.example.snookerscore.fragments.game.CurrentScore
-import com.example.snookerscore.fragments.game.FrameScore
-import com.example.snookerscore.fragments.game.asDatabaseFrameScore
+import com.example.snookerscore.domain.CurrentScore
+import com.example.snookerscore.domain.FrameScore
+import com.example.snookerscore.domain.asDatabaseFrameScore
 import com.example.snookerscore.network.NetworkRankingContainer
 import com.example.snookerscore.network.RankingsApi
 import com.example.snookerscore.network.asDatabaseModel

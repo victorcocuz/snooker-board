@@ -12,7 +12,7 @@ import androidx.navigation.findNavController
 import com.example.snookerscore.GenericViewModelFactory
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameStatsBinding
-import com.example.snookerscore.fragments.game.FrameScore
+import com.example.snookerscore.domain.FrameScore
 import com.example.snookerscore.utils.setupGameNotification
 import kotlinx.android.synthetic.main.item_game_statistics_view.*
 

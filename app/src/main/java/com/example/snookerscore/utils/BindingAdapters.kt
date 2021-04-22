@@ -6,9 +6,13 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snookerscore.R
+import com.example.snookerscore.domain.Ball
 import com.example.snookerscore.domain.DomainRanking
-import com.example.snookerscore.fragments.game.*
-import com.example.snookerscore.fragments.game.Ball.*
+import com.example.snookerscore.domain.*
+import com.example.snookerscore.domain.Ball.*
+import com.example.snookerscore.domain.CurrentScore
+import com.example.snookerscore.domain.FrameScore
+import com.example.snookerscore.domain.MatchAction
 import com.example.snookerscore.fragments.gamestatistics.GameStatsAdapter
 import com.example.snookerscore.fragments.rankings.RankingsAdapter
 import java.text.DecimalFormat

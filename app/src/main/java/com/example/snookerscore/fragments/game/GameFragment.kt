@@ -8,7 +8,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameBinding
-import com.example.snookerscore.fragments.game.Ball.*
+import com.example.snookerscore.domain.Ball
+import com.example.snookerscore.domain.Ball.*
+import com.example.snookerscore.domain.Pot
 import com.example.snookerscore.utils.EventObserver
 import java.util.*
 
@@ -42,7 +44,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
                 itemAnimator = null
                 adapter = ballAdapter
             }
-            fragGameActions.apply {
+            fragGameActionBtns.apply {
                 gameViewModel = gameFragmentViewModel
             }
         }
@@ -51,7 +53,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
         gameFragmentViewModel.apply {
             // Enable or disable buttons
             displayBallStack.observe(viewLifecycleOwner, { ballStack ->
-                manageBallVisibility(ballStack.peek()!!)
+                manageBallVisibility(ballStack.last())
             })
 
             // Open foul dialog

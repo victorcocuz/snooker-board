@@ -5,7 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.snookerscore.database.SnookerDatabase
-import com.example.snookerscore.fragments.game.FrameScore
+import com.example.snookerscore.domain.FrameScore
 import com.example.snookerscore.repository.SnookerRepository
 import kotlinx.coroutines.launch
 

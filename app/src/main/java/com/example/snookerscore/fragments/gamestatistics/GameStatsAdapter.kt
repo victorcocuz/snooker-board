@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snookerscore.databinding.ItemGameStatisticsViewBinding
-import com.example.snookerscore.fragments.game.FrameScore
+import com.example.snookerscore.domain.FrameScore
 
 class GameStatsAdapter:
     ListAdapter<Pair<FrameScore, FrameScore>, GameStatsAdapter.ViewHolder>(DiffCallback) {

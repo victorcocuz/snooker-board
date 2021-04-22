@@ -54,12 +54,12 @@ interface SnookerDatabaseDao {
     fun getMaxBreak(id: Int) : Int
 
     // Current Match
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    fun insertCrtMatch(crtMatch: DatabaseCrtMatch)
-//
-//    @Query( "Select * FROM current_match_table LIMIT 1")
-//    fun getCurrentMatch(): LiveData<DatabaseCrtMatch>
-//
-//    @Query("DELETE FROM current_match_table")
-//    fun deleteCrtMatch()
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCrtBreak(crtMatch: DatabaseMatchBreak)
+
+    @Query( "Select * FROM crt_break_table")
+    fun getCurrentBreak(): LiveData<DatabaseMatchBreak>
+
+    @Query("DELETE FROM crt_break_table")
+    fun deleteCrtBreak()
 }

@@ -6,10 +6,10 @@
     <data>
         <variable
             name="frameScoreA"
-            type="com.example.snookerscore.fragments.game.FrameScore" />
+            type="com.example.snookerscore.domain.FrameScore" />
         <variable
             name="frameScoreB"
-            type="com.example.snookerscore.fragments.game.FrameScore" />
+            type="com.example.snookerscore.domain.FrameScore" />
     </data>
 
     <LinearLayout

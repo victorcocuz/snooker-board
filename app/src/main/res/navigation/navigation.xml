@@ -78,7 +78,7 @@
         android:label="GameGenericDialogFragment" >
         <argument
             android:name="matchAction"
-            app:argType="com.example.snookerscore.fragments.game.MatchAction" />
+            app:argType="com.example.snookerscore.domain.MatchAction" />
         <action
             android:id="@+id/action_gameGenericDialogFragment_to_playFragment"
             app:destination="@id/playFragment" />

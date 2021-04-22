@@ -3,7 +3,7 @@ package com.example.snookerscore.database
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.snookerscore.domain.DomainRanking
-import com.example.snookerscore.fragments.game.FrameScore
+import com.example.snookerscore.domain.FrameScore
 
 @Entity(tableName = "rankings_table")
 data class DatabaseRanking constructor(
@@ -65,16 +65,29 @@ fun List<DatabaseFrameScore>.asDomainFrameScoreList(): ArrayList<Pair<FrameScore
     return frameScoreList
 }
 
-//@Entity(tableName = "current_match_table")
-//data class DatabaseCrtMatch constructor(
-//    @PrimaryKey
-//    val crtMatch: Int = 0,
-//    val matchFrames: Int,
-//    val matchReds: Int,
-//    val matchFoulModifier: Int,
-//    val matchBreaksFirst: Int,
-//    val frameCount: Int,
-//    val ballStack: ArrayDeque<Ball>,
-//    val frameScore: CurrentFrame,
-//    val frameStack: ArrayDeque<Break>
-//)
+@Entity(tableName = "crt_break_table")
+data class DatabaseMatchBreak constructor(
+    @PrimaryKey(autoGenerate = true)
+    val breakId: Int = 0,
+    val player : Int,
+    val potsBreakId: Int,
+    val breakSize: Int
+    )
+
+@Entity(tableName = "crt_pot_table")
+data class DatabaseMatchPot constructor(
+    @PrimaryKey(autoGenerate = true)
+    val potId: Int = 0,
+    val potsBreakId: Int,
+    val ball: Int,
+    val potType: Int,
+    val potAction: Int
+)
+
+//fun List<DatabaseMatchPot>.asDomainPotList(): ArrayDeque<Pot> {
+//    return map { pot ->
+//        when(pot.potType) {
+//            PotType.HIT -> Pot.HIT(pot.ball)
+//        }
+//    }.toMutableList().toTypedArray()
+//}

@@ -3,9 +3,9 @@ package com.example.snookerscore.fragments.gamedialogs
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.snookerscore.fragments.game.Ball
-import com.example.snookerscore.fragments.game.Pot
-import com.example.snookerscore.fragments.game.PotAction
+import com.example.snookerscore.domain.Ball
+import com.example.snookerscore.domain.Pot
+import com.example.snookerscore.domain.PotAction
 import com.example.snookerscore.utils.Event
 
 class GameFoulDialogViewModel : ViewModel() {

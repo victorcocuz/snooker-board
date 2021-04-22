@@ -4,9 +4,9 @@
 
     <data>
 
-        <import type="com.example.snookerscore.fragments.game.Pot" />
+        <import type="com.example.snookerscore.domain.Pot" />
 
-        <import type="com.example.snookerscore.fragments.game.MatchAction" />
+        <import type="com.example.snookerscore.domain.MatchAction" />
 
         <variable
             name="gameViewModel"
