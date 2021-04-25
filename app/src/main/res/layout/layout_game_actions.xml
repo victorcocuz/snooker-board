@@ -9,8 +9,11 @@
         <import type="com.example.snookerscore.domain.MatchAction" />
 
         <variable
+            name="genericEventsViewModel"
+            type="com.example.snookerscore.GenericEventsViewModel" />
+        <variable
             name="gameViewModel"
-            type="com.example.snookerscore.fragments.game.GameFragmentViewModel" />
+            type="com.example.snookerscore.fragments.game.GameViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,7 +45,7 @@
         <TextView
             android:id="@+id/game_btn_act_foul"
             style="@style/temp_btn"
-            android:onClick="@{() -> gameViewModel.onFoulClicked()}"
+            android:onClick="@{() -> genericEventsViewModel.onFoulClicked()}"
             android:text="@string/action_foul"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_add_red"
@@ -65,7 +68,7 @@
             android:id="@+id/game_btn_act_rerack"
             style="@style/temp_btn"
             android:layout_marginBottom="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.resetFrame()}"
+            android:onClick="@{() -> gameViewModel.resetFrameScore()}"
             android:text="@string/action_rerack"
             app:layout_constraintBottom_toTopOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_end_frame"
@@ -78,7 +81,7 @@
             style="@style/temp_btn"
             android:onClick="@{() -> gameViewModel.endFrame()}"
             android:text="@string/action_end"
-            app:endFrameEnabled="@{gameViewModel.displayPlayer.isFrameEqual()}"
+            app:endFrameEnabled="@{gameViewModel.displayScore.isFrameEqual()}"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_rerack"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_end_match"
             app:layout_constraintHorizontal_bias="0.5"
@@ -89,8 +92,8 @@
             style="@style/temp_btn"
             android:onClick="@{() -> gameViewModel.assignMatchAction(MatchAction.END_MATCH)}"
             android:text="@string/action_finish"
-            app:endMatchEnabledFrameEqual="@{gameViewModel.displayPlayer.isFrameEqual()}"
-            app:endMatchEnabledMatchEqual="@{gameViewModel.displayPlayer.isMatchEqual()}"
+            app:endMatchEnabledFrameEqual="@{gameViewModel.displayScore.isFrameEqual()}"
+            app:endMatchEnabledMatchEqual="@{gameViewModel.displayScore.isMatchEqual()}"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_rerack"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_undo"
             app:layout_constraintHorizontal_bias="0.5"

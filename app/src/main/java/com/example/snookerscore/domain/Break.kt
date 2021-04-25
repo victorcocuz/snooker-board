@@ -1,5 +1,6 @@
 package com.example.snookerscore.domain
 
+import com.example.snookerscore.database.DatabaseMatchBall
 import com.example.snookerscore.database.DatabaseMatchBreak
 import com.example.snookerscore.database.DatabaseMatchPot
 
@@ -38,16 +39,28 @@ sealed class Pot(
 }
 
 data class Break(
-    val player: Int,
     val breakId: Int,
+    val player: Int,
+    val frameCount: Int,
     val pots: MutableList<Pot>,
     var breakSize: Int
 )
 
+fun List<Break>.asDatabaseBreak(): List<DatabaseMatchBreak> {
+    return map {
+        DatabaseMatchBreak(
+            player = it.player,
+            frameCount = it.frameCount,
+            breakId = it.breakId,
+            breakSize = it.breakSize
+        )
+    }
+}
+
 fun Break.asDatabasePot(): List<DatabaseMatchPot> {
     return pots.map { pot ->
         DatabaseMatchPot(
-            potsBreakId = breakId,
+            breakId = breakId,
             ball = pot.ball.ordinal,
             potType = pot.potType.ordinal,
             potAction = pot.potAction.ordinal
@@ -55,11 +68,10 @@ fun Break.asDatabasePot(): List<DatabaseMatchPot> {
     }
 }
 
-fun Break.asDatabaseBreak(): DatabaseMatchBreak {
-    return DatabaseMatchBreak(
-        player = this.player,
-        breakId = this.breakId,
-        potsBreakId = this.breakId,
-        breakSize = this.breakSize
-    )
+fun List<Ball>.asDatabaseBallStack(): List<DatabaseMatchBall> {
+    return this.map { ball ->
+        DatabaseMatchBall(
+            ballValue = ball.ordinal
+        )
+    }
 }

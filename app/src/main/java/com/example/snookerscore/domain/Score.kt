@@ -1,13 +1,14 @@
 package com.example.snookerscore.domain
 
 import com.example.snookerscore.database.DatabaseFrameScore
+import timber.log.Timber
 
 enum class MatchAction {
-    CANCEL_MATCH, END_FRAME, FRAME_ENDED, END_MATCH, MATCH_ENDED
+    CANCEL_MATCH, END_FRAME, FRAME_ENDED, END_MATCH, MATCH_ENDED, CONTINUE_MATCH, NO_ACTION, START_NEW_MATCH
 }
 
 sealed class CurrentScore(
-    var frameCount: Int,
+    var frameId: Int,
     var framePoints: Int,
     var matchPoints: Int,
     var successShots: Int,
@@ -17,6 +18,24 @@ sealed class CurrentScore(
 ) {
     object PlayerA : CurrentScore(0, 0, 0, 0, 0, 0, 0)
     object PlayerB : CurrentScore(0, 0, 0, 0, 0, 0, 0)
+
+    fun initPlayer(
+        frameId: Int,
+        framePoints: Int,
+        matchPoints: Int,
+        successShots: Int,
+        missedShots: Int,
+        fouls: Int,
+        highestBreak: Int
+    ) {
+        this.frameId = frameId
+        this.framePoints = framePoints
+        this.matchPoints = matchPoints
+        this.successShots = successShots
+        this.missedShots = missedShots
+        this.fouls = fouls
+        this.highestBreak = highestBreak
+    }
 
     fun getFirst() = PlayerA
     fun getSecond() = PlayerB
@@ -56,7 +75,8 @@ sealed class CurrentScore(
     }
 
     fun addFrameCount() {
-        this.frameCount += 1
+        Timber.e("has been triggered")
+        this.frameId += 1
     }
 
     fun addMatchPoint() {
@@ -82,13 +102,13 @@ sealed class CurrentScore(
 
     fun resetMatchScore() {
         this.matchPoints = 0
-        this.frameCount = 0
+        this.frameId = 0
     }
 }
 
 fun CurrentScore.asDatabaseFrameScore(): DatabaseFrameScore {
     return DatabaseFrameScore(
-        frameCount = this.frameCount,
+        frameCount = this.frameId,
         playerId = when (this) {
             CurrentScore.PlayerA -> 0
             CurrentScore.PlayerB -> 1

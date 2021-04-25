@@ -2,28 +2,10 @@ package com.example.snookerscore.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.snookerscore.domain.DomainRanking
+import com.example.snookerscore.domain.CurrentScore
 import com.example.snookerscore.domain.FrameScore
 
-@Entity(tableName = "rankings_table")
-data class DatabaseRanking constructor(
-    @PrimaryKey
-    val position: Int = 0,
-    val name: String = "",
-    val points: Int = 0
-)
-
-fun List<DatabaseRanking>.asDomainRankings(): List<DomainRanking> {
-    return map {
-        DomainRanking(
-            position = it.position,
-            name = it.name,
-            points = it.points
-        )
-    }
-}
-
-@Entity(tableName = "frames_table")
+@Entity(tableName = "match_score_table")
 data class DatabaseFrameScore constructor(
     @PrimaryKey(autoGenerate = true)
     val scoreId: Int = 0,
@@ -65,29 +47,30 @@ fun List<DatabaseFrameScore>.asDomainFrameScoreList(): ArrayList<Pair<FrameScore
     return frameScoreList
 }
 
-@Entity(tableName = "crt_break_table")
-data class DatabaseMatchBreak constructor(
-    @PrimaryKey(autoGenerate = true)
-    val breakId: Int = 0,
-    val player : Int,
-    val potsBreakId: Int,
-    val breakSize: Int
-    )
-
-@Entity(tableName = "crt_pot_table")
-data class DatabaseMatchPot constructor(
-    @PrimaryKey(autoGenerate = true)
-    val potId: Int = 0,
-    val potsBreakId: Int,
-    val ball: Int,
-    val potType: Int,
-    val potAction: Int
-)
-
-//fun List<DatabaseMatchPot>.asDomainPotList(): ArrayDeque<Pot> {
-//    return map { pot ->
-//        when(pot.potType) {
-//            PotType.HIT -> Pot.HIT(pot.ball)
-//        }
-//    }.toMutableList().toTypedArray()
-//}
+fun List<DatabaseFrameScore>.asCurrentScore(): Any? {
+    if (this.size > 1) {
+        val currentScore: CurrentScore = CurrentScore.PlayerA
+        val dbPlayerA = this[this.lastIndex - 1]
+        val dbPlayerB = this[this.lastIndex]
+        currentScore.getFirst().initPlayer(
+            dbPlayerA.frameCount,
+            dbPlayerA.framePoints,
+            dbPlayerA.matchPoints,
+            dbPlayerA.successShots,
+            dbPlayerA.missedShots,
+            dbPlayerA.fouls,
+            dbPlayerA.highestBreak
+        )
+        currentScore.getSecond().initPlayer(
+            dbPlayerB.frameCount,
+            dbPlayerB.framePoints,
+            dbPlayerB.matchPoints,
+            dbPlayerB.successShots,
+            dbPlayerB.missedShots,
+            dbPlayerB.fouls,
+            dbPlayerB.highestBreak
+        )
+        return currentScore
+    }
+    return null
+}

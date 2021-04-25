@@ -5,22 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
-import com.example.snookerscore.GenericViewModelFactory
+import androidx.navigation.fragment.findNavController
+import com.example.snookerscore.GenericEventsViewModel
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentPlayBinding
-import com.example.snookerscore.fragments.game.GameFragmentViewModel
+import com.example.snookerscore.domain.MatchAction
+import com.example.snookerscore.fragments.game.GameViewModel
 import com.example.snookerscore.utils.EventObserver
 
-class PlayFragment : Fragment() {
+class PlayFragment : androidx.fragment.app.Fragment() {
 
     private val playFragmentViewModel: PlayFragmentViewModel by viewModels()
-    private val gameFragmentViewModel: GameFragmentViewModel by activityViewModels {
-        GenericViewModelFactory(requireNotNull(this.activity).application)
-    }
+    private val gameViewModel: GameViewModel by activityViewModels()
+    private val eventsViewModel: GenericEventsViewModel by activityViewModels()
+    private var matchIsSaved = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,23 +56,45 @@ class PlayFragment : Fragment() {
                 })
             }
 
+            gameViewModel.apply {
+                dbBreaks.observe(viewLifecycleOwner, {
+                    if (it.isNotEmpty()) matchIsSaved = true
+                })
+            }
+
             fragPlayBtnPlay.setOnClickListener {
-                gameFragmentViewModel.setMatchRules(
-                    viewModel!!.eventFrames.value!!.peekContent(),
-                    viewModel!!.eventReds.value!!.peekContent(),
-                    viewModel!!.eventFoulModifier.value!!.peekContent(),
-                    viewModel!!.eventBreaksFirst.value!!.peekContent()
-                )
-                it.findNavController().navigate(
-                    PlayFragmentDirections.actionPlayFragmentToGameFragment(
-                        viewModel!!.eventFrames.value!!.peekContent(),
-                        viewModel!!.eventReds.value!!.peekContent(),
-                        viewModel!!.eventFoulModifier.value!!.peekContent(),
-                        viewModel!!.eventBreaksFirst.value!!.peekContent()
+                if (matchIsSaved) {
+                    findNavController().navigate(
+                        PlayFragmentDirections.actionPlayFragmentToGameGenericDialogFragment(
+                            MatchAction.CONTINUE_MATCH,
+                            MatchAction.START_NEW_MATCH
+                        )
                     )
-                )
+                } else {
+                    resetMatch()
+                    findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
+                }
+            }
+
+            eventsViewModel.apply {
+                eventMatchActionConfirmed.observe(viewLifecycleOwner, EventObserver {
+                    when (it) {
+                        MatchAction.START_NEW_MATCH -> resetMatch()
+                        MatchAction.CONTINUE_MATCH -> gameViewModel.getSavedStateRules()
+                        else -> {
+                        }
+                    }
+                    findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
+                })
             }
         }
         return binding.root
     }
+
+    private fun resetMatch() = gameViewModel.resetMatch(
+        playFragmentViewModel.eventFrames.value!!.peekContent(),
+        playFragmentViewModel.eventReds.value!!.peekContent(),
+        playFragmentViewModel.eventFoulModifier.value!!.peekContent(),
+        playFragmentViewModel.eventBreaksFirst.value!!.peekContent()
+    )
 }

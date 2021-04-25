@@ -10,13 +10,14 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.snookerscore.GenericEventsViewModel
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameFoulDialogBinding
 import com.example.snookerscore.domain.*
 import com.example.snookerscore.domain.Ball.*
 import com.example.snookerscore.fragments.game.BallAdapter
 import com.example.snookerscore.fragments.game.BallListener
-import com.example.snookerscore.fragments.game.GameFragmentViewModel
+import com.example.snookerscore.fragments.game.GameViewModel
 import com.example.snookerscore.utils.EventObserver
 import com.example.snookerscore.utils.toast
 import java.util.*
@@ -24,7 +25,8 @@ import java.util.*
 class GameFoulDialogFragment : DialogFragment() {
     private lateinit var ballsList: List<Ball>
     private val foulDialogViewModel: GameFoulDialogViewModel by viewModels()
-    private val gameFragmentViewModel: GameFragmentViewModel by activityViewModels()
+    private val eventsViewModel: GenericEventsViewModel by activityViewModels()
+    private val gameFragmentViewModel: GameViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -42,6 +44,7 @@ class GameFoulDialogFragment : DialogFragment() {
             lifecycleOwner = this@GameFoulDialogFragment
             foulViewModel = foulDialogViewModel
             gameViewModel = gameFragmentViewModel
+            genericEventsViewModel = eventsViewModel
             foulBallsListRv.apply {
                 layoutManager = linearLayoutManager
                 adapter = ballAdapter
@@ -69,9 +72,6 @@ class GameFoulDialogFragment : DialogFragment() {
             })
         }
         gameFragmentViewModel.apply {
-            eventCancelDialog.observe(viewLifecycleOwner, EventObserver {
-                dismiss()
-            })
             displayBallStack.observe(viewLifecycleOwner, { ballStack ->
                 ballsList = when (ballStack.size) {
                     2 -> listOf(WHITE, BLACK)
@@ -83,6 +83,11 @@ class GameFoulDialogFragment : DialogFragment() {
                     else -> listOf(WHITE, RED, YELLOW, GREEN, BROWN, BLUE, PINK, BLACK)
                 }
                 ballAdapter.submitList(ballsList)
+            })
+        }
+        eventsViewModel.apply {
+            eventMatchAction.observe(viewLifecycleOwner, EventObserver {
+                if (it == MatchAction.NO_ACTION) dismiss()
             })
         }
         return binding.root

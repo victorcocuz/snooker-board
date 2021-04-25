@@ -4,9 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.example.snookerscore.domain.MatchAction"/>
+        <variable
+            name="genericEventsViewModel"
+            type="com.example.snookerscore.GenericEventsViewModel" />
         <variable
             name="gameViewModel"
-            type="com.example.snookerscore.fragments.game.GameFragmentViewModel" />
+            type="com.example.snookerscore.fragments.game.GameViewModel" />
         <variable
             name="foulViewModel"
             type="com.example.snookerscore.fragments.gamedialogs.GameFoulDialogViewModel" />
@@ -81,7 +85,7 @@
             android:layout_width="wrap_content"
             android:onClick="@{() -> foulViewModel.onActionClicked(PotAction.CONTINUE)}"
             android:text="@string/fragment_foul_action_force_continue"
-            app:dialogCannotForceDiff="@{gameViewModel.displayPlayer}"
+            app:dialogCannotForceDiff="@{gameViewModel.displayScore}"
             app:dialogCannotForceRemaining="@{gameViewModel.displayBallStack.size()}"
             app:layout_constraintBottom_toBottomOf="@+id/foul_action_continue"
             app:layout_constraintEnd_toEndOf="parent"
@@ -128,7 +132,7 @@
             android:layout_width="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
             android:layout_marginBottom="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.onGenDialogCancelClicked()}"
+            android:onClick="@{() -> genericEventsViewModel.onMatchActionQueried(MatchAction.NO_ACTION)}"
             android:text="@string/fragment_foul_cancel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/foul_ok"

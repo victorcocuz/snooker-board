@@ -6,15 +6,11 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snookerscore.R
-import com.example.snookerscore.domain.Ball
-import com.example.snookerscore.domain.DomainRanking
 import com.example.snookerscore.domain.*
 import com.example.snookerscore.domain.Ball.*
-import com.example.snookerscore.domain.CurrentScore
-import com.example.snookerscore.domain.FrameScore
-import com.example.snookerscore.domain.MatchAction
 import com.example.snookerscore.fragments.gamestatistics.GameStatsAdapter
 import com.example.snookerscore.fragments.rankings.RankingsAdapter
+import timber.log.Timber
 import java.text.DecimalFormat
 import kotlin.math.abs
 
@@ -46,28 +42,33 @@ fun ImageView.setBallImage(item: Ball?) {
 
 // Game Display
 @BindingAdapter("crtPlayerA")
-fun TextView.setCurrentPlayerA(crtPlayer: CurrentScore) {
-    setBackgroundColor(
-        when (crtPlayer) {
-            crtPlayer.getFirst() -> ContextCompat.getColor(context, R.color.design_default_color_primary)
-            else -> 0x00000000
-        }
-    )
+fun TextView.setCurrentPlayerA(crtPlayer: CurrentScore?) {
+    crtPlayer?.let {
+        setBackgroundColor(
+            when (crtPlayer) {
+                crtPlayer.getFirst() -> ContextCompat.getColor(context, R.color.design_default_color_primary)
+                else -> 0x00000000
+            }
+        )
+    }
 }
 
 @BindingAdapter("crtPlayerB")
-fun TextView.setCurrentPlayerB(crtPlayer: CurrentScore) {
-    setBackgroundColor(
-        when (crtPlayer) {
-            crtPlayer.getFirst() -> 0x00000000
-            else -> ContextCompat.getColor(context, R.color.design_default_color_primary)
-        }
-    )
+fun TextView.setCurrentPlayerB(crtPlayer: CurrentScore?) {
+    crtPlayer?.let {
+        setBackgroundColor(
+            when (crtPlayer) {
+                crtPlayer.getFirst() -> 0x00000000
+                else -> ContextCompat.getColor(context, R.color.design_default_color_primary)
+            }
+        )
+    }
 }
 
 @BindingAdapter("setTotalScore")
 fun TextView.setTotalScore(frames: Int) {
-    text = context.getString(R.string.game_total_score, (frames * 2 - 1))
+    Timber.e("frames $frames")
+        text = context.getString(R.string.game_total_score, (frames * 2 - 1))
 }
 
 @BindingAdapter("gamePointsDiffSize")
@@ -77,8 +78,10 @@ fun TextView.setGamePointsRemaining(size: Int) {
 }
 
 @BindingAdapter("gamePointsRemaining")
-fun TextView.setGamePointsDiff(crtPlayer: CurrentScore) {
-    text = abs(crtPlayer.getFirst().framePoints - crtPlayer.getSecond().framePoints).toString()
+fun TextView.setGamePointsDiff(crtPlayer: CurrentScore?) {
+    crtPlayer?.let {
+        text = abs(crtPlayer.getFirst().framePoints - crtPlayer.getSecond().framePoints).toString()
+    }
 }
 
 @BindingAdapter("shotSuccess", "shotMiss")
@@ -178,12 +181,14 @@ fun TextView.setDialogFreeballEnabled(potAction: PotAction?) {
 }
 
 @BindingAdapter("dialogCannotForceDiff", "dialogCannotForceRemaining")
-fun TextView.setDialogForceContinueEnabled(crtPlayer: CurrentScore, size: Int) {
-    val diff = abs(crtPlayer.getFirst().framePoints - crtPlayer.getSecond().framePoints)
-    val remaining =
-        if (size <= 7) (-(8 - size) * (8 - size) - (8 - size) + 56) / 2
-        else 27 + ((size - 7) / 2) * 8
-    isEnabled = (remaining - diff) >= 0
+fun TextView.setDialogForceContinueEnabled(crtPlayer: CurrentScore?, size: Int) {
+    crtPlayer?.let {
+        val diff = abs(crtPlayer.getFirst().framePoints - crtPlayer.getSecond().framePoints)
+        val remaining =
+            if (size <= 7) (-(8 - size) * (8 - size) - (8 - size) + 56) / 2
+            else 27 + ((size - 7) / 2) * 8
+        isEnabled = (remaining - diff) >= 0
+    }
 }
 
 // Game Gen Dialog
@@ -195,8 +200,38 @@ fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
         MatchAction.END_MATCH -> "Are you sure you want to end this match?"
         MatchAction.FRAME_ENDED -> "This frame will end. Would you like to proceed?"
         MatchAction.MATCH_ENDED -> "This match will end. Would you like to proceed?"
+        MatchAction.CONTINUE_MATCH -> "Would you like to continue the current match or start a new one"
+        else -> "$matchAction not implemented"
     }
 }
+
+@BindingAdapter("dialogGameGenYes")
+fun TextView.setDialogGameYes(matchAction: MatchAction) {
+    text = when(matchAction) {
+        MatchAction.CANCEL_MATCH -> "Yes"
+        MatchAction.END_FRAME -> "Yes"
+        MatchAction.END_MATCH -> "Yes"
+        MatchAction.FRAME_ENDED -> "Yes"
+        MatchAction.MATCH_ENDED -> "Yes"
+        MatchAction.CONTINUE_MATCH -> "Continue Match"
+        else -> "$matchAction not implemented"
+    }
+}
+
+@BindingAdapter("dialogGameGenNo")
+fun TextView.setDialogGameNo(matchAction: MatchAction) {
+    text = when(matchAction) {
+        MatchAction.CANCEL_MATCH -> "No"
+        MatchAction.END_FRAME -> "No"
+        MatchAction.END_MATCH -> "No"
+        MatchAction.FRAME_ENDED -> "No"
+        MatchAction.MATCH_ENDED -> "No"
+        MatchAction.CONTINUE_MATCH -> "Start New Match"
+        else -> "$matchAction not implemented"
+    }
+}
+
+
 
 // RV Adapters
 @BindingAdapter("listRankingsData")

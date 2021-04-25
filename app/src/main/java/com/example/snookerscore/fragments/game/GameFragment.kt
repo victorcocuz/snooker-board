@@ -6,16 +6,19 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.snookerscore.GenericEventsViewModel
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameBinding
 import com.example.snookerscore.domain.Ball
 import com.example.snookerscore.domain.Ball.*
+import com.example.snookerscore.domain.MatchAction
 import com.example.snookerscore.domain.Pot
 import com.example.snookerscore.utils.EventObserver
 import java.util.*
 
 class GameFragment : androidx.fragment.app.Fragment() {
-    private val gameFragmentViewModel: GameFragmentViewModel by activityViewModels()
+    private val gameViewModel: GameViewModel by activityViewModels()
+    private val eventsViewModel: GenericEventsViewModel by activityViewModels()
     private lateinit var ballsList: List<Ball>
     private lateinit var ballAdapter: BallAdapter
     private lateinit var binding: FragmentGameBinding
@@ -33,35 +36,57 @@ class GameFragment : androidx.fragment.app.Fragment() {
 
         }
         ballAdapter = BallAdapter(BallListener { ball ->
-            gameFragmentViewModel.updateFrame(Pot.HIT(ball))
-        }, gameFragmentViewModel.displayBallStack)
+            gameViewModel.updateFrame(Pot.HIT(ball))
+        }, gameViewModel.displayBallStack)
 
         binding.apply {
             lifecycleOwner = this@GameFragment
-            gameViewModel = gameFragmentViewModel
+            gameViewModel = this@GameFragment.gameViewModel
             fragGameBallsRv.apply {
                 layoutManager = linearLayoutManager
                 itemAnimator = null
                 adapter = ballAdapter
             }
             fragGameActionBtns.apply {
-                gameViewModel = gameFragmentViewModel
+                gameViewModel = this@GameFragment.gameViewModel
+                genericEventsViewModel = eventsViewModel
             }
         }
 
         // VM Observers
-        gameFragmentViewModel.apply {
+        gameViewModel.apply {
             // Enable or disable buttons
             displayBallStack.observe(viewLifecycleOwner, { ballStack ->
                 manageBallVisibility(ballStack.last())
             })
-
-            // Open foul dialog
+            eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
+                findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameGenericDialogFragment(matchAction, MatchAction.NO_ACTION))
+            })
+        }
+        eventsViewModel.apply {
             eventFoul.observe(viewLifecycleOwner, EventObserver {
                 findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameFoulDialogFragment())
             })
-            eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
-                findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameGenericDialogFragment(matchAction))
+            eventMatchActionConfirmed.observe(viewLifecycleOwner, EventObserver { matchAction ->
+                gameViewModel.apply {
+                    when (matchAction) {
+                        MatchAction.CANCEL_MATCH -> {
+                            resetMatchScore()
+                            requireActivity().onBackPressed()
+                        }
+                        in listOf(MatchAction.END_FRAME, MatchAction.FRAME_ENDED) -> frameEnded()
+                        in listOf(MatchAction.END_MATCH, MatchAction.MATCH_ENDED) -> {
+                            frameEnded()
+                            findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameStatsFragment())
+                        }
+                        MatchAction.CONTINUE_MATCH -> {
+                            eventsViewModel.eventMatchActionConfirmed(MatchAction.CONTINUE_MATCH)
+                        }
+                        MatchAction.START_NEW_MATCH -> eventsViewModel.eventMatchActionConfirmed(MatchAction.START_NEW_MATCH)
+                        else -> {
+                        }
+                    }
+                }
             })
         }
 

@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_playFragment_to_gameFragment"
             app:destination="@id/gameFragment" />
+        <action
+            android:id="@+id/action_playFragment_to_gameGenericDialogFragment"
+            app:destination="@id/gameGenericDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
@@ -43,24 +46,12 @@
         <action
             android:id="@+id/action_gameFragment_to_gameGenericDialogFragment"
             app:destination="@id/gameGenericDialogFragment" />
-        <argument
-            android:name="matchFrames"
-            app:argType="integer"
-            android:defaultValue="3" />
-        <argument
-            android:name="matchReds"
-            app:argType="integer"
-            android:defaultValue="15" />
-        <argument
-            android:name="matchFoulModifier"
-            app:argType="integer"
-            android:defaultValue="4" />
         <action
             android:id="@+id/action_gameFragment_to_gameFoulDialogFragment"
             app:destination="@id/gameFoulDialogFragment" />
-        <argument
-            android:name="matchBreaksFirst"
-            android:defaultValue="0" />
+        <action
+            android:id="@+id/action_gameFragment_to_gameStatsFragment"
+            app:destination="@id/gameStatsFragment" />
     </fragment>
     <fragment
         android:id="@+id/gameStatsFragment"
@@ -77,14 +68,11 @@
         android:name="com.example.snookerscore.fragments.gamedialogs.GameGenericDialogFragment"
         android:label="GameGenericDialogFragment" >
         <argument
-            android:name="matchAction"
+            android:name="matchActionYes"
             app:argType="com.example.snookerscore.domain.MatchAction" />
-        <action
-            android:id="@+id/action_gameGenericDialogFragment_to_playFragment"
-            app:destination="@id/playFragment" />
-        <action
-            android:id="@+id/action_gameGenericDialogFragment_to_gameStatsFragment"
-            app:destination="@id/gameStatsFragment" />
+        <argument
+            android:name="matchActionNo"
+            app:argType="com.example.snookerscore.domain.MatchAction" />
     </dialog>
     <dialog
         android:id="@+id/gameFoulDialogFragment"

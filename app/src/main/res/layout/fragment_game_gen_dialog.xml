@@ -5,11 +5,14 @@
 
     <data>
         <variable
-            name="matchAction"
+            name="matchActionYes"
             type="com.example.snookerscore.domain.MatchAction" />
         <variable
-            name="gameViewModel"
-            type="com.example.snookerscore.fragments.game.GameFragmentViewModel" />
+            name="matchActionNo"
+            type="com.example.snookerscore.domain.MatchAction" />
+        <variable
+            name="genericEventsViewModel"
+            type="com.example.snookerscore.GenericEventsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_large"
-            app:dialogGameGenQuestion="@{matchAction}"
+            app:dialogGameGenQuestion="@{matchActionYes}"
             android:layout_marginTop="@dimen/margin_large"
             android:layout_marginEnd="@dimen/margin_large"
             android:text="@string/hello_blank_fragment"
@@ -38,8 +41,8 @@
             android:layout_marginStart="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_xlarge"
             android:layout_marginBottom="@dimen/margin_xlarge"
-            android:onClick="@{() -> gameViewModel.onGenDialogCancelClicked()}"
-            android:text="@string/dialog_gen_no"
+            android:onClick="@{() -> genericEventsViewModel.onMatchActionQueried(matchActionNo)}"
+            app:dialogGameGenNo="@{matchActionYes}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/game_dialog_gen_yes"
             app:layout_constraintHorizontal_bias="0.5"
@@ -52,8 +55,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.onGenDialogConfirmed(matchAction)}"
-            android:text="@string/dialog_gen_yes"
+            android:onClick="@{() -> genericEventsViewModel.onMatchActionQueried(matchActionYes)}"
+            app:dialogGameGenYes="@{matchActionYes}"
             app:layout_constraintBottom_toBottomOf="@+id/game_dialog_gen_no"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

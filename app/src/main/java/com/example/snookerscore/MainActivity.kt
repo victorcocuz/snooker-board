@@ -4,14 +4,26 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.example.snookerscore.database.SnookerDatabase
 import com.example.snookerscore.databinding.ActivityMainBinding
+import com.example.snookerscore.domain.CurrentScore
+import com.example.snookerscore.fragments.game.GameViewModel
+import com.example.snookerscore.repository.SnookerRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var gameViewModel: GameViewModel
+    private lateinit var snookerRepository: SnookerRepository
+    private val activityScope = CoroutineScope(Dispatchers.Default)
 
     private val setOfPrimaryFragments =
         setOf(R.id.rankingsFragment, R.id.friendsFragment, R.id.playFragment, R.id.historyFragment, R.id.statisticsFragment)
@@ -23,6 +35,13 @@ class MainActivity : AppCompatActivity() {
 
         navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
         supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        snookerRepository = SnookerRepository(SnookerDatabase.getDatabase(this.application))
+        gameViewModel = ViewModelProvider(
+            this,
+            GenericViewModelFactory(this.application, snookerRepository, this, null)
+        ).get(GameViewModel::class.java)
+
         binding.apply {
             navBottom.setupWithNavController(navController)
 
@@ -34,6 +53,44 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        // Observables
+        snookerRepository.apply {
+            currentScore.observe(this@MainActivity, {
+                if (it is CurrentScore) {
+                    Timber.e("this gets triggered $it")
+
+                    gameViewModel.setScore(it)
+                }
+            })
+            currentBreaks.observe(this@MainActivity, {
+                if (it.size > 0) {
+                    Timber.e("this gets triggered $it")
+                    gameViewModel.setFrameStack(it)
+                }
+            })
+            currentBallStack.observe(this@MainActivity, {
+                if (it.size > 0) {
+                    Timber.e("this gets triggered $it")
+                    gameViewModel.setBallStack(it)
+                }
+            })
+        }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        activityScope.launch {
+            snookerRepository.deleteCurrentMatch()
+            if (gameViewModel.displayFrameStack.value != null) {
+                snookerRepository.saveCurrentMatch(
+                    gameViewModel.displayScore.value!!,
+                    gameViewModel.displayFrameStack.value!!,
+                    gameViewModel.displayBallStack.value!!,
+                    gameViewModel.frameCount.value!!
+                )
+            }
+            if(::gameViewModel.isInitialized) gameViewModel.setSavedStateRules()
+        }
+    }
 }

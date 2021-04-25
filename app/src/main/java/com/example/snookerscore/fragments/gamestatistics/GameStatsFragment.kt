@@ -11,15 +11,24 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.snookerscore.GenericViewModelFactory
 import com.example.snookerscore.R
+import com.example.snookerscore.database.SnookerDatabase
 import com.example.snookerscore.databinding.FragmentGameStatsBinding
 import com.example.snookerscore.domain.FrameScore
+import com.example.snookerscore.repository.SnookerRepository
 import com.example.snookerscore.utils.setupGameNotification
 import kotlinx.android.synthetic.main.item_game_statistics_view.*
 
 class GameStatsFragment : Fragment() {
 
     private val gameStatsViewModel: GameStatsViewModel by lazy {
-        ViewModelProvider(this, GenericViewModelFactory(requireNotNull(this.activity).application)).get(GameStatsViewModel::class.java)
+        ViewModelProvider(
+            this, GenericViewModelFactory(
+                requireNotNull(this.activity).application,
+                SnookerRepository(SnookerDatabase.getDatabase(requireNotNull(this.activity).application)),
+                this,
+                null
+            )
+        ).get(GameStatsViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -41,12 +50,22 @@ class GameStatsFragment : Fragment() {
 
             gameStatsRv.adapter = GameStatsAdapter()
             gameStatsHeader.apply {
-                itemGamestatsLinearLayout.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.design_default_color_secondary))
+                itemGamestatsLinearLayout.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.design_default_color_secondary
+                    )
+                )
                 frameScoreA = FrameScore(-1, -1, -1, -1, -1, -1, -1, -1)
                 frameScoreB = FrameScore(-1, -1, -1, -1, -1, -1, -1, -1)
             }
             gameStatsFooter.apply {
-                itemGamestatsLinearLayout.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.design_default_color_secondary))
+                itemGamestatsLinearLayout.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.design_default_color_secondary
+                    )
+                )
                 gameStatsViewModel.totalsA.observe(viewLifecycleOwner, {
                     frameScoreA = it
                 })
