@@ -33,7 +33,7 @@ class GameGenericDialogFragment : DialogFragment() {
         }
 
         // Observers
-        eventsViewModel.eventMatchAction.observe(viewLifecycleOwner, EventObserver {
+        eventsViewModel.eventMatchActionQueried.observe(viewLifecycleOwner, EventObserver {
             dismiss()
             matchAction = it
         })
@@ -42,6 +42,6 @@ class GameGenericDialogFragment : DialogFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        eventsViewModel.eventMatchActionConfirmed(matchAction)
+        eventsViewModel.onEventMatchActionConfirmed(matchAction)
     }
 }

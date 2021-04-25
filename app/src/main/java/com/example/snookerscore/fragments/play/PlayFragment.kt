@@ -64,10 +64,11 @@ class PlayFragment : androidx.fragment.app.Fragment() {
 
             fragPlayBtnPlay.setOnClickListener {
                 if (matchIsSaved) {
+                    matchIsSaved = false
                     findNavController().navigate(
                         PlayFragmentDirections.actionPlayFragmentToGameGenericDialogFragment(
-                            MatchAction.CONTINUE_MATCH,
-                            MatchAction.START_NEW_MATCH
+                            MatchAction.MATCH_CONTINUE,
+                            MatchAction.MATCH_START_NEW
                         )
                     )
                 } else {
@@ -79,8 +80,8 @@ class PlayFragment : androidx.fragment.app.Fragment() {
             eventsViewModel.apply {
                 eventMatchActionConfirmed.observe(viewLifecycleOwner, EventObserver {
                     when (it) {
-                        MatchAction.START_NEW_MATCH -> resetMatch()
-                        MatchAction.CONTINUE_MATCH -> gameViewModel.getSavedStateRules()
+                        MatchAction.MATCH_START_NEW -> resetMatch()
+                        MatchAction.MATCH_CONTINUE -> gameViewModel.getSavedStateRules()
                         else -> {
                         }
                     }

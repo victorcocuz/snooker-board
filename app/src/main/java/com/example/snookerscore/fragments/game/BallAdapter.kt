@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.snookerscore.databinding.ItemBallViewBinding
 import com.example.snookerscore.domain.Ball
 
-class BallAdapter(private val clickListener: BallListener, private val ballStackSize: LiveData<MutableList<Ball>>): ListAdapter<Ball, BallAdapter.ViewHolder>(BallAdapterCallback()) {
+class BallAdapter(private val clickListener: BallListener, private val ballStack: LiveData<MutableList<Ball>>): ListAdapter<Ball, BallAdapter.ViewHolder>(BallAdapterCallback()) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -17,7 +17,7 @@ class BallAdapter(private val clickListener: BallListener, private val ballStack
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), clickListener, ballStackSize)
+        holder.bind(getItem(position), clickListener, ballStack)
     }
 
     class ViewHolder private constructor(val binding: ItemBallViewBinding) : RecyclerView.ViewHolder(binding.root) {

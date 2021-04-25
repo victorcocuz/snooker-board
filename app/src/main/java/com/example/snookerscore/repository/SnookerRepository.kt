@@ -37,15 +37,14 @@ class SnookerRepository(private val database: SnookerDatabase) {
         it.asDomainFrameScoreList()
     }
 
-    suspend fun addFrames(frameScore: CurrentScore, frameCount: Int) {
+    suspend fun addFrames(frameScore: CurrentScore) {
         withContext(Dispatchers.IO) {
-            snookerDbDao.deleteScoreByFrameCount(frameCount) // If state has been saved, current frame should be removed
             snookerDbDao.insertMatchScore(frameScore.getFirst().asDatabaseFrameScore())
             snookerDbDao.insertMatchScore(frameScore.getSecond().asDatabaseFrameScore())
         }
     }
 
-    suspend fun removeFrames() {
+    suspend fun deleteMatchFrames() {
         withContext(Dispatchers.IO) {
             snookerDbDao.deleteMatchScore()
         }
@@ -67,36 +66,37 @@ class SnookerRepository(private val database: SnookerDatabase) {
     }
 
     // State
-    suspend fun saveCurrentMatch(frameScore: CurrentScore, breaks: List<Break>, ballStack: List<Ball>, frameCount: Int) {
-        withContext(Dispatchers.IO) {
-            addFrames(frameScore, frameCount)
-            snookerDbDao.apply {
-                insertMatchBreaks(breaks.asDatabaseBreak())
-                breaks.forEach {
-                    insertMatchPots(it.asDatabasePot())
-                }
-                insertMatchBalls(ballStack.asDatabaseBallStack())
+    suspend fun saveCurrentMatch(frameScore: CurrentScore, breaks: List<Break>, ballStack: List<Ball>) = withContext(Dispatchers.IO) {
+        snookerDbDao.apply {
+            insertCrtScore(frameScore.getFirst().asDatabaseCrtScore())
+            insertCrtScore(frameScore.getSecond().asDatabaseCrtScore())
+            insertCrtBreaks(breaks.asDatabaseBreak())
+            breaks.forEach {
+                insertCrtPots(it.asDatabasePot())
             }
+            insertCrtBalls(ballStack.asDatabaseBallStack())
         }
     }
 
-    val currentBreaks: LiveData<MutableList<Break>> = Transformations.map(snookerDbDao.getFrameBreaks()) {
+    suspend fun deleteCurrentMatch() = withContext(Dispatchers.IO) {
+        snookerDbDao.apply {
+            deleteCrtScore()
+            deleteCrtBreaks()
+            deleteCrtPots()
+            deleteCrtBallStack()
+        }
+    }
+
+
+    val currentBreaks: LiveData<MutableList<Break>> = Transformations.map(snookerDbDao.getCrtBreaks()) {
         it.asDomainBreakList()
     }
 
-    val currentScore: LiveData<Any> = Transformations.map(snookerDbDao.getMatchScore()) {
+    val currentScore = Transformations.map(snookerDbDao.getCrtScore()) {
         it.asCurrentScore()
     }
 
     val currentBallStack: LiveData<MutableList<Ball>> = Transformations.map(snookerDbDao.getBallStack()) {
         it.asDomainBallStack()
-    }
-
-    suspend fun deleteCurrentMatch() {
-        withContext(Dispatchers.IO) {
-            snookerDbDao.deleteMatchBreaks()
-            snookerDbDao.deletePotsBreaks()
-            snookerDbDao.deleteMatchBallStack()
-        }
     }
 }

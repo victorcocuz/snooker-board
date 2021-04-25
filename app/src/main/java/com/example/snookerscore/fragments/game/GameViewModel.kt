@@ -1,13 +1,17 @@
 package com.example.snookerscore.fragments.game
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.lifecycle.*
+import com.example.snookerscore.R
 import com.example.snookerscore.domain.*
 import com.example.snookerscore.domain.Ball.*
 import com.example.snookerscore.domain.PotType.*
 import com.example.snookerscore.repository.SnookerRepository
 import com.example.snookerscore.utils.Event
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import kotlin.math.max
 
 class GameViewModel(
@@ -34,6 +38,15 @@ class GameViewModel(
     private val _eventMatchAction = MutableLiveData<Event<MatchAction>>()
     val eventMatchAction: LiveData<Event<MatchAction>> = _eventMatchAction
 
+    // Variables
+    private var ballStack: MutableList<Ball> = mutableListOf()
+    private var score: CurrentScore = CurrentScore.PlayerA
+    private var frameStack: MutableList<Break> = mutableListOf()
+    private val sharedPref: SharedPreferences = application.getSharedPreferences(
+        application.applicationContext.getString(R.string.preference_file_key),
+        Context.MODE_PRIVATE
+    )
+
     // Init game settings
     var matchFrames = 0
     private var matchReds = 0
@@ -41,6 +54,7 @@ class GameViewModel(
     private var matchFirst = 0
 
     fun resetMatch(matchFrames: Int, matchReds: Int, matchFoul: Int, matchFirst: Int) {
+        Timber.e("match is reset")
         this.matchFrames = matchFrames
         this.matchReds = matchReds
         this.matchFoul = matchFoul
@@ -48,26 +62,27 @@ class GameViewModel(
         resetMatchScore()
     }
 
-    fun setSavedStateRules() {
-        savedStateHandle["matchFrames"] = matchFrames
-        savedStateHandle["matchReds"] = matchReds
-        savedStateHandle["matchFoul"] = matchFoul
-        savedStateHandle["matchFirst"] = matchFirst
-        savedStateHandle["matchCrtPlayer"] = score.getPlayerAsInt()
+    fun setSavedStateRules(): SharedPreferences.Editor = sharedPref.edit().apply {
+        getApplication<Application>().resources.apply {
+            putInt(getString(R.string.shared_pref_match_frames), matchFrames)
+            putInt(getString(R.string.shared_pref_match_reds), matchReds)
+            putInt(getString(R.string.shared_pref_match_foul), matchFoul)
+            putInt(getString(R.string.shared_pref_match_first), matchFirst)
+            putInt(getString(R.string.shared_pref_match_crt_player), score.getPlayerAsInt())
+            apply()
+        }
+
     }
 
-    fun getSavedStateRules() {
-        matchFrames = savedStateHandle.get("matchFrames") ?: 0
-        matchReds = savedStateHandle.get("matchReds") ?: 0
-        matchFoul = savedStateHandle.get("matchFoul") ?: 0
-        matchFirst = savedStateHandle.get("matchFirst") ?: 0
-        score = score.getPlayerFromInt(savedStateHandle.get("matchCrtPlayer") ?: matchFirst)
+    fun getSavedStateRules() = sharedPref.apply {
+        getApplication<Application>().resources.apply {
+            matchFrames = getInt(getString(R.string.shared_pref_match_frames), 0)
+            matchReds = getInt(getString(R.string.shared_pref_match_reds), 0)
+            matchFoul = getInt(getString(R.string.shared_pref_match_foul), 0)
+            matchFirst = getInt(getString(R.string.shared_pref_match_first), 0)
+            score = score.getPlayerFromInt(getInt(getString(R.string.shared_pref_match_frames), 0))
+        }
     }
-
-    // Other variables
-    private var ballStack: MutableList<Ball> = mutableListOf()
-    private var score: CurrentScore = CurrentScore.PlayerA
-    private var frameStack: MutableList<Break> = mutableListOf()
 
     fun setBallStack(ballStack: MutableList<Ball>) {
         this.ballStack = ballStack
@@ -192,9 +207,9 @@ class GameViewModel(
     // Match functions
     fun endFrame() = assignMatchAction(
         when {
-            score.getWinner().matchPoints + 1 == matchFrames -> MatchAction.MATCH_ENDED
-            ballStack.size == 1 -> MatchAction.FRAME_ENDED
-            else -> MatchAction.END_FRAME
+            score.getWinner().matchPoints + 1 == matchFrames -> MatchAction.MATCH_END_CONFIRM
+            ballStack.size == 1 -> MatchAction.FRAME_END_CONFIRM
+            else -> MatchAction.FRAME_END_QUERY
         }
     )
 
@@ -204,7 +219,7 @@ class GameViewModel(
         getSecond().frameId = _frameCount.value!!
         switchPlayers()
         viewModelScope.launch {
-            snookerRepository.addFrames(score, _frameCount.value!!)
+            snookerRepository.addFrames(score)
             this@GameViewModel.resetFrameScore()
             _frameCount.value = _frameCount.value!!.plus(1)
         }
@@ -217,7 +232,7 @@ class GameViewModel(
         _frameCount.value = 1
         resetFrameScore()
         viewModelScope.launch {
-            snookerRepository.removeFrames()
+            snookerRepository.deleteMatchFrames()
             snookerRepository.deleteCurrentMatch()
         }
     }

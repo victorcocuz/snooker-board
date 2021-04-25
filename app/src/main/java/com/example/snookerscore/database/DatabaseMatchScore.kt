@@ -6,7 +6,7 @@ import com.example.snookerscore.domain.CurrentScore
 import com.example.snookerscore.domain.FrameScore
 
 @Entity(tableName = "match_score_table")
-data class DatabaseFrameScore constructor(
+data class DatabaseScore(
     @PrimaryKey(autoGenerate = true)
     val scoreId: Int = 0,
     val frameCount: Int,
@@ -19,7 +19,21 @@ data class DatabaseFrameScore constructor(
     val highestBreak: Int
 )
 
-fun List<DatabaseFrameScore>.asDomainFrameScoreList(): ArrayList<Pair<FrameScore, FrameScore>> {
+@Entity(tableName = "current_score_table")
+data class DatabaseCrtScore(
+    @PrimaryKey(autoGenerate = true)
+    val scoreId: Int = 0,
+    val frameCount: Int,
+    val playerId: Int,
+    val framePoints: Int,
+    val matchPoints: Int,
+    val successShots: Int,
+    val missedShots: Int,
+    val fouls: Int,
+    val highestBreak: Int
+)
+
+fun List<DatabaseScore>.asDomainFrameScoreList(): ArrayList<Pair<FrameScore, FrameScore>> {
     val frameScoreList = ArrayList<Pair<FrameScore, FrameScore>>()
     for (i in this.indices step 2) {
         val frameScoreA = FrameScore(
@@ -47,7 +61,7 @@ fun List<DatabaseFrameScore>.asDomainFrameScoreList(): ArrayList<Pair<FrameScore
     return frameScoreList
 }
 
-fun List<DatabaseFrameScore>.asCurrentScore(): Any? {
+fun List<DatabaseCrtScore>.asCurrentScore(): Any? {
     if (this.size > 1) {
         val currentScore: CurrentScore = CurrentScore.PlayerA
         val dbPlayerA = this[this.lastIndex - 1]

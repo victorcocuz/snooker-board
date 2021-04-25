@@ -86,7 +86,7 @@ class GameFoulDialogFragment : DialogFragment() {
             })
         }
         eventsViewModel.apply {
-            eventMatchAction.observe(viewLifecycleOwner, EventObserver {
+            eventMatchActionQueried.observe(viewLifecycleOwner, EventObserver {
                 if (it == MatchAction.NO_ACTION) dismiss()
             })
         }

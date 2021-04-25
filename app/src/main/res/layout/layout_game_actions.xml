@@ -90,7 +90,7 @@
         <TextView
             android:id="@+id/game_btn_act_end_match"
             style="@style/temp_btn"
-            android:onClick="@{() -> gameViewModel.assignMatchAction(MatchAction.END_MATCH)}"
+            android:onClick="@{() -> gameViewModel.assignMatchAction(MatchAction.MATCH_END_QUERY)}"
             android:text="@string/action_finish"
             app:endMatchEnabledFrameEqual="@{gameViewModel.displayScore.isFrameEqual()}"
             app:endMatchEnabledMatchEqual="@{gameViewModel.displayScore.isMatchEqual()}"
@@ -114,7 +114,7 @@
             android:id="@+id/game_btn_act_cancel"
             style="@style/temp_btn"
             android:layout_marginBottom="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.assignMatchAction(MatchAction.CANCEL_MATCH)}"
+            android:onClick="@{() -> gameViewModel.assignMatchAction(MatchAction.MATCH_CANCEL)}"
             android:text="@string/action_cancel"
             app:layout_constraintBottom_toTopOf="@+id/game_btn_act_rerack"
             app:layout_constraintStart_toStartOf="@+id/game_btn_act_rerack" />

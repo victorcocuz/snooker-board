@@ -9,10 +9,11 @@ import androidx.room.TypeConverters
 @Database(
     entities = [
         DatabaseRanking::class,
-        DatabaseFrameScore::class,
-        DatabaseMatchBreak::class,
-        DatabaseMatchPot::class,
-        DatabaseMatchBall::class], version = 8, exportSchema = false
+        DatabaseScore::class,
+        DatabaseBreak::class,
+        DatabasePot::class,
+        DatabaseBall::class,
+        DatabaseCrtScore::class], version = 9, exportSchema = false
 )
 
 @TypeConverters(Converters::class)

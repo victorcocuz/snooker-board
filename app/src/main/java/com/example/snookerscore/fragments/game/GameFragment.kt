@@ -2,26 +2,35 @@ package com.example.snookerscore.fragments.game
 
 import android.os.Bundle
 import android.view.*
+import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snookerscore.GenericEventsViewModel
 import com.example.snookerscore.R
+import com.example.snookerscore.database.SnookerDatabase
 import com.example.snookerscore.databinding.FragmentGameBinding
 import com.example.snookerscore.domain.Ball
 import com.example.snookerscore.domain.Ball.*
 import com.example.snookerscore.domain.MatchAction
 import com.example.snookerscore.domain.Pot
+import com.example.snookerscore.repository.SnookerRepository
 import com.example.snookerscore.utils.EventObserver
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 
 class GameFragment : androidx.fragment.app.Fragment() {
     private val gameViewModel: GameViewModel by activityViewModels()
     private val eventsViewModel: GenericEventsViewModel by activityViewModels()
+    private lateinit var snookerRepository: SnookerRepository
     private lateinit var ballsList: List<Ball>
     private lateinit var ballAdapter: BallAdapter
     private lateinit var binding: FragmentGameBinding
+    private val gameFragmentScope = CoroutineScope(Dispatchers.Default)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,6 +38,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
     ): View {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false)
+        snookerRepository = SnookerRepository(SnookerDatabase.getDatabase(requireActivity().application))
 
         val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         linearLayoutManager.apply {
@@ -70,25 +80,40 @@ class GameFragment : androidx.fragment.app.Fragment() {
             eventMatchActionConfirmed.observe(viewLifecycleOwner, EventObserver { matchAction ->
                 gameViewModel.apply {
                     when (matchAction) {
-                        MatchAction.CANCEL_MATCH -> {
+                        MatchAction.MATCH_CANCEL -> {
+                            gameFragmentScope.launch {
+                                snookerRepository.deleteMatchFrames()
+                                snookerRepository.deleteCurrentMatch()
+                            }
+
                             resetMatchScore()
-                            requireActivity().onBackPressed()
+                            requireActivity().supportFragmentManager.popBackStack()
                         }
-                        in listOf(MatchAction.END_FRAME, MatchAction.FRAME_ENDED) -> frameEnded()
-                        in listOf(MatchAction.END_MATCH, MatchAction.MATCH_ENDED) -> {
+                        in listOf(MatchAction.FRAME_END_QUERY, MatchAction.FRAME_END_CONFIRM) -> {
+                            ballAdapter.submitList(null)
+                            frameEnded()
+                        }
+                        in listOf(MatchAction.MATCH_END_QUERY, MatchAction.MATCH_END_CONFIRM) -> {
                             frameEnded()
                             findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameStatsFragment())
                         }
-                        MatchAction.CONTINUE_MATCH -> {
-                            eventsViewModel.eventMatchActionConfirmed(MatchAction.CONTINUE_MATCH)
+                        MatchAction.MATCH_CONTINUE -> {
+                            eventsViewModel.onEventMatchActionConfirmed(MatchAction.MATCH_CONTINUE)
                         }
-                        MatchAction.START_NEW_MATCH -> eventsViewModel.eventMatchActionConfirmed(MatchAction.START_NEW_MATCH)
+                        MatchAction.MATCH_START_NEW -> eventsViewModel.onEventMatchActionConfirmed(MatchAction.MATCH_START_NEW)
                         else -> {
                         }
                     }
                 }
             })
         }
+
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                Timber.e("wtf")
+                gameViewModel.assignMatchAction(MatchAction.MATCH_CANCEL)
+            }
+        })
 
         return binding.root
     }

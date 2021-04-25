@@ -13,7 +13,7 @@ data class DatabaseFrame(
 )
 
 @Entity(tableName = "match_breaks_table")
-data class DatabaseMatchBreak(
+data class DatabaseBreak(
     @PrimaryKey(autoGenerate = false)
     val breakId: Int,
     val player: Int,
@@ -22,7 +22,7 @@ data class DatabaseMatchBreak(
 )
 
 @Entity(tableName = "match_pots_table")
-data class DatabaseMatchPot(
+data class DatabasePot(
     @PrimaryKey(autoGenerate = true)
     val potId: Int = 0,
     val breakId: Int,
@@ -32,19 +32,19 @@ data class DatabaseMatchPot(
 )
 
 @Entity(tableName = "match_ball_stack_table")
-data class DatabaseMatchBall(
+data class DatabaseBall(
     @PrimaryKey(autoGenerate = true)
     val ballId: Int = 0,
     val ballValue: Int
 )
 
 data class BreakWithPots(
-    @Embedded val matchBreak: DatabaseMatchBreak,
+    @Embedded val matchBreak: DatabaseBreak,
     @Relation(
         parentColumn = "breakId",
         entityColumn = "breakId"
     )
-    val matchPots: List<DatabaseMatchPot>
+    val matchPots: List<DatabasePot>
 )
 
 fun List<BreakWithPots>.asDomainBreakList(): MutableList<Break> {
@@ -59,7 +59,7 @@ fun List<BreakWithPots>.asDomainBreakList(): MutableList<Break> {
     }.toMutableList()
 }
 
-fun List<DatabaseMatchPot>.asDomainPotList(): MutableList<Pot> {
+fun List<DatabasePot>.asDomainPotList(): MutableList<Pot> {
     return map { pot ->
         when (PotType.values()[pot.potType]) {
             PotType.HIT -> Pot.HIT(Ball.values()[pot.ball])
@@ -73,7 +73,7 @@ fun List<DatabaseMatchPot>.asDomainPotList(): MutableList<Pot> {
     }.toMutableList()
 }
 
-fun List<DatabaseMatchBall>.asDomainBallStack(): MutableList<Ball> {
+fun List<DatabaseBall>.asDomainBallStack(): MutableList<Ball> {
     return map {
         (Ball.values()[it.ballValue])
     }.toMutableList()

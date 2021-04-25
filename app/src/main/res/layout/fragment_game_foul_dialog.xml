@@ -132,7 +132,7 @@
             android:layout_width="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
             android:layout_marginBottom="@dimen/margin_large"
-            android:onClick="@{() -> genericEventsViewModel.onMatchActionQueried(MatchAction.NO_ACTION)}"
+            android:onClick="@{() -> genericEventsViewModel.onEventActionQueried(MatchAction.NO_ACTION)}"
             android:text="@string/fragment_foul_cancel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/foul_ok"

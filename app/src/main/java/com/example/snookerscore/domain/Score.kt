@@ -1,10 +1,10 @@
 package com.example.snookerscore.domain
 
-import com.example.snookerscore.database.DatabaseFrameScore
-import timber.log.Timber
+import com.example.snookerscore.database.DatabaseCrtScore
+import com.example.snookerscore.database.DatabaseScore
 
 enum class MatchAction {
-    CANCEL_MATCH, END_FRAME, FRAME_ENDED, END_MATCH, MATCH_ENDED, CONTINUE_MATCH, NO_ACTION, START_NEW_MATCH
+    FRAME_END_QUERY, FRAME_END_CONFIRM, MATCH_END_QUERY, MATCH_END_CONFIRM, MATCH_CONTINUE, MATCH_START_NEW, MATCH_CANCEL, NO_ACTION
 }
 
 sealed class CurrentScore(
@@ -74,11 +74,6 @@ sealed class CurrentScore(
         this.fouls += pol
     }
 
-    fun addFrameCount() {
-        Timber.e("has been triggered")
-        this.frameId += 1
-    }
-
     fun addMatchPoint() {
         this.matchPoints += 1
     }
@@ -106,8 +101,24 @@ sealed class CurrentScore(
     }
 }
 
-fun CurrentScore.asDatabaseFrameScore(): DatabaseFrameScore {
-    return DatabaseFrameScore(
+fun CurrentScore.asDatabaseFrameScore(): DatabaseScore {
+    return DatabaseScore(
+        frameCount = this.frameId,
+        playerId = when (this) {
+            CurrentScore.PlayerA -> 0
+            CurrentScore.PlayerB -> 1
+        },
+        framePoints = this.framePoints,
+        matchPoints = this.matchPoints,
+        successShots = this.successShots,
+        missedShots = this.missedShots,
+        fouls = this.fouls,
+        highestBreak = this.highestBreak
+    )
+}
+
+fun CurrentScore.asDatabaseCrtScore(): DatabaseCrtScore {
+    return DatabaseCrtScore(
         frameCount = this.frameId,
         playerId = when (this) {
             CurrentScore.PlayerA -> 0

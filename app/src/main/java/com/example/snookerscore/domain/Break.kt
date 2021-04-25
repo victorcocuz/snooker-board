@@ -1,8 +1,8 @@
 package com.example.snookerscore.domain
 
-import com.example.snookerscore.database.DatabaseMatchBall
-import com.example.snookerscore.database.DatabaseMatchBreak
-import com.example.snookerscore.database.DatabaseMatchPot
+import com.example.snookerscore.database.DatabaseBall
+import com.example.snookerscore.database.DatabaseBreak
+import com.example.snookerscore.database.DatabasePot
 
 enum class Ball(
     val points: Int,
@@ -46,9 +46,9 @@ data class Break(
     var breakSize: Int
 )
 
-fun List<Break>.asDatabaseBreak(): List<DatabaseMatchBreak> {
+fun List<Break>.asDatabaseBreak(): List<DatabaseBreak> {
     return map {
-        DatabaseMatchBreak(
+        DatabaseBreak(
             player = it.player,
             frameCount = it.frameCount,
             breakId = it.breakId,
@@ -57,9 +57,9 @@ fun List<Break>.asDatabaseBreak(): List<DatabaseMatchBreak> {
     }
 }
 
-fun Break.asDatabasePot(): List<DatabaseMatchPot> {
+fun Break.asDatabasePot(): List<DatabasePot> {
     return pots.map { pot ->
-        DatabaseMatchPot(
+        DatabasePot(
             breakId = breakId,
             ball = pot.ball.ordinal,
             potType = pot.potType.ordinal,
@@ -68,9 +68,9 @@ fun Break.asDatabasePot(): List<DatabaseMatchPot> {
     }
 }
 
-fun List<Ball>.asDatabaseBallStack(): List<DatabaseMatchBall> {
+fun List<Ball>.asDatabaseBallStack(): List<DatabaseBall> {
     return this.map { ball ->
-        DatabaseMatchBall(
+        DatabaseBall(
             ballValue = ball.ordinal
         )
     }

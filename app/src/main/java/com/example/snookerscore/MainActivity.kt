@@ -17,7 +17,6 @@ import com.example.snookerscore.repository.SnookerRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -54,24 +53,20 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Observables
+        // VM Observers
         snookerRepository.apply {
             currentScore.observe(this@MainActivity, {
                 if (it is CurrentScore) {
-                    Timber.e("this gets triggered $it")
-
                     gameViewModel.setScore(it)
                 }
             })
             currentBreaks.observe(this@MainActivity, {
                 if (it.size > 0) {
-                    Timber.e("this gets triggered $it")
                     gameViewModel.setFrameStack(it)
                 }
             })
             currentBallStack.observe(this@MainActivity, {
                 if (it.size > 0) {
-                    Timber.e("this gets triggered $it")
                     gameViewModel.setBallStack(it)
                 }
             })
@@ -79,18 +74,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
         activityScope.launch {
-            snookerRepository.deleteCurrentMatch()
-            if (gameViewModel.displayFrameStack.value != null) {
+            if ((gameViewModel.displayFrameStack.value ?: mutableListOf()).isNotEmpty()) {
+                snookerRepository.deleteCurrentMatch()
                 snookerRepository.saveCurrentMatch(
                     gameViewModel.displayScore.value!!,
                     gameViewModel.displayFrameStack.value!!,
-                    gameViewModel.displayBallStack.value!!,
-                    gameViewModel.frameCount.value!!
+                    gameViewModel.displayBallStack.value!!
                 )
+                if (::gameViewModel.isInitialized) {
+                    gameViewModel.setSavedStateRules()
+                }
             }
-            if(::gameViewModel.isInitialized) gameViewModel.setSavedStateRules()
         }
+        super.onSaveInstanceState(outState)
     }
 }

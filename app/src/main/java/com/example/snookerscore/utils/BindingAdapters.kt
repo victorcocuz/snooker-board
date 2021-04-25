@@ -10,7 +10,6 @@ import com.example.snookerscore.domain.*
 import com.example.snookerscore.domain.Ball.*
 import com.example.snookerscore.fragments.gamestatistics.GameStatsAdapter
 import com.example.snookerscore.fragments.rankings.RankingsAdapter
-import timber.log.Timber
 import java.text.DecimalFormat
 import kotlin.math.abs
 
@@ -67,7 +66,6 @@ fun TextView.setCurrentPlayerB(crtPlayer: CurrentScore?) {
 
 @BindingAdapter("setTotalScore")
 fun TextView.setTotalScore(frames: Int) {
-    Timber.e("frames $frames")
         text = context.getString(R.string.game_total_score, (frames * 2 - 1))
 }
 
@@ -195,12 +193,12 @@ fun TextView.setDialogForceContinueEnabled(crtPlayer: CurrentScore?, size: Int) 
 @BindingAdapter("dialogGameGenQuestion")
 fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
     text = when (matchAction) {
-        MatchAction.CANCEL_MATCH -> "Are you sure you want to cancel the current match? You will lose all match progress"
-        MatchAction.END_FRAME -> "Are you sure you want to end this frame?"
-        MatchAction.END_MATCH -> "Are you sure you want to end this match?"
-        MatchAction.FRAME_ENDED -> "This frame will end. Would you like to proceed?"
-        MatchAction.MATCH_ENDED -> "This match will end. Would you like to proceed?"
-        MatchAction.CONTINUE_MATCH -> "Would you like to continue the current match or start a new one"
+        MatchAction.MATCH_CANCEL -> "Are you sure you want to cancel the current match? You will lose all match progress"
+        MatchAction.FRAME_END_QUERY -> "Are you sure you want to end this frame?"
+        MatchAction.MATCH_END_QUERY -> "Are you sure you want to end this match?"
+        MatchAction.FRAME_END_CONFIRM -> "This frame will end. Would you like to proceed?"
+        MatchAction.MATCH_END_CONFIRM -> "This match will end. Would you like to proceed?"
+        MatchAction.MATCH_CONTINUE -> "Would you like to continue the current match or start a new one"
         else -> "$matchAction not implemented"
     }
 }
@@ -208,12 +206,12 @@ fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
 @BindingAdapter("dialogGameGenYes")
 fun TextView.setDialogGameYes(matchAction: MatchAction) {
     text = when(matchAction) {
-        MatchAction.CANCEL_MATCH -> "Yes"
-        MatchAction.END_FRAME -> "Yes"
-        MatchAction.END_MATCH -> "Yes"
-        MatchAction.FRAME_ENDED -> "Yes"
-        MatchAction.MATCH_ENDED -> "Yes"
-        MatchAction.CONTINUE_MATCH -> "Continue Match"
+        MatchAction.MATCH_CANCEL -> "Yes"
+        MatchAction.FRAME_END_QUERY -> "Yes"
+        MatchAction.MATCH_END_QUERY -> "Yes"
+        MatchAction.FRAME_END_CONFIRM -> "Yes"
+        MatchAction.MATCH_END_CONFIRM -> "Yes"
+        MatchAction.MATCH_CONTINUE -> "Continue Match"
         else -> "$matchAction not implemented"
     }
 }
@@ -221,12 +219,12 @@ fun TextView.setDialogGameYes(matchAction: MatchAction) {
 @BindingAdapter("dialogGameGenNo")
 fun TextView.setDialogGameNo(matchAction: MatchAction) {
     text = when(matchAction) {
-        MatchAction.CANCEL_MATCH -> "No"
-        MatchAction.END_FRAME -> "No"
-        MatchAction.END_MATCH -> "No"
-        MatchAction.FRAME_ENDED -> "No"
-        MatchAction.MATCH_ENDED -> "No"
-        MatchAction.CONTINUE_MATCH -> "Start New Match"
+        MatchAction.MATCH_CANCEL -> "No"
+        MatchAction.FRAME_END_QUERY -> "No"
+        MatchAction.MATCH_END_QUERY -> "No"
+        MatchAction.FRAME_END_CONFIRM -> "No"
+        MatchAction.MATCH_END_CONFIRM -> "No"
+        MatchAction.MATCH_CONTINUE -> "Start New Match"
         else -> "$matchAction not implemented"
     }
 }
