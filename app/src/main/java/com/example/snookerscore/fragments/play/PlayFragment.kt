@@ -1,5 +1,7 @@
 package com.example.snookerscore.fragments.play
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,7 +22,7 @@ class PlayFragment : androidx.fragment.app.Fragment() {
     private val playFragmentViewModel: PlayFragmentViewModel by viewModels()
     private val gameViewModel: GameViewModel by activityViewModels()
     private val eventsViewModel: GenericEventsViewModel by activityViewModels()
-    private var matchIsSaved = false
+    private lateinit var sharedPref: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,6 +30,11 @@ class PlayFragment : androidx.fragment.app.Fragment() {
     ): View {
         val binding: FragmentPlayBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_play, container, false)
+
+        sharedPref = requireActivity().application.getSharedPreferences(
+            requireActivity().getString(R.string.preference_file_key),
+            Context.MODE_PRIVATE
+        )
 
         binding.apply {
             viewModel = playFragmentViewModel
@@ -38,6 +45,7 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                 displayedValues = (minValue until maxValue * 2).filter { it % 2 != 0 }.map { it.toString() }.toTypedArray()
             }
 
+            // Show the selected button corresponding to it's selected value
             playFragmentViewModel.apply {
                 eventReds.observe(viewLifecycleOwner, EventObserver {
                     fragPlayBtnRedsSix.isSelected = it == 6
@@ -56,15 +64,10 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                 })
             }
 
-            gameViewModel.apply {
-                dbBreaks.observe(viewLifecycleOwner, {
-                    if (it.isNotEmpty()) matchIsSaved = true
-                })
-            }
-
+            // If match is saved open dialog, else start a new match
             fragPlayBtnPlay.setOnClickListener {
-                if (matchIsSaved) {
-                    matchIsSaved = false
+                if (sharedPref.getBoolean(requireContext().getString(R.string.shared_pref_match_is_saved), false)) {
+                    sharedPref.edit().putBoolean(getString(R.string.shared_pref_match_is_saved), false).apply()
                     findNavController().navigate(
                         PlayFragmentDirections.actionPlayFragmentToGameGenericDialogFragment(
                             MatchAction.MATCH_CONTINUE,
@@ -77,6 +80,7 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                 }
             }
 
+            // When new match is selected reset match, otherwise continue the existing match
             eventsViewModel.apply {
                 eventMatchActionConfirmed.observe(viewLifecycleOwner, EventObserver {
                     when (it) {
@@ -92,10 +96,13 @@ class PlayFragment : androidx.fragment.app.Fragment() {
         return binding.root
     }
 
-    private fun resetMatch() = gameViewModel.resetMatch(
-        playFragmentViewModel.eventFrames.value!!.peekContent(),
-        playFragmentViewModel.eventReds.value!!.peekContent(),
-        playFragmentViewModel.eventFoulModifier.value!!.peekContent(),
-        playFragmentViewModel.eventBreaksFirst.value!!.peekContent()
-    )
+    private fun resetMatch() = sharedPref.edit().apply {
+        putInt(getString(R.string.shared_pref_match_frames), playFragmentViewModel.eventFrames.value!!.peekContent())
+        putInt(getString(R.string.shared_pref_match_reds), playFragmentViewModel.eventReds.value!!.peekContent())
+        putInt(getString(R.string.shared_pref_match_foul), playFragmentViewModel.eventFoulModifier.value!!.peekContent())
+        putInt(getString(R.string.shared_pref_match_first), playFragmentViewModel.eventBreaksFirst.value!!.peekContent())
+        apply()
+        gameViewModel.getSavedStateRules()
+        gameViewModel.resetMatchScore()
+    }
 }

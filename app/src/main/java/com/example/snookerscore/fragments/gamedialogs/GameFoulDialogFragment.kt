@@ -67,7 +67,7 @@ class GameFoulDialogFragment : DialogFragment() {
                 requireContext().toast("Select a ball and an action to continue")
             })
             foul.observe(viewLifecycleOwner, EventObserver { pot -> // If foul confirms, send foul to gameFragmentViewModel
-                gameFragmentViewModel.handleFoulDialog(pot, foulDialogViewModel.removeRed.value!!, foulDialogViewModel.freeBall.value!!)
+                gameFragmentViewModel.handleFoulEvent(pot, foulDialogViewModel.removeRed.value!!, foulDialogViewModel.freeBall.value!!)
                 dismiss()
             })
         }

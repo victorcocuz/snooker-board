@@ -58,6 +58,8 @@ sealed class CurrentScore(
 
     fun isMatchEqual() = this.matchPoints == this.getOther().matchPoints
 
+    fun isMatchInProgress() = maxOf(this.framePoints, this.matchPoints, this.getOther().framePoints, this.getOther().matchPoints) != 0
+
     fun addFramePoints(points: Int) {
         this.framePoints += points
     }

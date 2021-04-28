@@ -19,13 +19,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
+    private val activityScope = CoroutineScope(Dispatchers.Default)
     private lateinit var binding: ActivityMainBinding
     private lateinit var gameViewModel: GameViewModel
     private lateinit var snookerRepository: SnookerRepository
-    private val activityScope = CoroutineScope(Dispatchers.Default)
-
-    private val setOfPrimaryFragments =
-        setOf(R.id.rankingsFragment, R.id.friendsFragment, R.id.playFragment, R.id.historyFragment, R.id.statisticsFragment)
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,10 +43,11 @@ class MainActivity : AppCompatActivity() {
 
             // Hide bottom navigation when not needed
             navController.addOnDestinationChangedListener { _, nd: NavDestination, _ ->
-                navBottom.visibility = when (nd.id) {
-                    in setOfPrimaryFragments -> View.VISIBLE
-                    else -> View.GONE
-                }
+                navBottom.visibility = View.GONE
+//                navBottom.visibility = when (nd.id) {
+//                    in listOf(R.id.rankingsFragment, R.id.friendsFragment, R.id.playFragment, R.id.historyFragment, R.id.statisticsFragment) -> View.VISIBLE
+//                    else -> View.GONE
+//                }
             }
         }
 
@@ -75,7 +73,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         activityScope.launch {
-            if ((gameViewModel.displayFrameStack.value ?: mutableListOf()).isNotEmpty()) {
+            if (gameViewModel.displayScore.value!!.isMatchInProgress()) {
                 snookerRepository.deleteCurrentMatch()
                 snookerRepository.saveCurrentMatch(
                     gameViewModel.displayScore.value!!,

@@ -20,7 +20,6 @@ import com.example.snookerscore.utils.EventObserver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.*
 
 class GameFragment : androidx.fragment.app.Fragment() {
@@ -109,7 +108,6 @@ class GameFragment : androidx.fragment.app.Fragment() {
 
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object: OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                Timber.e("wtf")
                 gameViewModel.assignMatchAction(MatchAction.MATCH_CANCEL)
             }
         })

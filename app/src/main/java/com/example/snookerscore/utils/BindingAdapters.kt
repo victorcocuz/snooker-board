@@ -1,5 +1,7 @@
 package com.example.snookerscore.utils
 
+import android.app.Application
+import android.content.Context
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -65,7 +67,11 @@ fun TextView.setCurrentPlayerB(crtPlayer: CurrentScore?) {
 }
 
 @BindingAdapter("setTotalScore")
-fun TextView.setTotalScore(frames: Int) {
+fun TextView.setTotalScore(application: Application) {
+    val frames = application.getSharedPreferences(
+        application.applicationContext.getString(R.string.preference_file_key),
+        Context.MODE_PRIVATE
+    ).getInt(application.getString(R.string.shared_pref_match_frames), 0)
         text = context.getString(R.string.game_total_score, (frames * 2 - 1))
 }
 

@@ -111,4 +111,5 @@
     <string name="shared_pref_match_foul">matchFoul</string>
     <string name="shared_pref_match_first">matchFirst</string>
     <string name="shared_pref_match_crt_player">matchCrtPlayer</string>
+    <string name="shared_pref_match_is_saved">matchIsSaved</string>
 </resources>

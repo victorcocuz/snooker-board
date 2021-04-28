@@ -18,7 +18,9 @@
         android:label="PlayFragment" >
         <action
             android:id="@+id/action_playFragment_to_gameFragment"
-            app:destination="@id/gameFragment" />
+            app:destination="@id/gameFragment"
+            app:popUpTo="@id/playFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_playFragment_to_gameGenericDialogFragment"
             app:destination="@id/gameGenericDialogFragment" />
@@ -51,7 +53,9 @@
             app:destination="@id/gameFoulDialogFragment" />
         <action
             android:id="@+id/action_gameFragment_to_gameStatsFragment"
-            app:destination="@id/gameStatsFragment" />
+            app:destination="@id/gameStatsFragment"
+            app:popUpTo="@id/gameFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_gameFragment_to_playFragment"
             app:destination="@id/playFragment"

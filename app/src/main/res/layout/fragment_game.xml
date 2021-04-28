@@ -93,7 +93,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_text_score_frames_a"
             app:layout_constraintTop_toBottomOf="@+id/game_label_player_a"
-            app:setTotalScore="@{gameViewModel.matchFrames}"
+            app:setTotalScore="@{gameViewModel.application}"
             tools:text="(37)" />
 
         <TextView

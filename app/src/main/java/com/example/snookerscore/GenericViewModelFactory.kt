@@ -26,7 +26,7 @@ class GenericViewModelFactory(
             return GameStatsViewModel(application) as T
         }
         if (modelClass.isAssignableFrom(GameViewModel::class.java)) {
-            return GameViewModel(application, snookerRepository, handle) as T
+            return GameViewModel(application, snookerRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")    }
 }
