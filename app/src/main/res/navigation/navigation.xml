@@ -52,6 +52,11 @@
         <action
             android:id="@+id/action_gameFragment_to_gameStatsFragment"
             app:destination="@id/gameStatsFragment" />
+        <action
+            android:id="@+id/action_gameFragment_to_playFragment"
+            app:destination="@id/playFragment"
+            app:popUpTo="@id/gameFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/gameStatsFragment"

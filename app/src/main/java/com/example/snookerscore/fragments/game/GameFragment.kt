@@ -85,9 +85,8 @@ class GameFragment : androidx.fragment.app.Fragment() {
                                 snookerRepository.deleteMatchFrames()
                                 snookerRepository.deleteCurrentMatch()
                             }
-
                             resetMatchScore()
-                            requireActivity().supportFragmentManager.popBackStack()
+                            findNavController().navigate(GameFragmentDirections.actionGameFragmentToPlayFragment())
                         }
                         in listOf(MatchAction.FRAME_END_QUERY, MatchAction.FRAME_END_CONFIRM) -> {
                             ballAdapter.submitList(null)
