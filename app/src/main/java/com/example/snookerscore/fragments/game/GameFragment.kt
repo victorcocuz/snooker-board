@@ -59,11 +59,14 @@ class GameFragment : androidx.fragment.app.Fragment() {
                 itemAnimator = null
                 adapter = ballAdapter
             }
-            fragGameBreakRv.adapter = BreakAdapter(requireActivity())
+            fragGameBreakRv.apply {
+             adapter = BreakAdapter(requireActivity())
+             itemAnimator = null
+            }
             fragGameScore.apply {
                 gameViewModel = this@GameFragment.gameViewModel
             }
-            fragGameActionBtns.apply {
+            fragGameActionButtons.apply {
                 gameViewModel = this@GameFragment.gameViewModel
                 genericEventsViewModel = eventsViewModel
             }

@@ -16,7 +16,8 @@
         android:theme="@style/Theme.SnookerScore"
         tools:ignore="UnusedAttribute"
         android:fullBackupContent="@xml/backup_descriptor">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:theme="@style/Theme.SnookerScore">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

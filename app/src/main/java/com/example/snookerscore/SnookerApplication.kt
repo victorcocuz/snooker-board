@@ -17,7 +17,7 @@ class SnookerApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())
-        delayedInit()
+//        delayedInit()
     }
 
     private fun delayedInit() {
