@@ -24,7 +24,6 @@
                 android:onClick="@{() -> clickListener.onClick(ball)}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-
             <TextView
                 app:ballValue="@{ball}"
                 app:stackSize="@{ballStackSize}"

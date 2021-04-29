@@ -11,6 +11,7 @@ import com.example.snookerscore.R
 import com.example.snookerscore.domain.*
 import com.example.snookerscore.domain.Ball.*
 import com.example.snookerscore.fragments.game.BreaksAdapter
+import com.example.snookerscore.fragments.game.PotsAdapter
 import com.example.snookerscore.fragments.game.getDisplayShots
 import com.example.snookerscore.fragments.gamestatistics.GameStatsAdapter
 import com.example.snookerscore.fragments.rankings.RankingsAdapter
@@ -273,4 +274,16 @@ fun bindGameStatsRv(recyclerView: RecyclerView, data: ArrayList<Pair<FrameScore,
 fun bindBreakRv(recyclerView: RecyclerView, breaks: MutableList<Break>?) {
     val adapter = recyclerView.adapter as BreaksAdapter
     adapter.submitList(breaks?.getDisplayShots())
+}
+
+@BindingAdapter("listPotsA")
+fun RecyclerView.bindPotsRvA(crtBreak: Break) {
+    val adapter = this.adapter as PotsAdapter
+    adapter.submitList(if (crtBreak.player == 0) crtBreak.pots else mutableListOf())
+}
+
+@BindingAdapter("listPotsB")
+fun RecyclerView.bindPotsRvB(crtBreak: Break) {
+    val adapter = this.adapter as PotsAdapter
+    adapter.submitList(if (crtBreak.player == 1) crtBreak.pots else mutableListOf())
 }

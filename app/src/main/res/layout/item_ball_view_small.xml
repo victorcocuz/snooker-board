@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="ball"
+            type="com.example.snookerscore.domain.Ball" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="@dimen/ball_size_small"
+        android:layout_height="@dimen/ball_size_small">
+            <ImageButton
+                android:contentDescription="@string/item_ball_view_ball"
+                android:id="@+id/item_button_ball_small"
+                app:ballImage="@{ball}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+    </FrameLayout>
+</layout>
