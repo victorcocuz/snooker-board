@@ -189,11 +189,14 @@
             android:id="@+id/frag_game_break_rv"
             android:layout_width="match_parent"
             android:layout_height="160dp"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_medium"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/frag_game_action_btns"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:listBreakData="@{gameViewModel.displayFrameStack}"
             tools:itemCount="16"
-            tools:layout_editor_absoluteX="207dp"
             tools:listitem="@layout/item_break_view" />
 
         <TextView

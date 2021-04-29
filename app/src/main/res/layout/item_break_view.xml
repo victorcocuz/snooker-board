@@ -4,50 +4,91 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="crtBreak"
             type="com.example.snookerscore.domain.Break" />
     </data>
 
     <LinearLayout
-        android:id="@+id/item_break_linear_layout"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/ball_size"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/item_break_a_balls_rv"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
-            app:listPotsA="@{crtBreak}" />
+        <LinearLayout
+            android:id="@+id/item_break_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_xsmall"
+            android:background="@color/design_default_color_secondary"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/item_break_a_points"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="@dimen/text_regular"
-            app:crtBreakPointsA="@{crtBreak}"
-            tools:text="12" />
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="4">
 
-        <TextView
-            android:id="@+id/item_break_b_points"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textSize="@dimen/text_regular"
-            app:crtBreakPointsB="@{crtBreak}"
-            tools:text="9" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/item_break_a_balls_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    app:listPotsA="@{crtBreak}" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/item_break_b_balls_rv"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
-            app:listPotsB="@{crtBreak}" />
+                <TextView
+                    android:id="@+id/item_break_a_fouls"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="right"
+                    android:text="Foul"
+                    android:visibility="visible" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/item_break_a_points"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="@dimen/text_regular"
+                app:crtBreakPointsA="@{crtBreak}"
+                tools:text="12" />
+
+            <TextView
+                android:id="@+id/item_break_b_points"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="@dimen/text_regular"
+                app:crtBreakPointsB="@{crtBreak}"
+                tools:text="9" />
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4">
+
+                <TextView
+                    android:id="@+id/item_break_b_fouls"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Foul"
+                    android:visibility="invisible" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/item_break_b_balls_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:listPotsB="@{crtBreak}" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/black" />
+
     </LinearLayout>
 </layout>
