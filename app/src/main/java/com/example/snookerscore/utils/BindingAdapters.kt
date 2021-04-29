@@ -144,32 +144,6 @@ fun TextView.setMissSafeFoulEnabled(size: Int) {
     }
 }
 
-@BindingAdapter("undoAndRerackEnabled")
-fun TextView.setUndoAndRerackEnabled(size: Int) {
-    isEnabled = when (size) {
-        0 -> false
-        else -> true
-    }
-}
-
-@BindingAdapter("addRedEnabled")
-fun TextView.setAddRedEnabled(size: Int) {
-    isEnabled = when (size) {
-        in (10..36).filter { it % 2 == 0 } -> true
-        else -> false
-    }
-}
-
-@BindingAdapter("endFrameEnabled")
-fun TextView.setEndFrameEnabled(isFrameEqual: Boolean) {
-    isEnabled = !isFrameEqual
-}
-
-@BindingAdapter("endMatchEnabledFrameEqual", "endMatchEnabledMatchEqual")
-fun TextView.setEndMatchEnabled(isFrameEqual: Boolean, isMatchEqual: Boolean) {
-    isEnabled = !(isFrameEqual && isMatchEqual)
-}
-
 // Game Foul Dialog
 @BindingAdapter("dialogSetRedEnabled")
 fun TextView.dialogSetRedEnabled(size: Int) {

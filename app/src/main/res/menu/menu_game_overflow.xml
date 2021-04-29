@@ -1,9 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:title="@string/menu_item_undo" />
-    <item android:title="@string/menu_item_rerack" />
-    <item android:title="@string/menu_item_remove_red" />
-    <item android:title="@string/menu_item_concede_frame" />
-    <item android:title="@string/menu_item_concede_match" />
+    <item
+        android:id="@+id/match_action_undo"
+        android:icon="@drawable/ic_temp_action_undo"
+        android:title="@string/menu_item_undo"
+        app:showAsAction="ifRoom" />
+    <item
+        android:title="@string/menu_item_more"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_menu_more">
+        <menu>
+            <item
+                android:id="@+id/match_action_add_red"
+                android:icon="@drawable/ic_temp_action_add_red"
+                android:title="@string/menu_item_add_red" />
+            <item
+                android:id="@+id/match_action_rerack"
+                android:icon="@drawable/ic_temp_action_rerack"
+                android:title="@string/menu_item_rerack" />
+            <item
+                android:id="@+id/match_action_cancel_match"
+                android:icon="@drawable/ic_temp_action_cancel_match"
+                android:title="@string/menu_item_cancel_match" />
+            <item
+                android:id="@+id/match_action_concede_frame"
+                android:icon="@drawable/ic_temp_action_concede_frame"
+                android:title="@string/menu_item_concede_frame" />
+            <item
+                android:id="@+id/match_action_concede_match"
+                android:icon="@drawable/ic_temp_action_concede_match"
+                android:title="@string/menu_item_concede_match" />
+        </menu>
+    </item>
 </menu>

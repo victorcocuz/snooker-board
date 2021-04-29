@@ -3,11 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <import type="com.example.snookerscore.domain.Pot" />
-
-        <import type="com.example.snookerscore.domain.MatchAction" />
-
         <variable
             name="genericEventsViewModel"
             type="com.example.snookerscore.GenericEventsViewModel" />
@@ -48,76 +44,10 @@
             android:onClick="@{() -> genericEventsViewModel.onFoulClicked()}"
             android:text="@string/action_foul"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
-            app:layout_constraintEnd_toStartOf="@+id/game_btn_act_add_red"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_btn_act_miss"
             app:setMissSafeFoulEnabled="@{gameViewModel.displayBallStack.size()}" />
-
-        <TextView
-            android:id="@+id/game_btn_act_add_red"
-            style="@style/temp_btn"
-            android:onClick="@{() -> gameViewModel.updateFrame(Pot.ADDRED.INSTANCE)}"
-            android:text="@string/action_add_red"
-            app:addRedEnabled="@{gameViewModel.displayBallStack.size()}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_btn_act_foul" />
-
-        <TextView
-            android:id="@+id/game_btn_act_rerack"
-            style="@style/temp_btn"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.resetFrame()}"
-            android:text="@string/action_rerack"
-            app:layout_constraintBottom_toTopOf="@+id/game_btn_act_safe"
-            app:layout_constraintEnd_toStartOf="@+id/game_btn_act_end_frame"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:undoAndRerackEnabled="@{gameViewModel.displayFrameStack.size()}" />
-
-        <TextView
-            android:id="@+id/game_btn_act_end_frame"
-            style="@style/temp_btn"
-            android:onClick="@{() -> gameViewModel.endFrame()}"
-            android:text="@string/action_end"
-            app:endFrameEnabled="@{gameViewModel.displayScore.isFrameEqual()}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_rerack"
-            app:layout_constraintEnd_toStartOf="@+id/game_btn_act_end_match"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_btn_act_rerack" />
-
-        <TextView
-            android:id="@+id/game_btn_act_end_match"
-            style="@style/temp_btn"
-            android:onClick="@{() -> gameViewModel.assignMatchAction(MatchAction.MATCH_END_QUERY)}"
-            android:text="@string/action_finish"
-            app:endMatchEnabledFrameEqual="@{gameViewModel.displayScore.isFrameEqual()}"
-            app:endMatchEnabledMatchEqual="@{gameViewModel.displayScore.isMatchEqual()}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_rerack"
-            app:layout_constraintEnd_toStartOf="@+id/game_btn_act_undo"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_btn_act_end_frame" />
-
-        <TextView
-            android:id="@+id/game_btn_act_undo"
-            style="@style/temp_btn"
-            android:onClick="@{() -> gameViewModel.undo()}"
-            android:text="@string/action_undo"
-            app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_rerack"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_btn_act_end_match"
-            app:undoAndRerackEnabled="@{gameViewModel.displayFrameStack.size()}" />
-
-        <TextView
-            android:id="@+id/game_btn_act_cancel"
-            style="@style/temp_btn"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.assignMatchAction(MatchAction.MATCH_CANCEL)}"
-            android:text="@string/action_cancel"
-            app:layout_constraintBottom_toTopOf="@+id/game_btn_act_rerack"
-            app:layout_constraintStart_toStartOf="@+id/game_btn_act_rerack" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

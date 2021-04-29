@@ -12,9 +12,10 @@
     <!-- Menu Items -->
     <string name="menu_item_undo">Undo</string>
     <string name="menu_item_rerack">Rerack</string>
-    <string name="menu_item_remove_red">Remove Red</string>
+    <string name="menu_item_add_red">Add Red</string>
     <string name="menu_item_concede_frame">Concede Frame</string>
     <string name="menu_item_concede_match">Concede Match</string>
+    <string name="menu_item_cancel_match">Cancel Match</string>
 
     <!-- Binding -->
     <string name="game_total_score">(%1$d)</string>
@@ -112,4 +113,5 @@
     <string name="shared_pref_match_first">matchFirst</string>
     <string name="shared_pref_match_crt_player">matchCrtPlayer</string>
     <string name="shared_pref_match_is_saved">matchIsSaved</string>
+    <string name="menu_item_more">Main Menu</string>
 </resources>

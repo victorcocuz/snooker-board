@@ -3,6 +3,7 @@ package com.example.snookerscore.fragments.game
 import android.os.Bundle
 import android.view.*
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -22,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
+
 class GameFragment : androidx.fragment.app.Fragment() {
     private val gameViewModel: GameViewModel by activityViewModels()
     private val eventsViewModel: GenericEventsViewModel by activityViewModels()
@@ -35,28 +37,32 @@ class GameFragment : androidx.fragment.app.Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false)
         snookerRepository = SnookerRepository(SnookerDatabase.getDatabase(requireActivity().application))
 
-        val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        linearLayoutManager.apply {
-            canScrollHorizontally()
-
-        }
         ballAdapter = BallAdapter(BallListener { ball ->
+            requireActivity().invalidateOptionsMenu()
             gameViewModel.updateFrame(Pot.HIT(ball))
         }, gameViewModel.displayBallStack)
 
         binding.apply {
             lifecycleOwner = this@GameFragment
+            (activity as AppCompatActivity).apply {
+                setSupportActionBar(fragGameToolbar)
+                supportActionBar?.setDisplayShowTitleEnabled(false)
+            }
+            setHasOptionsMenu(true)
+
             gameViewModel = this@GameFragment.gameViewModel
             fragGameBallsRv.apply {
-                layoutManager = linearLayoutManager
+                layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
                 itemAnimator = null
                 adapter = ballAdapter
             }
             fragGameBreakRv.adapter = BreakAdapter(requireActivity())
+            fragGameScore.apply {
+                gameViewModel = this@GameFragment.gameViewModel
+            }
             fragGameActionBtns.apply {
                 gameViewModel = this@GameFragment.gameViewModel
                 genericEventsViewModel = eventsViewModel
@@ -70,7 +76,12 @@ class GameFragment : androidx.fragment.app.Fragment() {
                 manageBallVisibility(ballStack.last())
             })
             eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
-                findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameGenericDialogFragment(matchAction, MatchAction.NO_ACTION))
+                findNavController().navigate(
+                    GameFragmentDirections.actionGameFragmentToGameGenericDialogFragment(
+                        matchAction,
+                        MatchAction.NO_ACTION
+                    )
+                )
             })
         }
         eventsViewModel.apply {
@@ -107,7 +118,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
             })
         }
 
-        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object: OnBackPressedCallback(true) {
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 gameViewModel.assignMatchAction(MatchAction.MATCH_CANCEL)
             }
@@ -119,6 +130,30 @@ class GameFragment : androidx.fragment.app.Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_game_overflow, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.match_action_undo -> gameViewModel.undo()
+            R.id.match_action_add_red -> gameViewModel.updateFrame(Pot.ADDRED)
+            R.id.match_action_rerack -> gameViewModel.resetFrame()
+            R.id.match_action_concede_frame -> gameViewModel.endFrame()
+            R.id.match_action_cancel_match -> gameViewModel.assignMatchAction(MatchAction.MATCH_CANCEL)
+            R.id.match_action_concede_match -> gameViewModel.assignMatchAction(MatchAction.MATCH_END_QUERY)
+        }
+        requireActivity().invalidateOptionsMenu()
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        gameViewModel.apply {
+            menu.findItem(R.id.match_action_undo).isEnabled = (displayFrameStack.value?.size ?: 0) > 0
+            menu.findItem(R.id.match_action_rerack).isEnabled = (displayFrameStack.value?.size ?: 0) > 0
+            menu.findItem(R.id.match_action_add_red).isEnabled = (displayBallStack.value?.size ?: 0) in (10..36).filter { it % 2 == 0 }
+            menu.findItem(R.id.match_action_concede_frame).isEnabled = !(displayScore.value?.isFrameEqual() ?: true)
+            menu.findItem(R.id.match_action_concede_match).isEnabled =
+                !(displayScore.value?.isFrameEqual() ?: true && displayScore.value?.isMatchEqual() ?: true)
+        }
     }
 
     private fun manageBallVisibility(frameState: Ball) {
