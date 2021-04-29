@@ -68,7 +68,7 @@
             android:id="@+id/game_btn_act_rerack"
             style="@style/temp_btn"
             android:layout_marginBottom="@dimen/margin_large"
-            android:onClick="@{() -> gameViewModel.resetFrameScore()}"
+            android:onClick="@{() -> gameViewModel.resetFrame()}"
             android:text="@string/action_rerack"
             app:layout_constraintBottom_toTopOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_end_frame"

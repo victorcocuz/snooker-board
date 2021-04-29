@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="gameViewModel"
             type="com.example.snookerscore.fragments.game.GameViewModel" />
@@ -147,23 +148,23 @@
             android:id="@+id/game_text_score_break_a"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="50"
             android:text="@{String.valueOf(gameViewModel.displayScore.getFirst().highestBreak)}"
             app:layout_constraintBottom_toBottomOf="@+id/game_text_score_foul_a"
             app:layout_constraintEnd_toStartOf="@+id/game_text_score_break_b"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_text_score_percentage_a" />
+            app:layout_constraintStart_toEndOf="@+id/game_text_score_percentage_a"
+            tools:text="50" />
 
         <TextView
             android:id="@+id/game_text_score_break_b"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{String.valueOf(gameViewModel.displayScore.getSecond().highestBreak)}"
-            tools:text="40"
             app:layout_constraintBottom_toBottomOf="@+id/game_text_score_foul_a"
             app:layout_constraintEnd_toStartOf="@+id/game_text_score_percentage_b"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_text_score_break_a" />
+            app:layout_constraintStart_toEndOf="@+id/game_text_score_break_a"
+            tools:text="40" />
 
         <TextView
             android:id="@+id/game_label_remaining"
@@ -181,8 +182,19 @@
             android:layout_marginStart="@dimen/margin_large"
             android:layout_marginBottom="@dimen/margin_xlarge"
             android:text="@string/fragment_game_label_difference"
-            app:layout_constraintBottom_toTopOf="@+id/frag_game_action_btns"
+            app:layout_constraintBottom_toTopOf="@+id/frag_game_break_rv"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/frag_game_break_rv"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@+id/frag_game_action_btns"
+            app:listBreakData="@{gameViewModel.displayFrameStack}"
+            tools:itemCount="16"
+            tools:layout_editor_absoluteX="207dp"
+            tools:listitem="@layout/item_break_view" />
 
         <TextView
             android:id="@+id/game_text_score_remaining"
@@ -216,7 +228,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/frag_game_balls_rv"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/margin_large"
             android:layout_marginEnd="@dimen/margin_large"

@@ -15,7 +15,6 @@ import com.example.snookerscore.database.SnookerDatabase
 import com.example.snookerscore.databinding.FragmentGameStatsBinding
 import com.example.snookerscore.domain.FrameScore
 import com.example.snookerscore.repository.SnookerRepository
-import com.example.snookerscore.utils.setupGameNotification
 import kotlinx.android.synthetic.main.item_game_statistics_view.*
 
 class GameStatsFragment : Fragment() {
@@ -49,6 +48,8 @@ class GameStatsFragment : Fragment() {
             viewModel = gameStatsViewModel
 
             gameStatsRv.adapter = GameStatsAdapter()
+
+            // Header format
             gameStatsHeader.apply {
                 itemGamestatsLinearLayout.setBackgroundColor(
                     ContextCompat.getColor(
@@ -59,6 +60,8 @@ class GameStatsFragment : Fragment() {
                 frameScoreA = FrameScore(-1, -1, -1, -1, -1, -1, -1, -1)
                 frameScoreB = FrameScore(-1, -1, -1, -1, -1, -1, -1, -1)
             }
+
+            // Footer format
             gameStatsFooter.apply {
                 itemGamestatsLinearLayout.setBackgroundColor(
                     ContextCompat.getColor(
@@ -74,7 +77,9 @@ class GameStatsFragment : Fragment() {
                 })
             }
         }
-        setupGameNotification(requireActivity())
+
+        // Notification that the game has ended
+//        setupGameNotification(requireActivity())
         return binding.root
     }
 }

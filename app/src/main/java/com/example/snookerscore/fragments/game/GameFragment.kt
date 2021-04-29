@@ -56,6 +56,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
                 itemAnimator = null
                 adapter = ballAdapter
             }
+            fragGameBreakRv.adapter = BreaksAdapter()
             fragGameActionBtns.apply {
                 gameViewModel = this@GameFragment.gameViewModel
                 genericEventsViewModel = eventsViewModel
@@ -84,7 +85,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
                                 snookerRepository.deleteMatchFrames()
                                 snookerRepository.deleteCurrentMatch()
                             }
-                            resetMatchScore()
+                            resetMatch()
                             findNavController().navigate(GameFragmentDirections.actionGameFragmentToPlayFragment())
                         }
                         in listOf(MatchAction.FRAME_END_QUERY, MatchAction.FRAME_END_CONFIRM) -> {
@@ -122,15 +123,15 @@ class GameFragment : androidx.fragment.app.Fragment() {
 
     private fun manageBallVisibility(frameState: Ball) {
         ballsList = when (frameState) {
-            FREEBALL -> listOf(FREEBALL)
-            RED -> listOf(RED)
-            COLOR -> listOf(YELLOW, GREEN, BROWN, BLUE, PINK, BLACK)
-            YELLOW -> listOf(YELLOW)
-            GREEN -> listOf(GREEN)
-            BROWN -> listOf(BROWN)
-            BLUE -> listOf(BLUE)
-            PINK -> listOf(PINK)
-            BLACK -> listOf(BLACK)
+            is FREEBALL -> listOf(FREEBALL())
+            is RED -> listOf(RED())
+            is COLOR -> listOf(YELLOW(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
+            is YELLOW -> listOf(YELLOW())
+            is GREEN -> listOf(GREEN())
+            is BROWN -> listOf(BROWN())
+            is BLUE -> listOf(BLUE())
+            is PINK -> listOf(PINK())
+            is BLACK -> listOf(BLACK())
             else -> listOf()
         }
         ballAdapter.submitList(ballsList)

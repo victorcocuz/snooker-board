@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.snookerscore.R
 import com.example.snookerscore.domain.*
 import com.example.snookerscore.domain.Ball.*
+import com.example.snookerscore.fragments.game.BreaksAdapter
+import com.example.snookerscore.fragments.game.getDisplayShots
 import com.example.snookerscore.fragments.gamestatistics.GameStatsAdapter
 import com.example.snookerscore.fragments.rankings.RankingsAdapter
 import java.text.DecimalFormat
@@ -19,7 +21,7 @@ import kotlin.math.abs
 @BindingAdapter("ballValue", "stackSize")
 fun TextView.setPointsValue(item: Ball, stackSize: Int) {
     val reds = (stackSize - 7) / 2
-    text = if (reds > 0 && item == RED) reds.toString() else ""
+    text = if (reds > 0 && item is RED) reds.toString() else ""
 }
 
 @BindingAdapter("ballImage")
@@ -27,14 +29,14 @@ fun ImageView.setBallImage(item: Ball?) {
     item?.let {
         setBackgroundResource(
             when (item) {
-                RED -> R.drawable.ball_red
-                YELLOW -> R.drawable.ball_yellow
-                GREEN -> R.drawable.ball_green
-                BROWN -> R.drawable.ball_brown
-                BLUE -> R.drawable.ball_blue
-                PINK -> R.drawable.ball_pink
-                BLACK -> R.drawable.ball_black
-                FREEBALL -> R.drawable.ball_grey
+                is RED -> R.drawable.ball_red
+                is YELLOW -> R.drawable.ball_yellow
+                is GREEN -> R.drawable.ball_green
+                is BROWN -> R.drawable.ball_brown
+                is BLUE -> R.drawable.ball_blue
+                is PINK -> R.drawable.ball_pink
+                is BLACK -> R.drawable.ball_black
+                is FREEBALL -> R.drawable.ball_grey
                 else -> R.drawable.ball_white
             }
         )
@@ -235,7 +237,24 @@ fun TextView.setDialogGameNo(matchAction: MatchAction) {
     }
 }
 
+// Break Adapters
+@BindingAdapter("crtBreakPointsA")
+fun TextView.bindBreakPointsA(crtBreak: Break) {
+    text = when  {
+        crtBreak.player == 0 && crtBreak.breakSize != 0 -> crtBreak.breakSize.toString()
+        crtBreak.player == 1 && crtBreak.pots.last().potType == PotType.FOUL -> crtBreak.pots.last().ball.foul.toString()
+        else -> ""
+    }
+}
 
+@BindingAdapter("crtBreakPointsB")
+fun TextView.bindBreakPointsB(crtBreak: Break) {
+    text = when  {
+        crtBreak.player == 1 && crtBreak.breakSize != 0 -> crtBreak.breakSize.toString()
+        crtBreak.player == 0 && crtBreak.pots.last().potType == PotType.FOUL -> crtBreak.pots.last().ball.foul.toString()
+        else -> ""
+    }
+}
 
 // RV Adapters
 @BindingAdapter("listRankingsData")
@@ -244,9 +263,14 @@ fun bindRankingsRv(recyclerView: RecyclerView, data: List<DomainRanking>?) {
     adapter.submitList(data)
 }
 
-
 @BindingAdapter("listGameStatsData")
 fun bindGameStatsRv(recyclerView: RecyclerView, data: ArrayList<Pair<FrameScore, FrameScore>>?) {
     val adapter = recyclerView.adapter as GameStatsAdapter
     adapter.submitList(data)
+}
+
+@BindingAdapter("listBreakData")
+fun bindBreakRv(recyclerView: RecyclerView, breaks: MutableList<Break>?) {
+    val adapter = recyclerView.adapter as BreaksAdapter
+    adapter.submitList(breaks?.getDisplayShots())
 }

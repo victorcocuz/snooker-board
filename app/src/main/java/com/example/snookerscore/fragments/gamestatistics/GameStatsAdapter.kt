@@ -17,14 +17,16 @@ class GameStatsAdapter:
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position)!!)
+        holder.bind(getItem(position))
     }
 
     class ViewHolder private constructor(private val binding: ItemGameStatisticsViewBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(frameScores: Pair<FrameScore, FrameScore>) {
-            binding.frameScoreA = frameScores.first
-            binding.frameScoreB = frameScores.second
-            binding.executePendingBindings()
+            binding.apply {
+                frameScoreA = frameScores.first
+                frameScoreB = frameScores.second
+                executePendingBindings()
+            }
         }
 
         companion object {

@@ -27,6 +27,8 @@ data class DatabasePot(
     val potId: Int = 0,
     val breakId: Int,
     val ball: Int,
+    val ballPoints: Int,
+    val ballFoul: Int,
     val potType: Int,
     val potAction: Int
 )
@@ -35,7 +37,9 @@ data class DatabasePot(
 data class DatabaseBall(
     @PrimaryKey(autoGenerate = true)
     val ballId: Int = 0,
-    val ballValue: Int
+    val ballValue: Int,
+    val ballPoints: Int,
+    val ballFoul: Int
 )
 
 data class BreakWithPots(
@@ -62,11 +66,11 @@ fun List<BreakWithPots>.asDomainBreakList(): MutableList<Break> {
 fun List<DatabasePot>.asDomainPotList(): MutableList<Pot> {
     return map { pot ->
         when (PotType.values()[pot.potType]) {
-            PotType.HIT -> Pot.HIT(Ball.values()[pot.ball])
+            PotType.HIT -> Pot.HIT(getBallFromValues(pot.ball, pot.ballPoints, pot.ballFoul))
             PotType.FREE -> Pot.FREEMISS
             PotType.SAFE -> Pot.SAFE
             PotType.MISS -> Pot.MISS
-            PotType.FOUL -> Pot.FOUL(Ball.values()[pot.ball], PotAction.values()[pot.potAction])
+            PotType.FOUL -> Pot.FOUL(getBallFromValues(pot.ball, pot.ballPoints, pot.ballFoul), PotAction.values()[pot.potAction])
             PotType.REMOVERED -> Pot.REMOVERED
             PotType.ADDRED -> Pot.ADDRED
         }
@@ -75,6 +79,6 @@ fun List<DatabasePot>.asDomainPotList(): MutableList<Pot> {
 
 fun List<DatabaseBall>.asDomainBallStack(): MutableList<Ball> {
     return map {
-        (Ball.values()[it.ballValue])
+        (getBallFromValues(it.ballValue, it.ballPoints, it.ballFoul))
     }.toMutableList()
 }

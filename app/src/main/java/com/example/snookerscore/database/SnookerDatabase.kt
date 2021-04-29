@@ -13,7 +13,7 @@ import androidx.room.TypeConverters
         DatabaseBreak::class,
         DatabasePot::class,
         DatabaseBall::class,
-        DatabaseCrtScore::class], version = 9, exportSchema = false
+        DatabaseCrtScore::class], version = 10, exportSchema = false
 )
 
 @TypeConverters(Converters::class)

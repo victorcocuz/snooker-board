@@ -69,6 +69,10 @@ class GameViewModel(
         }
     }
 
+    fun assignMatchAction(matchAction: MatchAction) {
+        _eventMatchAction.value = Event(matchAction)
+    }
+
     fun setBallStack(ballStack: MutableList<Ball>) {
         this.ballStack = ballStack
         getFrameStatus()
@@ -89,55 +93,55 @@ class GameViewModel(
         updateFrame(pot)
         if (removeRed) updateFrame(Pot.REMOVERED)
         if (freeBall) {
-            if (ballStack.inColors()) ballStack.addBalls(FREEBALL) else ballStack.addBalls(COLOR, FREEBALL)
+            if (ballStack.inColors()) ballStack.addBalls(FREEBALL()) else ballStack.addBalls(COLOR(), FREEBALL())
             getFrameStatus()
         }
     }
 
     fun updateFrame(pot: Pot) = ballStack.apply {
-        frameStack.addToFrameStack(pot, score.getPlayerAsInt(), frameCount)
+        val newPot = score.calculatePoints(pot, 1, this.last(), matchFoul)
+        frameStack.addToFrameStack(newPot, score.getPlayerAsInt(), frameCount)
         when (pot.potType) {
-            in listOf(HIT, FREE) -> removeBalls()
-            in listOf(REMOVERED, ADDRED) -> removeBalls(2)
+            in listOf(HIT, FREE) -> removeBall()
+            in listOf(REMOVERED, ADDRED) -> removeBall(2)
             else -> {
-                if (last() == FREEBALL) {
+                if (last() is FREEBALL) {
                     frameStack.addToFrameStack(Pot.FREEMISS, score.getPlayerAsInt(), frameCount)
-                    removeBalls(if (inColors()) 1 else 2)
+                    removeBall(if (inColors()) 1 else 2)
                 }
-                if (last() == COLOR) removeBalls()
+                if (last() is COLOR) removeBall()
             }
         }
-        if (size == 1) if (score.isFrameEqual()) addBalls(BLACK) else endFrame()
-        score.calculatePoints(pot.ball, pot.potType, 1, this.last(), matchFoul)
+        if (size == 1) if (score.isFrameEqual()) addBalls(BLACK()) else endFrame()
         if (pot.potAction == PotAction.SWITCH) score = score.getOther()
         getFrameStatus()
     }
 
     fun undo(): Any = ballStack.apply {
-        if (score != score.getPlayerFromInt(frameStack.last().player)) score = score.getOther()
+        score = score.getPlayerFromInt(frameStack.last().player)
         val lastPot = frameStack.removeFromFrameStack()
         when (lastPot.potType) {
-            HIT -> addBalls(if (isNextColor()) COLOR else lastPot.ball)
-            ADDRED -> addBalls(RED, COLOR)
+            HIT -> addBalls(if (isNextColor()) COLOR() else lastPot.ball)
+            ADDRED -> addBalls(RED(), COLOR())
             FREE -> {
-                if (inColors()) addBalls(FREEBALL) else addBalls(COLOR, FREEBALL)
+                if (inColors()) addBalls(FREEBALL()) else addBalls(COLOR(), FREEBALL())
                 undo()
             }
             REMOVERED -> {
-                if (last() == FREEBALL) removeBalls(if (inColors()) 1 else 2)
-                if (isNextColor()) addBalls(COLOR, RED) else addBalls(RED, COLOR)
+                if (last() is FREEBALL) removeBall(if (inColors()) 1 else 2)
+                if (isNextColor()) addBalls(COLOR(), RED()) else addBalls(RED(), COLOR())
                 undo()
             }
             FOUL -> {
-                if (last() == FREEBALL) removeBalls(if (inColors()) 1 else 2)
-                if (frameStack.isPreviousRed() && isNextColor()) addBalls(COLOR)
+                if (last() is FREEBALL) removeBall(if (inColors()) 1 else 2)
+                if (frameStack.isPreviousRed() && isNextColor()) addBalls(COLOR())
             }
-            SAFE -> if (frameStack.isPreviousRed() && isNextColor()) addBalls(COLOR)
+            SAFE -> if (frameStack.isPreviousRed() && isNextColor()) addBalls(COLOR())
             MISS -> if (frameStack.isPreviousRed() && isNextColor()) {
-                addBalls(COLOR)
+                addBalls(COLOR())
             }
         }
-        score.calculatePoints(lastPot.ball, lastPot.potType, -1, ballStack.last(), matchFoul)
+        score.calculatePoints(lastPot, -1, ballStack.last(), matchFoul)
         getFrameStatus()
     }
 
@@ -157,42 +161,37 @@ class GameViewModel(
         score = score.getOther()
         viewModelScope.launch {
             snookerRepository.addFrames(score)
-            this@GameViewModel.resetFrameScore()
+            this@GameViewModel.resetFrame()
             frameCount += 1
         }
     }
 
-    fun resetMatchScore() {
+    fun resetMatch() {
         score = score.getPlayerFromInt(matchFirst)
         score.getFirst().resetMatchScore()
         score.getSecond().resetMatchScore()
         frameCount = 1
-        resetFrameScore()
+        resetFrame()
         viewModelScope.launch {
             snookerRepository.deleteMatchFrames()
             snookerRepository.deleteCurrentMatch()
         }
     }
 
-    fun resetFrameScore() {
+    fun resetFrame() {
         score.getFirst().resetFrameScore()
         score.getSecond().resetFrameScore()
         frameStack.clear()
         ballStack.clear()
-        ballStack.addBalls(NOBALL, BLACK, PINK, BLUE, BROWN, GREEN, YELLOW)
-        repeat(matchReds) { ballStack.addBalls(COLOR, RED) }
+        ballStack.addBalls(NOBALL(), BLACK(), PINK(), BLUE(), BROWN(), GREEN(), YELLOW())
+        repeat(matchReds) { ballStack.addBalls(COLOR(), RED()) }
         getFrameStatus()
     }
 
-    // Helpers
     private fun getFrameStatus() {
         _displayBallStack.value = ballStack
         _displayFrameStack.value = frameStack
         _displayScore.value = score
         score.findMaxBreak(frameStack)
-    }
-
-    fun assignMatchAction(matchAction: MatchAction) {
-        _eventMatchAction.value = Event(matchAction)
     }
 }

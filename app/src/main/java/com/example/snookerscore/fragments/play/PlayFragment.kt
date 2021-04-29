@@ -103,6 +103,6 @@ class PlayFragment : androidx.fragment.app.Fragment() {
         putInt(getString(R.string.shared_pref_match_first), playFragmentViewModel.eventBreaksFirst.value!!.peekContent())
         apply()
         gameViewModel.getSavedStateRules()
-        gameViewModel.resetMatchScore()
+        gameViewModel.resetMatch()
     }
 }

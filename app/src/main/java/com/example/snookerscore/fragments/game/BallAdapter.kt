@@ -11,7 +11,6 @@ import com.example.snookerscore.domain.Ball
 
 class BallAdapter(private val clickListener: BallListener, private val ballStack: LiveData<MutableList<Ball>>): ListAdapter<Ball, BallAdapter.ViewHolder>(BallAdapterCallback()) {
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
     }

@@ -74,13 +74,13 @@ class GameFoulDialogFragment : DialogFragment() {
         gameFragmentViewModel.apply {
             displayBallStack.observe(viewLifecycleOwner, { ballStack ->
                 ballsList = when (ballStack.size) {
-                    2 -> listOf(WHITE, BLACK)
-                    3 -> listOf(WHITE, PINK, BLACK)
-                    4 -> listOf(WHITE, BLUE, PINK, BLACK)
-                    5 -> listOf(WHITE, BROWN, BLUE, PINK, BLACK)
-                    6 -> listOf(WHITE, GREEN, BROWN, BLUE, PINK, BLACK)
-                    7 -> listOf(WHITE, YELLOW, GREEN, BROWN, BLUE, PINK, BLACK)
-                    else -> listOf(WHITE, RED, YELLOW, GREEN, BROWN, BLUE, PINK, BLACK)
+                    2 -> listOf(WHITE(), BLACK())
+                    3 -> listOf(WHITE(), PINK(), BLACK())
+                    4 -> listOf(WHITE(), BLUE(), PINK(), BLACK())
+                    5 -> listOf(WHITE(), BROWN(), BLUE(), PINK(), BLACK())
+                    6 -> listOf(WHITE(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
+                    7 -> listOf(WHITE(), YELLOW(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
+                    else -> listOf(WHITE(), RED(), YELLOW(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
                 }
                 ballAdapter.submitList(ballsList)
             })
