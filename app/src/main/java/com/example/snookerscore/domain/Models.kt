@@ -6,3 +6,5 @@ data class DomainRanking(
     val name: String = "",
     val points: Int = 0
 )
+
+enum class BallAdapterType { MATCH, FOUL, BREAK }

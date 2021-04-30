@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.snookerscore.R
 import com.example.snookerscore.domain.*
 import com.example.snookerscore.domain.Ball.*
+import com.example.snookerscore.fragments.game.BallAdapter
 import com.example.snookerscore.fragments.game.BreakAdapter
-import com.example.snookerscore.fragments.game.PotsAdapter
 import com.example.snookerscore.fragments.game.getDisplayShots
 import com.example.snookerscore.fragments.gamestatistics.GameStatsAdapter
 import com.example.snookerscore.fragments.rankings.RankingsAdapter
@@ -252,12 +252,20 @@ fun bindBreakRv(recyclerView: RecyclerView, breaks: MutableList<Break>?) {
 
 @BindingAdapter("listPotsA")
 fun RecyclerView.bindPotsRvA(crtBreak: Break?) {
-    val adapter = this.adapter as PotsAdapter
-    adapter.submitList(if (crtBreak?.player == 0) crtBreak.pots else mutableListOf())
+    val adapter = this.adapter as BallAdapter
+    val balls = mutableListOf<Ball>()
+    crtBreak?.pots?.forEach {
+        balls.add(it.ball)
+    }
+    adapter.submitList(if (crtBreak?.player == 0) balls else mutableListOf())
 }
 
 @BindingAdapter("listPotsB")
 fun RecyclerView.bindPotsRvB(crtBreak: Break?) {
-    val adapter = this.adapter as PotsAdapter
-    adapter.submitList(if (crtBreak?.player == 1) crtBreak.pots else mutableListOf())
+    val adapter = this.adapter as BallAdapter
+    val balls = mutableListOf<Ball>()
+    crtBreak?.pots?.forEach {
+        balls.add(it.ball)
+    }
+    adapter.submitList(if (crtBreak?.player == 1) balls else mutableListOf())
 }

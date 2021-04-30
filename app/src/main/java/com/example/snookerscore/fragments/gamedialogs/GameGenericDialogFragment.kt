@@ -28,8 +28,6 @@ class GameGenericDialogFragment : DialogFragment() {
     ): View {
         val binding: FragmentGameGenDialogBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_game_gen_dialog, container, false)
-        isCancelable = false
-
 
         binding.apply {
             lifecycleOwner = this@GameGenericDialogFragment
@@ -48,7 +46,7 @@ class GameGenericDialogFragment : DialogFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        eventsViewModel.onEventMatchActionConfirmed(matchAction)
+        if (this::matchAction.isInitialized) eventsViewModel.onEventMatchActionConfirmed(matchAction)
     }
 }
 

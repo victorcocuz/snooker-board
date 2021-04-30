@@ -15,8 +15,9 @@
     </data>
 
     <FrameLayout
-        android:layout_width="68dp"
-        android:layout_height="68dp">
+        android:id="@+id/item_ball_view_frame_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
             <ImageButton
                 android:contentDescription="@string/item_ball_view_ball"
                 android:id="@+id/item_button_ball"

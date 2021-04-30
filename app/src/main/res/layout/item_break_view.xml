@@ -30,14 +30,13 @@
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_weight="4">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/item_break_a_balls_rv"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_height="match_parent"
-                    android:layout_gravity="right"
                     app:listPotsA="@{crtBreak}" />
 
                 <TextView
@@ -86,6 +85,7 @@
                     android:id="@+id/item_break_b_balls_rv"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     app:listPotsB="@{crtBreak}" />
             </FrameLayout>
         </LinearLayout>

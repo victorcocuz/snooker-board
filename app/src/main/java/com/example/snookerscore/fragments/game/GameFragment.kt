@@ -14,6 +14,7 @@ import com.example.snookerscore.database.SnookerDatabase
 import com.example.snookerscore.databinding.FragmentGameBinding
 import com.example.snookerscore.domain.Ball
 import com.example.snookerscore.domain.Ball.*
+import com.example.snookerscore.domain.BallAdapterType
 import com.example.snookerscore.domain.MatchAction
 import com.example.snookerscore.domain.Pot
 import com.example.snookerscore.repository.SnookerRepository
@@ -40,10 +41,14 @@ class GameFragment : androidx.fragment.app.Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false)
         snookerRepository = SnookerRepository(SnookerDatabase.getDatabase(requireActivity().application))
 
-        ballAdapter = BallAdapter(BallListener { ball ->
-            requireActivity().invalidateOptionsMenu()
-            gameViewModel.updateFrame(Pot.HIT(ball))
-        }, gameViewModel.displayBallStack)
+        ballAdapter = BallAdapter(
+            BallListener { ball ->
+                requireActivity().invalidateOptionsMenu()
+                gameViewModel.updateFrame(Pot.HIT(ball))
+            },
+            gameViewModel.displayBallStack,
+            BallAdapterType.MATCH
+        )
 
         binding.apply {
             lifecycleOwner = this@GameFragment
@@ -60,8 +65,8 @@ class GameFragment : androidx.fragment.app.Fragment() {
                 adapter = ballAdapter
             }
             fragGameBreakRv.apply {
-             adapter = BreakAdapter(requireActivity())
-             itemAnimator = null
+                adapter = BreakAdapter(requireActivity())
+                itemAnimator = null
             }
             fragGameScore.apply {
                 gameViewModel = this@GameFragment.gameViewModel

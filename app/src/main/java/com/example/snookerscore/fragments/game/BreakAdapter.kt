@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snookerscore.databinding.ItemBreakViewBinding
+import com.example.snookerscore.domain.BallAdapterType
 import com.example.snookerscore.domain.Break
 import com.example.snookerscore.domain.PotType
 
@@ -42,9 +43,18 @@ class BreakAdapter(private val activity: Activity) :
                     itemBreakBBallsRv.visibility = View.VISIBLE
                 }
 
-                itemBreakABallsRv.adapter = PotsAdapter()
+                itemBreakABallsRv.adapter = BallAdapter(
+                    null,
+                    null,
+                    BallAdapterType.BREAK
+                )
                 itemBreakABallsRv.layoutManager = GridLayoutManager(activity, 8)
-                itemBreakBBallsRv.adapter = PotsAdapter()
+
+                itemBreakBBallsRv.adapter = BallAdapter(
+                    null,
+                    null,
+                    BallAdapterType.BREAK
+                )
                 itemBreakBBallsRv.layoutManager = GridLayoutManager(activity, 8)
                 executePendingBindings()
             }

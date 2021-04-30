@@ -19,7 +19,7 @@ fun Context.toast(message: CharSequence) =
 //}
 
 fun DialogFragment.setSize(factor: Float) {
-    val outMetrics = Resources.getSystem().displayMetrics
+//    val outMetrics = Resources.getSystem().displayMetrics
 //    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
 //        val display = requireActivity().display
 //        display?.getRealMetrics(outMetrics)
@@ -30,7 +30,7 @@ fun DialogFragment.setSize(factor: Float) {
 //        display.getMetrics(outMetrics)
 //    }
 
-    val width = outMetrics.widthPixels
+    val width = Resources.getSystem().displayMetrics.widthPixels
     dialog?.window?.setLayout((width * factor).toInt(), WindowManager.LayoutParams.WRAP_CONTENT)
 //    window.setGravity(Gravity.CENTER)
 }

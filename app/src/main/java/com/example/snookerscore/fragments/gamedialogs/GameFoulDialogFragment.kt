@@ -42,9 +42,11 @@ class GameFoulDialogFragment : DialogFragment() {
 
         // Bind RV, VM, adapter
         val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        val ballAdapter = BallAdapter(BallListener { ball ->
-            foulDialogViewModel.onBallClicked(ball)
-        }, MutableLiveData(mutableListOf()))
+        val ballAdapter = BallAdapter(
+            BallListener { ball -> foulDialogViewModel.onBallClicked(ball) },
+            MutableLiveData(mutableListOf()),
+            BallAdapterType.FOUL
+        )
 
         binding.apply {
             lifecycleOwner = this@GameFoulDialogFragment
