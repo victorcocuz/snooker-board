@@ -1,9 +1,7 @@
 package com.example.snookerscore.fragments.gamedialogs
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
@@ -12,10 +10,17 @@ import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameGenDialogBinding
 import com.example.snookerscore.domain.MatchAction
 import com.example.snookerscore.utils.EventObserver
+import com.example.snookerscore.utils.setSize
+
 
 class GameGenericDialogFragment : DialogFragment() {
     private val eventsViewModel: GenericEventsViewModel by activityViewModels()
     private lateinit var matchAction: MatchAction
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        setSize(resources.getDimension(R.dimen.dialog_factor))
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,6 +29,7 @@ class GameGenericDialogFragment : DialogFragment() {
         val binding: FragmentGameGenDialogBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_game_gen_dialog, container, false)
         isCancelable = false
+
 
         binding.apply {
             lifecycleOwner = this@GameGenericDialogFragment
@@ -45,3 +51,4 @@ class GameGenericDialogFragment : DialogFragment() {
         eventsViewModel.onEventMatchActionConfirmed(matchAction)
     }
 }
+

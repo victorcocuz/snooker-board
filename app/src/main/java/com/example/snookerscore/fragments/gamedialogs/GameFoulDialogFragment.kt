@@ -19,6 +19,7 @@ import com.example.snookerscore.fragments.game.BallAdapter
 import com.example.snookerscore.fragments.game.BallListener
 import com.example.snookerscore.fragments.game.GameViewModel
 import com.example.snookerscore.utils.EventObserver
+import com.example.snookerscore.utils.setSize
 import com.example.snookerscore.utils.toast
 import java.util.*
 
@@ -27,6 +28,11 @@ class GameFoulDialogFragment : DialogFragment() {
     private val foulDialogViewModel: GameFoulDialogViewModel by viewModels()
     private val eventsViewModel: GenericEventsViewModel by activityViewModels()
     private val gameFragmentViewModel: GameViewModel by activityViewModels()
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        setSize(resources.getDimension(R.dimen.dialog_factor))
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?

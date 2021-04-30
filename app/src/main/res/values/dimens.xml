@@ -26,4 +26,6 @@
     <!-- Text -->
     <dimen name="text_regular">16sp</dimen>
     <dimen name="ball_size_small">18dp</dimen>
+
+    <dimen name="dialog_factor">1.0px</dimen>
 </resources>
