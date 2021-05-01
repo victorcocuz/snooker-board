@@ -105,7 +105,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/frag_game_break_linear_layout"
-            app:listBreakData="@{gameViewModel.displayFrameStack}"
+            app:listBreakData="@{gameViewModel.displayFrame.frameStack}"
             tools:itemCount="16"
             tools:listitem="@layout/item_break_view" />
 

@@ -24,15 +24,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
-
 class GameFragment : androidx.fragment.app.Fragment() {
+    private val gameFragmentScope = CoroutineScope(Dispatchers.Default)
     private val gameViewModel: GameViewModel by activityViewModels()
     private val eventsViewModel: GenericEventsViewModel by activityViewModels()
     private lateinit var snookerRepository: SnookerRepository
     private lateinit var ballsList: List<DomainBall>
     private lateinit var ballAdapter: BallAdapter
     private lateinit var binding: FragmentGameBinding
-    private val gameFragmentScope = CoroutineScope(Dispatchers.Default)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +45,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
                 requireActivity().invalidateOptionsMenu()
                 gameViewModel.updateFrame(DomainPot.HIT(ball))
             },
-            gameViewModel.displayBallStack,
+            gameViewModel.displayFrame,
             BallAdapterType.MATCH
         )
 
@@ -80,8 +79,8 @@ class GameFragment : androidx.fragment.app.Fragment() {
         // VM Observers
         gameViewModel.apply {
             // Enable or disable buttons
-            displayBallStack.observe(viewLifecycleOwner, { ballStack ->
-                manageBallVisibility(ballStack.last())
+            displayFrame.observe(viewLifecycleOwner, { frame ->
+                manageBallVisibility(frame.ballStack.lastOrNull())
             })
             eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                 findNavController().navigate(
@@ -104,7 +103,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
                                 snookerRepository.deleteMatchFrames()
                                 snookerRepository.deleteCurrentMatch()
                             }
-                            resetMatch()
+                            startNewMatch()
                             findNavController().navigate(GameFragmentDirections.actionGameFragmentToPlayFragment())
                         }
                         in listOf(MatchAction.FRAME_END_QUERY, MatchAction.FRAME_END_CONFIRM) -> {
@@ -123,12 +122,16 @@ class GameFragment : androidx.fragment.app.Fragment() {
                         }
                     }
                 }
+                requireActivity().invalidateOptionsMenu()
             })
         }
 
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                gameViewModel.assignMatchAction(MatchAction.MATCH_CANCEL)
+                gameFragmentScope.launch {
+                    gameViewModel.saveCurrentMatch()
+                }
+                findNavController().navigate(GameFragmentDirections.actionGameFragmentToPlayFragment())
             }
         })
 
@@ -144,7 +147,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
         when (item.itemId) {
             R.id.match_action_undo -> gameViewModel.undo()
             R.id.match_action_add_red -> gameViewModel.updateFrame(DomainPot.ADDRED)
-            R.id.match_action_rerack -> gameViewModel.resetFrame()
+            R.id.match_action_rerack -> gameViewModel.startNewFrame()
             R.id.match_action_concede_frame -> gameViewModel.endFrame()
             R.id.match_action_cancel_match -> gameViewModel.assignMatchAction(MatchAction.MATCH_CANCEL)
             R.id.match_action_concede_match -> gameViewModel.assignMatchAction(MatchAction.MATCH_END_QUERY)
@@ -155,16 +158,19 @@ class GameFragment : androidx.fragment.app.Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         gameViewModel.apply {
-            menu.findItem(R.id.match_action_undo).isEnabled = (displayFrameStack.value?.size ?: 0) > 0
-            menu.findItem(R.id.match_action_rerack).isEnabled = (displayFrameStack.value?.size ?: 0) > 0
-            menu.findItem(R.id.match_action_add_red).isEnabled = (displayBallStack.value?.size ?: 0) in (10..36).filter { it % 2 == 0 }
-            menu.findItem(R.id.match_action_concede_frame).isEnabled = !(displayScore.value?.isFrameEqual() ?: true)
+            menu.findItem(R.id.match_action_undo).isEnabled = (displayFrame.value?.frameStack?.size ?: 0) > 0
+            menu.findItem(R.id.match_action_rerack).isEnabled = (displayFrame.value?.frameStack?.size ?: 0) > 0
+            menu.findItem(R.id.match_action_add_red).isEnabled =
+                (displayFrame.value?.frameStack?.size ?: 0) in (10..36).filter { it % 2 == 0 }
+            menu.findItem(R.id.match_action_concede_frame).isEnabled =
+                displayFrame.value?.frameScore?.get(0)?.framePoints != displayFrame.value?.frameScore?.get(1)?.framePoints
             menu.findItem(R.id.match_action_concede_match).isEnabled =
-                !(displayScore.value?.isFrameEqual() ?: true && displayScore.value?.isMatchEqual() ?: true)
+                displayFrame.value?.frameScore?.get(0)?.framePoints != displayFrame.value?.frameScore?.get(1)?.framePoints
+                        || displayFrame.value?.frameScore?.get(0)?.matchPoints != displayFrame.value?.frameScore?.get(1)?.matchPoints
         }
     }
 
-    private fun manageBallVisibility(frameState: DomainBall) {
+    private fun manageBallVisibility(frameState: DomainBall?) {
         ballsList = when (frameState) {
             is FREEBALL -> listOf(FREEBALL())
             is RED -> listOf(RED())

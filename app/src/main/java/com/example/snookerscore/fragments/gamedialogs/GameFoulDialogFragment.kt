@@ -44,7 +44,7 @@ class GameFoulDialogFragment : DialogFragment() {
         val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         val ballAdapter = BallAdapter(
             BallListener { ball -> foulDialogViewModel.onBallClicked(ball) },
-            MutableLiveData(mutableListOf()),
+            MutableLiveData(),
             BallAdapterType.FOUL
         )
 
@@ -80,8 +80,8 @@ class GameFoulDialogFragment : DialogFragment() {
             })
         }
         gameFragmentViewModel.apply {
-            displayBallStack.observe(viewLifecycleOwner, { ballStack ->
-                ballsList = when (ballStack.size) {
+            displayFrame.observe(viewLifecycleOwner, { frame ->
+                ballsList = when (frame.ballStack.size) {
                     2 -> listOf(WHITE(), BLACK())
                     3 -> listOf(WHITE(), PINK(), BLACK())
                     4 -> listOf(WHITE(), BLUE(), PINK(), BLACK())

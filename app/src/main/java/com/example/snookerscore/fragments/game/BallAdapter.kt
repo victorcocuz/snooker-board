@@ -8,17 +8,18 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snookerscore.databinding.ItemBallViewBinding
-import com.example.snookerscore.domain.DomainBall
 import com.example.snookerscore.domain.BallAdapterType
+import com.example.snookerscore.domain.DomainBall
+import com.example.snookerscore.domain.DomainFrame
 
-class BallAdapter(private val clickListener: BallListener?, private val ballStack: LiveData<MutableList<DomainBall>>?, private val adapterType: BallAdapterType): ListAdapter<DomainBall, BallAdapter.ViewHolder>(BallAdapterCallback()) {
+class BallAdapter(private val clickListener: BallListener?, private val frame: LiveData<DomainFrame>?, private val adapterType: BallAdapterType): ListAdapter<DomainBall, BallAdapter.ViewHolder>(BallAdapterCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), clickListener, ballStack, adapterType)
+        holder.bind(getItem(position), clickListener, frame, adapterType)
     }
 
     class ViewHolder private constructor(val binding: ItemBallViewBinding, val context: Context) : RecyclerView.ViewHolder(binding.root) {
@@ -29,7 +30,7 @@ class BallAdapter(private val clickListener: BallListener?, private val ballStac
             }
         }
 
-        fun bind(item: DomainBall, clickListener: BallListener?, ballStack: LiveData<MutableList<DomainBall>>?, adapterType: BallAdapterType) {
+        fun bind(item: DomainBall, clickListener: BallListener?, frame: LiveData<DomainFrame>?, adapterType: BallAdapterType) {
             binding.apply {
                 ball = item
                 val factor = when (adapterType) {
@@ -43,7 +44,7 @@ class BallAdapter(private val clickListener: BallListener?, private val ballStac
                     setPadding(28 / factor, 28 / factor, 28 / factor, 28 / factor)
                 }
 
-                this.ballStackSize = ballStack?.value?.size ?: 0
+                this.ballStackSize = frame?.value?.ballStack?.size ?: 0
                 this.clickListener = clickListener
                 executePendingBindings()
             }

@@ -75,7 +75,7 @@ fun TextView.setTotalScore(application: Application) {
         application.applicationContext.getString(R.string.preference_file_key),
         Context.MODE_PRIVATE
     ).getInt(application.getString(R.string.shared_pref_match_frames), 0)
-        text = context.getString(R.string.game_total_score, (frames * 2 - 1))
+    text = context.getString(R.string.game_total_score, (frames * 2 - 1))
 }
 
 @BindingAdapter("gamePointsDiffSize")
@@ -85,9 +85,9 @@ fun TextView.setGamePointsRemaining(size: Int) {
 }
 
 @BindingAdapter("gamePointsRemaining")
-fun TextView.setGamePointsDiff(crtPlayer: CurrentScore?) {
-    crtPlayer?.let {
-        text = abs(crtPlayer.getFirst().framePoints - crtPlayer.getSecond().framePoints).toString()
+fun TextView.setGamePointsDiff(players: MutableList<DomainPlayerScore>?) {
+    players?.let {
+        text = abs(it[0].framePoints - it[1].framePoints).toString()
     }
 }
 
@@ -121,7 +121,7 @@ fun TextView.bindGameStatsFrameNumber(frameCount: Int) {
 
 @BindingAdapter("gameStatsBreak")
 fun TextView.bindGameStatsBreak(highestBreak: Int) {
-    text = when(highestBreak) {
+    text = when (highestBreak) {
         -1 -> context.getString(R.string.fragment_statistics_header_break)
         else -> highestBreak.toString()
     }
@@ -129,7 +129,7 @@ fun TextView.bindGameStatsBreak(highestBreak: Int) {
 
 @BindingAdapter("gameStatsPoints")
 fun TextView.bindGameStatsPoints(framePoints: Int) {
-    text = when(framePoints) {
+    text = when (framePoints) {
         -1 -> context.getString(R.string.fragment_statistics_header_points)
         else -> framePoints.toString()
     }
@@ -161,10 +161,11 @@ fun TextView.setDialogFreeballEnabled(potAction: PotAction?) {
     }
 }
 
-@BindingAdapter("dialogCannotForceDiff", "dialogCannotForceRemaining")
-fun TextView.setDialogForceContinueEnabled(crtPlayer: CurrentScore?, size: Int) {
-    crtPlayer?.let {
-        val diff = abs(crtPlayer.getFirst().framePoints - crtPlayer.getSecond().framePoints)
+@BindingAdapter("dialogCannotForce")
+fun TextView.setDialogForceContinueEnabled(frame: DomainFrame?) {
+    frame?.let {
+        val diff = abs(it.frameScore[0].framePoints - it.frameScore[1].framePoints)
+        val size = frame.ballStack.size
         val remaining =
             if (size <= 7) (-(8 - size) * (8 - size) - (8 - size) + 56) / 2
             else 27 + ((size - 7) / 2) * 8
@@ -188,7 +189,7 @@ fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
 
 @BindingAdapter("dialogGameGenYes")
 fun TextView.setDialogGameYes(matchAction: MatchAction) {
-    text = when(matchAction) {
+    text = when (matchAction) {
         MatchAction.MATCH_CANCEL -> "Yes"
         MatchAction.FRAME_END_QUERY -> "Yes"
         MatchAction.MATCH_END_QUERY -> "Yes"
@@ -201,7 +202,7 @@ fun TextView.setDialogGameYes(matchAction: MatchAction) {
 
 @BindingAdapter("dialogGameGenNo")
 fun TextView.setDialogGameNo(matchAction: MatchAction) {
-    text = when(matchAction) {
+    text = when (matchAction) {
         MatchAction.MATCH_CANCEL -> "No"
         MatchAction.FRAME_END_QUERY -> "No"
         MatchAction.MATCH_END_QUERY -> "No"
@@ -215,7 +216,7 @@ fun TextView.setDialogGameNo(matchAction: MatchAction) {
 // Break Adapters
 @BindingAdapter("crtBreakPointsA")
 fun TextView.bindBreakPointsA(crtBreak: DomainBreak) {
-    text = when  {
+    text = when {
         crtBreak.player == 0 && crtBreak.breakSize != 0 -> crtBreak.breakSize.toString()
         crtBreak.player == 1 && crtBreak.pots.last().potType == PotType.FOUL -> crtBreak.pots.last().ball.foul.toString()
         else -> ""
@@ -224,7 +225,7 @@ fun TextView.bindBreakPointsA(crtBreak: DomainBreak) {
 
 @BindingAdapter("crtBreakPointsB")
 fun TextView.bindBreakPointsB(crtBreak: DomainBreak) {
-    text = when  {
+    text = when {
         crtBreak.player == 1 && crtBreak.breakSize != 0 -> crtBreak.breakSize.toString()
         crtBreak.player == 0 && crtBreak.pots.last().potType == PotType.FOUL -> crtBreak.pots.last().ball.foul.toString()
         else -> ""

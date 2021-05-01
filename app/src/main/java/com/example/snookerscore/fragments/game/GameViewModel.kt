@@ -21,14 +21,8 @@ class GameViewModel(
     private val _displayFrame = MutableLiveData<DomainFrame>()
     val displayFrame: LiveData<DomainFrame> = _displayFrame
 
-    private val _displayBallStack = MutableLiveData<MutableList<DomainBall>>()
-    val displayBallStack: LiveData<MutableList<DomainBall>> = _displayBallStack
-
     private val _displayScore = MutableLiveData<CurrentScore>()
     val displayScore: LiveData<CurrentScore> = _displayScore
-
-    private val _displayFrameStack = MutableLiveData<MutableList<DomainBreak>>()
-    val displayFrameStack: LiveData<MutableList<DomainBreak>> = _displayFrameStack
 
     private val _eventMatchAction = MutableLiveData<Event<MatchAction>>()
     val eventMatchAction: LiveData<Event<MatchAction>> = _eventMatchAction
@@ -43,25 +37,31 @@ class GameViewModel(
     )
     private var frameCount = 1
 
-    // Init game settings
+    // Match settings
     private var matchFrames = 0
     private var matchReds = 0
     private var matchFoul = 0
     private var matchFirst = 0
 
-    fun setSavedStateRules(): SharedPreferences.Editor = sharedPref.edit().apply {
-        getApplication<Application>().resources.apply {
-            putBoolean(getString(R.string.shared_pref_match_is_saved), true)
-            putInt(getString(R.string.shared_pref_match_frames), matchFrames)
-            putInt(getString(R.string.shared_pref_match_reds), matchReds)
-            putInt(getString(R.string.shared_pref_match_foul), matchFoul)
-            putInt(getString(R.string.shared_pref_match_first), matchFirst)
-            putInt(getString(R.string.shared_pref_match_crt_player), score.getPlayerAsInt())
-            apply()
+    suspend fun saveCurrentMatch() {
+        if (score.isMatchInProgress()) {
+            snookerRepository.deleteCurrentMatch()
+            snookerRepository.saveCurrentMatch(displayFrame.value!!)
+            sharedPref.edit().apply {
+                getApplication<Application>().resources.apply {
+                    putBoolean(getString(R.string.shared_pref_match_is_saved), true)
+                    putInt(getString(R.string.shared_pref_match_frames), matchFrames)
+                    putInt(getString(R.string.shared_pref_match_reds), matchReds)
+                    putInt(getString(R.string.shared_pref_match_foul), matchFoul)
+                    putInt(getString(R.string.shared_pref_match_first), matchFirst)
+                    putInt(getString(R.string.shared_pref_match_crt_player), score.getPlayerAsInt())
+                    apply()
+                }
+            }
         }
     }
 
-    fun getSavedStateRules() = sharedPref.apply {
+    private fun getSavedStateRules() = sharedPref.apply {
         getApplication<Application>().resources.apply {
             matchFrames = getInt(getString(R.string.shared_pref_match_frames), 0)
             matchReds = getInt(getString(R.string.shared_pref_match_reds), 0)
@@ -72,15 +72,63 @@ class GameViewModel(
         }
     }
 
-    fun assignMatchAction(matchAction: MatchAction) {
-        _eventMatchAction.value = Event(matchAction)
-    }
-
-    fun setFrame(frame: DomainFrame) {
+    fun loadMatch(frame: DomainFrame) {
+        getSavedStateRules()
         score = frame.frameScore.asCurrentScore() ?: score
         frameStack = frame.frameStack
         ballStack = frame.ballStack
         updateFrameStatus()
+    }
+
+    fun startNewMatch() {
+        getSavedStateRules()
+        score.getFirst().resetMatchScore()
+        score.getSecond().resetMatchScore()
+        frameCount = 1
+        startNewFrame()
+        viewModelScope.launch {
+            snookerRepository.deleteMatchFrames()
+            snookerRepository.deleteCurrentMatch()
+        }
+    }
+
+    fun startNewFrame() {
+        if (score.isMatchInProgress()) {
+            matchFirst = if (matchFirst == 0) 1 else 0
+            score = score.getPlayerFromInt(matchFirst)
+        } else {
+            score = score.getPlayerFromInt(matchFirst)
+        }
+        score.getFirst().resetFrameScore()
+        score.getSecond().resetFrameScore()
+        frameStack.clear()
+        ballStack.clear()
+        ballStack.addBalls(NOBALL(), BLACK(), PINK(), BLUE(), BROWN(), GREEN(), YELLOW())
+        repeat(matchReds) { ballStack.addBalls(COLOR(), RED()) }
+        updateFrameStatus()
+    }
+
+    fun endFrame() = assignMatchAction(
+        when {
+            score.getWinner().matchPoints + 1 == matchFrames -> MatchAction.MATCH_END_CONFIRM
+            ballStack.size == 1 -> MatchAction.FRAME_END_CONFIRM
+            else -> MatchAction.FRAME_END_QUERY
+        }
+    )
+
+    fun frameEnded() = score.apply {
+        getWinner().addMatchPoint()
+        getFirst().frameId = frameCount
+        getSecond().frameId = frameCount
+        viewModelScope.launch {
+            snookerRepository.addFrames(score)
+            this@GameViewModel.startNewFrame()
+            frameCount += 1
+        }
+    }
+
+    fun assignMatchAction(matchAction: MatchAction) {
+        _eventMatchAction.value = Event(matchAction)
     }
 
     // Handler functions
@@ -141,51 +189,7 @@ class GameViewModel(
     }
 
     // Match functions
-    fun endFrame() = assignMatchAction(
-        when {
-            score.getWinner().matchPoints + 1 == matchFrames -> MatchAction.MATCH_END_CONFIRM
-            ballStack.size == 1 -> MatchAction.FRAME_END_CONFIRM
-            else -> MatchAction.FRAME_END_QUERY
-        }
-    )
-
-    fun frameEnded() = score.apply {
-        getWinner().addMatchPoint()
-        getFirst().frameId = frameCount
-        getSecond().frameId = frameCount
-        score = score.getOther()
-        viewModelScope.launch {
-            snookerRepository.addFrames(score)
-            this@GameViewModel.resetFrame()
-            frameCount += 1
-        }
-    }
-
-    fun resetMatch() {
-        score = score.getPlayerFromInt(matchFirst)
-        score.getFirst().resetMatchScore()
-        score.getSecond().resetMatchScore()
-        frameCount = 1
-        resetFrame()
-        viewModelScope.launch {
-            snookerRepository.deleteMatchFrames()
-            snookerRepository.deleteCurrentMatch()
-        }
-    }
-
-    fun resetFrame() {
-        score.getFirst().resetFrameScore()
-        score.getSecond().resetFrameScore()
-        frameStack.clear()
-        ballStack.clear()
-        ballStack.addBalls(NOBALL(), BLACK(), PINK(), BLUE(), BROWN(), GREEN(), YELLOW())
-        repeat(matchReds) { ballStack.addBalls(COLOR(), RED()) }
-        updateFrameStatus()
-    }
-
     private fun updateFrameStatus() {
-        _displayBallStack.value = ballStack
-        _displayFrameStack.value = frameStack
         _displayScore.value = score
         _displayFrame.value = DomainFrame(
             frameCount,

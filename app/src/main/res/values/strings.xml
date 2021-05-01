@@ -114,4 +114,5 @@
     <string name="shared_pref_match_crt_player">matchCrtPlayer</string>
     <string name="shared_pref_match_is_saved">matchIsSaved</string>
     <string name="menu_item_more">Main Menu</string>
+    <string name="shared_pref_match_broke_last">matchBrokeLast</string>
 </resources>

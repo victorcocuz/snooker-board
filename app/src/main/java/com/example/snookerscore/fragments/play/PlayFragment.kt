@@ -83,12 +83,7 @@ class PlayFragment : androidx.fragment.app.Fragment() {
             // When new match is selected reset match, otherwise continue the existing match
             eventsViewModel.apply {
                 eventMatchActionConfirmed.observe(viewLifecycleOwner, EventObserver {
-                    when (it) {
-                        MatchAction.MATCH_START_NEW -> resetMatch()
-                        MatchAction.MATCH_CONTINUE -> gameViewModel.getSavedStateRules()
-                        else -> {
-                        }
-                    }
+                    if (it == MatchAction.MATCH_START_NEW) resetMatch()
                     findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
                 })
             }
@@ -102,7 +97,6 @@ class PlayFragment : androidx.fragment.app.Fragment() {
         putInt(getString(R.string.shared_pref_match_foul), playFragmentViewModel.eventFoulModifier.value!!.peekContent())
         putInt(getString(R.string.shared_pref_match_first), playFragmentViewModel.eventBreaksFirst.value!!.peekContent())
         apply()
-        gameViewModel.getSavedStateRules()
-        gameViewModel.resetMatch()
+        gameViewModel.startNewMatch()
     }
 }

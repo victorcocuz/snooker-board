@@ -25,7 +25,7 @@
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_miss"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:setMissSafeFoulEnabled="@{gameViewModel.displayBallStack.size()}" />
+            app:setMissSafeFoulEnabled="@{gameViewModel.displayFrame.ballStack.size()}" />
 
         <TextView
             android:id="@+id/game_btn_act_miss"
@@ -36,7 +36,7 @@
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_foul"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_btn_act_safe"
-            app:setMissSafeFoulEnabled="@{gameViewModel.displayBallStack.size()}" />
+            app:setMissSafeFoulEnabled="@{gameViewModel.displayFrame.ballStack.size()}" />
 
         <TextView
             android:id="@+id/game_btn_act_foul"
@@ -47,7 +47,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_btn_act_miss"
-            app:setMissSafeFoulEnabled="@{gameViewModel.displayBallStack.size()}" />
+            app:setMissSafeFoulEnabled="@{gameViewModel.displayFrame.ballStack.size()}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
