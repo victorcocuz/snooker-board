@@ -9,7 +9,7 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snookerscore.R
 import com.example.snookerscore.domain.*
-import com.example.snookerscore.domain.Ball.*
+import com.example.snookerscore.domain.DomainBall.*
 import com.example.snookerscore.fragments.game.BallAdapter
 import com.example.snookerscore.fragments.game.BreakAdapter
 import com.example.snookerscore.fragments.game.getDisplayShots
@@ -20,13 +20,13 @@ import kotlin.math.abs
 
 // Ball Item View
 @BindingAdapter("ballValue", "stackSize")
-fun TextView.setPointsValue(item: Ball, stackSize: Int) {
+fun TextView.setPointsValue(item: DomainBall, stackSize: Int) {
     val reds = (stackSize - 7) / 2
     text = if (reds > 0 && item is RED) reds.toString() else ""
 }
 
 @BindingAdapter("ballImage")
-fun ImageView.setBallImage(item: Ball?) {
+fun ImageView.setBallImage(item: DomainBall?) {
     item?.let {
         setBackgroundResource(
             when (item) {
@@ -214,7 +214,7 @@ fun TextView.setDialogGameNo(matchAction: MatchAction) {
 
 // Break Adapters
 @BindingAdapter("crtBreakPointsA")
-fun TextView.bindBreakPointsA(crtBreak: Break) {
+fun TextView.bindBreakPointsA(crtBreak: DomainBreak) {
     text = when  {
         crtBreak.player == 0 && crtBreak.breakSize != 0 -> crtBreak.breakSize.toString()
         crtBreak.player == 1 && crtBreak.pots.last().potType == PotType.FOUL -> crtBreak.pots.last().ball.foul.toString()
@@ -223,7 +223,7 @@ fun TextView.bindBreakPointsA(crtBreak: Break) {
 }
 
 @BindingAdapter("crtBreakPointsB")
-fun TextView.bindBreakPointsB(crtBreak: Break) {
+fun TextView.bindBreakPointsB(crtBreak: DomainBreak) {
     text = when  {
         crtBreak.player == 1 && crtBreak.breakSize != 0 -> crtBreak.breakSize.toString()
         crtBreak.player == 0 && crtBreak.pots.last().potType == PotType.FOUL -> crtBreak.pots.last().ball.foul.toString()
@@ -239,21 +239,21 @@ fun bindRankingsRv(recyclerView: RecyclerView, data: List<DomainRanking>?) {
 }
 
 @BindingAdapter("listGameStatsData")
-fun bindGameStatsRv(recyclerView: RecyclerView, data: ArrayList<Pair<FrameScore, FrameScore>>?) {
+fun bindGameStatsRv(recyclerView: RecyclerView, data: ArrayList<Pair<DomainPlayerScore, DomainPlayerScore>>?) {
     val adapter = recyclerView.adapter as GameStatsAdapter
     adapter.submitList(data)
 }
 
 @BindingAdapter("listBreakData")
-fun bindBreakRv(recyclerView: RecyclerView, breaks: MutableList<Break>?) {
+fun bindBreakRv(recyclerView: RecyclerView, breaks: MutableList<DomainBreak>?) {
     val adapter = recyclerView.adapter as BreakAdapter
     adapter.submitList(breaks?.getDisplayShots())
 }
 
 @BindingAdapter("listPotsA")
-fun RecyclerView.bindPotsRvA(crtBreak: Break?) {
+fun RecyclerView.bindPotsRvA(crtBreak: DomainBreak?) {
     val adapter = this.adapter as BallAdapter
-    val balls = mutableListOf<Ball>()
+    val balls = mutableListOf<DomainBall>()
     crtBreak?.pots?.forEach {
         balls.add(it.ball)
     }
@@ -261,9 +261,9 @@ fun RecyclerView.bindPotsRvA(crtBreak: Break?) {
 }
 
 @BindingAdapter("listPotsB")
-fun RecyclerView.bindPotsRvB(crtBreak: Break?) {
+fun RecyclerView.bindPotsRvB(crtBreak: DomainBreak?) {
     val adapter = this.adapter as BallAdapter
-    val balls = mutableListOf<Ball>()
+    val balls = mutableListOf<DomainBall>()
     crtBreak?.pots?.forEach {
         balls.add(it.ball)
     }

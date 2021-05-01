@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="com.example.snookerscore.domain.Pot" />
+        <import type="com.example.snookerscore.domain.DomainPot" />
         <variable
             name="genericEventsViewModel"
             type="com.example.snookerscore.GenericEventsViewModel" />
@@ -19,7 +19,7 @@
         <TextView
             android:id="@+id/game_btn_act_safe"
             style="@style/temp_btn"
-            android:onClick="@{() -> gameViewModel.updateFrame(Pot.SAFE.INSTANCE)}"
+            android:onClick="@{() -> gameViewModel.updateFrame(DomainPot.SAFE.INSTANCE)}"
             android:text="@string/action_safe"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_miss"
@@ -30,7 +30,7 @@
         <TextView
             android:id="@+id/game_btn_act_miss"
             style="@style/temp_btn"
-            android:onClick="@{() -> gameViewModel.updateFrame(Pot.MISS.INSTANCE)}"
+            android:onClick="@{() -> gameViewModel.updateFrame(DomainPot.MISS.INSTANCE)}"
             android:text="@string/action_miss"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_foul"

@@ -6,7 +6,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.snookerscore.database.SnookerDatabase
 import com.example.snookerscore.databinding.ActivityMainBinding
-import com.example.snookerscore.domain.CurrentScore
 import com.example.snookerscore.fragments.game.GameViewModel
 import com.example.snookerscore.repository.SnookerRepository
 import kotlinx.coroutines.CoroutineScope
@@ -48,19 +47,9 @@ class MainActivity : AppCompatActivity() {
 
         // VM Observers
         snookerRepository.apply {
-            currentScore.observe(this@MainActivity, {
-                if (it is CurrentScore) {
-                    gameViewModel.setScore(it)
-                }
-            })
-            currentBreaks.observe(this@MainActivity, {
+            currentFrame.observe(this@MainActivity, {
                 if (it.size > 0) {
-                    gameViewModel.setFrameStack(it)
-                }
-            })
-            currentBallStack.observe(this@MainActivity, {
-                if (it.size > 0) {
-                    gameViewModel.setBallStack(it)
+                    gameViewModel.setFrame(it.last())
                 }
             })
         }
@@ -70,11 +59,7 @@ class MainActivity : AppCompatActivity() {
         activityScope.launch {
             if (gameViewModel.displayScore.value!!.isMatchInProgress()) {
                 snookerRepository.deleteCurrentMatch()
-                snookerRepository.saveCurrentMatch(
-                    gameViewModel.displayScore.value!!,
-                    gameViewModel.displayFrameStack.value!!,
-                    gameViewModel.displayBallStack.value!!
-                )
+                snookerRepository.saveCurrentMatch(gameViewModel.displayFrame.value!!)
                 if (::gameViewModel.isInitialized) {
                     gameViewModel.setSavedStateRules()
                 }

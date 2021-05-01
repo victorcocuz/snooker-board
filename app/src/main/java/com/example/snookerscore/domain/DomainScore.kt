@@ -1,11 +1,6 @@
 package com.example.snookerscore.domain
 
-import com.example.snookerscore.database.DatabaseCrtScore
-import com.example.snookerscore.database.DatabaseScore
-
-enum class MatchAction {
-    FRAME_END_QUERY, FRAME_END_CONFIRM, MATCH_END_QUERY, MATCH_END_CONFIRM, MATCH_CONTINUE, MATCH_START_NEW, MATCH_CANCEL, NO_ACTION
-}
+import com.example.snookerscore.database.DbScore
 
 sealed class CurrentScore(
     var frameId: Int,
@@ -80,7 +75,7 @@ sealed class CurrentScore(
         this.matchPoints += 1
     }
 
-    fun findMaxBreak(frameStack: MutableList<Break>) {
+    fun findMaxBreak(frameStack: MutableList<DomainBreak>) {
         var highestBreak = 0
         frameStack.forEach { crtBreak ->
             if (this.getPlayerAsInt() == crtBreak.player && crtBreak.breakSize > highestBreak) {
@@ -103,9 +98,9 @@ sealed class CurrentScore(
     }
 }
 
-fun CurrentScore.asDatabaseFrameScore(): DatabaseScore {
-    return DatabaseScore(
-        frameCount = this.frameId,
+fun CurrentScore.asDbFrameScore(): DbScore {
+    return DbScore(
+        frameId = this.frameId,
         playerId = when (this) {
             CurrentScore.PlayerA -> 0
             CurrentScore.PlayerB -> 1
@@ -119,13 +114,10 @@ fun CurrentScore.asDatabaseFrameScore(): DatabaseScore {
     )
 }
 
-fun CurrentScore.asDatabaseCrtScore(): DatabaseCrtScore {
-    return DatabaseCrtScore(
-        frameCount = this.frameId,
-        playerId = when (this) {
-            CurrentScore.PlayerA -> 0
-            CurrentScore.PlayerB -> 1
-        },
+fun CurrentScore.asDomainPlayerScore(): DomainPlayerScore {
+    return DomainPlayerScore(
+        frameId = this.frameId,
+        playerId = this.getPlayerAsInt(),
         framePoints = this.framePoints,
         matchPoints = this.matchPoints,
         successShots = this.successShots,
@@ -135,8 +127,8 @@ fun CurrentScore.asDatabaseCrtScore(): DatabaseCrtScore {
     )
 }
 
-data class FrameScore(
-    val frameCount: Int,
+data class DomainPlayerScore(
+    val frameId: Int,
     val playerId: Int,
     val framePoints: Int,
     val matchPoints: Int,
@@ -145,3 +137,31 @@ data class FrameScore(
     val fouls: Int,
     val highestBreak: Int
 )
+
+fun MutableList<DomainPlayerScore>.asCurrentScore(): CurrentScore? {
+    if (this.size > 1) {
+        val currentScore: CurrentScore = CurrentScore.PlayerA
+        val dbPlayerA = this[this.lastIndex - 1]
+        val dbPlayerB = this[this.lastIndex]
+        currentScore.getFirst().initPlayer(
+            dbPlayerA.frameId,
+            dbPlayerA.framePoints,
+            dbPlayerA.matchPoints,
+            dbPlayerA.successShots,
+            dbPlayerA.missedShots,
+            dbPlayerA.fouls,
+            dbPlayerA.highestBreak
+        )
+        currentScore.getSecond().initPlayer(
+            dbPlayerB.frameId,
+            dbPlayerB.framePoints,
+            dbPlayerB.matchPoints,
+            dbPlayerB.successShots,
+            dbPlayerB.missedShots,
+            dbPlayerB.fouls,
+            dbPlayerB.highestBreak
+        )
+        return currentScore
+    }
+    return null
+}

@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 import androidx.lifecycle.*
 import com.example.snookerscore.R
 import com.example.snookerscore.domain.*
-import com.example.snookerscore.domain.Ball.*
+import com.example.snookerscore.domain.DomainBall.*
 import com.example.snookerscore.domain.PotType.*
 import com.example.snookerscore.repository.SnookerRepository
 import com.example.snookerscore.utils.Event
@@ -18,22 +18,25 @@ class GameViewModel(
 ) : AndroidViewModel(application) {
 
     // Observables
-    private val _displayBallStack = MutableLiveData<MutableList<Ball>>()
-    val displayBallStack: LiveData<MutableList<Ball>> = _displayBallStack
+    private val _displayFrame = MutableLiveData<DomainFrame>()
+    val displayFrame: LiveData<DomainFrame> = _displayFrame
+
+    private val _displayBallStack = MutableLiveData<MutableList<DomainBall>>()
+    val displayBallStack: LiveData<MutableList<DomainBall>> = _displayBallStack
 
     private val _displayScore = MutableLiveData<CurrentScore>()
     val displayScore: LiveData<CurrentScore> = _displayScore
 
-    private val _displayFrameStack = MutableLiveData<MutableList<Break>>()
-    val displayFrameStack: LiveData<MutableList<Break>> = _displayFrameStack
+    private val _displayFrameStack = MutableLiveData<MutableList<DomainBreak>>()
+    val displayFrameStack: LiveData<MutableList<DomainBreak>> = _displayFrameStack
 
     private val _eventMatchAction = MutableLiveData<Event<MatchAction>>()
     val eventMatchAction: LiveData<Event<MatchAction>> = _eventMatchAction
 
     // Variables
-    private var ballStack: MutableList<Ball> = mutableListOf()
+    private var ballStack: MutableList<DomainBall> = mutableListOf()
     private var score: CurrentScore = CurrentScore.PlayerA
-    private var frameStack: MutableList<Break> = mutableListOf()
+    private var frameStack: MutableList<DomainBreak> = mutableListOf()
     private val sharedPref: SharedPreferences = application.getSharedPreferences(
         application.applicationContext.getString(R.string.preference_file_key),
         Context.MODE_PRIVATE
@@ -65,7 +68,7 @@ class GameViewModel(
             matchFoul = getInt(getString(R.string.shared_pref_match_foul), 0)
             matchFirst = getInt(getString(R.string.shared_pref_match_first), 0)
             score = score.getPlayerFromInt(getInt(getString(R.string.shared_pref_match_crt_player), 0))
-            getFrameStatus()
+            updateFrameStatus()
         }
     }
 
@@ -73,32 +76,24 @@ class GameViewModel(
         _eventMatchAction.value = Event(matchAction)
     }
 
-    fun setBallStack(ballStack: MutableList<Ball>) {
-        this.ballStack = ballStack
-        getFrameStatus()
-    }
-
-    fun setScore(score: CurrentScore) {
-        this.score = score
-        getFrameStatus()
-    }
-
-    fun setFrameStack(frameStack: MutableList<Break>) {
-        this.frameStack = frameStack
-        getFrameStatus()
+    fun setFrame(frame: DomainFrame) {
+        score = frame.frameScore.asCurrentScore() ?: score
+        frameStack = frame.frameStack
+        ballStack = frame.ballStack
+        updateFrameStatus()
     }
 
     // Handler functions
-    fun handleFoulEvent(pot: Pot, removeRed: Boolean, freeBall: Boolean) {
+    fun handleFoulEvent(pot: DomainPot, removeRed: Boolean, freeBall: Boolean) {
         updateFrame(pot)
-        if (removeRed) updateFrame(Pot.REMOVERED)
+        if (removeRed) updateFrame(DomainPot.REMOVERED)
         if (freeBall) {
             if (ballStack.inColors()) ballStack.addBalls(FREEBALL()) else ballStack.addBalls(COLOR(), FREEBALL())
-            getFrameStatus()
+            updateFrameStatus()
         }
     }
 
-    fun updateFrame(pot: Pot) = ballStack.apply {
+    fun updateFrame(pot: DomainPot) = ballStack.apply {
         val newPot = score.calculatePoints(pot, 1, this.last(), matchFoul)
         frameStack.addToFrameStack(newPot, score.getPlayerAsInt(), frameCount)
         when (pot.potType) {
@@ -106,7 +101,7 @@ class GameViewModel(
             in listOf(REMOVERED, ADDRED) -> removeBall(2)
             else -> {
                 if (last() is FREEBALL) {
-                    frameStack.addToFrameStack(Pot.FREEMISS, score.getPlayerAsInt(), frameCount)
+                    frameStack.addToFrameStack(DomainPot.FREEMISS, score.getPlayerAsInt(), frameCount)
                     removeBall(if (inColors()) 1 else 2)
                 }
                 if (last() is COLOR) removeBall()
@@ -114,7 +109,7 @@ class GameViewModel(
         }
         if (size == 1) if (score.isFrameEqual()) addBalls(BLACK()) else endFrame()
         if (pot.potAction == PotAction.SWITCH) score = score.getOther()
-        getFrameStatus()
+        updateFrameStatus()
     }
 
     fun undo(): Any = ballStack.apply {
@@ -142,7 +137,7 @@ class GameViewModel(
             }
         }
         score.calculatePoints(lastPot, -1, ballStack.last(), matchFoul)
-        getFrameStatus()
+        updateFrameStatus()
     }
 
     // Match functions
@@ -185,13 +180,22 @@ class GameViewModel(
         ballStack.clear()
         ballStack.addBalls(NOBALL(), BLACK(), PINK(), BLUE(), BROWN(), GREEN(), YELLOW())
         repeat(matchReds) { ballStack.addBalls(COLOR(), RED()) }
-        getFrameStatus()
+        updateFrameStatus()
     }
 
-    private fun getFrameStatus() {
+    private fun updateFrameStatus() {
         _displayBallStack.value = ballStack
         _displayFrameStack.value = frameStack
         _displayScore.value = score
+        _displayFrame.value = DomainFrame(
+            frameCount,
+            mutableListOf(
+                score.getFirst().asDomainPlayerScore(),
+                score.getSecond().asDomainPlayerScore()
+            ),
+            frameStack,
+            ballStack
+        )
         score.findMaxBreak(frameStack)
     }
 }

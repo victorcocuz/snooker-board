@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snookerscore.databinding.ItemGameStatisticsViewBinding
-import com.example.snookerscore.domain.FrameScore
+import com.example.snookerscore.domain.DomainPlayerScore
 
 class GameStatsAdapter:
-    ListAdapter<Pair<FrameScore, FrameScore>, GameStatsAdapter.ViewHolder>(DiffCallback) {
+    ListAdapter<Pair<DomainPlayerScore, DomainPlayerScore>, GameStatsAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -21,7 +21,7 @@ class GameStatsAdapter:
     }
 
     class ViewHolder private constructor(private val binding: ItemGameStatisticsViewBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(frameScores: Pair<FrameScore, FrameScore>) {
+        fun bind(frameScores: Pair<DomainPlayerScore, DomainPlayerScore>) {
             binding.apply {
                 frameScoreA = frameScores.first
                 frameScoreB = frameScores.second
@@ -37,13 +37,13 @@ class GameStatsAdapter:
         }
     }
 
-    companion object DiffCallback : DiffUtil.ItemCallback<Pair<FrameScore, FrameScore>>() {
-        override fun areItemsTheSame(oldItem: Pair<FrameScore, FrameScore>, newItem: Pair<FrameScore, FrameScore>): Boolean {
+    companion object DiffCallback : DiffUtil.ItemCallback<Pair<DomainPlayerScore, DomainPlayerScore>>() {
+        override fun areItemsTheSame(oldItem: Pair<DomainPlayerScore, DomainPlayerScore>, newItem: Pair<DomainPlayerScore, DomainPlayerScore>): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: Pair<FrameScore, FrameScore>, newItem: Pair<FrameScore, FrameScore>): Boolean {
-            return oldItem.first.frameCount == newItem.first.frameCount
+        override fun areContentsTheSame(oldItem: Pair<DomainPlayerScore, DomainPlayerScore>, newItem: Pair<DomainPlayerScore, DomainPlayerScore>): Boolean {
+            return oldItem.first.frameId == newItem.first.frameId
         }
     }
 }

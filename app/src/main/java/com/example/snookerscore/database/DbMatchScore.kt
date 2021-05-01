@@ -2,14 +2,13 @@ package com.example.snookerscore.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.snookerscore.domain.CurrentScore
-import com.example.snookerscore.domain.FrameScore
+import com.example.snookerscore.domain.DomainPlayerScore
 
 @Entity(tableName = "match_score_table")
-data class DatabaseScore(
+data class DbScore(
     @PrimaryKey(autoGenerate = true)
     val scoreId: Int = 0,
-    val frameCount: Int,
+    val frameId: Int,
     val playerId: Int,
     val framePoints: Int,
     val matchPoints: Int,
@@ -20,10 +19,10 @@ data class DatabaseScore(
 )
 
 @Entity(tableName = "current_score_table")
-data class DatabaseCrtScore(
+data class DbCrtScore(
     @PrimaryKey(autoGenerate = true)
     val scoreId: Int = 0,
-    val frameCount: Int,
+    val frameId: Int,
     val playerId: Int,
     val framePoints: Int,
     val matchPoints: Int,
@@ -33,11 +32,11 @@ data class DatabaseCrtScore(
     val highestBreak: Int
 )
 
-fun List<DatabaseScore>.asDomainFrameScoreList(): ArrayList<Pair<FrameScore, FrameScore>> {
-    val frameScoreList = ArrayList<Pair<FrameScore, FrameScore>>()
+fun List<DbScore>.asDomainFrameScoreList(): ArrayList<Pair<DomainPlayerScore, DomainPlayerScore>> {
+    val frameScoreList = ArrayList<Pair<DomainPlayerScore, DomainPlayerScore>>()
     for (i in this.indices step 2) {
-        val frameScoreA = FrameScore(
-            frameCount = this[i].frameCount,
+        val frameScoreA = DomainPlayerScore(
+            frameId = this[i].frameId,
             playerId = this[i].playerId,
             framePoints = this[i].framePoints,
             matchPoints = this[i].matchPoints,
@@ -46,8 +45,8 @@ fun List<DatabaseScore>.asDomainFrameScoreList(): ArrayList<Pair<FrameScore, Fra
             fouls = this[i].fouls,
             highestBreak = this[i].highestBreak,
         )
-        val frameScoreB = FrameScore(
-            frameCount = this[i + 1].frameCount,
+        val frameScoreB = DomainPlayerScore(
+            frameId = this[i + 1].frameId,
             playerId = this[i + 1].playerId,
             framePoints = this[i + 1].framePoints,
             matchPoints = this[i + 1].matchPoints,
@@ -61,30 +60,17 @@ fun List<DatabaseScore>.asDomainFrameScoreList(): ArrayList<Pair<FrameScore, Fra
     return frameScoreList
 }
 
-fun List<DatabaseCrtScore>.asCurrentScore(): Any? {
-    if (this.size > 1) {
-        val currentScore: CurrentScore = CurrentScore.PlayerA
-        val dbPlayerA = this[this.lastIndex - 1]
-        val dbPlayerB = this[this.lastIndex]
-        currentScore.getFirst().initPlayer(
-            dbPlayerA.frameCount,
-            dbPlayerA.framePoints,
-            dbPlayerA.matchPoints,
-            dbPlayerA.successShots,
-            dbPlayerA.missedShots,
-            dbPlayerA.fouls,
-            dbPlayerA.highestBreak
+fun List<DbCrtScore>.asDomainCrtFrameScoreList(): MutableList<DomainPlayerScore> {
+    return map {
+        DomainPlayerScore(
+            frameId = it.frameId,
+            playerId = it.playerId,
+            framePoints = it.framePoints,
+            matchPoints = it.matchPoints,
+            successShots = it.successShots,
+            missedShots = it.missedShots,
+            fouls = it.fouls,
+            highestBreak = it.highestBreak,
         )
-        currentScore.getSecond().initPlayer(
-            dbPlayerB.frameCount,
-            dbPlayerB.framePoints,
-            dbPlayerB.matchPoints,
-            dbPlayerB.successShots,
-            dbPlayerB.missedShots,
-            dbPlayerB.fouls,
-            dbPlayerB.highestBreak
-        )
-        return currentScore
-    }
-    return null
+    }.toMutableList()
 }

@@ -8,3 +8,7 @@ data class DomainRanking(
 )
 
 enum class BallAdapterType { MATCH, FOUL, BREAK }
+
+enum class MatchAction {
+    FRAME_END_QUERY, FRAME_END_CONFIRM, MATCH_END_QUERY, MATCH_END_CONFIRM, MATCH_CONTINUE, MATCH_START_NEW, MATCH_CANCEL, NO_ACTION
+}

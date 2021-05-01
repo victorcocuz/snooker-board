@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snookerscore.databinding.ItemBreakViewBinding
 import com.example.snookerscore.domain.BallAdapterType
-import com.example.snookerscore.domain.Break
+import com.example.snookerscore.domain.DomainBreak
 import com.example.snookerscore.domain.PotType
 
 class BreakAdapter(private val activity: Activity) :
-    ListAdapter<Break, BreakAdapter.ViewHolder>(DiffCallBack) {
+    ListAdapter<DomainBreak, BreakAdapter.ViewHolder>(DiffCallBack) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
     }
@@ -24,7 +24,7 @@ class BreakAdapter(private val activity: Activity) :
     }
 
     class ViewHolder private constructor(val binding: ItemBreakViewBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: Break, activity: Activity) {
+        fun bind(item: DomainBreak, activity: Activity) {
             binding.apply {
                 crtBreak = item
 
@@ -68,12 +68,12 @@ class BreakAdapter(private val activity: Activity) :
         }
     }
 
-    companion object DiffCallBack : DiffUtil.ItemCallback<Break>() {
-        override fun areItemsTheSame(oldItem: Break, newItem: Break): Boolean {
+    companion object DiffCallBack : DiffUtil.ItemCallback<DomainBreak>() {
+        override fun areItemsTheSame(oldItem: DomainBreak, newItem: DomainBreak): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: Break, newItem: Break): Boolean {
+        override fun areContentsTheSame(oldItem: DomainBreak, newItem: DomainBreak): Boolean {
             return oldItem.breakSize == newItem.breakSize
         }
     }

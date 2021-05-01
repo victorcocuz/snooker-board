@@ -33,14 +33,14 @@ class SnookerRepository(private val database: SnookerDatabase) {
     }
 
     // Frames
-    val frames: LiveData<ArrayList<Pair<FrameScore, FrameScore>>> = Transformations.map(snookerDbDao.getMatchScore()) {
+    val frames: LiveData<ArrayList<Pair<DomainPlayerScore, DomainPlayerScore>>> = Transformations.map(snookerDbDao.getMatchScore()) {
         it.asDomainFrameScoreList()
     }
 
     suspend fun addFrames(frameScore: CurrentScore) {
         withContext(Dispatchers.IO) {
-            snookerDbDao.insertMatchScore(frameScore.getFirst().asDatabaseFrameScore())
-            snookerDbDao.insertMatchScore(frameScore.getSecond().asDatabaseFrameScore())
+            snookerDbDao.insertMatchScore(frameScore.getFirst().asDbFrameScore())
+            snookerDbDao.insertMatchScore(frameScore.getSecond().asDbFrameScore())
         }
     }
 
@@ -50,9 +50,9 @@ class SnookerRepository(private val database: SnookerDatabase) {
         }
     }
 
-    suspend fun getTotals(playerId: Int): FrameScore {
+    suspend fun getTotals(playerId: Int): DomainPlayerScore {
         return withContext(Dispatchers.IO) {
-            return@withContext FrameScore(
+            return@withContext DomainPlayerScore(
                 -2,
                 playerId,
                 snookerDbDao.getSumOfFramePoints(playerId),
@@ -66,15 +66,15 @@ class SnookerRepository(private val database: SnookerDatabase) {
     }
 
     // State
-    suspend fun saveCurrentMatch(frameScore: CurrentScore, breaks: List<Break>, ballStack: List<Ball>) = withContext(Dispatchers.IO) {
+    suspend fun saveCurrentMatch(frame: DomainFrame) = withContext(Dispatchers.IO) {
         snookerDbDao.apply {
-            insertCrtScore(frameScore.getFirst().asDatabaseCrtScore())
-            insertCrtScore(frameScore.getSecond().asDatabaseCrtScore())
-            insertCrtBreaks(breaks.asDatabaseBreak())
-            breaks.forEach {
-                insertCrtPots(it.asDatabasePot())
+            insertCrtFrame(frame.asDbFrame())
+            insertCrtScore(frame.asDbCrtScore())
+            insertCrtBreaks(frame.asDbBreak())
+            frame.frameStack.forEach {
+                insertCrtPots(it.asDbPot())
             }
-            insertCrtBalls(ballStack.asDatabaseBallStack())
+            insertCrtBalls(frame.asDbBallStack())
         }
     }
 
@@ -84,19 +84,11 @@ class SnookerRepository(private val database: SnookerDatabase) {
             deleteCrtBreaks()
             deleteCrtPots()
             deleteCrtBallStack()
+            deleteCrtFrame()
         }
     }
 
-
-    val currentBreaks: LiveData<MutableList<Break>> = Transformations.map(snookerDbDao.getCrtBreaks()) {
-        it.asDomainBreakList()
-    }
-
-    val currentScore = Transformations.map(snookerDbDao.getCrtScore()) {
-        it.asCurrentScore()
-    }
-
-    val currentBallStack: LiveData<MutableList<Ball>> = Transformations.map(snookerDbDao.getBallStack()) {
-        it.asDomainBallStack()
+    val currentFrame: LiveData<MutableList<DomainFrame>> = Transformations.map(snookerDbDao.getCrtFrame()) {
+        it.asDomainFrame()
     }
 }

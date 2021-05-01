@@ -6,10 +6,10 @@
     <data>
         <variable
             name="frameScoreA"
-            type="com.example.snookerscore.domain.FrameScore" />
+            type="com.example.snookerscore.domain.DomainPlayerScore" />
         <variable
             name="frameScoreB"
-            type="com.example.snookerscore.domain.FrameScore" />
+            type="com.example.snookerscore.domain.DomainPlayerScore" />
     </data>
 
     <LinearLayout
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            app:gameStatsFrameNumber="@{frameScoreA.frameCount}"
+            app:gameStatsFrameNumber="@{frameScoreA.frameId}"
             tools:text="1" />
 
         <TextView

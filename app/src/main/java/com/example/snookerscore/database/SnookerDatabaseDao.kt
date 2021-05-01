@@ -27,10 +27,10 @@ interface SnookerDatabaseDao {
 
     // Score
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertMatchScore(vararg frame: DatabaseScore)
+    fun insertMatchScore(vararg frame: DbScore)
 
-    @Query("SELECT * FROM match_score_table ORDER BY frameCount ASC")
-    fun getMatchScore(): LiveData<List<DatabaseScore>>
+    @Query("SELECT * FROM match_score_table ORDER BY frameId ASC")
+    fun getMatchScore(): LiveData<List<DbScore>>
 
     @Query("DELETE FROM match_score_table")
     fun deleteMatchScore()
@@ -56,28 +56,28 @@ interface SnookerDatabaseDao {
 
     // Current Match
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCrtScore(frame: DatabaseCrtScore)
+    fun insertCrtFrame(frame: DbFrame)
 
-    @Query("SELECT * FROM current_score_table")
-    fun getCrtScore(): LiveData<List<DatabaseCrtScore>>
+    @Query("SELECT * FROM match_frames_table")
+    fun getCrtFrame(): LiveData<List<DbFrameWithScoreAndBreakWithPotsAndBallStack>>
+
+    @Query("DELETE FROM match_frames_table")
+    fun deleteCrtFrame()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCrtScore(score: List<DbCrtScore>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCrtBreaks(matchBreaks: List<DbBreak>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCrtPots(matchPots: List<DbPot>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCrtBalls(matchBalls: List<DbBall>)
 
     @Query("DELETE FROM current_score_table")
     fun deleteCrtScore()
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCrtBreaks(matchBreaks: List<DatabaseBreak>)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCrtPots(matchPots: List<DatabasePot>)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCrtBalls(matchBalls: List<DatabaseBall>)
-
-    @Query("SELECT * FROM match_breaks_table ")
-    fun getCrtBreaks(): LiveData<List<BreakWithPots>>
-
-    @Query("SELECT * FROM match_ball_stack_table")
-    fun getBallStack(): LiveData<List<DatabaseBall>>
 
     @Query("DELETE FROM match_breaks_table")
     fun deleteCrtBreaks()

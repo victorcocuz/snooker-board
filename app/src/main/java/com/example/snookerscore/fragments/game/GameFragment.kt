@@ -12,11 +12,11 @@ import com.example.snookerscore.GenericEventsViewModel
 import com.example.snookerscore.R
 import com.example.snookerscore.database.SnookerDatabase
 import com.example.snookerscore.databinding.FragmentGameBinding
-import com.example.snookerscore.domain.Ball
-import com.example.snookerscore.domain.Ball.*
 import com.example.snookerscore.domain.BallAdapterType
+import com.example.snookerscore.domain.DomainBall
+import com.example.snookerscore.domain.DomainBall.*
+import com.example.snookerscore.domain.DomainPot
 import com.example.snookerscore.domain.MatchAction
-import com.example.snookerscore.domain.Pot
 import com.example.snookerscore.repository.SnookerRepository
 import com.example.snookerscore.utils.EventObserver
 import kotlinx.coroutines.CoroutineScope
@@ -29,7 +29,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
     private val gameViewModel: GameViewModel by activityViewModels()
     private val eventsViewModel: GenericEventsViewModel by activityViewModels()
     private lateinit var snookerRepository: SnookerRepository
-    private lateinit var ballsList: List<Ball>
+    private lateinit var ballsList: List<DomainBall>
     private lateinit var ballAdapter: BallAdapter
     private lateinit var binding: FragmentGameBinding
     private val gameFragmentScope = CoroutineScope(Dispatchers.Default)
@@ -44,7 +44,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
         ballAdapter = BallAdapter(
             BallListener { ball ->
                 requireActivity().invalidateOptionsMenu()
-                gameViewModel.updateFrame(Pot.HIT(ball))
+                gameViewModel.updateFrame(DomainPot.HIT(ball))
             },
             gameViewModel.displayBallStack,
             BallAdapterType.MATCH
@@ -143,7 +143,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.match_action_undo -> gameViewModel.undo()
-            R.id.match_action_add_red -> gameViewModel.updateFrame(Pot.ADDRED)
+            R.id.match_action_add_red -> gameViewModel.updateFrame(DomainPot.ADDRED)
             R.id.match_action_rerack -> gameViewModel.resetFrame()
             R.id.match_action_concede_frame -> gameViewModel.endFrame()
             R.id.match_action_cancel_match -> gameViewModel.assignMatchAction(MatchAction.MATCH_CANCEL)
@@ -164,7 +164,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
         }
     }
 
-    private fun manageBallVisibility(frameState: Ball) {
+    private fun manageBallVisibility(frameState: DomainBall) {
         ballsList = when (frameState) {
             is FREEBALL -> listOf(FREEBALL())
             is RED -> listOf(RED())

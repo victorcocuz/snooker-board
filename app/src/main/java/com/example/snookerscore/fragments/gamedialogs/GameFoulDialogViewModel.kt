@@ -3,8 +3,8 @@ package com.example.snookerscore.fragments.gamedialogs
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.snookerscore.domain.Ball
-import com.example.snookerscore.domain.Pot
+import com.example.snookerscore.domain.DomainBall
+import com.example.snookerscore.domain.DomainPot
 import com.example.snookerscore.domain.PotAction
 import com.example.snookerscore.utils.Event
 
@@ -13,8 +13,8 @@ class GameFoulDialogViewModel : ViewModel() {
     private val _eventFoulNotValid = MutableLiveData<Event<Unit>>()
     val eventFoulNotValid: LiveData<Event<Unit>> = _eventFoulNotValid
 
-    private val _foulConfirmed = MutableLiveData<Event<Pot>>()
-    val foul: LiveData<Event<Pot>> = _foulConfirmed
+    private val _foulConfirmed = MutableLiveData<Event<DomainPot>>()
+    val foul: LiveData<Event<DomainPot>> = _foulConfirmed
 
     private val _actionClicked = MutableLiveData<PotAction?>(null)
     val actionClicked: LiveData<PotAction?> = _actionClicked
@@ -26,10 +26,10 @@ class GameFoulDialogViewModel : ViewModel() {
     val removeRed: LiveData<Boolean> = _removeRed
 
     // Variables
-    private var ballClicked: Ball? = null
+    private var ballClicked: DomainBall? = null
 
     // Handlers
-    fun onBallClicked(ball: Ball) {
+    fun onBallClicked(ball: DomainBall) {
         ballClicked = ball
     }
 
@@ -48,7 +48,7 @@ class GameFoulDialogViewModel : ViewModel() {
 
     fun onConfirmClicked() {
         if (ballClicked != null && actionClicked.value != null) {
-            _foulConfirmed.value = Event(Pot.FOUL(ballClicked!!, actionClicked.value!!))
+            _foulConfirmed.value = Event(DomainPot.FOUL(ballClicked!!, actionClicked.value!!))
         } else {
             _eventFoulNotValid.value = Event(Unit)
         }

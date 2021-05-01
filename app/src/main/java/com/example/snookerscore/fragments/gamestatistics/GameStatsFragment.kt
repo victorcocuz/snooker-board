@@ -13,7 +13,7 @@ import com.example.snookerscore.GenericViewModelFactory
 import com.example.snookerscore.R
 import com.example.snookerscore.database.SnookerDatabase
 import com.example.snookerscore.databinding.FragmentGameStatsBinding
-import com.example.snookerscore.domain.FrameScore
+import com.example.snookerscore.domain.DomainPlayerScore
 import com.example.snookerscore.repository.SnookerRepository
 import kotlinx.android.synthetic.main.item_game_statistics_view.*
 
@@ -57,8 +57,8 @@ class GameStatsFragment : Fragment() {
                         R.color.design_default_color_secondary
                     )
                 )
-                frameScoreA = FrameScore(-1, -1, -1, -1, -1, -1, -1, -1)
-                frameScoreB = FrameScore(-1, -1, -1, -1, -1, -1, -1, -1)
+                frameScoreA = DomainPlayerScore(-1, -1, -1, -1, -1, -1, -1, -1)
+                frameScoreB = DomainPlayerScore(-1, -1, -1, -1, -1, -1, -1, -1)
             }
 
             // Footer format

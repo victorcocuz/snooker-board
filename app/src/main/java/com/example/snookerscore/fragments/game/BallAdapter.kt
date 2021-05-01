@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snookerscore.databinding.ItemBallViewBinding
-import com.example.snookerscore.domain.Ball
+import com.example.snookerscore.domain.DomainBall
 import com.example.snookerscore.domain.BallAdapterType
 
-class BallAdapter(private val clickListener: BallListener?, private val ballStack: LiveData<MutableList<Ball>>?, private val adapterType: BallAdapterType): ListAdapter<Ball, BallAdapter.ViewHolder>(BallAdapterCallback()) {
+class BallAdapter(private val clickListener: BallListener?, private val ballStack: LiveData<MutableList<DomainBall>>?, private val adapterType: BallAdapterType): ListAdapter<DomainBall, BallAdapter.ViewHolder>(BallAdapterCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -29,7 +29,7 @@ class BallAdapter(private val clickListener: BallListener?, private val ballStac
             }
         }
 
-        fun bind(item: Ball, clickListener: BallListener?, ballStack: LiveData<MutableList<Ball>>?, adapterType: BallAdapterType) {
+        fun bind(item: DomainBall, clickListener: BallListener?, ballStack: LiveData<MutableList<DomainBall>>?, adapterType: BallAdapterType) {
             binding.apply {
                 ball = item
                 val factor = when (adapterType) {
@@ -51,16 +51,16 @@ class BallAdapter(private val clickListener: BallListener?, private val ballStac
     }
 }
 
-class BallAdapterCallback : DiffUtil.ItemCallback<Ball>() {
-    override fun areItemsTheSame(oldItem: Ball, newItem: Ball): Boolean {
+class BallAdapterCallback : DiffUtil.ItemCallback<DomainBall>() {
+    override fun areItemsTheSame(oldItem: DomainBall, newItem: DomainBall): Boolean {
         return oldItem == newItem
     }
 
-    override fun areContentsTheSame(oldItem: Ball, newItem: Ball): Boolean {
+    override fun areContentsTheSame(oldItem: DomainBall, newItem: DomainBall): Boolean {
         return oldItem.points == newItem.points
     }
 }
 
-class BallListener(val clickListener: (ball: Ball) -> Unit) {
-    fun onClick(ball: Ball) = clickListener(ball)
+class BallListener(val clickListener: (ball: DomainBall) -> Unit) {
+    fun onClick(ball: DomainBall) = clickListener(ball)
 }

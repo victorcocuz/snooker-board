@@ -8,7 +8,7 @@
             type="int" />
         <variable
             name="ball"
-            type="com.example.snookerscore.domain.Ball" />
+            type="com.example.snookerscore.domain.DomainBall" />
         <variable
             name="clickListener"
             type="com.example.snookerscore.fragments.game.BallListener" />

@@ -1,22 +1,22 @@
 package com.example.snookerscore.fragments.game
 
-import com.example.snookerscore.domain.Ball
-import com.example.snookerscore.domain.Ball.*
-import com.example.snookerscore.domain.Break
+import com.example.snookerscore.domain.DomainBall
+import com.example.snookerscore.domain.DomainBall.*
+import com.example.snookerscore.domain.DomainBreak
 import com.example.snookerscore.domain.CurrentScore
-import com.example.snookerscore.domain.Pot
+import com.example.snookerscore.domain.DomainPot
 import com.example.snookerscore.domain.PotType.*
 import kotlin.math.max
 
 // FrameStack
-fun MutableList<Break>.isPreviousRed() = this.last().pots.last().ball is RED
-fun MutableList<Break>.addToFrameStack(pot: Pot, playerAsInt: Int, frameCount: Int) {
+fun MutableList<DomainBreak>.isPreviousRed() = this.last().pots.last().ball is RED
+fun MutableList<DomainBreak>.addToFrameStack(pot: DomainPot, playerAsInt: Int, frameCount: Int) {
     if (pot.potType !in listOf(HIT, FREE, ADDRED)
         || this.size == 0
         || this.last().pots.last().potType !in listOf(HIT, FREE, ADDRED)
         || this.last().player != playerAsInt
     ) this.add(
-        Break(
+        DomainBreak(
             1 + (this.lastOrNull()?.breakId ?: 0),
             playerAsInt,
             frameCount,
@@ -28,7 +28,7 @@ fun MutableList<Break>.addToFrameStack(pot: Pot, playerAsInt: Int, frameCount: I
     if (pot.potType in listOf(HIT, FREE, ADDRED)) this.last().breakSize += pot.ball.points
 }
 
-fun MutableList<Break>.removeFromFrameStack(): Pot {
+fun MutableList<DomainBreak>.removeFromFrameStack(): DomainPot {
     val crtPot = this.last().pots.removeLast()
     if (crtPot.potType in listOf(HIT, FREE, ADDRED)) this.last().breakSize -= crtPot.ball.points
     if (this.last().pots.size == 0) this.removeLast()
@@ -36,8 +36,8 @@ fun MutableList<Break>.removeFromFrameStack(): Pot {
     return crtPot
 }
 
-fun MutableList<Break>.getDisplayShots(): MutableList<Break> {
-    val list = mutableListOf<Break>()
+fun MutableList<DomainBreak>.getDisplayShots(): MutableList<DomainBreak> {
+    val list = mutableListOf<DomainBreak>()
     this.forEach {
         if (it.pots.last().potType in listOf(HIT, ADDRED, FREE, FOUL)
             && it.pots.last().ball != NOBALL()
@@ -49,7 +49,7 @@ fun MutableList<Break>.getDisplayShots(): MutableList<Break> {
 }
 
 // Score
-fun CurrentScore.calculatePoints(pot: Pot, pol: Int, lastBall: Ball, matchFoul: Int): Pot {
+fun CurrentScore.calculatePoints(pot: DomainPot, pol: Int, lastBall: DomainBall, matchFoul: Int): DomainPot {
     var points = 0
     this.apply {
         when (pot.potType) {
@@ -58,7 +58,7 @@ fun CurrentScore.calculatePoints(pot: Pot, pol: Int, lastBall: Ball, matchFoul: 
                 addFramePoints(pol * points)
                 pot.ball.assignNewPoints(points)
                 addSuccessShots(pol)
-                return Pot.HIT(pot.ball)
+                return DomainPot.HIT(pot.ball)
             }
             FOUL -> {
                 points = (matchFoul + if (pot.ball is WHITE) max(lastBall.foul, 4) else pot.ball.foul)
@@ -66,7 +66,7 @@ fun CurrentScore.calculatePoints(pot: Pot, pol: Int, lastBall: Ball, matchFoul: 
                 getOther().addFramePoints(pol * points)
                 addMissedShots(pol)
                 addFouls(pol)
-                return Pot.FOUL(pot.ball, pot.potAction)
+                return DomainPot.FOUL(pot.ball, pot.potAction)
             }
             MISS -> addMissedShots(pol)
             else -> {}
@@ -76,9 +76,9 @@ fun CurrentScore.calculatePoints(pot: Pot, pol: Int, lastBall: Ball, matchFoul: 
 }
 
 // BallStack
-fun MutableList<Ball>.inColors(): Boolean = this.size <= 7
-fun MutableList<Ball>.isNextColor(): Boolean = this.size in (7..37).filter { it % 2 != 0 }
-fun MutableList<Ball>.removeBall(times: Int = 1) = repeat(times) { this.removeLast() }
-fun MutableList<Ball>.addBalls(vararg balls: Ball) {
+fun MutableList<DomainBall>.inColors(): Boolean = this.size <= 7
+fun MutableList<DomainBall>.isNextColor(): Boolean = this.size in (7..37).filter { it % 2 != 0 }
+fun MutableList<DomainBall>.removeBall(times: Int = 1) = repeat(times) { this.removeLast() }
+fun MutableList<DomainBall>.addBalls(vararg balls: DomainBall) {
     for (ball in balls) this.add(ball)
 }

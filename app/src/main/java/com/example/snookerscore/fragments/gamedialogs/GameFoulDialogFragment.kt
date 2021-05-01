@@ -14,7 +14,7 @@ import com.example.snookerscore.GenericEventsViewModel
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameFoulDialogBinding
 import com.example.snookerscore.domain.*
-import com.example.snookerscore.domain.Ball.*
+import com.example.snookerscore.domain.DomainBall.*
 import com.example.snookerscore.fragments.game.BallAdapter
 import com.example.snookerscore.fragments.game.BallListener
 import com.example.snookerscore.fragments.game.GameViewModel
@@ -24,7 +24,7 @@ import com.example.snookerscore.utils.toast
 import java.util.*
 
 class GameFoulDialogFragment : DialogFragment() {
-    private lateinit var ballsList: List<Ball>
+    private lateinit var ballsList: List<DomainBall>
     private val foulDialogViewModel: GameFoulDialogViewModel by viewModels()
     private val eventsViewModel: GenericEventsViewModel by activityViewModels()
     private val gameFragmentViewModel: GameViewModel by activityViewModels()
