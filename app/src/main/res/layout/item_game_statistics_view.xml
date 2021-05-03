@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.example.snookerscore.domain.StatisticsType"/>
         <variable
             name="frameScoreA"
             type="com.example.snookerscore.domain.DomainPlayerScore" />
@@ -25,7 +26,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            app:gameStatsFrameNumber="@{frameScoreA.frameId}"
+            app:setGameStatsValue="@{frameScoreA.frameId}"
+            app:setGameStatsType="@{StatisticsType.FRAME_ID}"
             tools:text="1" />
 
         <TextView
@@ -34,7 +36,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            app:gameStatsBreak="@{frameScoreA.highestBreak}"
+            app:setGameStatsValue="@{frameScoreA.highestBreak}"
+            app:setGameStatsType="@{StatisticsType.HIGHEST_BREAK}"
             tools:text="120" />
 
         <TextView
@@ -43,8 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            app:shotMiss="@{frameScoreA.missedShots}"
-            app:shotSuccess="@{frameScoreA.successShots}"
+            app:setFrameScorePercentage="@{frameScoreA}"
             tools:text="50%" />
 
         <TextView
@@ -53,8 +55,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            app:gameStatsPoints="@{frameScoreA.framePoints}"
-
+            app:setGameStatsValue="@{frameScoreA.framePoints}"
+            app:setGameStatsType="@{StatisticsType.FRAME_POINTS}"
             tools:text="12" />
 
         <TextView
@@ -73,7 +75,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            app:gameStatsPoints="@{frameScoreB.framePoints}"
+            app:setGameStatsValue="@{frameScoreB.framePoints}"
+            app:setGameStatsType="@{StatisticsType.FRAME_POINTS}"
             tools:text="18" />
 
         <TextView
@@ -82,8 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            app:shotMiss="@{frameScoreB.missedShots}"
-            app:shotSuccess="@{frameScoreB.successShots}"
+            app:setFrameScorePercentage="@{frameScoreB}"
             tools:text="48%" />
 
         <TextView
@@ -92,7 +94,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            app:gameStatsBreak="@{frameScoreB.highestBreak}"
+            app:setGameStatsValue="@{frameScoreB.highestBreak}"
+            app:setGameStatsType="@{StatisticsType.HIGHEST_BREAK}"
             tools:text="138" />
 
     </LinearLayout>

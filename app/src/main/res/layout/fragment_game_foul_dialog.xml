@@ -4,17 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.example.snookerscore.domain.MatchAction"/>
+
+        <import type="com.example.snookerscore.domain.MatchAction" />
+
         <variable
             name="ballAdapter"
             type="com.example.snookerscore.fragments.game.BallAdapter" />
+
         <variable
             name="eventsViewModel"
             type="com.example.snookerscore.GenericEventsViewModel" />
+
         <variable
             name="gameViewModel"
             type="com.example.snookerscore.fragments.game.GameViewModel" />
-        <import type="com.example.snookerscore.domain.PotAction"/>
+
+        <import type="com.example.snookerscore.domain.PotAction" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,11 +52,11 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/foul_balls_list_rv"
             android:layout_width="0dp"
-            app:bindFoulBalls="@{gameViewModel.displayFrame.ballStack.size()}"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_large"
+            app:bindFoulBalls="@{gameViewModel.displayFrame.ballStack.size()}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/foul_label_balls" />
@@ -73,13 +78,13 @@
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_xsmall"
             android:onClick="@{() -> eventsViewModel.onActionClicked(PotAction.SWITCH)}"
-            app:setSelected="@{eventsViewModel.actionClicked == PotAction.SWITCH}"
             android:text="@string/fragment_game_foul_action_continue"
             app:layout_constraintEnd_toStartOf="@+id/foul_action_force_continue"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/foul_label_choose_action" />
+            app:layout_constraintTop_toBottomOf="@+id/foul_label_choose_action"
+            app:setSelected="@{eventsViewModel.actionClicked == PotAction.SWITCH}" />
 
         <TextView
             android:id="@+id/foul_action_force_continue"
@@ -87,12 +92,12 @@
             android:layout_width="wrap_content"
             android:onClick="@{() -> eventsViewModel.onActionClicked(PotAction.CONTINUE)}"
             android:text="@string/fragment_foul_action_force_continue"
-            app:setSelected="@{eventsViewModel.actionClicked == PotAction.CONTINUE}"
-            app:dialogCannotForce="@{gameViewModel.displayFrame}"
             app:layout_constraintBottom_toBottomOf="@+id/foul_action_continue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/foul_action_continue" />
+            app:layout_constraintStart_toEndOf="@+id/foul_action_continue"
+            app:setEnabled="@{gameViewModel.displayFrame.getFrameScoreRemaining() > gameViewModel.displayFrame.getFrameScoreDiff()}"
+            app:setSelected="@{eventsViewModel.actionClicked == PotAction.CONTINUE}" />
 
         <TextView
             android:id="@+id/foul_label_other_actions"
@@ -109,12 +114,12 @@
             android:layout_width="wrap_content"
             android:onClick="@{() -> eventsViewModel.onFreeballClicked()}"
             android:text="@string/fragment_foul_action_free_ball"
-            app:setEnabled="@{eventsViewModel.actionClicked == PotAction.SWITCH}"
-            app:setSelected="@{eventsViewModel.isFreeBall}"
             app:layout_constraintBottom_toBottomOf="@+id/foul_action_remove_red"
             app:layout_constraintEnd_toStartOf="@+id/foul_action_remove_red"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:setEnabled="@{eventsViewModel.actionClicked == PotAction.SWITCH}"
+            app:setSelected="@{eventsViewModel.isFreeBall}" />
 
         <TextView
             android:id="@+id/foul_action_remove_red"
@@ -123,12 +128,12 @@
             android:layout_marginTop="@dimen/margin_large"
             android:onClick="@{() -> eventsViewModel.onRemoveRedClicked()}"
             android:text="@string/fragment_foul_action_remove_red"
-            app:setEnabled="@{gameViewModel.displayFrame.ballStack.size() > 8}"
-            app:setSelected="@{eventsViewModel.isRemoveRed}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/foul_action_free_ball"
-            app:layout_constraintTop_toBottomOf="@+id/foul_label_other_actions" />
+            app:layout_constraintTop_toBottomOf="@+id/foul_label_other_actions"
+            app:setEnabled="@{gameViewModel.displayFrame.ballStack.size() > 8}"
+            app:setSelected="@{eventsViewModel.isRemoveRed}" />
 
         <TextView
             android:id="@+id/foul_cancel"

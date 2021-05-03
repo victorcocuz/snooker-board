@@ -97,6 +97,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
                     when (matchAction) {
                         MatchAction.FOUL_CONFIRMED -> {
                             handleFoulEvent(getFoul(), eventsViewModel.isRemoveRed.value!!, eventsViewModel.isFreeBall.value!!)
+                            eventsViewModel.resetFoul()
                         }
                         MatchAction.MATCH_CANCEL -> {
                             gameFragmentScope.launch {
@@ -157,16 +158,13 @@ class GameFragment : androidx.fragment.app.Fragment() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
-        gameViewModel.apply {
-            menu.findItem(R.id.match_action_undo).isEnabled = (displayFrame.value?.frameStack?.size ?: 0) > 0
-            menu.findItem(R.id.match_action_rerack).isEnabled = (displayFrame.value?.frameStack?.size ?: 0) > 0
+        gameViewModel.displayFrame.value?.apply {
+            menu.findItem(R.id.match_action_undo).isEnabled = (frameStack.size) > 0
+            menu.findItem(R.id.match_action_rerack).isEnabled = (frameStack.size) > 0
             menu.findItem(R.id.match_action_add_red).isEnabled =
-                (displayFrame.value?.frameStack?.size ?: 0) in (10..36).filter { it % 2 == 0 }
-            menu.findItem(R.id.match_action_concede_frame).isEnabled =
-                displayFrame.value?.frameScore?.get(0)?.framePoints != displayFrame.value?.frameScore?.get(1)?.framePoints
-            menu.findItem(R.id.match_action_concede_match).isEnabled =
-                displayFrame.value?.frameScore?.get(0)?.framePoints != displayFrame.value?.frameScore?.get(1)?.framePoints
-                        || displayFrame.value?.frameScore?.get(0)?.matchPoints != displayFrame.value?.frameScore?.get(1)?.matchPoints
+                (frameStack.size) in (10..36).filter { it % 2 == 0 }
+            menu.findItem(R.id.match_action_concede_frame).isEnabled = getFrameScoreDiff() != 0
+            menu.findItem(R.id.match_action_concede_match).isEnabled = getFrameScoreDiff() != 0 || getMatchScoreDiff() != 0
         }
     }
 }

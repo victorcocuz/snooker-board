@@ -9,6 +9,8 @@ data class DomainRanking(
 
 enum class BallAdapterType { MATCH, FOUL, BREAK }
 
+enum class StatisticsType { FRAME_ID, HIGHEST_BREAK, FRAME_POINTS}
+
 enum class MatchAction {
     FOUL_QUERIED,
     FOUL_CONFIRMED,

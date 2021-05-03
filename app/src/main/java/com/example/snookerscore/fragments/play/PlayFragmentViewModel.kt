@@ -3,7 +3,6 @@ package com.example.snookerscore.fragments.play
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import timber.log.Timber
 
 class PlayFragmentViewModel: ViewModel() {
     // Live Data
@@ -32,12 +31,10 @@ class PlayFragmentViewModel: ViewModel() {
 
     fun setReds(number: Int) {
         _eventReds.value = number
-        Timber.e("reds ${reds.value}")
     }
 
     fun setFoulModifier(number: Int) {
         _eventFoulModifier.value = number
-        Timber.e("reds ${reds.value}")
     }
 
     fun setBreaksFirst(position: Int) {

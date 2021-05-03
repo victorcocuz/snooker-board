@@ -65,6 +65,7 @@ class GameFoulDialogFragment : DialogFragment() {
                         dismiss()
                     } else requireContext().toast("Select a ball and an action to continue")
                 } else {
+                    eventsViewModel.resetFoul()
                     matchAction = MatchAction.NO_ACTION
                     dismiss()
                 }
@@ -75,7 +76,6 @@ class GameFoulDialogFragment : DialogFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        eventsViewModel.resetFoul()
         if (this::matchAction.isInitialized) eventsViewModel.onEventMatchActionConfirmed(matchAction)
     }
 }

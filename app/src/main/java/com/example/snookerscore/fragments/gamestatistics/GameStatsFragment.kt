@@ -57,8 +57,8 @@ class GameStatsFragment : Fragment() {
                         R.color.design_default_color_secondary
                     )
                 )
-                frameScoreA = DomainPlayerScore(-1, -1, -1, -1, -1, -1, -1, -1)
-                frameScoreB = DomainPlayerScore(-1, -1, -1, -1, -1, -1, -1, -1)
+                frameScoreA = DomainPlayerScore(-1, -1, -1, -1, -1, 0, -1, -1)
+                frameScoreB = DomainPlayerScore(-1, -1, -1, -1, -1, 0, -1, -1)
             }
 
             // Footer format

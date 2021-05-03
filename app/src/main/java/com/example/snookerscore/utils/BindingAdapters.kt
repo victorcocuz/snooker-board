@@ -17,58 +17,13 @@ import com.example.snookerscore.fragments.gamestatistics.GameStatsAdapter
 import com.example.snookerscore.fragments.rankings.RankingsAdapter
 import timber.log.Timber
 import java.text.DecimalFormat
-import kotlin.math.abs
-
-// Ball Item View
-@BindingAdapter("ballValue", "stackSize")
-fun TextView.setPointsValue(item: DomainBall, stackSize: Int) {
-    val reds = (stackSize - 7) / 2
-    text = if (reds > 0 && item is RED) reds.toString() else ""
-}
-
-@BindingAdapter("ballImage")
-fun ImageView.setBallImage(item: DomainBall?) {
-    item?.let {
-        setBackgroundResource(
-            when (item) {
-                is RED -> R.drawable.ball_red
-                is YELLOW -> R.drawable.ball_yellow
-                is GREEN -> R.drawable.ball_green
-                is BROWN -> R.drawable.ball_brown
-                is BLUE -> R.drawable.ball_blue
-                is PINK -> R.drawable.ball_pink
-                is BLACK -> R.drawable.ball_black
-                is FREEBALL -> R.drawable.ball_grey
-                else -> R.drawable.ball_white
-            }
-        )
-    }
-}
 
 // Game Display
-@BindingAdapter("crtPlayerA")
-fun TextView.setCurrentPlayerA(crtPlayer: CurrentScore?) {
-    crtPlayer?.let {
-        setBackgroundColor(
-            when (crtPlayer) {
-                crtPlayer.getFirst() -> ContextCompat.getColor(context, R.color.design_default_color_primary)
-                else -> 0x00000000
-            }
-        )
-    }
-}
-
-@BindingAdapter("crtPlayerB")
-fun TextView.setCurrentPlayerB(crtPlayer: CurrentScore?) {
-    crtPlayer?.let {
-        setBackgroundColor(
-            when (crtPlayer) {
-                crtPlayer.getFirst() -> 0x00000000
-                else -> ContextCompat.getColor(context, R.color.design_default_color_primary)
-            }
-        )
-    }
-}
+@BindingAdapter("setActivePlayer")
+fun TextView.setActivePlayer(activePlayer: Boolean) = setBackgroundColor(
+    if (activePlayer) ContextCompat.getColor(context, R.color.design_default_color_primary)
+    else 0x00000000
+)
 
 @BindingAdapter("setTotalScore")
 fun TextView.setTotalScore(application: Application) {
@@ -79,25 +34,13 @@ fun TextView.setTotalScore(application: Application) {
     text = context.getString(R.string.game_total_score, (frames * 2 - 1))
 }
 
-@BindingAdapter("gamePointsDiffSize")
-fun TextView.setGamePointsRemaining(size: Int) {
-    text = if (size <= 7) ((-(8 - size) * (8 - size) - (8 - size) + 56) / 2).toString()
-    else (27 + ((size - 7) / 2) * 8).toString()
-}
-
-@BindingAdapter("gamePointsRemaining")
-fun TextView.setGamePointsDiff(players: MutableList<DomainPlayerScore>?) {
-    players?.let {
-        text = abs(it[0].framePoints - it[1].framePoints).toString()
-    }
-}
-
-@BindingAdapter("shotSuccess", "shotMiss")
-fun TextView.setShotPercentage(success: Double, miss: Double) {
+// Statistics Adapters
+@BindingAdapter("setFrameScorePercentage")
+fun TextView.setFrameScorePercentage(frameScore: DomainPlayerScore?) = frameScore?.apply {
     val df = DecimalFormat("##%")
-    text = when (success + miss) {
-        in (0.1..10000.0) -> df.format((success / (success + miss)))
-        -2.0 -> "%"
+    text = when ((successShots + missedShots)) {
+        in (1..10000) -> df.format((successShots.toDouble() / (successShots.toDouble() + missedShots.toDouble())))
+        -1 -> context.getString(R.string.fragment_statistics_header_percentage)
         else -> "N/A"
     }
 }
@@ -110,45 +53,20 @@ fun TextView.setMatchPoints(matchPointsPlayerA: Int, matchPointsPlayerB: Int) {
     }
 }
 
-// Game Statistics Fragment
-@BindingAdapter("gameStatsFrameNumber")
-fun TextView.bindGameStatsFrameNumber(frameCount: Int) {
-    text = when (frameCount) {
-        -1 -> "#"
+@BindingAdapter("setGameStatsType", "setGameStatsValue")
+fun TextView.setGameStatsValue(type: StatisticsType, value: Int) {
+    text = when (value) {
+        -1 -> when (type) {
+            StatisticsType.FRAME_ID -> context.getString(R.string.fragment_statistics_header_frame_id)
+            StatisticsType.HIGHEST_BREAK -> context.getString(R.string.fragment_statistics_header_break)
+            StatisticsType.FRAME_POINTS -> context.getString(R.string.fragment_statistics_header_points)
+        }
         -2 -> context.getString(R.string.fragment_statistics_footer_total)
-        else -> frameCount.toString()
+        else ->value.toString()
+        }
     }
-}
 
-@BindingAdapter("gameStatsBreak")
-fun TextView.bindGameStatsBreak(highestBreak: Int) {
-    text = when (highestBreak) {
-        -1 -> context.getString(R.string.fragment_statistics_header_break)
-        else -> highestBreak.toString()
-    }
-}
-
-@BindingAdapter("gameStatsPoints")
-fun TextView.bindGameStatsPoints(framePoints: Int) {
-    text = when (framePoints) {
-        -1 -> context.getString(R.string.fragment_statistics_header_points)
-        else -> framePoints.toString()
-    }
-}
-
-@BindingAdapter("dialogCannotForce")
-fun TextView.setDialogForceContinueEnabled(frame: DomainFrame?) {
-    frame?.let {
-        val diff = abs(it.frameScore[0].framePoints - it.frameScore[1].framePoints)
-        val size = frame.ballStack.size
-        val remaining =
-            if (size <= 7) (-(8 - size) * (8 - size) - (8 - size) + 56) / 2
-            else 27 + ((size - 7) / 2) * 8
-        isEnabled = (remaining - diff) >= 0
-    }
-}
-
-// Game Gen Dialog
+// Game Dialog Adapters
 @BindingAdapter("dialogGameGenQuestion")
 fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
     text = when (matchAction) {
@@ -189,21 +107,38 @@ fun TextView.setDialogGameNo(matchAction: MatchAction) {
 }
 
 // Break Adapters
-@BindingAdapter("crtBreakPointsA")
-fun TextView.bindBreakPointsA(crtBreak: DomainBreak) {
+@BindingAdapter("setBreakPoints", "setBreakPointsPlayer")
+fun TextView.setBreakPoints(crtBreak: DomainBreak, player: Int) {
     text = when {
-        crtBreak.player == 0 && crtBreak.breakSize != 0 -> crtBreak.breakSize.toString()
-        crtBreak.player == 1 && crtBreak.pots.last().potType == PotType.FOUL -> crtBreak.pots.last().ball.foul.toString()
+        crtBreak.player == player && crtBreak.breakSize != 0 -> crtBreak.breakSize.toString()
+        crtBreak.player != player && crtBreak.pots.last().potType == PotType.FOUL -> crtBreak.pots.last().ball.foul.toString()
         else -> ""
     }
 }
 
-@BindingAdapter("crtBreakPointsB")
-fun TextView.bindBreakPointsB(crtBreak: DomainBreak) {
-    text = when {
-        crtBreak.player == 1 && crtBreak.breakSize != 0 -> crtBreak.breakSize.toString()
-        crtBreak.player == 0 && crtBreak.pots.last().potType == PotType.FOUL -> crtBreak.pots.last().ball.foul.toString()
-        else -> ""
+// Ball Item View
+@BindingAdapter("ballValue", "stackSize")
+fun TextView.setPointsValue(item: DomainBall, stackSize: Int) {
+    val reds = (stackSize - 7) / 2
+    text = if (reds > 0 && item is RED) reds.toString() else ""
+}
+
+@BindingAdapter("ballImage")
+fun ImageView.setBallImage(item: DomainBall?) {
+    item?.let {
+        setBackgroundResource(
+            when (item) {
+                is RED -> R.drawable.ball_red
+                is YELLOW -> R.drawable.ball_yellow
+                is GREEN -> R.drawable.ball_green
+                is BROWN -> R.drawable.ball_brown
+                is BLUE -> R.drawable.ball_blue
+                is PINK -> R.drawable.ball_pink
+                is BLACK -> R.drawable.ball_black
+                is FREEBALL -> R.drawable.ball_grey
+                else -> R.drawable.ball_white
+            }
+        )
     }
 }
 
@@ -217,18 +152,20 @@ fun RecyclerView.bindRankingsRv(data: List<DomainRanking>?) {
 @BindingAdapter("bindMatchBallsRv")
 fun RecyclerView.bindBallsRv(ballList: MutableList<DomainBall>?) {
     val adapter = this.adapter as BallAdapter
-    adapter.submitList( when (ballList?.lastOrNull()) {
-        is FREEBALL -> listOf(FREEBALL())
-        is RED -> listOf(RED())
-        is COLOR -> listOf(YELLOW(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
-        is YELLOW -> listOf(YELLOW())
-        is GREEN -> listOf(GREEN())
-        is BROWN -> listOf(BROWN())
-        is BLUE -> listOf(BLUE())
-        is PINK -> listOf(PINK())
-        is BLACK -> listOf(BLACK())
-        else -> listOf()
-    })
+    adapter.submitList(
+        when (ballList?.lastOrNull()) {
+            is FREEBALL -> listOf(FREEBALL())
+            is RED -> listOf(RED())
+            is COLOR -> listOf(YELLOW(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
+            is YELLOW -> listOf(YELLOW())
+            is GREEN -> listOf(GREEN())
+            is BROWN -> listOf(BROWN())
+            is BLUE -> listOf(BLUE())
+            is PINK -> listOf(PINK())
+            is BLACK -> listOf(BLACK())
+            else -> listOf()
+        }
+    )
 }
 
 @BindingAdapter("bindFoulBalls")
@@ -260,22 +197,12 @@ fun RecyclerView.bindBreakRv(breaks: MutableList<DomainBreak>?) {
     adapter.submitList(breaks?.getDisplayShots())
 }
 
-@BindingAdapter("bindPotsA")
-fun RecyclerView.bindPotsRvA(crtBreak: DomainBreak?) {
+@BindingAdapter("bindPots", "bindPotsPlayer")
+fun RecyclerView.bindPotsRvB(crtBreak: DomainBreak?, player: Int) {
     val adapter = this.adapter as BallAdapter
     val balls = mutableListOf<DomainBall>()
     crtBreak?.pots?.forEach {
         balls.add(it.ball)
     }
-    adapter.submitList(if (crtBreak?.player == 0) balls else mutableListOf())
-}
-
-@BindingAdapter("bindPotsB")
-fun RecyclerView.bindPotsRvB(crtBreak: DomainBreak?) {
-    val adapter = this.adapter as BallAdapter
-    val balls = mutableListOf<DomainBall>()
-    crtBreak?.pots?.forEach {
-        balls.add(it.ball)
-    }
-    adapter.submitList(if (crtBreak?.player == 1) balls else mutableListOf())
+    adapter.submitList(if (crtBreak?.player == player) balls else mutableListOf())
 }

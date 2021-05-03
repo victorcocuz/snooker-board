@@ -8,6 +8,7 @@ import com.example.snookerscore.domain.DomainPot
 import com.example.snookerscore.domain.MatchAction
 import com.example.snookerscore.domain.PotAction
 import com.example.snookerscore.utils.Event
+import timber.log.Timber
 
 class GenericEventsViewModel : ViewModel() {
     // Live Data
@@ -49,10 +50,12 @@ class GenericEventsViewModel : ViewModel() {
     // Handlers
     fun onBallClicked(ball: DomainBall) {
         ballClicked = ball
+        Timber.e("ball $ballClicked")
     }
 
     fun onActionClicked(action: PotAction) {
         _actionClicked.value = action
+        Timber.e("action ${actionClicked.value}")
         if (action == PotAction.CONTINUE) _isFreeBall.value = false
     }
 
@@ -66,7 +69,11 @@ class GenericEventsViewModel : ViewModel() {
 
     fun foulIsValid() = ballClicked != null && actionClicked.value != null
 
-    fun getFoul() = DomainPot.FOUL(ballClicked!!, actionClicked.value!!)
+    fun getFoul() : DomainPot {
+        Timber.e("ball $ballClicked")
+        Timber.e("action ${actionClicked.value}")
+        return DomainPot.FOUL(ballClicked!!, actionClicked.value!!)
+    }
 
     fun resetFoul() {
         _actionClicked.value = null

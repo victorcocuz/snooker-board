@@ -20,7 +20,7 @@
             android:layout_marginStart="@dimen/margin_xlarge"
             android:layout_marginTop="@dimen/margin_large"
             android:text="@string/fragment_game_label_player_a"
-            app:crtPlayerA="@{gameViewModel.displayScore}"
+            app:setActivePlayer="@{gameViewModel.displayScore == gameViewModel.displayScore.getFirst()}"
             app:layout_constraintEnd_toStartOf="@+id/game_label_player_b"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_xlarge"
             android:text="@string/fragment_game_label_player_b"
-            app:crtPlayerB="@{gameViewModel.displayScore}"
+            app:setActivePlayer="@{gameViewModel.displayScore == gameViewModel.displayScore.getSecond()}"
             app:layout_constraintBottom_toBottomOf="@+id/game_label_player_a"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -103,8 +103,7 @@
             app:layout_constraintEnd_toStartOf="@+id/game_text_score_break_a"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_text_score_foul_a"
-            app:shotMiss="@{gameViewModel.displayFrame.frameScore[0].missedShots}"
-            app:shotSuccess="@{gameViewModel.displayFrame.frameScore[0].successShots}"
+            app:setFrameScorePercentage="@{gameViewModel.displayFrame.frameScore[0]}"
             tools:text="55%" />
 
         <TextView
@@ -115,8 +114,7 @@
             app:layout_constraintEnd_toStartOf="@+id/game_text_score_foul_b"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_text_score_break_b"
-            app:shotMiss="@{gameViewModel.displayFrame.frameScore[1].missedShots}"
-            app:shotSuccess="@{gameViewModel.displayFrame.frameScore[1].successShots}"
+            app:setFrameScorePercentage="@{gameViewModel.displayFrame.frameScore[1]}"
             tools:text="58%" />
 
         <TextView
@@ -188,7 +186,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            app:gamePointsDiffSize="@{gameViewModel.displayFrame.ballStack.size()}"
+            android:text="@{String.valueOf(gameViewModel.displayFrame.getFrameScoreRemaining())}"
             app:layout_constraintBottom_toBottomOf="@+id/game_label_remaining"
             app:layout_constraintStart_toEndOf="@+id/game_label_remaining"
             tools:text="72" />
@@ -198,7 +196,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_large"
-            app:gamePointsRemaining="@{gameViewModel.displayFrame.frameScore}"
+            android:text="@{String.valueOf(gameViewModel.displayFrame.getFrameScoreDiff())}"
             app:layout_constraintBottom_toBottomOf="@+id/game_label_diff"
             app:layout_constraintStart_toEndOf="@+id/game_label_diff"
             tools:text="54" />

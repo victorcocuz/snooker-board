@@ -1,13 +1,22 @@
 package com.example.snookerscore.domain
 
 import com.example.snookerscore.database.*
+import kotlin.math.abs
 
 data class DomainFrame(
     val frameId: Int,
     val frameScore: MutableList<DomainPlayerScore>,
     val frameStack: MutableList<DomainBreak>,
     val ballStack: MutableList<DomainBall>,
-)
+) {
+    fun getLastPlayer() = frameStack.lastOrNull()?.player
+    fun getFrameScoreDiff() = abs(frameScore[0].framePoints - frameScore[1].framePoints)
+    fun getMatchScoreDiff() = abs(frameScore[0].matchPoints - frameScore[1].matchPoints)
+    fun getFrameScoreRemaining() = ballStack.size.apply {
+        return if (this <= 7) (-(8 - this) * (8 - this) - (8 - this) + 56) / 2
+        else 27 + ((this - 7) / 2) * 8
+    }
+}
 
 fun DomainFrame.asDbFrame(): DbFrame {
     return DbFrame(
