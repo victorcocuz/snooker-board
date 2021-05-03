@@ -37,31 +37,13 @@ class PlayFragment : androidx.fragment.app.Fragment() {
         )
 
         binding.apply {
-            viewModel = playFragmentViewModel
+            lifecycleOwner = this@PlayFragment
+            playViewModel = playFragmentViewModel
             numberPicker.apply {
                 minValue = 1
                 maxValue = 19
                 value = 2
                 displayedValues = (minValue until maxValue * 2).filter { it % 2 != 0 }.map { it.toString() }.toTypedArray()
-            }
-
-            // Show the selected button corresponding to it's selected value
-            playFragmentViewModel.apply {
-                eventReds.observe(viewLifecycleOwner, EventObserver {
-                    fragPlayBtnRedsSix.isSelected = it == 6
-                    fragPlayBtnRedsTen.isSelected = it == 10
-                    fragPlayBtnRedsFifteen.isSelected = it == 15
-                })
-                eventFoulModifier.observe(viewLifecycleOwner, EventObserver {
-                    fragPlayBtnFoulOne.isSelected = it == -3
-                    fragPlayBtnFoulTwo.isSelected = it == -2
-                    fragPlayBtnFoulThree.isSelected = it == -1
-                    fragPlayBtnFoulFour.isSelected = it == 0
-                })
-                eventBreaksFirst.observe(viewLifecycleOwner, EventObserver {
-                    fragPlayBtnBreakPlayerA.isSelected = it == 0
-                    fragPlayBtnBreakPlayerB.isSelected = it == 1
-                })
             }
 
             // If match is saved open dialog, else start a new match
@@ -92,10 +74,10 @@ class PlayFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun resetMatch() = sharedPref.edit().apply {
-        putInt(getString(R.string.shared_pref_match_frames), playFragmentViewModel.eventFrames.value!!.peekContent())
-        putInt(getString(R.string.shared_pref_match_reds), playFragmentViewModel.eventReds.value!!.peekContent())
-        putInt(getString(R.string.shared_pref_match_foul), playFragmentViewModel.eventFoulModifier.value!!.peekContent())
-        putInt(getString(R.string.shared_pref_match_first), playFragmentViewModel.eventBreaksFirst.value!!.peekContent())
+        putInt(getString(R.string.shared_pref_match_frames), playFragmentViewModel.eventFrames.value!!)
+        putInt(getString(R.string.shared_pref_match_reds), playFragmentViewModel.reds.value!!)
+        putInt(getString(R.string.shared_pref_match_foul), playFragmentViewModel.eventFoulModifier.value!!)
+        putInt(getString(R.string.shared_pref_match_first), playFragmentViewModel.eventBreaksFirst.value!!)
         apply()
         gameViewModel.startNewMatch()
     }

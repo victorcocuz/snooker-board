@@ -10,8 +10,7 @@ import com.example.snookerscore.domain.PotAction
 import com.example.snookerscore.utils.Event
 
 class GenericEventsViewModel : ViewModel() {
-
-    // Observables
+    // Live Data
     private val _eventFoulQueried = MutableLiveData<Event<Unit>>()
     val eventFoulQueried: LiveData<Event<Unit>> = _eventFoulQueried
 

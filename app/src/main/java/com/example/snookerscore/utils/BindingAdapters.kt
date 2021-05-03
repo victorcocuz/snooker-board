@@ -136,37 +136,6 @@ fun TextView.bindGameStatsPoints(framePoints: Int) {
     }
 }
 
-// Game Actions
-@BindingAdapter("setMissSafeFoulEnabled")
-fun TextView.setMissSafeFoulEnabled(size: Int) {
-    isEnabled = when (size) {
-        in (0..1) -> false
-        else -> true
-    }
-}
-
-// Game Foul Dialog
-@BindingAdapter("dialogSetRedEnabled")
-fun TextView.dialogSetRedEnabled(size: Int) {
-    isEnabled = when (size) {
-        in 0..8 -> false
-        else -> true
-    }
-}
-
-@BindingAdapter("setSelected")
-fun TextView.setSelected(isSelected: Boolean) {
-    this.isSelected = isSelected
-}
-
-@BindingAdapter("dialogFreeBallEnabledAction")
-fun TextView.setDialogFreeballEnabled(potAction: PotAction?) {
-    isEnabled = when (potAction) {
-        PotAction.SWITCH -> true
-        else -> false
-    }
-}
-
 @BindingAdapter("dialogCannotForce")
 fun TextView.setDialogForceContinueEnabled(frame: DomainFrame?) {
     frame?.let {
