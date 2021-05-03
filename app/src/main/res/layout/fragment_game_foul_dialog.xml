@@ -56,7 +56,7 @@
             android:layout_marginStart="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_large"
-            app:bindFoulBalls="@{gameViewModel.displayFrame.ballStack.size()}"
+            app:bindFoulBalls="@{gameViewModel.displayFrame.ballStack}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/foul_label_balls" />

@@ -15,7 +15,6 @@ import com.example.snookerscore.fragments.game.BreakAdapter
 import com.example.snookerscore.fragments.game.getDisplayShots
 import com.example.snookerscore.fragments.gamestatistics.GameStatsAdapter
 import com.example.snookerscore.fragments.rankings.RankingsAdapter
-import timber.log.Timber
 import java.text.DecimalFormat
 
 // Game Display
@@ -62,9 +61,9 @@ fun TextView.setGameStatsValue(type: StatisticsType, value: Int) {
             StatisticsType.FRAME_POINTS -> context.getString(R.string.fragment_statistics_header_points)
         }
         -2 -> context.getString(R.string.fragment_statistics_footer_total)
-        else ->value.toString()
-        }
+        else -> value.toString()
     }
+}
 
 // Game Dialog Adapters
 @BindingAdapter("dialogGameGenQuestion")
@@ -154,32 +153,19 @@ fun RecyclerView.bindBallsRv(ballList: MutableList<DomainBall>?) {
     val adapter = this.adapter as BallAdapter
     adapter.submitList(
         when (ballList?.lastOrNull()) {
-            is FREEBALL -> listOf(FREEBALL())
-            is RED -> listOf(RED())
             is COLOR -> listOf(YELLOW(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
-            is YELLOW -> listOf(YELLOW())
-            is GREEN -> listOf(GREEN())
-            is BROWN -> listOf(BROWN())
-            is BLUE -> listOf(BLUE())
-            is PINK -> listOf(PINK())
-            is BLACK -> listOf(BLACK())
-            else -> listOf()
+            is WHITE -> listOf()
+            else -> listOf(ballList?.lastOrNull())
         }
     )
 }
 
 @BindingAdapter("bindFoulBalls")
-fun RecyclerView.bindFoulBalls(ballStackSize: Int) {
-    Timber.e("size is $ballStackSize")
+fun RecyclerView.bindFoulBalls(ballStack: MutableList<DomainBall>) {
     val adapter = this.adapter as BallAdapter
     adapter.submitList(
-        when (ballStackSize) {
-            2 -> listOf(WHITE(), BLACK())
-            3 -> listOf(WHITE(), PINK(), BLACK())
-            4 -> listOf(WHITE(), BLUE(), PINK(), BLACK())
-            5 -> listOf(WHITE(), BROWN(), BLUE(), PINK(), BLACK())
-            6 -> listOf(WHITE(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
-            7 -> listOf(WHITE(), YELLOW(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
+        when (ballStack.size) {
+            in (2..7) -> ballStack.reversed()
             else -> listOf(WHITE(), RED(), YELLOW(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
         }
     )

@@ -103,7 +103,7 @@ class GameViewModel(
         score.getSecond().resetFrameScore()
         frameStack.clear()
         ballStack.clear()
-        ballStack.addBalls(NOBALL(), BLACK(), PINK(), BLUE(), BROWN(), GREEN(), YELLOW())
+        ballStack.addBalls(WHITE(), BLACK(), PINK(), BLUE(), BROWN(), GREEN(), YELLOW())
         repeat(matchReds) { ballStack.addBalls(COLOR(), RED()) }
         updateFrameStatus()
     }
