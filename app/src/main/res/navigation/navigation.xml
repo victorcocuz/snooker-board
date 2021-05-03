@@ -77,10 +77,13 @@
         android:name="com.example.snookerscore.fragments.gamedialogs.GameGenericDialogFragment"
         android:label="GameGenericDialogFragment" >
         <argument
-            android:name="matchActionYes"
+            android:name="matchActionA"
             app:argType="com.example.snookerscore.domain.MatchAction" />
         <argument
-            android:name="matchActionNo"
+            android:name="matchActionB"
+            app:argType="com.example.snookerscore.domain.MatchAction" />
+        <argument
+            android:name="matchActionC"
             app:argType="com.example.snookerscore.domain.MatchAction" />
     </dialog>
     <dialog

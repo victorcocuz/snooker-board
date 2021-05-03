@@ -2,6 +2,7 @@ package com.example.snookerscore.utils
 
 import android.app.Application
 import android.content.Context
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -70,38 +71,63 @@ fun TextView.setGameStatsValue(type: StatisticsType, value: Int) {
 fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
     text = when (matchAction) {
         MatchAction.MATCH_CANCEL -> "Are you sure you want to cancel the current match? You will lose all match progress"
-        MatchAction.FRAME_END_QUERY -> "Are you sure you want to end this frame?"
-        MatchAction.MATCH_END_QUERY -> "Are you sure you want to end this match?"
+        MatchAction.FRAME_END_QUERY -> "Are you sure you want to end this frame? It is still in progress."
+        MatchAction.MATCH_END_QUERY -> "Are you sure you want to end this match? It is still in progress."
         MatchAction.FRAME_END_CONFIRM -> "This frame will end. Would you like to proceed?"
         MatchAction.MATCH_END_CONFIRM -> "This match will end. Would you like to proceed?"
-        MatchAction.MATCH_CONTINUE -> "Would you like to continue the current match or start a new one"
+        MatchAction.MATCH_RELOAD -> "Would you like to continue the current match or start a new one"
         else -> "$matchAction not implemented"
     }
 }
 
-@BindingAdapter("dialogGameGenYes")
-fun TextView.setDialogGameYes(matchAction: MatchAction) {
-    text = when (matchAction) {
-        MatchAction.MATCH_CANCEL -> "Yes"
-        MatchAction.FRAME_END_QUERY -> "Yes"
-        MatchAction.MATCH_END_QUERY -> "Yes"
-        MatchAction.FRAME_END_CONFIRM -> "Yes"
-        MatchAction.MATCH_END_CONFIRM -> "Yes"
-        MatchAction.MATCH_CONTINUE -> "Continue Match"
-        else -> "$matchAction not implemented"
-    }
+@BindingAdapter("dialogGameGenC", "dialogGameGenCActionB", "dialogGameGenCScore")
+fun TextView.setDialogGameC(matchAction: MatchAction, matchActionB: MatchAction, score: CurrentScore) {
+    isEnabled = !(matchActionB == MatchAction.MATCH_END_CONFIRM_DISCARD && score.getFirst().framePoints == score.getSecond().framePoints)
+        text = when (matchAction) {
+            MatchAction.MATCH_CANCEL -> "Yes"
+            MatchAction.FRAME_END_QUERY -> "Yes"
+            MatchAction.MATCH_END_QUERY -> "Yes"
+            MatchAction.FRAME_END_CONFIRM -> "Yes"
+            MatchAction.MATCH_END_CONFIRM -> "Yes"
+            MatchAction.MATCH_RELOAD -> "Continue Match"
+            else -> "$matchAction not implemented"
+        }
 }
 
-@BindingAdapter("dialogGameGenNo")
-fun TextView.setDialogGameNo(matchAction: MatchAction) {
+@BindingAdapter("dialogGameGenA")
+fun TextView.setDialogGameA(matchAction: MatchAction) {
     text = when (matchAction) {
         MatchAction.MATCH_CANCEL -> "No"
         MatchAction.FRAME_END_QUERY -> "No"
         MatchAction.MATCH_END_QUERY -> "No"
         MatchAction.FRAME_END_CONFIRM -> "No"
         MatchAction.MATCH_END_CONFIRM -> "No"
-        MatchAction.MATCH_CONTINUE -> "Start New Match"
+        MatchAction.MATCH_RELOAD -> "Start New Match"
         else -> "$matchAction not implemented"
+    }
+}
+
+@BindingAdapter("dialogGameGenB", "dialogGameGenBScore")
+fun TextView.setDialogGameB(matchAction: MatchAction, score: CurrentScore) {
+    visibility = when {
+        score.getFirst().matchPoints + score.getSecond().matchPoints == 0 -> View.GONE
+        matchAction == MatchAction.MATCH_END_CONFIRM_DISCARD -> View.VISIBLE
+        else -> View.GONE
+    }
+    text = when (matchAction) {
+        MatchAction.MATCH_END_CONFIRM_DISCARD -> "End Match, Discard Frame"
+        else -> ""
+    }
+}
+
+@BindingAdapter("dialogGameNote", "dialogGameNoteScore")
+fun TextView.setDialogGameNote(matchAction: MatchAction, score: CurrentScore) {
+    visibility = if (matchAction == MatchAction.MATCH_END_CONFIRM_DISCARD) View.VISIBLE else View.GONE
+    text = when {
+        score.getFirst().matchPoints + score.getFirst().matchPoints == 0 -> ""
+        score.getWinner().matchPoints + 1 == score.getWinner().getOther().matchPoints -> "Keep frame results in draw"
+        score.matchPoints == score.getOther().matchPoints -> "Discard frame results in draw"
+        else -> ""
     }
 }
 

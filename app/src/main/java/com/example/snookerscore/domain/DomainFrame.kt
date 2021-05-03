@@ -9,13 +9,13 @@ data class DomainFrame(
     val frameStack: MutableList<DomainBreak>,
     val ballStack: MutableList<DomainBall>,
 ) {
-    fun getLastPlayer() = frameStack.lastOrNull()?.player
     fun getFrameScoreDiff() = abs(frameScore[0].framePoints - frameScore[1].framePoints)
     fun getMatchScoreDiff() = abs(frameScore[0].matchPoints - frameScore[1].matchPoints)
     fun getFrameScoreRemaining() = ballStack.size.apply {
         return if (this <= 7) (-(8 - this) * (8 - this) - (8 - this) + 56) / 2
         else 27 + ((this - 7) / 2) * 8
     }
+    fun isFrameInProgress() = getFrameScoreRemaining() > getFrameScoreDiff()
 }
 
 fun DomainFrame.asDbFrame(): DbFrame {

@@ -5,10 +5,16 @@
 
     <data>
         <variable
-            name="matchActionYes"
+            name="gameViewModel"
+            type="com.example.snookerscore.fragments.game.GameViewModel" />
+        <variable
+            name="dialogMatchActionA"
             type="com.example.snookerscore.domain.MatchAction" />
         <variable
-            name="matchActionNo"
+            name="dialogMatchActionB"
+            type="com.example.snookerscore.domain.MatchAction" />
+        <variable
+            name="dialogMatchActionC"
             type="com.example.snookerscore.domain.MatchAction" />
         <variable
             name="genericEventsViewModel"
@@ -25,42 +31,64 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_large"
-            app:dialogGameGenQuestion="@{matchActionYes}"
             android:layout_marginTop="@dimen/margin_large"
             android:layout_marginEnd="@dimen/margin_large"
             android:text="@string/hello_blank_fragment"
+            app:dialogGameGenQuestion="@{dialogMatchActionC}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/game_dialog_gen_no"
+            android:id="@+id/game_dialog_note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:dialogGameNote="@{dialogMatchActionB}"
+            app:dialogGameNoteScore="@{gameViewModel.displayScore}"
+            app:layout_constraintBottom_toTopOf="@+id/game_dialog_gen_a"
+            app:layout_constraintStart_toStartOf="@+id/game_dialog_gen_a"
+            app:layout_constraintTop_toBottomOf="@+id/game_dialog_gen_q" />
+
+        <TextView
+            android:id="@+id/game_dialog_gen_a"
             style="@style/temp_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_large"
-            android:layout_marginTop="@dimen/margin_xlarge"
-            android:layout_marginBottom="@dimen/margin_xlarge"
-            android:onClick="@{() -> genericEventsViewModel.onEventActionQueried(matchActionNo)}"
-            app:dialogGameGenNo="@{matchActionYes}"
+            android:onClick="@{() -> genericEventsViewModel.onEventActionQueried(dialogMatchActionA)}"
+            app:dialogGameGenA="@{dialogMatchActionC}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/game_dialog_gen_yes"
+            app:layout_constraintEnd_toStartOf="@+id/game_dialog_gen_b"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/game_dialog_gen_q" />
 
         <TextView
-            android:id="@+id/game_dialog_gen_yes"
+            android:id="@+id/game_dialog_gen_b"
+            android:onClick="@{() -> genericEventsViewModel.onEventActionQueried(dialogMatchActionB)}"
+            app:dialogGameGenB="@{dialogMatchActionB}"
+            app:dialogGameGenBScore="@{gameViewModel.displayScore}"
             style="@style/temp_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_large"
-            android:onClick="@{() -> genericEventsViewModel.onEventActionQueried(matchActionYes)}"
-            app:dialogGameGenYes="@{matchActionYes}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_dialog_gen_no"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/game_dialog_gen_a"
+            app:layout_constraintEnd_toStartOf="@+id/game_dialog_gen_c"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_dialog_gen_a" />
+
+        <TextView
+            android:id="@+id/game_dialog_gen_c"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> genericEventsViewModel.onEventActionQueried(dialogMatchActionC)}"
+            app:dialogGameGenC="@{dialogMatchActionC}"
+            app:dialogGameGenCActionB="@{dialogMatchActionB}"
+            app:dialogGameGenCScore="@{gameViewModel.displayScore}"
+            app:layout_constraintBottom_toBottomOf="@+id/game_dialog_gen_a"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_dialog_gen_no" />
+            app:layout_constraintStart_toEndOf="@+id/game_dialog_gen_b" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

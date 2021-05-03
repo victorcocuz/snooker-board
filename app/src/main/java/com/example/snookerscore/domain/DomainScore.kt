@@ -49,11 +49,14 @@ sealed class CurrentScore(
 
     fun getWinner() = if (this.framePoints > this.getOther().framePoints) this else this.getOther()
 
+
     fun isFrameEqual() = this.framePoints == this.getOther().framePoints
 
     fun isMatchEqual() = this.matchPoints == this.getOther().matchPoints
 
-    fun isMatchInProgress() = maxOf(this.framePoints, this.matchPoints, this.getOther().framePoints, this.getOther().matchPoints) != 0
+    fun isFrameInProgress() = (this.framePoints + this.getOther().framePoints > 0)
+
+    fun isMatchInProgress() = this.framePoints + this.matchPoints + this.getOther().framePoints + this.getOther().matchPoints > 0
 
     fun addFramePoints(points: Int) {
         this.framePoints += points

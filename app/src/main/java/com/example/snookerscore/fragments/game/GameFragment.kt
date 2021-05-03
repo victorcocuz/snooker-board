@@ -13,7 +13,6 @@ import com.example.snookerscore.R
 import com.example.snookerscore.database.SnookerDatabase
 import com.example.snookerscore.databinding.FragmentGameBinding
 import com.example.snookerscore.domain.BallAdapterType
-import com.example.snookerscore.domain.DomainBall
 import com.example.snookerscore.domain.DomainBall.*
 import com.example.snookerscore.domain.DomainPot
 import com.example.snookerscore.domain.MatchAction
@@ -29,7 +28,6 @@ class GameFragment : androidx.fragment.app.Fragment() {
     private val gameViewModel: GameViewModel by activityViewModels()
     private val eventsViewModel: GenericEventsViewModel by activityViewModels()
     private lateinit var snookerRepository: SnookerRepository
-    private lateinit var ballsList: List<DomainBall>
     private lateinit var ballAdapter: BallAdapter
     private lateinit var binding: FragmentGameBinding
 
@@ -69,6 +67,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
             }
             fragGameScore.apply {
                 gameViewModel = this@GameFragment.gameViewModel
+                application = requireActivity().application
             }
             fragGameActionButtons.apply {
                 gameViewModel = this@GameFragment.gameViewModel
@@ -82,10 +81,14 @@ class GameFragment : androidx.fragment.app.Fragment() {
             eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                 findNavController().navigate(
                     GameFragmentDirections.actionGameFragmentToGameGenericDialogFragment(
-                        matchAction,
-                        MatchAction.NO_ACTION
+                        MatchAction.NO_ACTION,
+                        if (matchAction == MatchAction.MATCH_END_QUERY) MatchAction.MATCH_END_CONFIRM_DISCARD else MatchAction.NO_ACTION,
+                        matchAction
                     )
                 )
+            })
+            eventFrameUpdated.observe(viewLifecycleOwner, EventObserver {
+                requireActivity().invalidateOptionsMenu()
             })
         }
         eventsViewModel.apply {
@@ -104,26 +107,28 @@ class GameFragment : androidx.fragment.app.Fragment() {
                                 snookerRepository.deleteMatchFrames()
                                 snookerRepository.deleteCurrentMatch()
                             }
-                            startNewMatch()
+                            resetMatch()
                             findNavController().navigate(GameFragmentDirections.actionGameFragmentToPlayFragment())
                         }
                         in listOf(MatchAction.FRAME_END_QUERY, MatchAction.FRAME_END_CONFIRM) -> {
-                            ballAdapter.submitList(null)
                             frameEnded()
                         }
                         in listOf(MatchAction.MATCH_END_QUERY, MatchAction.MATCH_END_CONFIRM) -> {
                             frameEnded()
                             findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameStatsFragment())
                         }
-                        MatchAction.MATCH_CONTINUE -> {
-                            eventsViewModel.onEventMatchActionConfirmed(MatchAction.MATCH_CONTINUE)
+                        MatchAction.MATCH_END_CONFIRM_DISCARD -> {
+                            resetFrame()
+                            findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameStatsFragment())
+                        }
+                        MatchAction.MATCH_RELOAD -> {
+                            eventsViewModel.onEventMatchActionConfirmed(MatchAction.MATCH_RELOAD)
                         }
                         MatchAction.MATCH_START_NEW -> eventsViewModel.onEventMatchActionConfirmed(MatchAction.MATCH_START_NEW)
                         else -> {
                         }
                     }
                 }
-                requireActivity().invalidateOptionsMenu()
             })
         }
 
@@ -148,10 +153,10 @@ class GameFragment : androidx.fragment.app.Fragment() {
         when (item.itemId) {
             R.id.match_action_undo -> gameViewModel.undo()
             R.id.match_action_add_red -> gameViewModel.updateFrame(DomainPot.ADDRED)
-            R.id.match_action_rerack -> gameViewModel.startNewFrame()
+            R.id.match_action_rerack -> gameViewModel.resetFrame()
             R.id.match_action_concede_frame -> gameViewModel.endFrame()
             R.id.match_action_cancel_match -> gameViewModel.assignMatchAction(MatchAction.MATCH_CANCEL)
-            R.id.match_action_concede_match -> gameViewModel.assignMatchAction(MatchAction.MATCH_END_QUERY)
+            R.id.match_action_concede_match -> gameViewModel.endMatch()
         }
         requireActivity().invalidateOptionsMenu()
         return super.onOptionsItemSelected(item)
@@ -159,6 +164,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         gameViewModel.displayFrame.value?.apply {
+
             menu.findItem(R.id.match_action_undo).isEnabled = (frameStack.size) > 0
             menu.findItem(R.id.match_action_rerack).isEnabled = (frameStack.size) > 0
             menu.findItem(R.id.match_action_add_red).isEnabled =

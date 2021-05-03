@@ -5,6 +5,9 @@
 
     <data>
         <variable
+            name="application"
+            type="android.app.Application" />
+        <variable
             name="gameViewModel"
             type="com.example.snookerscore.fragments.game.GameViewModel" />
     </data>
@@ -20,12 +23,12 @@
             android:layout_marginStart="@dimen/margin_xlarge"
             android:layout_marginTop="@dimen/margin_large"
             android:text="@string/fragment_game_label_player_a"
-            app:setActivePlayer="@{gameViewModel.displayScore == gameViewModel.displayScore.getFirst()}"
             app:layout_constraintEnd_toStartOf="@+id/game_label_player_b"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:setActivePlayer="@{gameViewModel.displayScore == gameViewModel.displayScore.getFirst()}" />
 
         <TextView
             android:id="@+id/game_label_player_b"
@@ -33,11 +36,11 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_xlarge"
             android:text="@string/fragment_game_label_player_b"
-            app:setActivePlayer="@{gameViewModel.displayScore == gameViewModel.displayScore.getSecond()}"
             app:layout_constraintBottom_toBottomOf="@+id/game_label_player_a"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_label_player_a" />
+            app:layout_constraintStart_toEndOf="@+id/game_label_player_a"
+            app:setActivePlayer="@{gameViewModel.displayScore == gameViewModel.displayScore.getSecond()}" />
 
         <TextView
             android:id="@+id/game_text_score_a"
@@ -92,7 +95,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_text_score_frames_a"
             app:layout_constraintTop_toBottomOf="@+id/game_label_player_a"
-            app:setTotalScore="@{gameViewModel.application}"
+            app:setTotalScore="@{application}"
             tools:text="(37)" />
 
         <TextView
@@ -200,7 +203,5 @@
             app:layout_constraintBottom_toBottomOf="@+id/game_label_diff"
             app:layout_constraintStart_toEndOf="@+id/game_label_diff"
             tools:text="54" />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

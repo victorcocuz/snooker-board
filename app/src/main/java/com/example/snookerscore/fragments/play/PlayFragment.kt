@@ -52,7 +52,8 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                     sharedPref.edit().putBoolean(getString(R.string.shared_pref_match_is_saved), false).apply()
                     findNavController().navigate(
                         PlayFragmentDirections.actionPlayFragmentToGameGenericDialogFragment(
-                            MatchAction.MATCH_CONTINUE,
+                            MatchAction.MATCH_RELOAD,
+                            MatchAction.NO_ACTION,
                             MatchAction.MATCH_START_NEW
                         )
                     )
@@ -79,6 +80,6 @@ class PlayFragment : androidx.fragment.app.Fragment() {
         putInt(getString(R.string.shared_pref_match_foul), playFragmentViewModel.eventFoulModifier.value!!)
         putInt(getString(R.string.shared_pref_match_first), playFragmentViewModel.eventBreaksFirst.value!!)
         apply()
-        gameViewModel.startNewMatch()
+        gameViewModel.resetMatch()
     }
 }

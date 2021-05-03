@@ -122,7 +122,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/frag_game_balls_rv"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             app:bindMatchBallsRv="@{gameViewModel.displayFrame.ballStack}"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/margin_large"

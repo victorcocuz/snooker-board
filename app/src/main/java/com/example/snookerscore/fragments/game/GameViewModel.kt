@@ -27,6 +27,9 @@ class GameViewModel(
     private val _eventMatchAction = MutableLiveData<Event<MatchAction>>()
     val eventMatchAction: LiveData<Event<MatchAction>> = _eventMatchAction
 
+    private val _eventFrameUpdated = MutableLiveData<Event<Unit>>()
+    val eventFrameUpdated: LiveData<Event<Unit>> = _eventFrameUpdated
+
     // Variables
     private var ballStack: MutableList<DomainBall> = mutableListOf()
     private var score: CurrentScore = CurrentScore.PlayerA
@@ -80,19 +83,19 @@ class GameViewModel(
         updateFrameStatus()
     }
 
-    fun startNewMatch() {
+    fun resetMatch() {
         getSavedStateRules()
         score.getFirst().resetMatchScore()
         score.getSecond().resetMatchScore()
         frameCount = 1
-        startNewFrame()
+        resetFrame()
         viewModelScope.launch {
             snookerRepository.deleteMatchFrames()
             snookerRepository.deleteCurrentMatch()
         }
     }
 
-    fun startNewFrame() {
+    fun resetFrame() {
         if (score.isMatchInProgress()) {
             matchFirst = if (matchFirst == 0) 1 else 0
             score = score.getPlayerFromInt(matchFirst)
@@ -108,13 +111,28 @@ class GameViewModel(
         updateFrameStatus()
     }
 
-    fun endFrame() = assignMatchAction(
+//    fun endFrame() = assignMatchAction(
+//        when {
+//            score.getWinner().matchPoints + 1 == matchFrames -> MatchAction.MATCH_END_CONFIRM
+//            ballStack.size == 1 -> MatchAction.FRAME_END_CONFIRM
+//            else -> MatchAction.FRAME_END_QUERY
+//        }
+//    )
+
+    fun endFrame() {
         when {
-            score.getWinner().matchPoints + 1 == matchFrames -> MatchAction.MATCH_END_CONFIRM
-            ballStack.size == 1 -> MatchAction.FRAME_END_CONFIRM
-            else -> MatchAction.FRAME_END_QUERY
+            _displayFrame.value!!.isFrameInProgress() -> assignMatchAction(MatchAction.FRAME_END_QUERY)
+            score.getWinner().matchPoints + 1 == matchFrames -> assignMatchAction(MatchAction.MATCH_END_CONFIRM)
+            else -> frameEnded()
         }
-    )
+    }
+
+    fun endMatch() {
+        when {
+            _displayFrame.value!!.isFrameInProgress() -> assignMatchAction(MatchAction.MATCH_END_QUERY)
+            else -> assignMatchAction(MatchAction.MATCH_END_CONFIRM)
+        }
+    }
 
     fun frameEnded() = score.apply {
         getWinner().addMatchPoint()
@@ -122,8 +140,9 @@ class GameViewModel(
         getSecond().frameId = frameCount
         viewModelScope.launch {
             snookerRepository.addFrames(score)
-            this@GameViewModel.startNewFrame()
+            this@GameViewModel.resetFrame()
             frameCount += 1
+            _eventFrameUpdated.value = Event(Unit)
         }
     }
 
@@ -155,7 +174,7 @@ class GameViewModel(
                 if (last() is COLOR) removeBall()
             }
         }
-        if (size == 1) if (score.isFrameEqual()) addBalls(BLACK()) else endFrame()
+        if (size == 1) if (score.isFrameEqual()) addBalls(BLACK()) else assignMatchAction(MatchAction.FRAME_END_CONFIRM)
         if (pot.potAction == PotAction.SWITCH) score = score.getOther()
         updateFrameStatus()
     }

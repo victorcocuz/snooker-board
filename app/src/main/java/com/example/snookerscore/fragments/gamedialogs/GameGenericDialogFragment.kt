@@ -9,12 +9,14 @@ import com.example.snookerscore.GenericEventsViewModel
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentGameGenDialogBinding
 import com.example.snookerscore.domain.MatchAction
+import com.example.snookerscore.fragments.game.GameViewModel
 import com.example.snookerscore.utils.EventObserver
 import com.example.snookerscore.utils.setSize
 
 
 class GameGenericDialogFragment : DialogFragment() {
     private val eventsViewModel: GenericEventsViewModel by activityViewModels()
+    private val gameViewModel: GameViewModel by activityViewModels()
     private lateinit var matchAction: MatchAction
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -32,8 +34,12 @@ class GameGenericDialogFragment : DialogFragment() {
         binding.apply {
             lifecycleOwner = this@GameGenericDialogFragment
             genericEventsViewModel = eventsViewModel
-            matchActionYes = GameGenericDialogFragmentArgs.fromBundle(requireArguments()).matchActionYes
-            matchActionNo = GameGenericDialogFragmentArgs.fromBundle(requireArguments()).matchActionNo
+            gameViewModel = this@GameGenericDialogFragment.gameViewModel
+            GameGenericDialogFragmentArgs.fromBundle(requireArguments()).apply {
+                dialogMatchActionA = matchActionA
+                dialogMatchActionB = matchActionB
+                dialogMatchActionC = matchActionC
+            }
         }
 
         // Observers
