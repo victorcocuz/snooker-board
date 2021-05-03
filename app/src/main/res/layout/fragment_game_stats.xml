@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@+id/game_stats_header"
-            app:listGameStatsData="@{viewModel.frames}"
+            app:bindGameStatsData="@{viewModel.frames}"
             tools:itemCount="16"
             tools:layout_editor_absoluteX="0dp"
             tools:listitem="@layout/item_game_statistics_view" />

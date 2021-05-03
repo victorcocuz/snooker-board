@@ -37,7 +37,7 @@
                     android:layout_width="wrap_content"
                     android:layout_gravity="center"
                     android:layout_height="match_parent"
-                    app:listPotsA="@{crtBreak}" />
+                    app:bindPotsA="@{crtBreak}" />
 
                 <TextView
                     android:id="@+id/item_break_a_fouls"
@@ -86,7 +86,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    app:listPotsB="@{crtBreak}" />
+                    app:bindPotsB="@{crtBreak}" />
             </FrameLayout>
         </LinearLayout>
     </LinearLayout>

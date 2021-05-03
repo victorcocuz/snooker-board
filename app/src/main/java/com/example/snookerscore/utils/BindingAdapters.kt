@@ -15,6 +15,7 @@ import com.example.snookerscore.fragments.game.BreakAdapter
 import com.example.snookerscore.fragments.game.getDisplayShots
 import com.example.snookerscore.fragments.gamestatistics.GameStatsAdapter
 import com.example.snookerscore.fragments.rankings.RankingsAdapter
+import timber.log.Timber
 import java.text.DecimalFormat
 import kotlin.math.abs
 
@@ -153,6 +154,11 @@ fun TextView.dialogSetRedEnabled(size: Int) {
     }
 }
 
+@BindingAdapter("setSelected")
+fun TextView.setSelected(isSelected: Boolean) {
+    this.isSelected = isSelected
+}
+
 @BindingAdapter("dialogFreeBallEnabledAction")
 fun TextView.setDialogFreeballEnabled(potAction: PotAction?) {
     isEnabled = when (potAction) {
@@ -233,25 +239,59 @@ fun TextView.bindBreakPointsB(crtBreak: DomainBreak) {
 }
 
 // RV Adapters
-@BindingAdapter("listRankingsData")
-fun bindRankingsRv(recyclerView: RecyclerView, data: List<DomainRanking>?) {
-    val adapter = recyclerView.adapter as RankingsAdapter
+@BindingAdapter("bindRankingsData")
+fun RecyclerView.bindRankingsRv(data: List<DomainRanking>?) {
+    val adapter = this.adapter as RankingsAdapter
     adapter.submitList(data)
 }
 
-@BindingAdapter("listGameStatsData")
-fun bindGameStatsRv(recyclerView: RecyclerView, data: ArrayList<Pair<DomainPlayerScore, DomainPlayerScore>>?) {
-    val adapter = recyclerView.adapter as GameStatsAdapter
+@BindingAdapter("bindMatchBallsRv")
+fun RecyclerView.bindBallsRv(ballList: MutableList<DomainBall>?) {
+    val adapter = this.adapter as BallAdapter
+    adapter.submitList( when (ballList?.lastOrNull()) {
+        is FREEBALL -> listOf(FREEBALL())
+        is RED -> listOf(RED())
+        is COLOR -> listOf(YELLOW(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
+        is YELLOW -> listOf(YELLOW())
+        is GREEN -> listOf(GREEN())
+        is BROWN -> listOf(BROWN())
+        is BLUE -> listOf(BLUE())
+        is PINK -> listOf(PINK())
+        is BLACK -> listOf(BLACK())
+        else -> listOf()
+    })
+}
+
+@BindingAdapter("bindFoulBalls")
+fun RecyclerView.bindFoulBalls(ballStackSize: Int) {
+    Timber.e("size is $ballStackSize")
+    val adapter = this.adapter as BallAdapter
+    adapter.submitList(
+        when (ballStackSize) {
+            2 -> listOf(WHITE(), BLACK())
+            3 -> listOf(WHITE(), PINK(), BLACK())
+            4 -> listOf(WHITE(), BLUE(), PINK(), BLACK())
+            5 -> listOf(WHITE(), BROWN(), BLUE(), PINK(), BLACK())
+            6 -> listOf(WHITE(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
+            7 -> listOf(WHITE(), YELLOW(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
+            else -> listOf(WHITE(), RED(), YELLOW(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
+        }
+    )
+}
+
+@BindingAdapter("bindGameStatsData")
+fun RecyclerView.bindGameStatsRv(data: ArrayList<Pair<DomainPlayerScore, DomainPlayerScore>>?) {
+    val adapter = this.adapter as GameStatsAdapter
     adapter.submitList(data)
 }
 
-@BindingAdapter("listBreakData")
-fun bindBreakRv(recyclerView: RecyclerView, breaks: MutableList<DomainBreak>?) {
-    val adapter = recyclerView.adapter as BreakAdapter
+@BindingAdapter("bindBreakData")
+fun RecyclerView.bindBreakRv(breaks: MutableList<DomainBreak>?) {
+    val adapter = this.adapter as BreakAdapter
     adapter.submitList(breaks?.getDisplayShots())
 }
 
-@BindingAdapter("listPotsA")
+@BindingAdapter("bindPotsA")
 fun RecyclerView.bindPotsRvA(crtBreak: DomainBreak?) {
     val adapter = this.adapter as BallAdapter
     val balls = mutableListOf<DomainBall>()
@@ -261,7 +301,7 @@ fun RecyclerView.bindPotsRvA(crtBreak: DomainBreak?) {
     adapter.submitList(if (crtBreak?.player == 0) balls else mutableListOf())
 }
 
-@BindingAdapter("listPotsB")
+@BindingAdapter("bindPotsB")
 fun RecyclerView.bindPotsRvB(crtBreak: DomainBreak?) {
     val adapter = this.adapter as BallAdapter
     val balls = mutableListOf<DomainBall>()

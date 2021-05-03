@@ -59,7 +59,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rankings_label_position"
-            app:listRankingsData="@{viewModel.rankings}"
+            app:bindRankingsData="@{viewModel.rankings}"
             tools:itemCount="16"
             tools:listitem="@layout/item_ranking_view" />
 

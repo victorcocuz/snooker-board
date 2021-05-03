@@ -79,9 +79,6 @@ class GameFragment : androidx.fragment.app.Fragment() {
         // VM Observers
         gameViewModel.apply {
             // Enable or disable buttons
-            displayFrame.observe(viewLifecycleOwner, { frame ->
-                manageBallVisibility(frame.ballStack.lastOrNull())
-            })
             eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                 findNavController().navigate(
                     GameFragmentDirections.actionGameFragmentToGameGenericDialogFragment(
@@ -92,12 +89,15 @@ class GameFragment : androidx.fragment.app.Fragment() {
             })
         }
         eventsViewModel.apply {
-            eventFoul.observe(viewLifecycleOwner, EventObserver {
+            eventFoulQueried.observe(viewLifecycleOwner, EventObserver {
                 findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameFoulDialogFragment())
             })
             eventMatchActionConfirmed.observe(viewLifecycleOwner, EventObserver { matchAction ->
                 gameViewModel.apply {
                     when (matchAction) {
+                        MatchAction.FOUL_CONFIRMED -> {
+                            handleFoulEvent(getFoul(), eventsViewModel.isRemoveRed.value!!, eventsViewModel.isFreeBall.value!!)
+                        }
                         MatchAction.MATCH_CANCEL -> {
                             gameFragmentScope.launch {
                                 snookerRepository.deleteMatchFrames()
@@ -168,21 +168,5 @@ class GameFragment : androidx.fragment.app.Fragment() {
                 displayFrame.value?.frameScore?.get(0)?.framePoints != displayFrame.value?.frameScore?.get(1)?.framePoints
                         || displayFrame.value?.frameScore?.get(0)?.matchPoints != displayFrame.value?.frameScore?.get(1)?.matchPoints
         }
-    }
-
-    private fun manageBallVisibility(frameState: DomainBall?) {
-        ballsList = when (frameState) {
-            is FREEBALL -> listOf(FREEBALL())
-            is RED -> listOf(RED())
-            is COLOR -> listOf(YELLOW(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
-            is YELLOW -> listOf(YELLOW())
-            is GREEN -> listOf(GREEN())
-            is BROWN -> listOf(BROWN())
-            is BLUE -> listOf(BLUE())
-            is PINK -> listOf(PINK())
-            is BLACK -> listOf(BLACK())
-            else -> listOf()
-        }
-        ballAdapter.submitList(ballsList)
     }
 }
