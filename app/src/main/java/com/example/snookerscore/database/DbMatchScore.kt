@@ -18,19 +18,19 @@ data class DbScore(
     val highestBreak: Int
 )
 
-@Entity(tableName = "current_score_table")
-data class DbCrtScore(
-    @PrimaryKey(autoGenerate = true)
-    val scoreId: Int = 0,
-    val frameId: Int,
-    val playerId: Int,
-    val framePoints: Int,
-    val matchPoints: Int,
-    val successShots: Int,
-    val missedShots: Int,
-    val fouls: Int,
-    val highestBreak: Int
-)
+//@Entity(tableName = "current_score_table")
+//data class DbScore(
+//    @PrimaryKey(autoGenerate = true)
+//    val scoreId: Int = 0,
+//    val frameId: Int,
+//    val playerId: Int,
+//    val framePoints: Int,
+//    val matchPoints: Int,
+//    val successShots: Int,
+//    val missedShots: Int,
+//    val fouls: Int,
+//    val highestBreak: Int
+//)
 
 fun List<DbScore>.asDomainFrameScoreList(): ArrayList<Pair<DomainPlayerScore, DomainPlayerScore>> {
     val frameScoreList = ArrayList<Pair<DomainPlayerScore, DomainPlayerScore>>()
@@ -60,7 +60,7 @@ fun List<DbScore>.asDomainFrameScoreList(): ArrayList<Pair<DomainPlayerScore, Do
     return frameScoreList
 }
 
-fun List<DbCrtScore>.asDomainCrtFrameScoreList(): MutableList<DomainPlayerScore> {
+fun List<DbScore>.asDomainCrtFrameScoreList(): MutableList<DomainPlayerScore> {
     return map {
         DomainPlayerScore(
             frameId = it.frameId,

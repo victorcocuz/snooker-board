@@ -1,5 +1,6 @@
 package com.example.snookerscore
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -8,6 +9,7 @@ import com.example.snookerscore.database.SnookerDatabase
 import com.example.snookerscore.databinding.ActivityMainBinding
 import com.example.snookerscore.fragments.game.GameViewModel
 import com.example.snookerscore.repository.SnookerRepository
+import com.example.snookerscore.utils.getSharedPref
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var gameViewModel: GameViewModel
     private lateinit var snookerRepository: SnookerRepository
+    private lateinit var sharedPref: SharedPreferences
     //    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +34,8 @@ class MainActivity : AppCompatActivity() {
             this,
             GenericViewModelFactory(this.application, snookerRepository, this, null)
         ).get(GameViewModel::class.java)
+        sharedPref = getSharedPref()
+
 
         //        binding.apply {
         //            navBottom.setupWithNavController(navController)
@@ -44,20 +49,11 @@ class MainActivity : AppCompatActivity() {
         //                }
         //            }
         //        }
-
-        // VM Observers
-        snookerRepository.apply {
-            currentFrame.observe(this@MainActivity, {
-                if (it.size > 0) {
-                    gameViewModel.loadMatch(it.last())
-                }
-            })
-        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         activityScope.launch {
-            if (::gameViewModel.isInitialized) gameViewModel.saveCurrentMatch()
+            if (::gameViewModel.isInitialized) gameViewModel.saveMatch()
         }
         super.onSaveInstanceState(outState)
     }

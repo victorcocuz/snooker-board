@@ -21,6 +21,9 @@ class GenericEventsViewModel : ViewModel() {
     private val _eventMatchActionConfirmed = MutableLiveData<Event<MatchAction>>()
     val eventMatchActionConfirmed: LiveData<Event<MatchAction>> = _eventMatchActionConfirmed
 
+    private val _eventStartMatch = MutableLiveData<Event<Unit>>()
+    val eventStartMatch: LiveData<Event<Unit>> = _eventStartMatch
+
     // Event handlers
     fun onFoulClicked() {
         _eventFoulQueried.value = Event(Unit)
@@ -32,6 +35,10 @@ class GenericEventsViewModel : ViewModel() {
 
     fun onEventMatchActionConfirmed(matchAction: MatchAction) {
         _eventMatchActionConfirmed.value = Event(matchAction)
+    }
+
+    fun onEventStartMatch() {
+        _eventStartMatch.value = Event(Unit)
     }
 
     // Observables

@@ -81,17 +81,17 @@ fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
 }
 
 @BindingAdapter("dialogGameGenC", "dialogGameGenCActionB", "dialogGameGenCScore")
-fun TextView.setDialogGameC(matchAction: MatchAction, matchActionB: MatchAction, score: CurrentScore) {
-    isEnabled = !(matchActionB == MatchAction.MATCH_END_CONFIRM_DISCARD && score.getFirst().framePoints == score.getSecond().framePoints)
-        text = when (matchAction) {
-            MatchAction.MATCH_CANCEL -> "Yes"
-            MatchAction.FRAME_END_QUERY -> "Yes"
-            MatchAction.MATCH_END_QUERY -> "Yes"
-            MatchAction.FRAME_END_CONFIRM -> "Yes"
-            MatchAction.MATCH_END_CONFIRM -> "Yes"
-            MatchAction.MATCH_RELOAD -> "Continue Match"
-            else -> "$matchAction not implemented"
-        }
+fun TextView.setDialogGameC(matchAction: MatchAction, matchActionB: MatchAction, score: CurrentScore?) {
+    isEnabled = !(matchActionB == MatchAction.MATCH_END_CONFIRM_DISCARD && (score?.isFrameEqual() ?: false))
+    text = when (matchAction) {
+        MatchAction.MATCH_CANCEL -> "Yes"
+        MatchAction.FRAME_END_QUERY -> "Yes"
+        MatchAction.MATCH_END_QUERY -> "Yes"
+        MatchAction.FRAME_END_CONFIRM -> "Yes"
+        MatchAction.MATCH_END_CONFIRM -> "Yes"
+        MatchAction.MATCH_RELOAD -> "Continue Match"
+        else -> "$matchAction not implemented"
+    }
 }
 
 @BindingAdapter("dialogGameGenA")
@@ -108,8 +108,9 @@ fun TextView.setDialogGameA(matchAction: MatchAction) {
 }
 
 @BindingAdapter("dialogGameGenB", "dialogGameGenBScore")
-fun TextView.setDialogGameB(matchAction: MatchAction, score: CurrentScore) {
+fun TextView.setDialogGameB(matchAction: MatchAction, score: CurrentScore?) {
     visibility = when {
+        score == null -> View.GONE
         score.getFirst().matchPoints + score.getSecond().matchPoints == 0 -> View.GONE
         matchAction == MatchAction.MATCH_END_CONFIRM_DISCARD -> View.VISIBLE
         else -> View.GONE
@@ -121,9 +122,10 @@ fun TextView.setDialogGameB(matchAction: MatchAction, score: CurrentScore) {
 }
 
 @BindingAdapter("dialogGameNote", "dialogGameNoteScore")
-fun TextView.setDialogGameNote(matchAction: MatchAction, score: CurrentScore) {
+fun TextView.setDialogGameNote(matchAction: MatchAction, score: CurrentScore?) {
     visibility = if (matchAction == MatchAction.MATCH_END_CONFIRM_DISCARD) View.VISIBLE else View.GONE
     text = when {
+        score == null -> ""
         score.getFirst().matchPoints + score.getFirst().matchPoints == 0 -> ""
         score.getWinner().matchPoints + 1 == score.getWinner().getOther().matchPoints -> "Keep frame results in draw"
         score.matchPoints == score.getOther().matchPoints -> "Discard frame results in draw"

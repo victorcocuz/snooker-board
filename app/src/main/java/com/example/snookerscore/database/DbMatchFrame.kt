@@ -18,7 +18,7 @@ data class DbFrameWithScoreAndBreakWithPotsAndBallStack(
         parentColumn = "frameId",
         entityColumn = "frameId",
     )
-    val frameScore: List<DbCrtScore>,
+    val frameScore: List<DbScore>,
     @Relation(
         parentColumn = "frameId",
         entityColumn = "frameId",
@@ -32,7 +32,7 @@ data class DbFrameWithScoreAndBreakWithPotsAndBallStack(
     val ballStack: List<DbBall>
 )
 
-fun List<DbFrameWithScoreAndBreakWithPotsAndBallStack>.asDomainFrame(): MutableList<DomainFrame> {
+fun List<DbFrameWithScoreAndBreakWithPotsAndBallStack>.asDomainFrameList(): MutableList<DomainFrame> {
     return map {
         DomainFrame(
             frameId = it.frame.frameId,
@@ -41,4 +41,13 @@ fun List<DbFrameWithScoreAndBreakWithPotsAndBallStack>.asDomainFrame(): MutableL
             ballStack = it.ballStack.asDomainBallStack()
         )
     }.toMutableList()
+}
+
+fun DbFrameWithScoreAndBreakWithPotsAndBallStack.asDomainFrame(): DomainFrame {
+    return DomainFrame(
+        frameId = this.frame.frameId,
+        frameScore = this.frameScore.asDomainCrtFrameScoreList(),
+        frameStack = this.frameStack.asDomainBreakList(),
+        ballStack = this.ballStack.asDomainBallStack()
+    )
 }

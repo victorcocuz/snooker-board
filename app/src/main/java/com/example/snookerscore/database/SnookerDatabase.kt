@@ -13,8 +13,9 @@ import androidx.room.TypeConverters
         DbBreak::class,
         DbPot::class,
         DbBall::class,
-        DbFrame::class,
-        DbCrtScore::class], version = 12, exportSchema = false
+        DbFrame::class],
+    version = 13,
+    exportSchema = false
 )
 
 @TypeConverters(Converters::class)

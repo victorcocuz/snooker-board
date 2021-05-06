@@ -11,6 +11,7 @@ import com.example.snookerscore.domain.PotType.*
 import com.example.snookerscore.repository.SnookerRepository
 import com.example.snookerscore.utils.Event
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class GameViewModel(
     application: Application,
@@ -46,10 +47,11 @@ class GameViewModel(
     private var matchFoul = 0
     private var matchFirst = 0
 
-    suspend fun saveCurrentMatch() {
+    suspend fun saveMatch() {
         if (score.isMatchInProgress()) {
-            snookerRepository.deleteCurrentMatch()
-            snookerRepository.saveCurrentMatch(displayFrame.value!!)
+            Timber.e("saving match")
+            snookerRepository.deleteCurrentFrame()
+            snookerRepository.saveCurrentFrame(displayFrame.value!!)
             sharedPref.edit().apply {
                 getApplication<Application>().resources.apply {
                     putBoolean(getString(R.string.shared_pref_match_is_saved), true)
@@ -64,22 +66,12 @@ class GameViewModel(
         }
     }
 
-    private fun getSavedStateRules() = sharedPref.apply {
-        getApplication<Application>().resources.apply {
-            matchFrames = getInt(getString(R.string.shared_pref_match_frames), 0)
-            matchReds = getInt(getString(R.string.shared_pref_match_reds), 0)
-            matchFoul = getInt(getString(R.string.shared_pref_match_foul), 0)
-            matchFirst = getInt(getString(R.string.shared_pref_match_first), 0)
-            score = score.getPlayerFromInt(getInt(getString(R.string.shared_pref_match_crt_player), 0))
-            updateFrameStatus()
-        }
-    }
-
     fun loadMatch(frame: DomainFrame) {
-        getSavedStateRules()
+        Timber.e("framescore ${frame.frameScore}")
         score = frame.frameScore.asCurrentScore() ?: score
         frameStack = frame.frameStack
         ballStack = frame.ballStack
+        getSavedStateRules()
         updateFrameStatus()
     }
 
@@ -89,9 +81,21 @@ class GameViewModel(
         score.getSecond().resetMatchScore()
         frameCount = 1
         resetFrame()
+        sharedPref.edit().putBoolean(getApplication<Application>().resources.getString(R.string.shared_pref_match_is_saved), false).apply()
         viewModelScope.launch {
-            snookerRepository.deleteMatchFrames()
             snookerRepository.deleteCurrentMatch()
+        }
+        updateFrameStatus()
+    }
+
+    private fun getSavedStateRules() = sharedPref.apply {
+        getApplication<Application>().resources.apply {
+            matchFrames = getInt(getString(R.string.shared_pref_match_frames), 0)
+            matchReds = getInt(getString(R.string.shared_pref_match_reds), 0)
+            matchFoul = getInt(getString(R.string.shared_pref_match_foul), 0)
+            matchFirst = getInt(getString(R.string.shared_pref_match_first), 0)
+            score = score.getPlayerFromInt(getInt(getString(R.string.shared_pref_match_crt_player), 0))
+            Timber.e("score is $score")
         }
     }
 
@@ -111,17 +115,11 @@ class GameViewModel(
         updateFrameStatus()
     }
 
-//    fun endFrame() = assignMatchAction(
-//        when {
-//            score.getWinner().matchPoints + 1 == matchFrames -> MatchAction.MATCH_END_CONFIRM
-//            ballStack.size == 1 -> MatchAction.FRAME_END_CONFIRM
-//            else -> MatchAction.FRAME_END_QUERY
-//        }
-//    )
-
     fun endFrame() {
         when {
-            _displayFrame.value!!.isFrameInProgress() -> assignMatchAction(MatchAction.FRAME_END_QUERY)
+            _displayFrame.value!!.isFrameInProgress() -> assignMatchAction(
+                if (score.getWinner().matchPoints + 1 == matchFrames) MatchAction.MATCH_END_QUERY else MatchAction.FRAME_END_QUERY
+            )
             score.getWinner().matchPoints + 1 == matchFrames -> assignMatchAction(MatchAction.MATCH_END_CONFIRM)
             else -> frameEnded()
         }
@@ -139,7 +137,7 @@ class GameViewModel(
         getFirst().frameId = frameCount
         getSecond().frameId = frameCount
         viewModelScope.launch {
-            snookerRepository.addFrames(score)
+            snookerRepository.saveCurrentFrame(displayFrame.value!!)
             this@GameViewModel.resetFrame()
             frameCount += 1
             _eventFrameUpdated.value = Event(Unit)

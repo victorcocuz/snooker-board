@@ -24,10 +24,10 @@ fun DomainFrame.asDbFrame(): DbFrame {
     )
 }
 
-fun DomainFrame.asDbCrtScore(): List<DbCrtScore> {
+fun DomainFrame.asDbCrtScore(): List<DbScore> {
     return frameScore.map { playerScore ->
-        DbCrtScore(
-            frameId = this.frameId,
+        DbScore(
+            frameId = frameId,
             playerId = playerScore.playerId,
             framePoints = playerScore.framePoints,
             matchPoints = playerScore.matchPoints,

@@ -19,7 +19,7 @@ class GameStatsViewModel(application: Application) : AndroidViewModel(applicatio
     private val _totalsB = MutableLiveData<DomainPlayerScore>()
     val totalsB: MutableLiveData<DomainPlayerScore> = _totalsB
 
-    val frames = snookerRepository.frames
+    val score = snookerRepository.score
 
     fun getTotals() = viewModelScope.launch {
         _totalsA.postValue(snookerRepository.getTotals(0))

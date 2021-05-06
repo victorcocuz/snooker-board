@@ -1,11 +1,13 @@
 package com.example.snookerscore.utils
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import com.example.snookerscore.R
 
 fun Context.toast(message: CharSequence) =
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
@@ -38,3 +40,8 @@ fun DialogFragment.setSize(factor: Float) {
 fun DialogFragment.setFullScreen() {
     dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 }
+
+fun Activity.getSharedPref() = application.getSharedPreferences(
+    getString(R.string.preference_file_key),
+    Context.MODE_PRIVATE
+)

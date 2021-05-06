@@ -17,7 +17,7 @@ class RefreshDataWorker(appContext: Context, params: WorkerParameters) : Corouti
         val repository = SnookerRepository(database)
 
         return try {
-            repository.refreshRankings()
+//            repository.refreshRankings()
             Result.success()
         } catch (exception: HttpException) {
             Result.retry()
