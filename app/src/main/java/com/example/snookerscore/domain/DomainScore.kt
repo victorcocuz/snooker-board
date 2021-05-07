@@ -49,6 +49,7 @@ sealed class CurrentScore(
 
     fun getWinner() = if (this.framePoints > this.getOther().framePoints) this else this.getOther()
 
+    fun isWinningTheMatch(matchFrames: Int) = this.getWinner().matchPoints + 1 == matchFrames
 
     fun isFrameEqual() = this.framePoints == this.getOther().framePoints
 

@@ -2,6 +2,7 @@ package com.example.snookerscore.utils
 
 import android.app.Activity
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.Resources
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -41,7 +42,11 @@ fun DialogFragment.setFullScreen() {
     dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 }
 
-fun Activity.getSharedPref() = application.getSharedPreferences(
+fun Activity.getSharedPref(): SharedPreferences = application.getSharedPreferences(
     getString(R.string.preference_file_key),
     Context.MODE_PRIVATE
 )
+
+fun SharedPreferences.setMatchInProgress(isInProgress: Boolean) {
+    this.edit().putBoolean("isMatchInProgress", isInProgress).apply()
+}

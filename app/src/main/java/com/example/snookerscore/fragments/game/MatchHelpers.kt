@@ -1,9 +1,9 @@
 package com.example.snookerscore.fragments.game
 
+import com.example.snookerscore.domain.CurrentScore
 import com.example.snookerscore.domain.DomainBall
 import com.example.snookerscore.domain.DomainBall.*
 import com.example.snookerscore.domain.DomainBreak
-import com.example.snookerscore.domain.CurrentScore
 import com.example.snookerscore.domain.DomainPot
 import com.example.snookerscore.domain.PotType.*
 import kotlin.math.max
@@ -17,7 +17,7 @@ fun MutableList<DomainBreak>.addToFrameStack(pot: DomainPot, playerAsInt: Int, f
         || this.last().player != playerAsInt
     ) this.add(
         DomainBreak(
-            1 + (this.lastOrNull()?.breakId ?: 0),
+//            1 + (this.lastOrNull()?.breakId ?: 0),
             playerAsInt,
             frameCount,
             mutableListOf(),
@@ -49,30 +49,27 @@ fun MutableList<DomainBreak>.getDisplayShots(): MutableList<DomainBreak> {
 }
 
 // Score
-fun CurrentScore.calculatePoints(pot: DomainPot, pol: Int, lastBall: DomainBall, matchFoul: Int): DomainPot {
+fun CurrentScore.calculatePoints(pot: DomainPot, pol: Int, lastBall: DomainBall, matchFoul: Int, frameStack: MutableList<DomainBreak>) {
     var points = 0
-    this.apply {
-        when (pot.potType) {
-            in listOf(HIT, FREE, ADDRED) -> {
-                points = if (pot.potType == FREE) lastBall.points else pot.ball.points
-                addFramePoints(pol * points)
-                pot.ball.assignNewPoints(points)
-                addSuccessShots(pol)
-                return DomainPot.HIT(pot.ball)
-            }
-            FOUL -> {
-                points = (matchFoul + if (pot.ball is WHITE) max(lastBall.foul, 4) else pot.ball.foul)
-                pot.ball.assignNewFoul(points)
-                getOther().addFramePoints(pol * points)
-                addMissedShots(pol)
-                addFouls(pol)
-                return DomainPot.FOUL(pot.ball, pot.potAction)
-            }
-            MISS -> addMissedShots(pol)
-            else -> {}
+    when (pot.potType) {
+        in listOf(HIT, FREE, ADDRED) -> {
+            points = if (pot.potType == FREE) lastBall.points else pot.ball.points
+            addFramePoints(pol * points)
+            pot.ball.assignNewPoints(points)
+            addSuccessShots(pol)
+        }
+        FOUL -> {
+            points = (matchFoul + if (pot.ball is WHITE) max(lastBall.foul, 4) else pot.ball.foul)
+            pot.ball.assignNewFoul(points)
+            getOther().addFramePoints(pol * points)
+            addMissedShots(pol)
+            addFouls(pol)
+        }
+        MISS -> addMissedShots(pol)
+        else -> {
         }
     }
-    return pot
+    findMaxBreak(frameStack)
 }
 
 // BallStack

@@ -4,6 +4,7 @@
 
     <data>
         <import type="com.example.snookerscore.domain.DomainPot" />
+        <import type="com.example.snookerscore.domain.FrameEvent"/>
         <variable
             name="genericEventsViewModel"
             type="com.example.snookerscore.GenericEventsViewModel" />
@@ -19,24 +20,24 @@
         <TextView
             android:id="@+id/game_btn_act_safe"
             style="@style/temp_btn"
-            android:onClick="@{() -> gameViewModel.updateFrame(DomainPot.SAFE.INSTANCE)}"
+            android:onClick="@{() -> gameViewModel.handleFrameEvent(FrameEvent.HANDLE_POT, DomainPot.SAFE.INSTANCE, false, false)}"
             android:text="@string/action_safe"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_miss"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:setEnabled="@{gameViewModel.displayFrame.ballStack.size() > 1}" />
+            app:setEnabled="@{gameViewModel.displayFrame.ballStack.size() > 1 &amp;&amp; !gameViewModel.isFrameUpdateInProgress}" />
 
         <TextView
             android:id="@+id/game_btn_act_miss"
             style="@style/temp_btn"
-            android:onClick="@{() -> gameViewModel.updateFrame(DomainPot.MISS.INSTANCE)}"
+            android:onClick="@{() -> gameViewModel.handleFrameEvent(FrameEvent.HANDLE_POT, DomainPot.MISS.INSTANCE, false, false)}"
             android:text="@string/action_miss"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_foul"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_btn_act_safe"
-            app:setEnabled="@{gameViewModel.displayFrame.ballStack.size() > 1}" />
+            app:setEnabled="@{gameViewModel.displayFrame.ballStack.size() > 1 &amp;&amp; !gameViewModel.isFrameUpdateInProgress}" />
 
         <TextView
             android:id="@+id/game_btn_act_foul"
@@ -47,7 +48,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_btn_act_miss"
-            app:setEnabled="@{gameViewModel.displayFrame.ballStack.size() > 1}" />
+            app:setEnabled="@{gameViewModel.displayFrame.ballStack.size() > 1 &amp;&amp; !gameViewModel.isFrameUpdateInProgress}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

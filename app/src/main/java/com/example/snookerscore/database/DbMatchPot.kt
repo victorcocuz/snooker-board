@@ -11,7 +11,7 @@ import com.example.snookerscore.domain.getBallFromValues
 data class DbPot(
     @PrimaryKey(autoGenerate = true)
     val potId: Int = 0,
-    val breakId: Int,
+    val breakId: Long,
     val ball: Int,
     val ballPoints: Int,
     val ballFoul: Int,

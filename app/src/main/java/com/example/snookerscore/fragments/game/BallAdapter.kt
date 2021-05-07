@@ -30,7 +30,7 @@ class BallAdapter(private val clickListener: BallListener?, private val frame: L
             }
         }
 
-        fun bind(item: DomainBall, clickListener: BallListener?, frame: LiveData<DomainFrame>?, adapterType: BallAdapterType) {
+        fun bind(item: DomainBall?, clickListener: BallListener?, frame: LiveData<DomainFrame>?, adapterType: BallAdapterType) {
             binding.apply {
                 ball = item
                 val factor = when (adapterType) {

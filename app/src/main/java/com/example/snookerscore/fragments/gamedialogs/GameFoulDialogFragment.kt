@@ -1,5 +1,6 @@
 package com.example.snookerscore.fragments.gamedialogs
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -63,7 +64,7 @@ class GameFoulDialogFragment : DialogFragment() {
                     if (foulIsValid()) {
                         matchAction = MatchAction.FOUL_CONFIRMED
                         dismiss()
-                    } else requireContext().toast("Select a ball and an action to continue")
+                    } else requireContext().toast(getString(R.string.toast_foul_invalid))
                 } else {
                     eventsViewModel.resetFoul()
                     matchAction = MatchAction.NO_ACTION
@@ -74,8 +75,15 @@ class GameFoulDialogFragment : DialogFragment() {
         return binding.root
     }
 
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        eventsViewModel.resetFoul()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         if (this::matchAction.isInitialized) eventsViewModel.onEventMatchActionConfirmed(matchAction)
     }
+
+
 }

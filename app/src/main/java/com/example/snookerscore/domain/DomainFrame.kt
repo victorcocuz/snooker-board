@@ -55,13 +55,13 @@ fun DomainFrame.asDbBreak(): List<DbBreak> {
         DbBreak(
             player = it.player,
             frameId = it.frameId,
-            breakId = it.breakId,
+//            breakId = it.breakId,
             breakSize = it.breakSize
         )
     }
 }
 
-fun DomainBreak.asDbPot(): List<DbPot> {
+fun DomainBreak.asDbPot(breakId: Long): List<DbPot> {
     return pots.map { pot ->
         DbPot(
             breakId = breakId,

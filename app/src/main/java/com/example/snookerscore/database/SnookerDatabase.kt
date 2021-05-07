@@ -14,7 +14,7 @@ import androidx.room.TypeConverters
         DbPot::class,
         DbBall::class,
         DbFrame::class],
-    version = 13,
+    version = 14,
     exportSchema = false
 )
 

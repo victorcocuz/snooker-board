@@ -12,7 +12,6 @@ import com.example.snookerscore.domain.MatchAction
 import com.example.snookerscore.fragments.game.GameViewModel
 import com.example.snookerscore.utils.EventObserver
 import com.example.snookerscore.utils.setSize
-import timber.log.Timber
 
 
 class GameGenericDialogFragment : DialogFragment() {
@@ -36,12 +35,13 @@ class GameGenericDialogFragment : DialogFragment() {
             lifecycleOwner = this@GameGenericDialogFragment
             genericEventsViewModel = eventsViewModel
             gameViewModel = this@GameGenericDialogFragment.gameViewModel
-            Timber.e("score is ${gameViewModel!!.displayScore.value}")
             GameGenericDialogFragmentArgs.fromBundle(requireArguments()).apply {
-                Timber.e("args are working")
                 dialogMatchActionA = matchActionA
                 dialogMatchActionB = matchActionB
                 dialogMatchActionC = matchActionC
+                if (dialogMatchActionC in listOf(MatchAction.MATCH_END_CONFIRM, MatchAction.FRAME_END_CONFIRM)) {
+                    this@GameGenericDialogFragment.isCancelable = false
+                    }
             }
         }
 

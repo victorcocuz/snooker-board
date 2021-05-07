@@ -8,8 +8,8 @@ import com.example.snookerscore.domain.DomainBreak
 
 @Entity(tableName = "match_breaks_table")
 data class DbBreak(
-    @PrimaryKey(autoGenerate = false)
-    val breakId: Int,
+    @PrimaryKey(autoGenerate = true)
+    val breakId: Long = 0,
     val player: Int,
     val frameId: Int,
     val breakSize: Int
@@ -29,7 +29,7 @@ fun List<DbBreakWithPots>.asDomainBreakList(): MutableList<DomainBreak> {
         DomainBreak(
             player = it.matchBreak.player,
             frameId = it.matchBreak.frameId,
-            breakId = it.matchBreak.breakId,
+//            breakId = it.matchBreak.breakId,
             pots = it.matchPots.asDomainPotList(),
             breakSize = it.matchBreak.breakSize
         )

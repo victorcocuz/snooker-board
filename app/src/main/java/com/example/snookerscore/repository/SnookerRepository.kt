@@ -1,13 +1,14 @@
 package com.example.snookerscore.repository
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.example.snookerscore.database.*
 import com.example.snookerscore.domain.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class SnookerRepository(private val database: SnookerDatabase) {
+class SnookerRepository(database: SnookerDatabase) {
 
     private val snookerDbDao = database.snookerDatabaseDao
 
@@ -25,24 +26,6 @@ class SnookerRepository(private val database: SnookerDatabase) {
     //            } catch (e: Exception) {
     //                Timber.e("Failure: ${e.message}")
     //            }
-    //        }
-    //    }
-
-    // Frames
-    //    val frames: LiveData<ArrayList<Pair<DomainPlayerScore, DomainPlayerScore>>> = Transformations.map(snookerDbDao.getMatchScore()) {
-    //        it.asDomainFrameScoreList()
-    //    }
-    //
-    //    suspend fun addFrames(frameScore: CurrentScore) {
-    //        withContext(Dispatchers.IO) {
-    //            snookerDbDao.insertMatchScore(frameScore.getFirst().asDbFrameScore())
-    //            snookerDbDao.insertMatchScore(frameScore.getSecond().asDbFrameScore())
-    //        }
-    //    }
-    //
-    //    suspend fun deleteMatchFrames() {
-    //        withContext(Dispatchers.IO) {
-    //            snookerDbDao.deleteMatchScore()
     //        }
     //    }
 
@@ -66,9 +49,9 @@ class SnookerRepository(private val database: SnookerDatabase) {
         snookerDbDao.apply {
             insertMatchFrame(frame.asDbFrame())
             insertMatchScore(frame.asDbCrtScore())
-            insertMatchBreaks(frame.asDbBreak())
-            frame.frameStack.forEach {
-                insertBreakPots(it.asDbPot())
+            val breakId = insertMatchBreaks(frame.asDbBreak())
+            for (i in 0 until frame.frameStack.size) {
+                insertBreakPots(frame.frameStack[i].asDbPot(breakId[i]))
             }
             insertMatchBalls(frame.asDbBallStack())
         }
@@ -84,21 +67,27 @@ class SnookerRepository(private val database: SnookerDatabase) {
         }
     }
 
-    suspend fun deleteCurrentFrame() = withContext(Dispatchers.IO) {
+    suspend fun deleteCurrentFrame(frameId: Int) = withContext(Dispatchers.IO) {
         snookerDbDao.apply {
-            deleteCurrentFrame()
-            deleteCurrentFrameScore()
-            val currentBreaks = getCurrentFrameBreaks()
+            deleteCurrentFrame(frameId)
+            deleteCurrentFrameScore(frameId)
+            val currentBreaks = getCurrentFrameBreaks(frameId)
             currentBreaks.forEach {
                 deleteCurrentBreakPots(it.breakId)
             }
-            deleteCurrentFrameBreaks()
-            deleteCurrentFrameBalls()
+            deleteCurrentFrameBreaks(frameId)
+            deleteCurrentFrameBalls(frameId)
         }
     }
 
-    val currentFrame: LiveData<DomainFrame> = Transformations.map(snookerDbDao.getCrtFrame()) {
-        it.asDomainFrame()
+
+    private val frameCount: MutableLiveData<Int> = MutableLiveData()
+    fun searchByCount(frameId: Int) {
+        frameCount.value = frameId
+    }
+
+    val crtFrame: LiveData<DbFrameWithScoreAndBreakWithPotsAndBallStack?> = Transformations.switchMap(frameCount) { frameId ->
+        snookerDbDao.getCurrentFrame(frameId)
     }
 
     val score: LiveData<ArrayList<Pair<DomainPlayerScore, DomainPlayerScore>>> = Transformations.map(snookerDbDao.getMatchScore()) {

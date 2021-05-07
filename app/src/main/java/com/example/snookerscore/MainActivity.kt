@@ -35,8 +35,6 @@ class MainActivity : AppCompatActivity() {
             GenericViewModelFactory(this.application, snookerRepository, this, null)
         ).get(GameViewModel::class.java)
         sharedPref = getSharedPref()
-
-
         //        binding.apply {
         //            navBottom.setupWithNavController(navController)
 
@@ -53,7 +51,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         activityScope.launch {
-            if (::gameViewModel.isInitialized) gameViewModel.saveMatch()
+            if (::gameViewModel.isInitialized && sharedPref.getBoolean(getString(R.string.shared_pref_match_is_in_progress), false)) {
+                gameViewModel.saveMatch()
+            }
         }
         super.onSaveInstanceState(outState)
     }

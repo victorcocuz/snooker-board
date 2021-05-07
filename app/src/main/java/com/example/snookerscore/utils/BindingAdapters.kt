@@ -15,7 +15,6 @@ import com.example.snookerscore.fragments.game.BallAdapter
 import com.example.snookerscore.fragments.game.BreakAdapter
 import com.example.snookerscore.fragments.game.getDisplayShots
 import com.example.snookerscore.fragments.gamestatistics.GameStatsAdapter
-import com.example.snookerscore.fragments.rankings.RankingsAdapter
 import java.text.DecimalFormat
 
 // Game Display
@@ -80,20 +79,6 @@ fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
     }
 }
 
-@BindingAdapter("dialogGameGenC", "dialogGameGenCActionB", "dialogGameGenCScore")
-fun TextView.setDialogGameC(matchAction: MatchAction, matchActionB: MatchAction, score: CurrentScore?) {
-    isEnabled = !(matchActionB == MatchAction.MATCH_END_CONFIRM_DISCARD && (score?.isFrameEqual() ?: false))
-    text = when (matchAction) {
-        MatchAction.MATCH_CANCEL -> "Yes"
-        MatchAction.FRAME_END_QUERY -> "Yes"
-        MatchAction.MATCH_END_QUERY -> "Yes"
-        MatchAction.FRAME_END_CONFIRM -> "Yes"
-        MatchAction.MATCH_END_CONFIRM -> "Yes"
-        MatchAction.MATCH_RELOAD -> "Continue Match"
-        else -> "$matchAction not implemented"
-    }
-}
-
 @BindingAdapter("dialogGameGenA")
 fun TextView.setDialogGameA(matchAction: MatchAction) {
     text = when (matchAction) {
@@ -121,6 +106,20 @@ fun TextView.setDialogGameB(matchAction: MatchAction, score: CurrentScore?) {
     }
 }
 
+@BindingAdapter("dialogGameGenC", "dialogGameGenCActionB", "dialogGameGenCScore")
+fun TextView.setDialogGameC(matchAction: MatchAction, matchActionB: MatchAction, score: CurrentScore?) {
+    isEnabled = !(matchActionB == MatchAction.MATCH_END_CONFIRM_DISCARD && (score?.isFrameEqual() ?: false))
+    text = when (matchAction) {
+        MatchAction.MATCH_CANCEL -> "Yes"
+        MatchAction.FRAME_END_QUERY -> "Yes"
+        MatchAction.MATCH_END_QUERY -> "Yes"
+        MatchAction.FRAME_END_CONFIRM -> "Yes"
+        MatchAction.MATCH_END_CONFIRM -> "Yes"
+        MatchAction.MATCH_RELOAD -> "Continue Match"
+        else -> "$matchAction not implemented"
+    }
+}
+
 @BindingAdapter("dialogGameNote", "dialogGameNoteScore")
 fun TextView.setDialogGameNote(matchAction: MatchAction, score: CurrentScore?) {
     visibility = if (matchAction == MatchAction.MATCH_END_CONFIRM_DISCARD) View.VISIBLE else View.GONE
@@ -145,7 +144,7 @@ fun TextView.setBreakPoints(crtBreak: DomainBreak, player: Int) {
 
 // Ball Item View
 @BindingAdapter("ballValue", "stackSize")
-fun TextView.setPointsValue(item: DomainBall, stackSize: Int) {
+fun TextView.setPointsValue(item: DomainBall?, stackSize: Int?) = stackSize?.let {
     val reds = (stackSize - 7) / 2
     text = if (reds > 0 && item is RED) reds.toString() else ""
 }
@@ -170,13 +169,7 @@ fun ImageView.setBallImage(item: DomainBall?) {
 }
 
 // RV Adapters
-@BindingAdapter("bindRankingsData")
-fun RecyclerView.bindRankingsRv(data: List<DomainRanking>?) {
-    val adapter = this.adapter as RankingsAdapter
-    adapter.submitList(data)
-}
-
-@BindingAdapter("bindMatchBallsRv")
+@BindingAdapter("bindMatchBallsRv", )
 fun RecyclerView.bindBallsRv(ballList: MutableList<DomainBall>?) {
     val adapter = this.adapter as BallAdapter
     adapter.submitList(
@@ -206,9 +199,9 @@ fun RecyclerView.bindGameStatsRv(data: ArrayList<Pair<DomainPlayerScore, DomainP
 }
 
 @BindingAdapter("bindBreakData")
-fun RecyclerView.bindBreakRv(breaks: MutableList<DomainBreak>?) {
+fun RecyclerView.bindBreakRv(breaks: MutableList<DomainBreak>?) = breaks?.let {
     val adapter = this.adapter as BreakAdapter
-    adapter.submitList(breaks?.getDisplayShots())
+    adapter.submitList(breaks.getDisplayShots())
 }
 
 @BindingAdapter("bindPots", "bindPotsPlayer")

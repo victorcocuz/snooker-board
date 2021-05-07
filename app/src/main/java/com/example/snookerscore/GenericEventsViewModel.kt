@@ -8,7 +8,6 @@ import com.example.snookerscore.domain.DomainPot
 import com.example.snookerscore.domain.MatchAction
 import com.example.snookerscore.domain.PotAction
 import com.example.snookerscore.utils.Event
-import timber.log.Timber
 
 class GenericEventsViewModel : ViewModel() {
     // Live Data
@@ -21,9 +20,6 @@ class GenericEventsViewModel : ViewModel() {
     private val _eventMatchActionConfirmed = MutableLiveData<Event<MatchAction>>()
     val eventMatchActionConfirmed: LiveData<Event<MatchAction>> = _eventMatchActionConfirmed
 
-    private val _eventStartMatch = MutableLiveData<Event<Unit>>()
-    val eventStartMatch: LiveData<Event<Unit>> = _eventStartMatch
-
     // Event handlers
     fun onFoulClicked() {
         _eventFoulQueried.value = Event(Unit)
@@ -35,10 +31,6 @@ class GenericEventsViewModel : ViewModel() {
 
     fun onEventMatchActionConfirmed(matchAction: MatchAction) {
         _eventMatchActionConfirmed.value = Event(matchAction)
-    }
-
-    fun onEventStartMatch() {
-        _eventStartMatch.value = Event(Unit)
     }
 
     // Observables
@@ -57,12 +49,10 @@ class GenericEventsViewModel : ViewModel() {
     // Handlers
     fun onBallClicked(ball: DomainBall) {
         ballClicked = ball
-        Timber.e("ball $ballClicked")
     }
 
     fun onActionClicked(action: PotAction) {
         _actionClicked.value = action
-        Timber.e("action ${actionClicked.value}")
         if (action == PotAction.CONTINUE) _isFreeBall.value = false
     }
 
@@ -77,8 +67,6 @@ class GenericEventsViewModel : ViewModel() {
     fun foulIsValid() = ballClicked != null && actionClicked.value != null
 
     fun getFoul() : DomainPot {
-        Timber.e("ball $ballClicked")
-        Timber.e("action ${actionClicked.value}")
         return DomainPot.FOUL(ballClicked!!, actionClicked.value!!)
     }
 

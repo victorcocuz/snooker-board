@@ -12,14 +12,18 @@ import androidx.navigation.fragment.findNavController
 import com.example.snookerscore.GenericEventsViewModel
 import com.example.snookerscore.R
 import com.example.snookerscore.database.SnookerDatabase
+import com.example.snookerscore.database.asDomainFrame
 import com.example.snookerscore.databinding.FragmentPlayBinding
 import com.example.snookerscore.domain.MatchAction
 import com.example.snookerscore.fragments.game.GameViewModel
 import com.example.snookerscore.repository.SnookerRepository
 import com.example.snookerscore.utils.EventObserver
 import com.example.snookerscore.utils.getSharedPref
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 class PlayFragment : androidx.fragment.app.Fragment() {
+    private val fragmentScope = CoroutineScope(Dispatchers.Default)
     private val playFragmentViewModel: PlayFragmentViewModel by viewModels()
     private val gameViewModel: GameViewModel by activityViewModels()
     private val eventsViewModel: GenericEventsViewModel by activityViewModels()
@@ -33,6 +37,7 @@ class PlayFragment : androidx.fragment.app.Fragment() {
         val binding: FragmentPlayBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_play, container, false)
 
+        snookerRepository = SnookerRepository(SnookerDatabase.getDatabase(requireActivity().application))
         sharedPref = requireActivity().getSharedPref()
 
         binding.apply {
@@ -44,11 +49,10 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                 value = 2
                 displayedValues = (minValue until maxValue * 2).filter { it % 2 != 0 }.map { it.toString() }.toTypedArray()
             }
-            snookerRepository = SnookerRepository(SnookerDatabase.getDatabase(requireActivity().application))
 
             // If match is saved open dialog, else start a new match
             fragPlayBtnPlay.setOnClickListener {
-                if (sharedPref.getBoolean(requireContext().getString(R.string.shared_pref_match_is_saved), false)) {
+                if (sharedPref.getBoolean(requireContext().getString(R.string.shared_pref_match_is_in_progress), false)) {
                     findNavController().navigate(
                         PlayFragmentDirections.actionPlayFragmentToGameGenericDialogFragment(
                             MatchAction.MATCH_START_NEW,
@@ -57,7 +61,7 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                         )
                     )
                 } else {
-                    resetMatch()
+                    startNewMatch()
                     findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
                 }
             }
@@ -65,32 +69,29 @@ class PlayFragment : androidx.fragment.app.Fragment() {
             // When new match is selected reset match, otherwise continue the existing match
             eventsViewModel.apply {
                 eventMatchActionConfirmed.observe(viewLifecycleOwner, EventObserver {
-                    sharedPref.edit().putBoolean(getString(R.string.shared_pref_match_is_saved), false).apply()
                     if (it == MatchAction.MATCH_START_NEW) {
-                        resetMatch()
-                        onEventStartMatch()
+                        startNewMatch()
+                        findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
                     }
                     if (it == MatchAction.MATCH_RELOAD) {
-                        snookerRepository.currentFrame.observe(viewLifecycleOwner, { domainFrame ->
-                            gameViewModel.loadMatch(domainFrame)
-                            onEventStartMatch()
+                        snookerRepository.searchByCount(sharedPref.getInt(getString(R.string.shared_pref_match_crt_frame), 0))
+                        snookerRepository.crtFrame.observe(viewLifecycleOwner, { domainFrame ->
+                            gameViewModel.loadMatch(domainFrame?.asDomainFrame())
+                            findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
                         })
                     }
-                })
-                eventStartMatch.observe(viewLifecycleOwner, EventObserver {
-                    findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
                 })
             }
         }
         return binding.root
     }
 
-    private fun resetMatch() = sharedPref.edit().apply {
+    private fun startNewMatch() = sharedPref.edit().apply {
         putInt(getString(R.string.shared_pref_match_frames), playFragmentViewModel.eventFrames.value!!)
         putInt(getString(R.string.shared_pref_match_reds), playFragmentViewModel.reds.value!!)
         putInt(getString(R.string.shared_pref_match_foul), playFragmentViewModel.eventFoulModifier.value!!)
         putInt(getString(R.string.shared_pref_match_first), playFragmentViewModel.eventBreaksFirst.value!!)
         apply()
-        gameViewModel.resetMatch()
+        gameViewModel.startNewMatch()
     }
 }
