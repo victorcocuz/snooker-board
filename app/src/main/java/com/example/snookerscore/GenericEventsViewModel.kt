@@ -20,12 +20,13 @@ class GenericEventsViewModel : ViewModel() {
     private val _eventMatchActionConfirmed = MutableLiveData<Event<MatchAction>>()
     val eventMatchActionConfirmed: LiveData<Event<MatchAction>> = _eventMatchActionConfirmed
 
+
     // Event handlers
     fun onFoulClicked() {
         _eventFoulQueried.value = Event(Unit)
     }
 
-    fun onEventActionQueried(matchAction: MatchAction) {
+    fun onEventMatchActionQueried(matchAction: MatchAction) {
         _eventMatchActionQueried.value = Event(matchAction)
     }
 

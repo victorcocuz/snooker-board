@@ -33,9 +33,7 @@ class GameFoulDialogFragment : DialogFragment() {
         setSize(resources.getDimension(R.dimen.dialog_factor))
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding: FragmentGameFoulDialogBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_game_foul_dialog, container, false)
 

@@ -24,6 +24,9 @@
         <action
             android:id="@+id/action_playFragment_to_gameGenericDialogFragment"
             app:destination="@id/gameGenericDialogFragment" />
+        <action
+            android:id="@+id/action_playFragment_to_textDialogFragment"
+            app:destination="@id/textDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
@@ -90,4 +93,12 @@
         android:id="@+id/gameFoulDialogFragment"
         android:name="com.example.snookerscore.fragments.gamedialogs.GameFoulDialogFragment"
         android:label="GameFoulDialogFragment" />
+    <dialog
+        android:id="@+id/textDialogFragment"
+        android:name="com.example.snookerscore.fragments.gamedialogs.TextDialogFragment"
+        android:label="TextDialogFragment" >
+        <argument
+            android:name="matchAction"
+            app:argType="com.example.snookerscore.domain.MatchAction" />
+    </dialog>
 </navigation>

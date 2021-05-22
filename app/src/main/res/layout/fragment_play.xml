@@ -4,9 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="com.example.snookerscore.domain.MatchAction" />
+
+        <variable
+            name="varNameA"
+            type="String" />
+
+        <variable
+            name="varNameB"
+            type="String" />
+
         <variable
             name="playViewModel"
             type="com.example.snookerscore.fragments.play.PlayFragmentViewModel" />
+
+        <variable
+            name="eventsViewModel"
+            type="com.example.snookerscore.GenericEventsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,7 +48,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
-            android:text="@string/fragment_play_btn_player_a"
+            android:onClick="@{() -> eventsViewModel.onEventMatchActionConfirmed(MatchAction.NAME_CHANGE_A_QUERIED)}"
+            android:text="@{varNameA}"
             app:layout_constraintEnd_toStartOf="@+id/frag_play_label_vs"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +70,8 @@
             style="@style/temp_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/fragment_play_btn_player_b"
+            android:onClick="@{() -> eventsViewModel.onEventMatchActionConfirmed(MatchAction.NAME_CHANGE_B_QUERIED)}"
+            android:text="@{varNameB}"
             app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_player_A"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -95,21 +112,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
-            android:text="@string/fragment_play_btn_break_player_a"
             android:onClick="@{() -> playViewModel.setBreaksFirst(0)}"
-            app:setSelected="@{playViewModel.eventBreaksFirst == 0}"
+            android:text="@string/fragment_play_btn_break_player_a"
             app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_break_random"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frag_play_label_breaks_first" />
+            app:layout_constraintTop_toBottomOf="@+id/frag_play_label_breaks_first"
+            app:setSelected="@{playViewModel.eventBreaksFirst == 0}" />
 
         <TextView
             android:id="@+id/frag_play_btn_break_random"
             style="@style/temp_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/fragment_play_btn_break_random"
             android:onClick="@{() -> playViewModel.setBreaksFirst(2)}"
+            android:text="@string/fragment_play_btn_break_random"
             app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_break_player_a"
             app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_break_player_b"
             app:layout_constraintHorizontal_bias="0.5"
@@ -121,12 +138,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="@{() -> playViewModel.setBreaksFirst(1)}"
-            app:setSelected="@{playViewModel.eventBreaksFirst == 1}"
             android:text="@string/fragment_play_btn_break_player_b"
             app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_break_random"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/frag_play_btn_break_random" />
+            app:layout_constraintStart_toEndOf="@+id/frag_play_btn_break_random"
+            app:setSelected="@{playViewModel.eventBreaksFirst == 1}" />
 
         <TextView
             android:id="@+id/frag_play_label_reds"
@@ -145,13 +162,13 @@
             android:layout_marginTop="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_large"
             android:onClick="@{() -> playViewModel.setReds(6)}"
-            app:setSelected="@{playViewModel.reds == 6}"
             android:text="@string/fragment_play_btn_reds_six"
             app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_reds_ten"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frag_play_label_reds" />
+            app:layout_constraintTop_toBottomOf="@+id/frag_play_label_reds"
+            app:setSelected="@{playViewModel.reds == 6}" />
 
         <TextView
             android:id="@+id/frag_play_btn_reds_ten"
@@ -160,11 +177,11 @@
             android:layout_height="wrap_content"
             android:onClick="@{() -> playViewModel.setReds(10)}"
             android:text="@string/fragment_play_btn_reds_ten"
-            app:setSelected="@{playViewModel.reds == 10}"
             app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_reds_six"
             app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_reds_fifteen"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/frag_play_btn_reds_six" />
+            app:layout_constraintStart_toEndOf="@+id/frag_play_btn_reds_six"
+            app:setSelected="@{playViewModel.reds == 10}" />
 
         <TextView
             android:id="@+id/frag_play_btn_reds_fifteen"
@@ -173,12 +190,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_large"
             android:onClick="@{() -> playViewModel.setReds(15)}"
-            app:setSelected="@{playViewModel.reds == 15}"
             android:text="@string/fragment_play_btn_reds_fifteen"
             app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_reds_six"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/frag_play_btn_reds_ten" />
+            app:layout_constraintStart_toEndOf="@+id/frag_play_btn_reds_ten"
+            app:setSelected="@{playViewModel.reds == 15}" />
 
         <TextView
             android:id="@+id/frag_play_label_foul_modifier"
@@ -196,13 +213,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
             android:onClick="@{() -> playViewModel.setFoulModifier(-3)}"
-            app:setSelected="@{playViewModel.eventFoulModifier == -3}"
             android:text="@string/fragment_play_btn_foul_one"
             app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_foul_two"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frag_play_label_foul_modifier" />
+            app:layout_constraintTop_toBottomOf="@+id/frag_play_label_foul_modifier"
+            app:setSelected="@{playViewModel.eventFoulModifier == -3}" />
 
         <TextView
             android:id="@+id/frag_play_btn_foul_two"
@@ -211,12 +228,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_large"
             android:onClick="@{() -> playViewModel.setFoulModifier(-2)}"
-            app:setSelected="@{playViewModel.eventFoulModifier == -2}"
             android:text="@string/fragment_play_btn_foul_two"
             app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_foul_one"
             app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_foul_three"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/frag_play_btn_foul_one" />
+            app:layout_constraintStart_toEndOf="@+id/frag_play_btn_foul_one"
+            app:setSelected="@{playViewModel.eventFoulModifier == -2}" />
 
         <TextView
             android:id="@+id/frag_play_btn_foul_three"
@@ -225,12 +242,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_large"
             android:onClick="@{() -> playViewModel.setFoulModifier(-1)}"
-            app:setSelected="@{playViewModel.eventFoulModifier == -1}"
             android:text="@string/fragment_play_btn_foul_three"
             app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_foul_two"
             app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_foul_four"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/frag_play_btn_foul_two" />
+            app:layout_constraintStart_toEndOf="@+id/frag_play_btn_foul_two"
+            app:setSelected="@{playViewModel.eventFoulModifier == -1}" />
 
         <TextView
             android:id="@+id/frag_play_btn_foul_four"
@@ -239,12 +256,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_large"
             android:onClick="@{() -> playViewModel.setFoulModifier(0)}"
-            app:setSelected="@{playViewModel.eventFoulModifier == 0}"
             android:text="@string/fragment_play_btn_foul_four"
             app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_foul_three"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/frag_play_btn_foul_three" />
+            app:layout_constraintStart_toEndOf="@+id/frag_play_btn_foul_three"
+            app:setSelected="@{playViewModel.eventFoulModifier == 0}" />
 
         <TextView
             android:id="@+id/frag_play_btn_play"

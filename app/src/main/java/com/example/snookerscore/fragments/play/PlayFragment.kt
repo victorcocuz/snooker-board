@@ -19,6 +19,7 @@ import com.example.snookerscore.fragments.game.GameViewModel
 import com.example.snookerscore.repository.SnookerRepository
 import com.example.snookerscore.utils.EventObserver
 import com.example.snookerscore.utils.getSharedPref
+import com.example.snookerscore.utils.hideKeyboard
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
@@ -37,12 +38,17 @@ class PlayFragment : androidx.fragment.app.Fragment() {
         val binding: FragmentPlayBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_play, container, false)
 
+        hideKeyboard()
+
         snookerRepository = SnookerRepository(SnookerDatabase.getDatabase(requireActivity().application))
         sharedPref = requireActivity().getSharedPref()
 
         binding.apply {
             lifecycleOwner = this@PlayFragment
             playViewModel = playFragmentViewModel
+            eventsViewModel = this@PlayFragment.eventsViewModel
+            varNameA = getNameFromPreferences(getString(R.string.shared_pref_match_player_a_name))
+            varNameB = getNameFromPreferences(getString(R.string.shared_pref_match_player_b_name))
             numberPicker.apply {
                 minValue = 1
                 maxValue = 19
@@ -67,23 +73,48 @@ class PlayFragment : androidx.fragment.app.Fragment() {
             }
 
             // When new match is selected reset match, otherwise continue the existing match
-            eventsViewModel.apply {
+            this@PlayFragment.eventsViewModel.apply {
                 eventMatchActionConfirmed.observe(viewLifecycleOwner, EventObserver {
-                    if (it == MatchAction.MATCH_START_NEW) {
-                        startNewMatch()
-                        findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
-                    }
-                    if (it == MatchAction.MATCH_RELOAD) {
-                        snookerRepository.searchByCount(sharedPref.getInt(getString(R.string.shared_pref_match_crt_frame), 0))
-                        snookerRepository.crtFrame.observe(viewLifecycleOwner, { domainFrame ->
-                            gameViewModel.loadMatch(domainFrame?.asDomainFrame())
+                    when (it) {
+                        MatchAction.MATCH_START_NEW -> {
+                            startNewMatch()
                             findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
-                        })
+                        }
+                        MatchAction.MATCH_RELOAD -> {
+                            snookerRepository.searchByCount(sharedPref.getInt(getString(R.string.shared_pref_match_crt_frame), 0))
+                            snookerRepository.crtFrame.observe(viewLifecycleOwner, { domainFrame ->
+                                gameViewModel.loadMatch(domainFrame?.asDomainFrame())
+                                findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
+                            })
+                        }
+                        in listOf(MatchAction.NAME_CHANGE_A_QUERIED, MatchAction.NAME_CHANGE_B_QUERIED) -> {
+                            findNavController().navigate(
+                                PlayFragmentDirections.actionPlayFragmentToTextDialogFragment(it)
+                            )
+                        }
+                        MatchAction.NAME_CHANGE_CONFIRM -> {
+                            varNameA = getNameFromPreferences(getString(R.string.shared_pref_match_player_a_name))
+                            varNameB = getNameFromPreferences(getString(R.string.shared_pref_match_player_b_name))
+                        }
+                        else -> {
+                        }
                     }
                 })
             }
         }
         return binding.root
+    }
+
+    private fun getNameFromPreferences(playerName: String): String? {
+        if (sharedPref.getString(playerName, "") == "") {
+            sharedPref.edit().putString(
+                playerName, when (playerName) {
+                    getString(R.string.shared_pref_match_player_a_name) -> getString(R.string.fragment_play_btn_player_a)
+                    else -> getString(R.string.fragment_play_btn_player_b)
+                }
+            ).apply()
+        }
+        return sharedPref.getString(playerName, "")
     }
 
     private fun startNewMatch() = sharedPref.edit().apply {

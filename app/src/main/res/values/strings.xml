@@ -119,4 +119,6 @@
     <string name="fragment_statistics_header_percentage">%</string>
     <string name="shared_pref_match_crt_frame">matchCrtFrame</string>
     <string name="toast_foul_invalid">Select a ball and an action to continue</string>
+    <string name="shared_pref_match_player_a_name">matchPlayerAName</string>
+    <string name="shared_pref_match_player_b_name">matchPlayerBName</string>
 </resources>

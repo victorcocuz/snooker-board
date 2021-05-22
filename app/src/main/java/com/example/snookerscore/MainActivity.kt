@@ -26,9 +26,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        //        navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
-        //        supportActionBar?.setDisplayShowTitleEnabled(false)
-
         snookerRepository = SnookerRepository(SnookerDatabase.getDatabase(this.application))
         gameViewModel = ViewModelProvider(
             this,

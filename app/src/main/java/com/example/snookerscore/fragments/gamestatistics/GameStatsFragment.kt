@@ -46,6 +46,7 @@ class GameStatsFragment : Fragment() {
             }
             lifecycleOwner = this@GameStatsFragment
             viewModel = gameStatsViewModel
+            application = requireActivity().application
 
             gameStatsRv.adapter = GameStatsAdapter()
 

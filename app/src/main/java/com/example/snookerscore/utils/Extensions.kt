@@ -1,13 +1,17 @@
 package com.example.snookerscore.utils
 
 import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
+import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import com.example.snookerscore.R
 
 fun Context.toast(message: CharSequence) =
@@ -42,11 +46,25 @@ fun DialogFragment.setFullScreen() {
     dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 }
 
-fun Activity.getSharedPref(): SharedPreferences = application.getSharedPreferences(
+fun Activity.getSharedPref(): SharedPreferences = application.getSharedPref()
+fun Application.getSharedPref(): SharedPreferences = getSharedPreferences(
     getString(R.string.preference_file_key),
-    Context.MODE_PRIVATE
-)
+    Context.MODE_PRIVATE)
 
 fun SharedPreferences.setMatchInProgress(isInProgress: Boolean) {
     this.edit().putBoolean("isMatchInProgress", isInProgress).apply()
+}
+
+fun Fragment.hideKeyboard() {
+    view?.let {
+        activity?.hideKeyboard(it) }
+}
+
+fun Activity.hideKeyboard() {
+    hideKeyboard(currentFocus ?: View(this))
+}
+
+fun Context.hideKeyboard(view: View) {
+    val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 }

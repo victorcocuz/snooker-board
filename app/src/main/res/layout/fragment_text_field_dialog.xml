@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.example.snookerscore.domain.MatchAction" />
+        <variable
+            name="varName"
+            type="String" />
+        <variable
+            name="varEventsViewModel"
+            type="com.example.snookerscore.GenericEventsViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/dialog_text_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Change Name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.21"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/dialog_text_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="@={varName}"
+            app:layout_constraintStart_toStartOf="@+id/dialog_text_label"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_text_label" />
+
+        <TextView
+            android:id="@+id/dialog_text_action_cancel"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="64dp"
+            android:onClick="@{() -> varEventsViewModel.onEventMatchActionQueried(MatchAction.NO_ACTION)}"
+            android:text="CANCEL"
+            app:layout_constraintBottom_toBottomOf="@+id/dialog_text_action_change"
+            app:layout_constraintEnd_toStartOf="@+id/dialog_text_action_change" />
+
+        <TextView
+            android:id="@+id/dialog_text_action_change"
+            style="@style/temp_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:text="CHANGE"
+            android:onClick="@{() -> varEventsViewModel.onEventMatchActionQueried(MatchAction.NAME_CHANGE_CONFIRM)}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_text_field" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

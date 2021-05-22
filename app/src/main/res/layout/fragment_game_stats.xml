@@ -5,6 +5,9 @@
 
     <data>
         <variable
+            name="application"
+            type="android.app.Application" />
+        <variable
             name="viewModel"
             type="com.example.snookerscore.fragments.gamestatistics.GameStatsViewModel" />
     </data>
@@ -29,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_large"
-            android:text="You"
+            app:getFromPrefsNameA="@{application}"
             app:layout_constraintEnd_toStartOf="@+id/game_stats_vs"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,7 +42,7 @@
             android:id="@+id/game_stats_player_b"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Guest"
+            app:getFromPrefsNameB="@{application}"
             app:layout_constraintBottom_toBottomOf="@+id/game_stats_player_a"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

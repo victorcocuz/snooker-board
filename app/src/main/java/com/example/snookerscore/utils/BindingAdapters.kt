@@ -1,7 +1,6 @@
 package com.example.snookerscore.utils
 
 import android.app.Application
-import android.content.Context
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -26,11 +25,18 @@ fun TextView.setActivePlayer(activePlayer: Boolean) = setBackgroundColor(
 
 @BindingAdapter("setTotalScore")
 fun TextView.setTotalScore(application: Application) {
-    val frames = application.getSharedPreferences(
-        application.applicationContext.getString(R.string.preference_file_key),
-        Context.MODE_PRIVATE
-    ).getInt(application.getString(R.string.shared_pref_match_frames), 0)
+    val frames = application.getSharedPref().getInt(application.getString(R.string.shared_pref_match_frames), 0)
     text = context.getString(R.string.game_total_score, (frames * 2 - 1))
+}
+
+@BindingAdapter("getFromPrefsNameA")
+fun TextView.getFromPrefsNameA(application: Application) {
+    text = application.getSharedPref().getString(application.getString(R.string.shared_pref_match_player_a_name), application.getString(R.string.fragment_play_btn_player_a))
+}
+
+@BindingAdapter("getFromPrefsNameB")
+fun TextView.getFromPrefsNameB(application: Application) {
+    text = application.getSharedPref().getString(application.getString(R.string.shared_pref_match_player_b_name), application.getString(R.string.fragment_play_btn_player_b))
 }
 
 // Statistics Adapters
