@@ -41,7 +41,7 @@
 
         <TextView
             android:id="@+id/dialog_text_action_cancel"
-            style="@style/temp_btn"
+            style="@style/MontserratButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="64dp"
@@ -52,7 +52,7 @@
 
         <TextView
             android:id="@+id/dialog_text_action_change"
-            style="@style/temp_btn"
+            style="@style/MontserratButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"

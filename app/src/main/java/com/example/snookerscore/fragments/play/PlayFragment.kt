@@ -20,11 +20,8 @@ import com.example.snookerscore.repository.SnookerRepository
 import com.example.snookerscore.utils.EventObserver
 import com.example.snookerscore.utils.getSharedPref
 import com.example.snookerscore.utils.hideKeyboard
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 
 class PlayFragment : androidx.fragment.app.Fragment() {
-    private val fragmentScope = CoroutineScope(Dispatchers.Default)
     private val playFragmentViewModel: PlayFragmentViewModel by viewModels()
     private val gameViewModel: GameViewModel by activityViewModels()
     private val eventsViewModel: GenericEventsViewModel by activityViewModels()
@@ -46,9 +43,11 @@ class PlayFragment : androidx.fragment.app.Fragment() {
         binding.apply {
             lifecycleOwner = this@PlayFragment
             playViewModel = playFragmentViewModel
-            eventsViewModel = this@PlayFragment.eventsViewModel
-            varNameA = getNameFromPreferences(getString(R.string.shared_pref_match_player_a_name))
-            varNameB = getNameFromPreferences(getString(R.string.shared_pref_match_player_b_name))
+            varEventsViewModel = this@PlayFragment.eventsViewModel
+            varNameFirstA = getNameFromPreferences(getString(R.string.shared_pref_match_name_first_a))
+            varNameLastA = getNameFromPreferences(getString(R.string.shared_pref_match_name_last_a))
+            varNameFirstB = getNameFromPreferences(getString(R.string.shared_pref_match_name_first_b))
+            varNameLastB = getNameFromPreferences(getString(R.string.shared_pref_match_name_last_b))
             numberPicker.apply {
                 minValue = 1
                 maxValue = 19
@@ -56,28 +55,27 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                 displayedValues = (minValue until maxValue * 2).filter { it % 2 != 0 }.map { it.toString() }.toTypedArray()
             }
 
-            // If match is saved open dialog, else start a new match
-            fragPlayBtnPlay.setOnClickListener {
-                if (sharedPref.getBoolean(requireContext().getString(R.string.shared_pref_match_is_in_progress), false)) {
-                    findNavController().navigate(
-                        PlayFragmentDirections.actionPlayFragmentToGameGenericDialogFragment(
-                            MatchAction.MATCH_START_NEW,
-                            MatchAction.NO_ACTION,
-                            MatchAction.MATCH_RELOAD
-                        )
-                    )
-                } else {
-                    startNewMatch()
-                    findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
-                }
-            }
-
             // When new match is selected reset match, otherwise continue the existing match
             this@PlayFragment.eventsViewModel.apply {
                 eventMatchActionConfirmed.observe(viewLifecycleOwner, EventObserver {
                     when (it) {
+                        // If match is saved open dialog, else start a new match
+                        MatchAction.MATCH_START -> {
+                            if (sharedPref.getBoolean(requireContext().getString(R.string.shared_pref_match_is_in_progress), false)) {
+                                findNavController().navigate(
+                                    PlayFragmentDirections.actionPlayFragmentToGameGenericDialogFragment(
+                                        MatchAction.MATCH_START_NEW,
+                                        MatchAction.NO_ACTION,
+                                        MatchAction.MATCH_RELOAD
+                                    )
+                                )
+                            } else {
+                                startNewMatch(varNameFirstA, varNameLastA, varNameFirstB, varNameLastB)
+                                findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
+                            }
+                        }
                         MatchAction.MATCH_START_NEW -> {
-                            startNewMatch()
+                            startNewMatch(varNameFirstA, varNameLastA, varNameFirstB, varNameLastB)
                             findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
                         }
                         MatchAction.MATCH_RELOAD -> {
@@ -92,9 +90,14 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                                 PlayFragmentDirections.actionPlayFragmentToTextDialogFragment(it)
                             )
                         }
-                        MatchAction.NAME_CHANGE_CONFIRM -> {
-                            varNameA = getNameFromPreferences(getString(R.string.shared_pref_match_player_a_name))
-                            varNameB = getNameFromPreferences(getString(R.string.shared_pref_match_player_b_name))
+                        MatchAction.INFO_FOUL -> {
+                            findNavController().navigate(
+                                PlayFragmentDirections.actionPlayFragmentToGameGenericDialogFragment(
+                                    MatchAction.NO_ACTION,
+                                    MatchAction.NO_ACTION,
+                                    MatchAction.INFO_FOUL
+                                )
+                            )
                         }
                         else -> {
                         }
@@ -106,18 +109,22 @@ class PlayFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun getNameFromPreferences(playerName: String): String? {
-        if (sharedPref.getString(playerName, "") == "") {
-            sharedPref.edit().putString(
-                playerName, when (playerName) {
-                    getString(R.string.shared_pref_match_player_a_name) -> getString(R.string.fragment_play_btn_player_a)
-                    else -> getString(R.string.fragment_play_btn_player_b)
-                }
-            ).apply()
-        }
+//        if (sharedPref.getString(playerName, "") == "") {
+//            sharedPref.edit().putString(
+//                playerName, when (playerName) {
+//                    getString(R.string.shared_pref_match_name_first_a) -> getString(R.string.you)
+//                    else -> getString(R.string.guest)
+//                }
+//            ).apply()
+//        }
         return sharedPref.getString(playerName, "")
     }
 
-    private fun startNewMatch() = sharedPref.edit().apply {
+    private fun startNewMatch(nameFirstA: String?, nameLastA: String?, nameFirstB: String?, nameLastB: String?) = sharedPref.edit().apply {
+        putString(getString(R.string.shared_pref_match_name_first_a), nameFirstA ?: "")
+        putString(getString(R.string.shared_pref_match_name_last_a), nameLastA ?: "")
+        putString(getString(R.string.shared_pref_match_name_first_b), nameFirstB ?: "")
+        putString(getString(R.string.shared_pref_match_name_last_b), nameLastB ?: "")
         putInt(getString(R.string.shared_pref_match_frames), playFragmentViewModel.eventFrames.value!!)
         putInt(getString(R.string.shared_pref_match_reds), playFragmentViewModel.reds.value!!)
         putInt(getString(R.string.shared_pref_match_foul), playFragmentViewModel.eventFoulModifier.value!!)

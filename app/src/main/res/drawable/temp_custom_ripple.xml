@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/design_default_color_primary">
+    android:color="@color/primary_dark">
 
     <item android:id="@android:id/background">
         <selector>
             <item android:state_enabled="false">
                 <shape>
                     <solid android:color="#555555" />
-                    <corners android:radius="@dimen/margin_xsmall" />
+                    <corners android:radius="@dimen/margin_xxxsmall" />
                     <stroke
                         android:width="@dimen/stroke_single"
                         android:color="@color/design_default_color_secondary" />
@@ -16,8 +16,8 @@
 
             <item android:state_selected="true">
                 <shape>
-                    <solid android:color="#AAAA44" />
-                    <corners android:radius="@dimen/margin_xsmall" />
+                    <solid android:color="@color/primary" />
+                    <corners android:radius="@dimen/margin_xxxsmall" />
                     <stroke
                         android:width="@dimen/stroke_single"
                         android:color="@color/design_default_color_secondary" />
@@ -26,11 +26,11 @@
 
             <item android:state_selected="false">
                 <shape>
-                    <solid android:color="@color/design_default_color_secondary" />
-                    <corners android:radius="@dimen/margin_xsmall" />
+                    <solid android:color="@color/accent" />
+                    <corners android:radius="@dimen/margin_xxxsmall" />
                     <stroke
                         android:width="@dimen/stroke_single"
-                        android:color="@color/design_default_color_secondary" />
+                        android:color="@color/accent" />
                 </shape>
             </item>
         </selector>

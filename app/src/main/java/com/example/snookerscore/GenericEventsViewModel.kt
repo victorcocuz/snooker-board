@@ -8,6 +8,7 @@ import com.example.snookerscore.domain.DomainPot
 import com.example.snookerscore.domain.MatchAction
 import com.example.snookerscore.domain.PotAction
 import com.example.snookerscore.utils.Event
+import timber.log.Timber
 
 class GenericEventsViewModel : ViewModel() {
     // Live Data
@@ -31,6 +32,7 @@ class GenericEventsViewModel : ViewModel() {
     }
 
     fun onEventMatchActionConfirmed(matchAction: MatchAction) {
+        Timber.e("match action $matchAction")
         _eventMatchActionConfirmed.value = Event(matchAction)
     }
 

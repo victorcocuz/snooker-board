@@ -23,7 +23,7 @@
             android:id="@+id/item_break_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/margin_xsmall"
+            android:padding="@dimen/margin_xxxsmall"
             android:background="@color/design_default_color_secondary"
             android:orientation="horizontal">
 

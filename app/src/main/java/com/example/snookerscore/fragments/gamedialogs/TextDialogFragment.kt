@@ -10,7 +10,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.example.snookerscore.GenericEventsViewModel
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentTextFieldDialogBinding
@@ -23,7 +22,6 @@ import com.example.snookerscore.utils.setSize
 
 class TextDialogFragment : DialogFragment() {
     private val eventsViewModel: GenericEventsViewModel by activityViewModels()
-    private val textDialogViewModel: TextDialogViewModel by viewModels()
     private lateinit var sharedPref: SharedPreferences
     private lateinit var imm: InputMethodManager
 
@@ -45,8 +43,8 @@ class TextDialogFragment : DialogFragment() {
             varEventsViewModel = eventsViewModel
             varName = sharedPref.getString(
                 when (name) {
-                    MatchAction.NAME_CHANGE_A_QUERIED -> getString(R.string.shared_pref_match_player_a_name)
-                    else -> getString(R.string.shared_pref_match_player_b_name)
+                    MatchAction.NAME_CHANGE_A_QUERIED -> getString(R.string.shared_pref_match_name_first_a)
+                    else -> getString(R.string.shared_pref_match_name_first_b)
                 }, "Name"
             )
 
@@ -60,8 +58,8 @@ class TextDialogFragment : DialogFragment() {
                 if (it == MatchAction.NAME_CHANGE_CONFIRM) {
                     sharedPref.edit().putString(
                         when (name) {
-                            MatchAction.NAME_CHANGE_A_QUERIED -> getString(R.string.shared_pref_match_player_a_name)
-                            else -> getString(R.string.shared_pref_match_player_b_name)
+                            MatchAction.NAME_CHANGE_A_QUERIED -> getString(R.string.shared_pref_match_name_first_a)
+                            else -> getString(R.string.shared_pref_match_name_first_b)
                         }, binding.varName
                     ).apply()
                     onEventMatchActionConfirmed(it)

@@ -7,7 +7,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.example.snookerscore.GenericEventsViewModel
 import com.example.snookerscore.R
-import com.example.snookerscore.databinding.FragmentGameGenDialogBinding
+import com.example.snookerscore.databinding.FragmentDialogGenBinding
 import com.example.snookerscore.domain.MatchAction
 import com.example.snookerscore.fragments.game.GameViewModel
 import com.example.snookerscore.utils.EventObserver
@@ -28,8 +28,8 @@ class GameGenericDialogFragment : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding: FragmentGameGenDialogBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_game_gen_dialog, container, false)
+        val binding: FragmentDialogGenBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_dialog_gen, container, false)
 
         binding.apply {
             lifecycleOwner = this@GameGenericDialogFragment

@@ -16,6 +16,15 @@ import com.example.snookerscore.fragments.game.getDisplayShots
 import com.example.snookerscore.fragments.gamestatistics.GameStatsAdapter
 import java.text.DecimalFormat
 
+// General
+@BindingAdapter("setVisible")
+fun TextView.setVisible(isVisible: Boolean) {
+    visibility = when (isVisible) {
+        true -> View.VISIBLE
+        false -> View.GONE
+    }
+}
+
 // Game Display
 @BindingAdapter("setActivePlayer")
 fun TextView.setActivePlayer(activePlayer: Boolean) = setBackgroundColor(
@@ -31,12 +40,12 @@ fun TextView.setTotalScore(application: Application) {
 
 @BindingAdapter("getFromPrefsNameA")
 fun TextView.getFromPrefsNameA(application: Application) {
-    text = application.getSharedPref().getString(application.getString(R.string.shared_pref_match_player_a_name), application.getString(R.string.fragment_play_btn_player_a))
+    text = application.getSharedPref().getString(application.getString(R.string.shared_pref_match_name_first_a), application.getString(R.string.you))
 }
 
 @BindingAdapter("getFromPrefsNameB")
 fun TextView.getFromPrefsNameB(application: Application) {
-    text = application.getSharedPref().getString(application.getString(R.string.shared_pref_match_player_b_name), application.getString(R.string.fragment_play_btn_player_b))
+    text = application.getSharedPref().getString(application.getString(R.string.shared_pref_match_name_first_b), application.getString(R.string.guest))
 }
 
 // Statistics Adapters
@@ -71,7 +80,7 @@ fun TextView.setGameStatsValue(type: StatisticsType, value: Int) {
     }
 }
 
-// Game Dialog Adapters
+// Gen Dialog Adapters
 @BindingAdapter("dialogGameGenQuestion")
 fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
     text = when (matchAction) {
@@ -81,6 +90,7 @@ fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
         MatchAction.FRAME_END_CONFIRM -> "This frame will end. Would you like to proceed?"
         MatchAction.MATCH_END_CONFIRM -> "This match will end. Would you like to proceed?"
         MatchAction.MATCH_RELOAD -> "Would you like to continue the current match or start a new one"
+        MatchAction.INFO_FOUL -> "A typical foul in snooker is worth 4 points. You may wish to decrease this value."
         else -> "$matchAction not implemented"
     }
 }

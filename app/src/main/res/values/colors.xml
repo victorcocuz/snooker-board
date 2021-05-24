@@ -8,4 +8,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#CCC</color>
+
+    <color name="primary_old">#AAAA44</color>
+    <color name="primary_dark">#293128</color>
+    <color name="primary">#2A652D</color>
+    <color name="accent">#F5F4E2</color>
+    <color name="background_a">#2F7C32</color>
+    <color name="background_b">#538C57</color>
+    <color name="edit_text_normal">#33F5F4E2</color>
+    <color name="edit_text_focused">#66F5F4E2</color>
 </resources>

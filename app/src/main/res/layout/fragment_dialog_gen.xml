@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.example.snookerscore.domain.MatchAction"/>
         <variable
             name="gameViewModel"
             type="com.example.snookerscore.fragments.game.GameViewModel" />
@@ -30,6 +31,7 @@
             android:id="@+id/game_dialog_gen_q"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/BlackText"
             android:layout_marginStart="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_large"
             android:layout_marginEnd="@dimen/margin_large"
@@ -51,11 +53,12 @@
 
         <TextView
             android:id="@+id/game_dialog_gen_a"
-            style="@style/temp_btn"
+            style="@style/MontserratButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="@{() -> genericEventsViewModel.onEventMatchActionQueried(dialogMatchActionA)}"
             app:dialogGameGenA="@{dialogMatchActionC}"
+            app:setVisible="@{dialogMatchActionA != MatchAction.NO_ACTION}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/game_dialog_gen_b"
             app:layout_constraintHorizontal_bias="0.5"
@@ -67,10 +70,10 @@
             android:onClick="@{() -> genericEventsViewModel.onEventMatchActionQueried(dialogMatchActionB)}"
             app:dialogGameGenB="@{dialogMatchActionB}"
             app:dialogGameGenBScore="@{gameViewModel.displayScore}"
-            style="@style/temp_btn"
+            app:setVisible="@{dialogMatchActionB != MatchAction.NO_ACTION}"
+            style="@style/MontserratButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TextView"
             app:layout_constraintBottom_toBottomOf="@+id/game_dialog_gen_a"
             app:layout_constraintEnd_toStartOf="@+id/game_dialog_gen_c"
             app:layout_constraintHorizontal_bias="0.5"
@@ -78,12 +81,13 @@
 
         <TextView
             android:id="@+id/game_dialog_gen_c"
-            style="@style/temp_btn"
+            style="@style/MontserratButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="@{() -> genericEventsViewModel.onEventMatchActionQueried(dialogMatchActionC)}"
             app:dialogGameGenC="@{dialogMatchActionC}"
             app:dialogGameGenCActionB="@{dialogMatchActionB}"
+            app:setVisible="@{(dialogMatchActionC != MatchAction.NO_ACTION) &amp;&amp; (dialogMatchActionC != MatchAction.INFO_FOUL)}"
             app:dialogGameGenCScore="@{gameViewModel.displayScore}"
             app:layout_constraintBottom_toBottomOf="@+id/game_dialog_gen_a"
             app:layout_constraintEnd_toEndOf="parent"

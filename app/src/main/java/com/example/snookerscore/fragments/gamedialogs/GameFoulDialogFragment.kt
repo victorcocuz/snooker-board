@@ -12,7 +12,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snookerscore.GenericEventsViewModel
 import com.example.snookerscore.R
-import com.example.snookerscore.databinding.FragmentGameFoulDialogBinding
+import com.example.snookerscore.databinding.FragmentDialogFoulBinding
 import com.example.snookerscore.domain.*
 import com.example.snookerscore.domain.DomainBall.*
 import com.example.snookerscore.fragments.game.BallAdapter
@@ -34,8 +34,8 @@ class GameFoulDialogFragment : DialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val binding: FragmentGameFoulDialogBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_game_foul_dialog, container, false)
+        val binding: FragmentDialogFoulBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_dialog_foul, container, false)
 
         // Bind RV, VM, adapter
         val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
@@ -48,7 +48,7 @@ class GameFoulDialogFragment : DialogFragment() {
         binding.apply {
             lifecycleOwner = this@GameFoulDialogFragment
             gameViewModel = this@GameFoulDialogFragment.gameViewModel
-            eventsViewModel = this@GameFoulDialogFragment.eventsViewModel
+            varEventsViewModel = this@GameFoulDialogFragment.eventsViewModel
             foulBallsListRv.apply {
                 layoutManager = linearLayoutManager
                 adapter = ballAdapter

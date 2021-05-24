@@ -19,7 +19,7 @@
 
         <TextView
             android:id="@+id/game_btn_act_safe"
-            style="@style/temp_btn"
+            style="@style/MontserratButtonStyle"
             android:onClick="@{() -> gameViewModel.handleFrameEvent(FrameEvent.HANDLE_POT, DomainPot.SAFE.INSTANCE, false, false)}"
             android:text="@string/action_safe"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -30,7 +30,7 @@
 
         <TextView
             android:id="@+id/game_btn_act_miss"
-            style="@style/temp_btn"
+            style="@style/MontserratButtonStyle"
             android:onClick="@{() -> gameViewModel.handleFrameEvent(FrameEvent.HANDLE_POT, DomainPot.MISS.INSTANCE, false, false)}"
             android:text="@string/action_miss"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
@@ -41,7 +41,7 @@
 
         <TextView
             android:id="@+id/game_btn_act_foul"
-            style="@style/temp_btn"
+            style="@style/MontserratButtonStyle"
             android:onClick="@{() -> genericEventsViewModel.onFoulClicked()}"
             android:text="@string/action_foul"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
