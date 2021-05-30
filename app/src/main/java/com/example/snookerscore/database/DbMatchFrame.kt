@@ -9,7 +9,8 @@ import com.example.snookerscore.domain.DomainFrame
 @Entity(tableName = "match_frames_table")
 data class DbFrame(
     @PrimaryKey(autoGenerate = false)
-    val frameId: Int
+    val frameId: Int,
+    var frameMax: Int,
 )
 
 data class DbFrameWithScoreAndBreakWithPotsAndBallStack(
@@ -32,22 +33,12 @@ data class DbFrameWithScoreAndBreakWithPotsAndBallStack(
     val ballStack: List<DbBall>
 )
 
-fun List<DbFrameWithScoreAndBreakWithPotsAndBallStack>.asDomainFrameList(): MutableList<DomainFrame> {
-    return map {
-        DomainFrame(
-            frameId = it.frame.frameId,
-            frameScore = it.frameScore.asDomainCrtFrameScoreList(),
-            frameStack = it.frameStack.asDomainBreakList(),
-            ballStack = it.ballStack.asDomainBallStack()
-        )
-    }.toMutableList()
-}
-
 fun DbFrameWithScoreAndBreakWithPotsAndBallStack.asDomainFrame(): DomainFrame {
     return DomainFrame(
         frameId = this.frame.frameId,
         frameScore = this.frameScore.asDomainCrtFrameScoreList(),
         frameStack = this.frameStack.asDomainBreakList(),
-        ballStack = this.ballStack.asDomainBallStack()
+        ballStack = this.ballStack.asDomainBallStack(),
+        frameMax = this.frame.frameMax
     )
 }

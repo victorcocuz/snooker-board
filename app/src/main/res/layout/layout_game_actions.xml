@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="com.example.snookerscore.domain.DomainPot" />
-        <import type="com.example.snookerscore.domain.FrameEvent"/>
+
+        <import type="com.example.snookerscore.domain.FrameEvent" />
+
         <variable
             name="genericEventsViewModel"
             type="com.example.snookerscore.GenericEventsViewModel" />
+
         <variable
             name="gameViewModel"
             type="com.example.snookerscore.fragments.game.GameViewModel" />
@@ -15,40 +20,105 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimaryVariant">
+
+        <FrameLayout
+            android:id="@+id/game_btn_line_hor_one"
+            style="@style/LineHorizontalAccent"
+            android:layout_width="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/game_btn_act_safe"
-            style="@style/MontserratButtonStyle"
+            style="@style/ButtonStretched"
+            android:layout_width="0dp"
             android:onClick="@{() -> gameViewModel.handleFrameEvent(FrameEvent.HANDLE_POT, DomainPot.SAFE.INSTANCE, false, false)}"
             android:text="@string/action_safe"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/game_btn_act_miss"
+            app:layout_constraintEnd_toStartOf="@+id/game_btn_line_vert_one"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/game_btn_line_hor_one"
             app:setEnabled="@{gameViewModel.displayFrame.ballStack.size() > 1 &amp;&amp; !gameViewModel.isFrameUpdateInProgress}" />
+
+        <FrameLayout
+            android:id="@+id/game_btn_line_vert_one"
+            style="@style/LineVerticalAccent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
+            app:layout_constraintEnd_toStartOf="@+id/game_btn_act_miss"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_btn_act_safe"
+            app:layout_constraintTop_toTopOf="@+id/game_btn_act_safe" />
 
         <TextView
             android:id="@+id/game_btn_act_miss"
-            style="@style/MontserratButtonStyle"
+            style="@style/ButtonStretched"
+            android:layout_width="0dp"
             android:onClick="@{() -> gameViewModel.handleFrameEvent(FrameEvent.HANDLE_POT, DomainPot.MISS.INSTANCE, false, false)}"
             android:text="@string/action_miss"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
+            app:layout_constraintEnd_toStartOf="@+id/game_btn_line_vert_two"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/game_btn_line_vert_one"
+            app:layout_constraintTop_toTopOf="@+id/game_btn_act_safe"
+            app:setEnabled="@{gameViewModel.displayFrame.ballStack.size() > 1 &amp;&amp; !gameViewModel.isFrameUpdateInProgress}" />
+
+        <FrameLayout
+            android:id="@+id/game_btn_line_vert_two"
+            style="@style/LineVerticalAccent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_act_foul"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_btn_act_safe"
-            app:setEnabled="@{gameViewModel.displayFrame.ballStack.size() > 1 &amp;&amp; !gameViewModel.isFrameUpdateInProgress}" />
+            app:layout_constraintStart_toEndOf="@+id/game_btn_act_miss"
+            app:layout_constraintTop_toTopOf="@+id/game_btn_act_safe" />
+
 
         <TextView
             android:id="@+id/game_btn_act_foul"
-            style="@style/MontserratButtonStyle"
+            style="@style/ButtonStretched"
+            android:layout_width="0dp"
             android:onClick="@{() -> genericEventsViewModel.onFoulClicked()}"
             android:text="@string/action_foul"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_btn_act_miss"
+            app:layout_constraintStart_toEndOf="@+id/game_btn_line_vert_two"
+            app:layout_constraintTop_toTopOf="@+id/game_btn_act_safe"
             app:setEnabled="@{gameViewModel.displayFrame.ballStack.size() > 1 &amp;&amp; !gameViewModel.isFrameUpdateInProgress}" />
+
+        <FrameLayout
+            android:id="@+id/game_btn_line_hor_two"
+            style="@style/LineHorizontalAccent"
+            android:layout_width="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/game_btn_act_safe" />
+
+        <LinearLayout
+            android:id="@+id/frag_game_balls_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_header_below"
+            android:layout_marginBottom="@dimen/margin_header_below"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/game_btn_act_safe">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/frag_game_balls_rv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:bindMatchBallsRv="@{gameViewModel.displayFrame.ballStack}" />
+
+        </LinearLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

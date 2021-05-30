@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="grey">#CCC</color>
+    <color name="white">#FFF6E5</color>
+    <color name="grey">#BBB</color>
+    <color name="white_disabled">#979797</color>
 
     <color name="primary_old">#AAAA44</color>
-    <color name="primary_dark">#293128</color>
-    <color name="primary">#2A652D</color>
-    <color name="accent">#F5F4E2</color>
-    <color name="background_a">#2F7C32</color>
-    <color name="background_b">#538C57</color>
-    <color name="edit_text_normal">#33F5F4E2</color>
-    <color name="edit_text_focused">#66F5F4E2</color>
+
+    <color name="brown_dark">#4A2F18</color>
+    <color name="brown">#7C5422</color>
+<!--    <color name="brown">#88652E</color>-->
+<!--    <color name="brown">#945F33</color>-->
+    <color name="beige">#EBC881</color>
+    <color name="cream_bright">#F5F4E2</color>
+    <color name="green_dark">#293128</color>
+    <color name="green_accent">#456F47</color>
+    <color name="green">#2A652D</color>
+    <color name="green_brighter">#5A9A5F</color>
+    <color name="green_bright">#368139</color>
+<!--    <color name="green_bright">#2F7C32</color>-->
+<!--    <color name="green_brighter">#538C57</color>-->
+    <color name="cream_bright_20">#33F5F4E2</color>
+    <color name="cream_bright_40">#66F5F4E2</color>
+    <color name="transparent">#00000000</color>
 </resources>

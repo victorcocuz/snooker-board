@@ -1,42 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="MontserratTextViewStyle" parent="android:Widget.TextView">
-        <item name="android:fontFamily">@font/montserrat</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">16sp</item>
+    <!-- Lines -->
+    <style name="LineHorizontal">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
     </style>
 
-    <style name="BlackText" parent="MontserratTextViewStyle">
+    <style name="LineHorizontalAccent" parent="LineHorizontal">
+        <item name="android:background">@color/beige</item>
+    </style>
+
+    <style name="LineHorizontalAccentOffset" parent="LineHorizontalAccent">
+        <item name="android:layout_marginStart">@dimen/margin_layout_offset</item>
+        <item name="android:layout_marginEnd">@dimen/margin_layout_offset</item>
+        <item name="android:background">@color/beige</item>
+    </style>
+
+    <style name="LineVertical">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="LineVerticalAccent" parent="LineVertical">
+        <item name="android:background">@color/beige</item>
+    </style>
+
+    <style name="LineHorizontalChapter" parent="LineHorizontal">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@color/beige</item>
+    </style>
+
+    <style name="LineHorizontalTransparent" parent="LineHorizontal">
+        <item name="android:background">@color/transparent</item>
+    </style>
+
+    <!-- Text Bold -->
+    <style name="MontserratBoldTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/montserrat_bold</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextTitle" parent="MontserratBoldTextViewStyle">
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="TextSubtitle" parent="MontserratBoldTextViewStyle">
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="TextHeaderBold" parent="MontserratBoldTextViewStyle">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TextStatisticsHeader" parent="MontserratBoldTextViewStyle">
+        <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/black</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="TextChapter" parent="MontserratBoldTextViewStyle">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/beige</item>
+    </style>
+
+    <!-- Text Regular -->
+    <style name="MontserratTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextDialog" parent="MontserratTextViewStyle">
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="TextHeader" parent="MontserratTextViewStyle">
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="TextStatisticsBody" parent="MontserratTextViewStyle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="TextHeaderBlack" parent="TextHeader">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="TextRegular" parent="MontserratTextViewStyle">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextNote" parent="TextRegular">
+        <item name="android:textColor">@color/beige</item>
+    </style>
+
     <style name="edit_text" parent="MontserratTextViewStyle">
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">@dimen/temp_btn_height</item>
+        <item name="android:layout_height">@dimen/btn_height</item>
         <item name="android:background">@drawable/bg_edit_text</item>
         <item name="android:paddingLeft">@dimen/padding_medium</item>
-        <item name="android:textColorHint">@color/accent</item>
+        <item name="android:textColorHint">@color/cream_bright</item>
         <item name="android:inputType">textCapWords</item>
     </style>
 
-    <style name="MontserratButtonStyle" parent="BlackText">
-        <item name="android:layout_width">@dimen/temp_btn_width</item>
-        <item name="android:layout_height">@dimen/temp_btn_height</item>
-        <item name="android:background">@drawable/temp_custom_ripple</item>
+    <style name="ButtonStandard" parent="TextHeader">
         <item name="android:paddingStart">@dimen/padding_button</item>
         <item name="android:paddingEnd">@dimen/padding_button</item>
         <item name="android:gravity">center</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
-        <item name="android:elevation">2dp</item>
         <item name="android:clipToPadding">false</item>
-        <item name="android:layout_marginStart">@dimen/margin_small</item>
-        <item name="android:layout_marginEnd">@dimen/margin_small</item>
+        <item name="android:elevation">@dimen/button_elevation</item>
     </style>
+
+    <style name="ButtonNarrow" parent="ButtonStandard">
+        <item name="android:layout_width">@dimen/btn_width</item>
+        <item name="android:layout_height">@dimen/btn_height</item>
+        <item name="android:background">@drawable/temp_custom_ripple</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_marginStart">@dimen/margin_btn</item>
+        <item name="android:layout_marginEnd">@dimen/margin_btn</item>
+    </style>
+
+    <style name="ButtonStretched" parent="ButtonStandard">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/btn_stretched_height</item>
+        <item name="android:background">@drawable/temp_custom_ripple_no_corners</item>
+        <item name="android:layout_margin">0dp</item>
+    </style>
+
+    <!-- Toolbar -->
+    <style name="Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/toolbar_height</item>
+        <item name="android:minHeight">@dimen/toolbar_height</item>
+        <item name="android:elevation">@dimen/toolbar_elevation</item>
+        <item name="android:background">?attr/colorPrimary</item>
+    </style>
+
+    <!-- Game -->
+    <style name="NameTag">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/name_tag_height</item>
+        <item name="android:gravity">center</item>
+        <item name="android:elevation">@dimen/toolbar_elevation</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
 </resources>

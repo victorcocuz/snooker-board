@@ -9,7 +9,7 @@ import com.example.snookerscore.domain.PotType.*
 import kotlin.math.max
 
 // FrameStack
-fun MutableList<DomainBreak>.isPreviousRed() = this.last().pots.last().ball is RED
+fun MutableList<DomainBreak>.isPreviousRed() = this.lastOrNull()?.pots?.lastOrNull()?.ball is RED
 fun MutableList<DomainBreak>.addToFrameStack(pot: DomainPot, playerAsInt: Int, frameCount: Int) {
     if (pot.potType !in listOf(HIT, FREE, ADDRED)
         || this.size == 0
@@ -17,7 +17,6 @@ fun MutableList<DomainBreak>.addToFrameStack(pot: DomainPot, playerAsInt: Int, f
         || this.last().player != playerAsInt
     ) this.add(
         DomainBreak(
-//            1 + (this.lastOrNull()?.breakId ?: 0),
             playerAsInt,
             frameCount,
             mutableListOf(),
@@ -75,7 +74,26 @@ fun CurrentScore.calculatePoints(pot: DomainPot, pol: Int, lastBall: DomainBall,
 // BallStack
 fun MutableList<DomainBall>.inColors(): Boolean = this.size <= 7
 fun MutableList<DomainBall>.isNextColor(): Boolean = this.size in (7..37).filter { it % 2 != 0 }
-fun MutableList<DomainBall>.removeBall(times: Int = 1) = repeat(times) { this.removeLast() }
+fun MutableList<DomainBall>.removeBalls(times: Int): Int = if (times == 1) {
+    this.removeLast().points
+} else {
+    repeat(times) { this.removeLast() }
+    8
+}
+
 fun MutableList<DomainBall>.addBalls(vararg balls: DomainBall) {
     for (ball in balls) this.add(ball)
 }
+
+fun MutableList<DomainBall>.addFreeBall(): Int {
+    return if (inColors()) {
+        addBalls(FREEBALL())
+        last().points
+    } else {
+        addBalls(COLOR(), FREEBALL())
+        8
+    }
+}
+
+fun MutableList<DomainBall>.removeFreeBall(): Int = if (inColors()) removeBalls(1) else removeBalls(2)
+

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="playerTagType"
+            type="com.example.snookerscore.domain.PlayerTagType" />
+        <variable
+            name="application"
+            type="android.app.Application" />
+        <variable
+            name="varGameViewModel"
+            type="com.example.snookerscore.fragments.game.GameViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/game_guide_vert_mid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintGuide_percent="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/frag_game_toolbar"
+            style="@style/Toolbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:theme="@style/ToolbarTheme">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/cd_logo"
+                android:src="@drawable/logo" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <LinearLayout
+            android:id="@+id/game_label_player_a"
+            style="@style/NameTag"
+            app:layout_constraintEnd_toStartOf="@+id/game_guide_vert_mid"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frag_game_toolbar"
+            app:setActivePlayerTag="@{playerTagType}"
+            app:setActivePlayer="@{varGameViewModel.displayScore == varGameViewModel.displayScore.getFirst()}">
+
+            <TextView
+                android:id="@+id/game_label_name_first_a"
+                style="@style/TextRegular"
+                android:layout_marginBottom="-4dp"
+                app:getNameApplication="@{application}"
+                app:getNamePref="@{@string/shared_pref_match_name_first_a}"
+                tools:text="@string/fragment_game_label_player_a" />
+
+            <TextView
+                android:id="@+id/game_label_name_last_a"
+                style="@style/TextSubtitle"
+                app:getNameApplication="@{application}"
+                app:getNamePref="@{@string/shared_pref_match_name_last_a}"
+                tools:text="@string/fragment_game_label_player_a" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/game_label_player_b"
+            style="@style/NameTag"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/game_guide_vert_mid"
+            app:layout_constraintTop_toBottomOf="@+id/frag_game_toolbar"
+            app:setActivePlayerTag="@{playerTagType}"
+            app:setActivePlayer="@{varGameViewModel.displayScore == varGameViewModel.displayScore.getSecond()}">
+
+            <TextView
+                android:id="@+id/game_label_name_first_b"
+                style="@style/TextRegular"
+                android:layout_marginBottom="-4dp"
+                app:getNameApplication="@{application}"
+                app:getNamePref="@{@string/shared_pref_match_name_first_b}"
+                tools:text="@string/fragment_game_label_player_b" />
+
+            <TextView
+                android:id="@+id/game_label_name_last_b"
+                style="@style/TextSubtitle"
+                app:getNameApplication="@{application}"
+                app:getNamePref="@{@string/shared_pref_match_name_last_b}"
+                tools:text="@string/fragment_game_label_player_b" />
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

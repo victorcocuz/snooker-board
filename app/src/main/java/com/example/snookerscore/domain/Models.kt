@@ -13,6 +13,8 @@ enum class StatisticsType { FRAME_ID, HIGHEST_BREAK, FRAME_POINTS}
 
 enum class FrameEvent {HANDLE_POT, HANDLE_FOUL, HANDLE_UNDO}
 
+enum class PlayerTagType {MATCH, STATISTICS}
+
 enum class MatchAction {
     FOUL_QUERIED,
     FOUL_CONFIRMED,
@@ -27,7 +29,8 @@ enum class MatchAction {
     MATCH_CANCEL,
     NAME_CHANGE_A_QUERIED,
     NAME_CHANGE_B_QUERIED,
-    NAME_CHANGE_CONFIRM,
+    APP_TO_MAIN,
     INFO_FOUL,
-    NO_ACTION
+    NO_ACTION,
+    IGNORE
 }

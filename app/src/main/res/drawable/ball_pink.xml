@@ -4,5 +4,5 @@
         android:state_pressed="true"
         android:drawable="@drawable/btn_pink_pressed"/>
     <item
-        android:drawable="@drawable/btn_pink_normal"/>
+        android:drawable="@drawable/ic_btn_pink_normal"/>
 </selector>

@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="bottom_height">120dp</dimen>
     <dimen name="btn_width_large">120dp</dimen>
-    <dimen name="temp_btn_width">66dp</dimen>
-    <dimen name="temp_btn_height">44dp</dimen>
+    <dimen name="btn_width">66dp</dimen>
+    <dimen name="btn_height">36dp</dimen>
+    <dimen name="btn_stretched_height">44dp</dimen>
+    <dimen name="dialog_title_height">32dp</dimen>
+    <dimen name="name_tag_height">64dp</dimen>
 
     <!-- Margins -->
     <dimen name="margin_xxxsmall">4dp</dimen>
@@ -13,10 +18,15 @@
     <dimen name="margin_large">32dp</dimen>
     <dimen name="margin_xlarge">64dp</dimen>
 
-    <dimen name="margin_header">12dp</dimen>
+    <dimen name="margin_header_below">12dp</dimen>
+    <dimen name="margin_header_above">16dp</dimen>
+    <dimen name="margin_layout_offset">8dp</dimen>
+    <dimen name="margin_layout_offset_mid">4dp</dimen>
+    <dimen name="margin_btn">4dp</dimen>
 
     <!-- Padding -->
     <dimen name="padding_xsmall">4dp</dimen>
+    <dimen name="padding_button_small">4dp</dimen>
     <dimen name="padding_button">16dp</dimen>
     <dimen name="padding_medium">16dp</dimen>
 
@@ -33,4 +43,8 @@
     <dimen name="ball_size_small">18dp</dimen>
 
     <dimen name="dialog_factor">1.0px</dimen>
+
+    <!-- Elevation -->
+    <dimen name="button_elevation">2dp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
 </resources>

@@ -1,7 +1,6 @@
 package com.example.snookerscore.fragments.game
 
 import android.app.Application
-import android.content.Context
 import android.content.SharedPreferences
 import androidx.lifecycle.*
 import com.example.snookerscore.R
@@ -10,6 +9,7 @@ import com.example.snookerscore.domain.DomainBall.*
 import com.example.snookerscore.domain.PotType.*
 import com.example.snookerscore.repository.SnookerRepository
 import com.example.snookerscore.utils.Event
+import com.example.snookerscore.utils.getSharedPref
 import com.example.snookerscore.utils.setMatchInProgress
 import kotlinx.coroutines.launch
 
@@ -38,11 +38,9 @@ class GameViewModel(
     private var ballStack: MutableList<DomainBall> = mutableListOf()
     private var score: CurrentScore = CurrentScore.PlayerA
     private var frameStack: MutableList<DomainBreak> = mutableListOf()
-    private val sharedPref: SharedPreferences = application.getSharedPreferences(
-        application.applicationContext.getString(R.string.preference_file_key),
-        Context.MODE_PRIVATE
-    )
+    private val sharedPref: SharedPreferences = application.getSharedPref()
     private var frameCount = 1
+    private var frameMax = 0
 
     // Match settings
     private var matchFrames = 0
@@ -76,6 +74,7 @@ class GameViewModel(
         score = frame.frameScore.asCurrentScore() ?: score
         frameStack = frame.frameStack
         ballStack = frame.ballStack
+        frameMax = frame.frameMax
         getSavedStateRules()
         updateFrameStatus()
     }
@@ -125,6 +124,7 @@ class GameViewModel(
         } else {
             score = score.getPlayerFromInt(matchFirst)
         }
+        frameMax = matchReds * 8 + 27
         score.getFirst().resetFrameScore()
         score.getSecond().resetFrameScore()
         frameStack.clear()
@@ -178,12 +178,13 @@ class GameViewModel(
         }
         updateFrameStatus()
         _isFrameUpdateInProgress.value = false
+        _eventFrameUpdated.value = Event(Unit)
     }
 
     private fun foul(pot: DomainPot, removeRed: Boolean, freeBall: Boolean) {
         updateFrame(pot)
         if (removeRed) updateFrame(DomainPot.REMOVERED)
-        if (freeBall) if (ballStack.inColors()) ballStack.addBalls(FREEBALL()) else ballStack.addBalls(COLOR(), FREEBALL())
+        if (freeBall) frameMax += ballStack.addFreeBall()
     }
 
     private fun updateFrame(pot: DomainPot) = ballStack.apply {
@@ -192,18 +193,20 @@ class GameViewModel(
                 in listOf(HIT, FREE, ADDRED) -> DomainPot.HIT(pot.ball)
                 FOUL -> DomainPot.FOUL(pot.ball, pot.potAction)
                 else -> pot
-            }, score.getPlayerAsInt(), frameCount
+            },
+            score.getPlayerAsInt(),
+            frameCount
         )
         score.calculatePoints(pot, 1, this.last(), matchFoul, frameStack)
         when (pot.potType) {
-            in listOf(HIT, FREE) -> removeBall()
-            in listOf(REMOVERED, ADDRED) -> removeBall(2)
+            in listOf(HIT, FREE) -> removeBalls(1)
+            in listOf(REMOVERED, ADDRED) -> removeBalls(2)
             else -> {
                 if (last() is FREEBALL) {
                     frameStack.addToFrameStack(DomainPot.FREEMISS, score.getPlayerAsInt(), frameCount)
-                    removeBall(if (inColors()) 1 else 2)
+                    frameMax -= removeFreeBall()
                 }
-                if (last() is COLOR) removeBall()
+                if (last() is COLOR) removeBalls(1)
             }
         }
         if (size == 1) if (score.isFrameEqual()) addBalls(BLACK()) else queryEndFrame()
@@ -217,16 +220,16 @@ class GameViewModel(
             HIT -> addBalls(if (isNextColor()) COLOR() else lastPot.ball)
             ADDRED -> addBalls(RED(), COLOR())
             FREE -> {
-                if (inColors()) addBalls(FREEBALL()) else addBalls(COLOR(), FREEBALL())
+                frameMax += addFreeBall()
                 undo()
             }
             REMOVERED -> {
-                if (last() is FREEBALL) removeBall(if (inColors()) 1 else 2)
+                if (last() is FREEBALL) removeBalls(if (inColors()) 1 else 2)
                 if (isNextColor()) addBalls(COLOR(), RED()) else addBalls(RED(), COLOR())
                 undo()
             }
             FOUL -> {
-                if (last() is FREEBALL) removeBall(if (inColors()) 1 else 2)
+                if (last() is FREEBALL) frameMax -= removeFreeBall()
                 if (frameStack.isPreviousRed() && isNextColor()) addBalls(COLOR())
             }
             SAFE -> if (frameStack.isPreviousRed() && isNextColor()) addBalls(COLOR())
@@ -247,7 +250,8 @@ class GameViewModel(
                 score.getSecond().asDomainPlayerScore()
             ),
             frameStack,
-            ballStack
+            ballStack,
+            frameMax
         )
     }
 }

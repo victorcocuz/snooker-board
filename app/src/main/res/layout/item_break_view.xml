@@ -4,94 +4,93 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="crtBreak"
             type="com.example.snookerscore.domain.DomainBreak" />
     </data>
 
-    <LinearLayout
-        android:orientation="vertical"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/black" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_layout_offset_mid">
 
         <LinearLayout
-            android:id="@+id/item_break_linear_layout"
-            android:layout_width="match_parent"
+            android:id="@+id/break_view_ll_a"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="@dimen/margin_xxxsmall"
-            android:background="@color/design_default_color_secondary"
-            android:orientation="horizontal">
+            android:layout_marginStart="@dimen/margin_layout_offset"
+            android:layout_marginEnd="@dimen/margin_layout_offset_mid"
+            android:layout_weight="1"
+            android:background="@drawable/bg_break"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="@dimen/padding_button_small"
+            app:layout_constraintEnd_toStartOf="@+id/break_view_ll_b"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:setBreakVisibilityBreak="@{crtBreak}"
+            app:setBreakVisibilityPlayer="@{0}">
 
-            <FrameLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/item_break_a_balls_rv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="4">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/item_break_a_balls_rv"
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_height="match_parent"
-                    app:bindPots="@{crtBreak}"
-                    app:bindPotsPlayer="@{0}"/>
-
-                <TextView
-                    android:id="@+id/item_break_a_fouls"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="end"
-                    android:text="Foul"
-                    android:visibility="visible" />
-
-            </FrameLayout>
+                android:layout_gravity="center"
+                android:layout_weight="3"
+                app:bindPots="@{crtBreak}"
+                app:bindPotsPlayer="@{0}" />
 
             <TextView
                 android:id="@+id/item_break_a_points"
+                style="@style/TextHeaderBold"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textSize="@dimen/text_regular"
                 app:setBreakPoints="@{crtBreak}"
                 app:setBreakPointsPlayer="@{0}"
                 tools:text="12" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/break_view_ll_b"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_layout_offset_mid"
+            android:layout_marginEnd="@dimen/margin_layout_offset"
+            android:layout_weight="1"
+            android:background="@drawable/bg_break"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_button_small"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/break_view_ll_a"
+            app:layout_constraintTop_toTopOf="parent"
+            app:setBreakVisibilityBreak="@{crtBreak}"
+            app:setBreakVisibilityPlayer="@{1}">
 
             <TextView
                 android:id="@+id/item_break_b_points"
+                style="@style/TextHeaderBold"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textSize="@dimen/text_regular"
                 app:setBreakPoints="@{crtBreak}"
                 app:setBreakPointsPlayer="@{1}"
                 tools:text="9" />
 
-            <FrameLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/item_break_b_balls_rv"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="4">
-
-                <TextView
-                    android:id="@+id/item_break_b_fouls"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Foul"
-                    android:visibility="invisible" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/item_break_b_balls_rv"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    app:bindPots="@{crtBreak}"
-                    app:bindPotsPlayer="@{1}"/>
-            </FrameLayout>
+                android:layout_gravity="center"
+                android:layout_weight="3"
+                app:bindPots="@{crtBreak}"
+                app:bindPotsPlayer="@{1}" />
         </LinearLayout>
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

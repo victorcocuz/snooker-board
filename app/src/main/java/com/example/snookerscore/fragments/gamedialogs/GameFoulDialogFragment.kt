@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snookerscore.GenericEventsViewModel
 import com.example.snookerscore.R
@@ -50,7 +51,7 @@ class GameFoulDialogFragment : DialogFragment() {
             gameViewModel = this@GameFoulDialogFragment.gameViewModel
             varEventsViewModel = this@GameFoulDialogFragment.eventsViewModel
             foulBallsListRv.apply {
-                layoutManager = linearLayoutManager
+                layoutManager = GridLayoutManager(activity, 4)
                 adapter = ballAdapter
             }
         }

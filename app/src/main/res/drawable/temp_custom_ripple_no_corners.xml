@@ -7,7 +7,6 @@
             <item android:state_enabled="false">
                 <shape>
                     <solid android:color="@color/white_disabled" />
-                    <corners android:radius="@dimen/margin_xxxsmall" />
                     <stroke
                         android:width="@dimen/stroke_single"
                         android:color="@color/white_disabled" />
@@ -17,20 +16,18 @@
             <item android:state_selected="true">
                 <shape>
                     <solid android:color="@color/green" />
-                    <corners android:radius="@dimen/margin_xxxsmall" />
                     <stroke
                         android:width="@dimen/stroke_single"
-                        android:color="?attr/colorOnPrimary" />
+                        android:color="@color/black" />
                 </shape>
             </item>
 
             <item android:state_selected="false">
                 <shape>
-                    <solid android:color="@color/cream_bright" />
-                    <corners android:radius="@dimen/margin_xxxsmall" />
-                    <stroke
-                        android:width="@dimen/stroke_single"
-                        android:color="@color/black" />
+                    <solid android:color="?attr/colorPrimary" />
+<!--                    <stroke-->
+<!--                        android:width="@dimen/stroke_single"-->
+<!--                        android:color="?attr/colorOnPrimary" />-->
                 </shape>
             </item>
         </selector>

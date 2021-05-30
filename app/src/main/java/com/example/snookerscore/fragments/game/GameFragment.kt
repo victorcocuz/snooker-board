@@ -12,13 +12,11 @@ import com.example.snookerscore.GenericEventsViewModel
 import com.example.snookerscore.R
 import com.example.snookerscore.database.SnookerDatabase
 import com.example.snookerscore.databinding.FragmentGameBinding
-import com.example.snookerscore.domain.BallAdapterType
+import com.example.snookerscore.domain.*
 import com.example.snookerscore.domain.DomainBall.*
-import com.example.snookerscore.domain.DomainPot
-import com.example.snookerscore.domain.FrameEvent
-import com.example.snookerscore.domain.MatchAction
 import com.example.snookerscore.repository.SnookerRepository
 import com.example.snookerscore.utils.EventObserver
+import com.example.snookerscore.utils.setStateOpacity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -50,29 +48,35 @@ class GameFragment : androidx.fragment.app.Fragment() {
 
         binding.apply {
             lifecycleOwner = this@GameFragment
-            (activity as AppCompatActivity).apply {
-                setSupportActionBar(fragGameToolbar)
-                supportActionBar?.setDisplayShowTitleEnabled(false)
-            }
             setHasOptionsMenu(true)
 
-            gameViewModel = this@GameFragment.gameViewModel
-            fragGameBallsRv.apply {
-                layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-                itemAnimator = null
-                adapter = ballAdapter
+            application = requireActivity().application
+            varGameViewModel = this@GameFragment.gameViewModel
+            fragGameTop.apply {
+                (activity as AppCompatActivity).apply {
+                    setSupportActionBar(fragGameToolbar)
+                    supportActionBar?.setDisplayShowTitleEnabled(false)
+                }
+                playerTagType = PlayerTagType.MATCH
+                varGameViewModel = gameViewModel
+                application = requireActivity().application
+            }
+            fragGameScore.apply {
+                varGameViewModel = this@GameFragment.gameViewModel
+                application = requireActivity().application
             }
             fragGameBreakRv.apply {
                 adapter = BreakAdapter(requireActivity())
                 itemAnimator = null
             }
-            fragGameScore.apply {
-                gameViewModel = this@GameFragment.gameViewModel
-                application = requireActivity().application
-            }
             fragGameActionButtons.apply {
                 gameViewModel = this@GameFragment.gameViewModel
                 genericEventsViewModel = eventsViewModel
+                fragGameBallsRv.apply {
+                    layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+                    itemAnimator = null
+                    adapter = ballAdapter
+                }
             }
         }
 
@@ -161,16 +165,27 @@ class GameFragment : androidx.fragment.app.Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) { // Buttons cannot be enabled when update is in progress
         gameViewModel.displayFrame.value?.apply {
-            menu.findItem(R.id.match_action_undo).isEnabled =
-                (frameStack.size) > 0 && !(gameViewModel.isFrameUpdateInProgress.value ?: false)
-            menu.findItem(R.id.match_action_rerack).isEnabled =
-                (frameStack.size) > 0 && !(gameViewModel.isFrameUpdateInProgress.value ?: false)
-            menu.findItem(R.id.match_action_add_red).isEnabled =
-                (ballStack.size) in (10..36).filter { it % 2 == 0 } && !(gameViewModel.isFrameUpdateInProgress.value ?: false)
-            menu.findItem(R.id.match_action_concede_frame).isEnabled =
-                getFrameScoreDiff() != 0 && !(gameViewModel.isFrameUpdateInProgress.value ?: false)
-            menu.findItem(R.id.match_action_concede_match).isEnabled =
-                getFrameScoreDiff() != 0 || getMatchScoreDiff() != 0 && !(gameViewModel.isFrameUpdateInProgress.value ?: false)
+            menu.findItem(R.id.match_action_undo).apply {
+                isEnabled = (frameStack.size) > 0 && !(gameViewModel.isFrameUpdateInProgress.value ?: false)
+                setStateOpacity()
+            }
+            menu.findItem(R.id.match_action_rerack).apply {
+                isEnabled = (frameStack.size) > 0 && !(gameViewModel.isFrameUpdateInProgress.value ?: false)
+//                setStateOpacity()
+            }
+            menu.findItem(R.id.match_action_add_red).apply {
+                isEnabled = (ballStack.size) in (10..36).filter { it % 2 == 0 } && !(gameViewModel.isFrameUpdateInProgress.value ?: false)
+//                setStateOpacity()
+            }
+//            menu.findItem(R.id.match_action_cancel_match).setStateOpacity()
+            menu.findItem(R.id.match_action_concede_frame).apply {
+                isEnabled = getFrameScoreDiff() != 0 && !(gameViewModel.isFrameUpdateInProgress.value ?: false)
+//                setStateOpacity()
+            }
+            menu.findItem(R.id.match_action_concede_match).apply {
+                isEnabled = getFrameScoreDiff() != 0 || getMatchScoreDiff() != 0 && !(gameViewModel.isFrameUpdateInProgress.value ?: false)
+//                setStateOpacity()
+            }
         }
     }
 }

@@ -4,12 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="application"
             type="android.app.Application" />
+
         <variable
-            name="viewModel"
+            name="varStatsViewModel"
             type="com.example.snookerscore.fragments.gamestatistics.GameStatsViewModel" />
+
+        <import type="com.example.snookerscore.domain.MatchAction" />
+
+        <variable
+            name="varEventsViewModel"
+            type="com.example.snookerscore.GenericEventsViewModel" />
+
+        <variable
+            name="varMaxHeight"
+            type="int" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,87 +29,129 @@
         android:layout_height="match_parent"
         tools:context=".fragments.gamestatistics.GameStatsFragment">
 
-        <TextView
-            android:id="@+id/game_stats_label"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/game_guide_vert_mid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
-            android:text="Match Results"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintGuide_percent="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <include
+            android:id="@+id/frag_game_top"
+            layout="@layout/layout_game_top"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/game_stats_player_a"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
-            app:getFromPrefsNameA="@{application}"
-            app:layout_constraintEnd_toStartOf="@+id/game_stats_vs"
-            app:layout_constraintHorizontal_bias="0.5"
+            android:id="@+id/game_text_score_frames_a"
+            style="@style/TextTitle"
+            android:layout_marginStart="@dimen/margin_layout_offset"
+            android:layout_marginEnd="@dimen/margin_layout_offset"
+            android:text="@{String.valueOf(varStatsViewModel.totalsA.matchPoints)}"
+            app:layout_constraintEnd_toStartOf="@+id/game_text_score_total"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/game_stats_label" />
+            app:layout_constraintTop_toBottomOf="@+id/frag_game_top"
+            tools:text="13" />
 
         <TextView
-            android:id="@+id/game_stats_player_b"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:getFromPrefsNameB="@{application}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_stats_player_a"
+            android:id="@+id/game_text_score_total"
+            style="@style/TextSubtitle"
+            app:layout_constraintBottom_toBottomOf="@+id/game_text_score_frames_a"
+            app:layout_constraintEnd_toEndOf="@+id/game_guide_vert_mid"
+            app:layout_constraintStart_toStartOf="@+id/game_guide_vert_mid"
+            app:layout_constraintTop_toTopOf="@+id/game_text_score_frames_a"
+            app:setTotalScore="@{application}"
+            tools:text="(37)" />
+
+        <TextView
+            android:id="@+id/game_text_score_frames_b"
+            style="@style/TextTitle"
+            android:layout_marginStart="@dimen/margin_layout_offset"
+            android:layout_marginEnd="@dimen/margin_layout_offset"
+            android:text="@{String.valueOf(varStatsViewModel.totalsB.matchPoints)}"
+            app:layout_constraintBottom_toBottomOf="@+id/game_text_score_frames_a"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_stats_vs" />
-
-        <TextView
-            android:id="@+id/game_stats_vs"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="VS"
-            app:layout_constraintBottom_toBottomOf="@+id/game_stats_player_a"
-            app:layout_constraintEnd_toStartOf="@+id/game_stats_player_b"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_stats_player_a" />
+            app:layout_constraintStart_toEndOf="@+id/game_text_score_total"
+            tools:text="15" />
 
         <include
             android:id="@+id/game_stats_header"
             layout="@layout/item_game_statistics_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_height="@dimen/btn_stretched_height"
+            android:layout_marginTop="@dimen/margin_header_above"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/game_stats_player_a" />
+            app:layout_constraintTop_toBottomOf="@+id/game_text_score_frames_a" />
+
+        <FrameLayout
+            android:id="@+id/game_stats_ghost_frame_for_height"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/game_stats_ghost_frame"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/game_stats_header" />
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/game_stats_rv"
-            android:layout_width="match_parent"
+        <ScrollView
+            android:id="@+id/game_stats_scroll_view"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/game_stats_header"
-            app:bindGameStatsData="@{viewModel.score}"
-            tools:itemCount="16"
-            tools:layout_editor_absoluteX="0dp"
-            tools:listitem="@layout/item_game_statistics_view" />
+            app:layout_constraintVertical_bias="0.0">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/game_stats_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:bindGameStatsData="@{varStatsViewModel.score}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="16"
+                tools:layout_editor_absoluteX="0dp"
+                tools:listitem="@layout/item_game_statistics_view" />
+        </ScrollView>
 
         <include
             android:id="@+id/game_stats_footer"
             layout="@layout/item_game_statistics_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/btn_stretched_height"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/game_stats_rv" />
+            app:layout_constraintTop_toBottomOf="@+id/game_stats_scroll_view" />
 
-        <Button
-            android:id="@+id/game_stats_btn"
+        <FrameLayout
+            android:id="@+id/game_stats_ghost_frame"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/toolbar_height"
+            app:layout_constraintBottom_toTopOf="@+id/game_stats_line_hor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <FrameLayout
+            android:id="@+id/game_stats_line_hor"
+            style="@style/LineHorizontalAccent"
+            android:layout_width="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/game_stats_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/game_stats_btn"
+            style="@style/ButtonStretched"
+            android:layout_width="match_parent"
+            android:onClick="@{() -> varEventsViewModel.onEventMatchActionConfirmed(MatchAction.APP_TO_MAIN)}"
             android:text="@string/fragment_game_stats_btn_go_to_play"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

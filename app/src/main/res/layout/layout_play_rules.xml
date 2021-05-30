@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.example.snookerscore.domain.MatchAction" />
+
+        <variable
+            name="varPlayViewModel"
+            type="com.example.snookerscore.fragments.play.PlayFragmentViewModel" />
+
+        <variable
+            name="varEventsViewModel"
+            type="com.example.snookerscore.GenericEventsViewModel" />
+
+        <variable
+            name="varNameFirstA"
+            type="String" />
+
+        <variable
+            name="varNameLastA"
+            type="String" />
+
+        <variable
+            name="varNameFirstB"
+            type="String" />
+
+        <variable
+            name="varNameLastB"
+            type="String" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".fragments.play.PlayFragment">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/frag_play_guide_mid_vert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintGuide_percent="0.5"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/frag_play_label_player_a"
+                style="@style/TextHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_header_above"
+                android:text="@string/fragment_play_label_player_a"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="spread_inside" />
+
+            <EditText
+                android:id="@+id/frag_play_et_name_first_a"
+                style="@style/edit_text"
+                android:layout_marginTop="@dimen/margin_header_below"
+                android:layout_marginEnd="@dimen/margin_xsmall"
+                android:autofillHints="@string/autofill_name_given"
+                android:ems="10"
+                android:hint="@string/hint_first_name"
+                android:text="@={varNameFirstA}"
+                app:layout_constraintEnd_toStartOf="@+id/frag_play_guide_mid_vert"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/frag_play_label_player_a"
+                tools:text="@string/you" />
+
+            <EditText
+                android:id="@+id/frag_play_et_name_last_a"
+                style="@style/edit_text"
+                android:layout_marginStart="@dimen/margin_xsmall"
+                android:autofillHints="@string/autofill_name_family"
+                android:ems="10"
+                android:hint="@string/hint_last_name"
+                android:text="@={varNameLastA}"
+                app:layout_constraintBottom_toBottomOf="@+id/frag_play_et_name_first_a"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/frag_play_guide_mid_vert"
+                tools:text="@string/you" />
+
+            <TextView
+                android:id="@+id/frag_play_label_player_b"
+                style="@style/TextHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_header_above"
+                android:text="@string/fragment_play_label_player_b"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/frag_play_et_name_first_a" />
+
+            <EditText
+                android:id="@+id/frag_play_et_name_first_b"
+                style="@style/edit_text"
+                android:layout_marginTop="@dimen/margin_header_below"
+                android:layout_marginEnd="@dimen/margin_xsmall"
+                android:autofillHints="@string/autofill_name_given"
+                android:ems="10"
+                android:hint="@string/hint_first_name"
+                android:text="@={varNameFirstB}"
+                app:layout_constraintEnd_toStartOf="@+id/frag_play_guide_mid_vert"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/frag_play_label_player_b"
+                tools:text="@string/guest" />
+
+            <EditText
+                android:id="@+id/frag_play_et_name_last_b"
+                style="@style/edit_text"
+                android:layout_marginStart="@dimen/margin_xsmall"
+                android:autofillHints="@string/autofill_name_family"
+                android:ems="10"
+                android:hint="@string/hint_last_name"
+                android:text="@={varNameLastB}"
+                app:layout_constraintBottom_toBottomOf="@+id/frag_play_et_name_first_b"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/frag_play_guide_mid_vert"
+                tools:text="@string/guest" />
+
+            <TextView
+                android:id="@+id/frag_play_label_frames"
+                style="@style/TextHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_header_above"
+                android:hint="@string/hint_last_name"
+                android:text="@string/fragment_play_label_frames"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/frag_play_et_name_first_b" />
+
+            <com.shawnlin.numberpicker.NumberPicker
+                android:id="@+id/numberPicker"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/btn_height"
+                android:layout_marginTop="@dimen/margin_header_below"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/frag_play_label_frames"
+                app:np_dividerColor="@color/white"
+                app:np_dividerDistance="@dimen/btn_width_large"
+                app:np_orientation="horizontal"
+                app:np_selectedTextColor="@color/white"
+                app:np_selectedTypeface="@font/montserrat"
+                app:np_textColor="@color/white"
+                app:np_typeface="@font/montserrat"
+                app:onValueChangedListener="@{(picker,oldv,newv) -> varPlayViewModel.setFrames(newv)}"
+                tools:orientation="horizontal" />
+
+            <TextView
+                android:id="@+id/frag_play_label_reds"
+                style="@style/TextHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_header_above"
+                android:text="@string/fragment_play_label_reds"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/numberPicker" />
+
+            <TextView
+                android:id="@+id/frag_play_btn_reds_six"
+                style="@style/ButtonNarrow"
+                android:layout_marginTop="@dimen/margin_header_below"
+                android:onClick="@{() -> varPlayViewModel.setReds(6)}"
+                android:text="@string/fragment_play_btn_reds_six"
+                app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_reds_ten"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/frag_play_label_reds"
+                app:setSelected="@{varPlayViewModel.reds == 6}" />
+
+            <TextView
+                android:id="@+id/frag_play_btn_reds_ten"
+                style="@style/ButtonNarrow"
+                android:onClick="@{() -> varPlayViewModel.setReds(10)}"
+                android:text="@string/fragment_play_btn_reds_ten"
+                app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_reds_six"
+                app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_reds_fifteen"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/frag_play_btn_reds_six"
+                app:setSelected="@{varPlayViewModel.reds == 10}" />
+
+            <TextView
+                android:id="@+id/frag_play_btn_reds_fifteen"
+                style="@style/ButtonNarrow"
+                android:onClick="@{() -> varPlayViewModel.setReds(15)}"
+                android:text="@string/fragment_play_btn_reds_fifteen"
+                app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_reds_six"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/frag_play_btn_reds_ten"
+                app:setSelected="@{varPlayViewModel.reds == 15}" />
+
+            <TextView
+                android:id="@+id/frag_play_label_foul_modifier"
+                style="@style/TextHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_header_above"
+                android:text="@string/fragment_play_label_foul_modifier"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/frag_play_btn_reds_six" />
+
+            <ImageView
+                android:id="@+id/frag_play_btn_foul_modifier_info"
+                android:layout_width="20dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:contentDescription="@string/cd_foul_modifier_info"
+                android:onClick="@{() -> varEventsViewModel.onEventMatchActionConfirmed(MatchAction.INFO_FOUL)}"
+                app:layout_constraintBottom_toBottomOf="@+id/frag_play_label_foul_modifier"
+                app:layout_constraintStart_toEndOf="@+id/frag_play_label_foul_modifier"
+                app:srcCompat="@drawable/ic_temp_info" />
+
+            <TextView
+                android:id="@+id/frag_play_btn_foul_one"
+                style="@style/ButtonNarrow"
+                android:layout_marginTop="@dimen/margin_header_below"
+                android:onClick="@{() -> varPlayViewModel.setFoulModifier(-3)}"
+                android:text="@string/fragment_play_btn_foul_one"
+                app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_foul_two"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/frag_play_label_foul_modifier"
+                app:setSelected="@{varPlayViewModel.eventFoulModifier == -3}" />
+
+            <TextView
+                android:id="@+id/frag_play_btn_foul_two"
+                style="@style/ButtonNarrow"
+                android:onClick="@{() -> varPlayViewModel.setFoulModifier(-2)}"
+                android:text="@string/fragment_play_btn_foul_two"
+                app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_foul_one"
+                app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_foul_three"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/frag_play_btn_foul_one"
+                app:setSelected="@{varPlayViewModel.eventFoulModifier == -2}" />
+
+            <TextView
+                android:id="@+id/frag_play_btn_foul_three"
+                style="@style/ButtonNarrow"
+                android:onClick="@{() -> varPlayViewModel.setFoulModifier(-1)}"
+                android:text="@string/fragment_play_btn_foul_three"
+                app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_foul_one"
+                app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_foul_four"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/frag_play_btn_foul_two"
+                app:setSelected="@{varPlayViewModel.eventFoulModifier == -1}" />
+
+            <TextView
+                android:id="@+id/frag_play_btn_foul_four"
+                style="@style/ButtonNarrow"
+                android:onClick="@{() -> varPlayViewModel.setFoulModifier(0)}"
+                android:text="@string/fragment_play_btn_foul_four"
+                app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_foul_one"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/frag_play_btn_foul_three"
+                app:setSelected="@{varPlayViewModel.eventFoulModifier == 0}" />
+
+            <TextView
+                android:id="@+id/frag_play_label_breaks_first"
+                style="@style/TextHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_header_above"
+                android:layout_marginBottom="@dimen/margin_header_below"
+                android:fontFamily="@font/montserrat"
+                android:text="@string/fragment_play_label_breaks_first"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/frag_play_btn_foul_one" />
+
+            <TextView
+                android:id="@+id/frag_play_btn_break_player_a"
+                style="@style/ButtonNarrow"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="@dimen/margin_header_below"
+                android:layout_marginBottom="@dimen/margin_header_above"
+                android:onClick="@{() -> varPlayViewModel.setBreaksFirst(0)}"
+                android:text="@string/fragment_play_label_player_a"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_break_random"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/frag_play_label_breaks_first"
+                app:setSelected="@{varPlayViewModel.eventBreaksFirst == 0}" />
+
+            <TextView
+                android:id="@+id/frag_play_btn_break_random"
+                style="@style/ButtonNarrow"
+                android:layout_width="wrap_content"
+                android:onClick="@{() -> varPlayViewModel.setBreaksFirst(2)}"
+                android:text="@string/fragment_play_btn_break_random"
+                app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_break_player_a"
+                app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_break_player_b"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/frag_play_btn_break_player_a" />
+
+            <TextView
+                android:id="@+id/frag_play_btn_break_player_b"
+                style="@style/ButtonNarrow"
+                android:layout_width="wrap_content"
+                android:onClick="@{() -> varPlayViewModel.setBreaksFirst(1)}"
+                android:text="@string/fragment_play_label_player_b"
+                app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_break_player_a"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/frag_play_btn_break_random"
+                app:setSelected="@{varPlayViewModel.eventBreaksFirst == 1}" />
+
+<!--            <FrameLayout-->
+<!--                android:id="@+id/frag_play_bottom_line"-->
+<!--                style="@style/LineHorizontalTransparent"-->
+<!--                android:layout_marginTop="@dimen/margin_header_above"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/frag_play_btn_break_player_a" />-->
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

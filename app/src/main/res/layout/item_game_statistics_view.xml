@@ -4,99 +4,102 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.example.snookerscore.domain.StatisticsType"/>
+        <import type="com.example.snookerscore.domain.StatisticsType" />
         <variable
             name="frameScoreA"
             type="com.example.snookerscore.domain.DomainPlayerScore" />
         <variable
             name="frameScoreB"
             type="com.example.snookerscore.domain.DomainPlayerScore" />
+        <variable
+            name="varBgType"
+            type="int"/>
+        <variable
+            name="varTextType"
+            type="int" />
     </data>
 
     <LinearLayout
-        android:id="@+id/item_gamestats_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/padding_xsmall">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/item_gamestats_frame_number"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            app:setGameStatsValue="@{frameScoreA.frameId}"
-            app:setGameStatsType="@{StatisticsType.FRAME_ID}"
-            tools:text="1" />
+        <LinearLayout
+            android:id="@+id/item_gamestats_linear_layout"
+            android:layout_width="match_parent"
+            app:setStatsTableBackground="@{varBgType}"
+            android:layout_height="@dimen/toolbar_height"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_xsmall">
 
-        <TextView
-            android:id="@+id/item_gamestats_player_a_break"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            app:setGameStatsValue="@{frameScoreA.highestBreak}"
-            app:setGameStatsType="@{StatisticsType.HIGHEST_BREAK}"
-            tools:text="120" />
+<!--            <TextView-->
+<!--                android:id="@+id/item_gamestats_frame_number"-->
+<!--                style="@style/TextStatisticsHeader"-->
+<!--                app:setStatsTableStyle="@{varTextType}"-->
+<!--                app:setGameStatsType="@{StatisticsType.FRAME_ID}"-->
+<!--                app:setGameStatsValue="@{frameScoreA.frameId}"-->
+<!--                tools:text="1" />-->
 
-        <TextView
-            android:id="@+id/item_gamestats_player_a_percentage"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            app:setFrameScorePercentage="@{frameScoreA}"
-            tools:text="50%" />
+            <TextView
+                android:id="@+id/item_gamestats_player_a_break"
+                style="@style/TextStatisticsHeader"
+                app:setStatsTableStyle="@{varTextType}"
+                app:setGameStatsType="@{StatisticsType.HIGHEST_BREAK}"
+                app:setGameStatsValue="@{frameScoreA.highestBreak}"
+                tools:text="120" />
 
-        <TextView
-            android:id="@+id/item_gamestats_player_a_frame_points"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            app:setGameStatsValue="@{frameScoreA.framePoints}"
-            app:setGameStatsType="@{StatisticsType.FRAME_POINTS}"
-            tools:text="12" />
+            <TextView
+                android:id="@+id/item_gamestats_player_a_percentage"
+                style="@style/TextStatisticsHeader"
+                app:setStatsTableStyle="@{varTextType}"
+                app:setFrameScorePercentage="@{frameScoreA}"
+                tools:text="50%" />
 
-        <TextView
-            android:id="@+id/item_gamestats_match_points"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            app:matchPointsPlayerA="@{frameScoreA.matchPoints}"
-            app:matchPointsPlayerB="@{frameScoreB.matchPoints}"
-            tools:text="(1-0)" />
+            <TextView
+                android:id="@+id/item_gamestats_player_a_frame_points"
+                style="@style/TextStatisticsHeader"
+                app:setStatsTableStyle="@{varTextType}"
+                app:setGameStatsType="@{StatisticsType.FRAME_POINTS}"
+                app:setGameStatsValue="@{frameScoreA.framePoints}"
+                tools:text="12" />
 
-        <TextView
-            android:id="@+id/item_gamestats_player_b_frame_points"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            app:setGameStatsValue="@{frameScoreB.framePoints}"
-            app:setGameStatsType="@{StatisticsType.FRAME_POINTS}"
-            tools:text="18" />
+            <TextView
+                android:id="@+id/item_gamestats_match_points"
+                style="@style/TextStatisticsHeader"
+                app:setStatsTableStyle="@{varTextType}"
+                app:matchPointsPlayerA="@{frameScoreA.matchPoints}"
+                app:matchPointsPlayerB="@{frameScoreB.matchPoints}"
+                tools:text="(1-0)" />
 
-        <TextView
-            android:id="@+id/item_gamestats_player_b_percentage"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            app:setFrameScorePercentage="@{frameScoreB}"
-            tools:text="48%" />
+            <TextView
+                android:id="@+id/item_gamestats_player_b_frame_points"
+                style="@style/TextStatisticsHeader"
+                app:setStatsTableStyle="@{varTextType}"
+                app:setGameStatsType="@{StatisticsType.FRAME_POINTS}"
+                app:setGameStatsValue="@{frameScoreB.framePoints}"
+                tools:text="18" />
 
-        <TextView
-            android:id="@+id/item_gamestats_player_b_break"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            app:setGameStatsValue="@{frameScoreB.highestBreak}"
-            app:setGameStatsType="@{StatisticsType.HIGHEST_BREAK}"
-            tools:text="138" />
+            <TextView
+                android:id="@+id/item_gamestats_player_b_percentage"
+                style="@style/TextStatisticsHeader"
+                app:setStatsTableStyle="@{varTextType}"
+                app:setFrameScorePercentage="@{frameScoreB}"
+                tools:text="48%" />
+
+            <TextView
+                android:id="@+id/item_gamestats_player_b_break"
+                style="@style/TextStatisticsHeader"
+                app:setStatsTableStyle="@{varTextType}"
+                app:setGameStatsType="@{StatisticsType.HIGHEST_BREAK}"
+                app:setGameStatsValue="@{frameScoreB.highestBreak}"
+                tools:text="138" />
+
+        </LinearLayout>
+
+        <FrameLayout style="@style/LineHorizontalAccent" />
 
     </LinearLayout>
+
+
 </layout>

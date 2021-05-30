@@ -8,6 +8,7 @@ data class DomainFrame(
     val frameScore: MutableList<DomainPlayerScore>,
     val frameStack: MutableList<DomainBreak>,
     val ballStack: MutableList<DomainBall>,
+    val frameMax: Int
 ) {
     fun getFrameScoreDiff() = abs(frameScore[0].framePoints - frameScore[1].framePoints)
     fun getMatchScoreDiff() = abs(frameScore[0].matchPoints - frameScore[1].matchPoints)
@@ -20,7 +21,8 @@ data class DomainFrame(
 
 fun DomainFrame.asDbFrame(): DbFrame {
     return DbFrame(
-        frameId = frameId
+        frameId = frameId,
+        frameMax = frameMax
     )
 }
 

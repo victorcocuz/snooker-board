@@ -35,13 +35,20 @@ class BallAdapter(private val clickListener: BallListener?, private val frame: L
                 ball = item
                 val factor = when (adapterType) {
                     BallAdapterType.MATCH -> 7
-                    BallAdapterType.FOUL -> 11
-                    BallAdapterType.BREAK -> 22
+                    BallAdapterType.FOUL -> 7
+                    BallAdapterType.BREAK -> 20
+                }
+                val padding = when (adapterType) {
+                    BallAdapterType.MATCH -> 8
+                    BallAdapterType.FOUL -> 16
+                    BallAdapterType.BREAK -> 4
                 }
                 itemBallViewFrameLayout.apply {
                     layoutParams.width = context.resources.displayMetrics.widthPixels / factor
                     layoutParams.height = context.resources.displayMetrics.widthPixels / factor
-                    setPadding(28 / factor, 28 / factor, 28 / factor, 28 / factor)
+                    setPadding(padding, padding, padding, padding)
+                    val params = this.layoutParams as ViewGroup.MarginLayoutParams
+//                    params.setMargins(padding, padding, padding, padding)
                 }
 
                 this.ballStackSize = frame?.value?.ballStack?.size ?: 0

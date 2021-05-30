@@ -2,7 +2,6 @@ package com.example.snookerscore.fragments.game
 
 import android.app.Activity
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
@@ -11,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.snookerscore.databinding.ItemBreakViewBinding
 import com.example.snookerscore.domain.BallAdapterType
 import com.example.snookerscore.domain.DomainBreak
-import com.example.snookerscore.domain.PotType
 
 class BreakAdapter(private val activity: Activity) :
     ListAdapter<DomainBreak, BreakAdapter.ViewHolder>(DiffCallBack) {
@@ -28,34 +26,16 @@ class BreakAdapter(private val activity: Activity) :
             binding.apply {
                 crtBreak = item
 
-                if (item.pots.last().potType == PotType.FOUL) {
-                    if (item.player == 0) {
-                        itemBreakAFouls.visibility = View.VISIBLE
-                        itemBreakABallsRv.visibility = View.INVISIBLE
-                    } else {
-                        itemBreakBFouls.visibility = View.VISIBLE
-                        itemBreakBBallsRv.visibility = View.INVISIBLE
-                    }
-                } else {
-                    itemBreakAFouls.visibility = View.INVISIBLE
-                    itemBreakABallsRv.visibility = View.VISIBLE
-                    itemBreakBFouls.visibility = View.INVISIBLE
-                    itemBreakBBallsRv.visibility = View.VISIBLE
+                itemBreakABallsRv.apply {
+                    adapter = BallAdapter(null, null, BallAdapterType.BREAK)
+                    layoutManager = GridLayoutManager(activity, 6)
                 }
 
-                itemBreakABallsRv.adapter = BallAdapter(
-                    null,
-                    null,
-                    BallAdapterType.BREAK
-                )
-                itemBreakABallsRv.layoutManager = GridLayoutManager(activity, 8)
+                itemBreakBBallsRv.apply {
+                    adapter = BallAdapter(null, null, BallAdapterType.BREAK)
+                    layoutManager = GridLayoutManager(activity, 6)
+                }
 
-                itemBreakBBallsRv.adapter = BallAdapter(
-                    null,
-                    null,
-                    BallAdapterType.BREAK
-                )
-                itemBreakBBallsRv.layoutManager = GridLayoutManager(activity, 8)
                 executePendingBindings()
             }
         }

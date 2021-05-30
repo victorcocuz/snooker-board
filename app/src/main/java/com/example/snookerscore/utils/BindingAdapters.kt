@@ -3,6 +3,7 @@ package com.example.snookerscore.utils
 import android.app.Application
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
@@ -17,6 +18,25 @@ import com.example.snookerscore.fragments.gamestatistics.GameStatsAdapter
 import java.text.DecimalFormat
 
 // General
+@BindingAdapter("setSelected")
+fun TextView.setSelected(selected: Boolean) {
+    isSelected = selected
+    setTextColor(
+        ContextCompat.getColor(
+            context,
+            if (isSelected) R.color.white
+            else if (!isEnabled) R.color.white
+            else R.color.black
+        )
+    )
+}
+
+@BindingAdapter("setEnabledTest")
+fun TextView.setEnabledTest(enabled: Boolean) {
+    isEnabled = enabled
+    setTextColor(ContextCompat.getColor(context, if (!isEnabled) R.color.white else if (isSelected) R.color.white else R.color.black))
+}
+
 @BindingAdapter("setVisible")
 fun TextView.setVisible(isVisible: Boolean) {
     visibility = when (isVisible) {
@@ -26,11 +46,18 @@ fun TextView.setVisible(isVisible: Boolean) {
 }
 
 // Game Display
-@BindingAdapter("setActivePlayer")
-fun TextView.setActivePlayer(activePlayer: Boolean) = setBackgroundColor(
-    if (activePlayer) ContextCompat.getColor(context, R.color.design_default_color_primary)
-    else 0x00000000
-)
+@BindingAdapter("setActivePlayer", "setActivePlayerTag")
+fun LinearLayout.setActivePlayer(inactivePlayer: Boolean, activePlayerTag: PlayerTagType) {
+    setBackgroundColor(
+        ContextCompat.getColor(
+            context,
+            if (!inactivePlayer || activePlayerTag == PlayerTagType.STATISTICS) R.color.transparent else R.color.brown
+        )
+    )
+    for (i in 0 until childCount) {
+        getChildAt(i).alpha = if (!inactivePlayer || activePlayerTag == PlayerTagType.STATISTICS) 1F else 0.5F
+    }
+}
 
 @BindingAdapter("setTotalScore")
 fun TextView.setTotalScore(application: Application) {
@@ -38,14 +65,15 @@ fun TextView.setTotalScore(application: Application) {
     text = context.getString(R.string.game_total_score, (frames * 2 - 1))
 }
 
-@BindingAdapter("getFromPrefsNameA")
-fun TextView.getFromPrefsNameA(application: Application) {
-    text = application.getSharedPref().getString(application.getString(R.string.shared_pref_match_name_first_a), application.getString(R.string.you))
+@BindingAdapter("getNameApplication", "getNamePref")
+fun TextView.getNameApplication(application: Application, name: String) {
+
+    text = application.getSharedPref().getString(name, "")
 }
 
-@BindingAdapter("getFromPrefsNameB")
-fun TextView.getFromPrefsNameB(application: Application) {
-    text = application.getSharedPref().getString(application.getString(R.string.shared_pref_match_name_first_b), application.getString(R.string.guest))
+@BindingAdapter("setBarWeightScoreFirst", "setBarWeightScoreSecond")
+fun LinearLayout.setBarWeight(scoreFirst: Int, scoreSecond: Int) {
+    layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, scoreFirst.toFloat() / scoreSecond.toFloat())
 }
 
 // Statistics Adapters
@@ -80,16 +108,55 @@ fun TextView.setGameStatsValue(type: StatisticsType, value: Int) {
     }
 }
 
+@BindingAdapter("setStatsTableBackground")
+fun LinearLayout.setStatsTableBackground(type: Int) {
+    setBackgroundColor(
+        ContextCompat.getColor(
+            context, when (type) {
+                0 -> R.color.green
+                1 -> R.color.transparent
+                else -> R.color.beige
+            }
+        )
+    )
+}
+
+@BindingAdapter("setStatsTableStyle")
+fun TextView.setStatsTableStyle(type: Int) {
+    setTextColor(
+        ContextCompat.getColor(
+            context, when (type) {
+                0 -> R.color.white
+                else -> R.color.black
+            }
+        )
+    )
+}
+
 // Gen Dialog Adapters
+@BindingAdapter("setDialogGameGenLabel")
+fun TextView.setDialogGameGenLabel(matchAction: MatchAction) {
+    text = when (matchAction) {
+        MatchAction.MATCH_CANCEL -> "Cancel match"
+        MatchAction.FRAME_END_QUERY -> "Concede frame"
+        MatchAction.MATCH_END_QUERY -> "Concede match"
+        MatchAction.FRAME_END_CONFIRM -> "Frame ended"
+        MatchAction.MATCH_END_CONFIRM -> "Match ended"
+        MatchAction.MATCH_RELOAD -> "Match in progress"
+        MatchAction.INFO_FOUL -> "Foul"
+        else -> "$matchAction not implemented"
+    }
+}
+
 @BindingAdapter("dialogGameGenQuestion")
 fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
     text = when (matchAction) {
-        MatchAction.MATCH_CANCEL -> "Are you sure you want to cancel the current match? You will lose all match progress"
-        MatchAction.FRAME_END_QUERY -> "Are you sure you want to end this frame? It is still in progress."
-        MatchAction.MATCH_END_QUERY -> "Are you sure you want to end this match? It is still in progress."
+        MatchAction.MATCH_CANCEL -> "Are you sure you want to cancel the current match? You will lose all match progress."
+        MatchAction.FRAME_END_QUERY -> "This frame is still in progress, are you sure you want to end it?"
+        MatchAction.MATCH_END_QUERY -> "This match is still in progress, are you sure you wan to end it?"
         MatchAction.FRAME_END_CONFIRM -> "This frame will end. Would you like to proceed?"
         MatchAction.MATCH_END_CONFIRM -> "This match will end. Would you like to proceed?"
-        MatchAction.MATCH_RELOAD -> "Would you like to continue the current match or start a new one"
+        MatchAction.MATCH_RELOAD -> "You have a match in progress, do you want to resume playing or start a new match?"
         MatchAction.INFO_FOUL -> "A typical foul in snooker is worth 4 points. You may wish to decrease this value."
         else -> "$matchAction not implemented"
     }
@@ -117,7 +184,7 @@ fun TextView.setDialogGameB(matchAction: MatchAction, score: CurrentScore?) {
         else -> View.GONE
     }
     text = when (matchAction) {
-        MatchAction.MATCH_END_CONFIRM_DISCARD -> "End Match, Discard Frame"
+        MatchAction.MATCH_END_CONFIRM_DISCARD -> "Yes & Remove Frame"
         else -> ""
     }
 }
@@ -142,8 +209,9 @@ fun TextView.setDialogGameNote(matchAction: MatchAction, score: CurrentScore?) {
     text = when {
         score == null -> ""
         score.getFirst().matchPoints + score.getFirst().matchPoints == 0 -> ""
-        score.getWinner().matchPoints + 1 == score.getWinner().getOther().matchPoints -> "Keep frame results in draw"
-        score.matchPoints == score.getOther().matchPoints -> "Discard frame results in draw"
+        score.getWinner().matchPoints + 1 == score.getWinner()
+            .getOther().matchPoints -> "NOTE: Keeping the current frame will result in a draw"
+        score.matchPoints == score.getOther().matchPoints -> "NOTE: Discarding the current frame will result in a draw"
         else -> ""
     }
 }
@@ -153,8 +221,18 @@ fun TextView.setDialogGameNote(matchAction: MatchAction, score: CurrentScore?) {
 fun TextView.setBreakPoints(crtBreak: DomainBreak, player: Int) {
     text = when {
         crtBreak.player == player && crtBreak.breakSize != 0 -> crtBreak.breakSize.toString()
-        crtBreak.player != player && crtBreak.pots.last().potType == PotType.FOUL -> crtBreak.pots.last().ball.foul.toString()
+        crtBreak.player == player && crtBreak.pots.lastOrNull()?.potType == PotType.FOUL -> "Foul"
+        crtBreak.player != player && crtBreak.pots.lastOrNull()?.potType == PotType.FOUL -> crtBreak.pots.lastOrNull()?.ball?.foul.toString()
         else -> ""
+    }
+}
+
+@BindingAdapter("setBreakVisibilityBreak", "setBreakVisibilityPlayer")
+fun LinearLayout.setBreakVisibility(crtBreak: DomainBreak, player: Int) {
+    visibility = when {
+        crtBreak.pots.lastOrNull()?.potType == PotType.FOUL -> View.VISIBLE
+        crtBreak.player == player -> View.VISIBLE
+        else -> View.INVISIBLE
     }
 }
 
@@ -185,7 +263,7 @@ fun ImageView.setBallImage(item: DomainBall?) {
 }
 
 // RV Adapters
-@BindingAdapter("bindMatchBallsRv", )
+@BindingAdapter("bindMatchBallsRv")
 fun RecyclerView.bindBallsRv(ballList: MutableList<DomainBall>?) {
     val adapter = this.adapter as BallAdapter
     adapter.submitList(

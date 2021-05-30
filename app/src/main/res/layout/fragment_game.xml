@@ -5,7 +5,10 @@
 
     <data>
         <variable
-            name="gameViewModel"
+            name="application"
+            type="android.app.Application" />
+        <variable
+            name="varGameViewModel"
             type="com.example.snookerscore.fragments.game.GameViewModel" />
     </data>
 
@@ -14,98 +17,44 @@
         android:layout_height="match_parent"
         tools:context=".fragments.game.GameFragment">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/frag_game_toolbar"
-            android:layout_width="match_parent"
-            android:background="?attr/colorPrimary"
-            app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            android:layout_height="56dp"
-            android:minHeight="@dimen/abc_action_bar_default_height_material"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/game_guide_hor_begin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="120dp" />
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:src="@mipmap/ic_launcher"/>
-        </androidx.appcompat.widget.Toolbar>
+        <include
+            android:id="@+id/frag_game_top"
+            layout="@layout/layout_game_top"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <include
             android:id="@+id/frag_game_score"
             layout="@layout/layout_game_score"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_layout_offset"
+            android:layout_marginEnd="@dimen/margin_layout_offset"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frag_game_toolbar" />
-
-        <TextView
-            android:id="@+id/frag_game_break_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
-            android:text="Breakdown"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frag_game_score" />
-
-        <LinearLayout
-            android:id="@+id/frag_game_break_linear_layout"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_marginStart="16dp"
-            android:background="?attr/colorSecondary"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frag_game_break_label">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="4"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:text="Balls A"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:text="Pts A"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:text="Pts B"/>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="4"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:text="Balls B"/>
-
-        </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@+id/frag_game_top" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/frag_game_break_rv"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
-            android:layout_marginStart="@dimen/margin_small"
-            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/margin_header_below"
+            app:bindBreakData="@{varGameViewModel.displayFrame.frameStack}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@+id/frag_game_action_buttons"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frag_game_break_linear_layout"
-            app:bindBreakData="@{gameViewModel.displayFrame.frameStack}"
+            app:layout_constraintTop_toBottomOf="@+id/frag_game_score"
             tools:itemCount="16"
             tools:listitem="@layout/item_break_view" />
 
@@ -114,21 +63,8 @@
             layout="@layout/layout_game_actions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
-            app:layout_constraintBottom_toTopOf="@+id/frag_game_balls_rv"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/frag_game_balls_rv"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            app:bindMatchBallsRv="@{gameViewModel.displayFrame.ballStack}"
-            android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/margin_large"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
