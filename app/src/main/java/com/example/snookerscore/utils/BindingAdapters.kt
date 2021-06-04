@@ -48,15 +48,15 @@ fun TextView.setVisible(isVisible: Boolean) {
 
 // Game Display
 @BindingAdapter("setActivePlayer", "setActivePlayerTag")
-fun LinearLayout.setActivePlayer(inactivePlayer: Boolean, activePlayerTag: PlayerTagType) {
+fun LinearLayout.setActivePlayer(activePlayer: Boolean, activePlayerTag: PlayerTagType) {
     setBackgroundColor(
         ContextCompat.getColor(
             context,
-            if (!inactivePlayer || activePlayerTag == PlayerTagType.STATISTICS) R.color.transparent else R.color.brown
+            if (activePlayer || activePlayerTag == PlayerTagType.STATISTICS) R.color.transparent else R.color.brown
         )
     )
     for (i in 0 until childCount) {
-        getChildAt(i).alpha = if (!inactivePlayer || activePlayerTag == PlayerTagType.STATISTICS) 1F else 0.5F
+        getChildAt(i).alpha = if (activePlayer || activePlayerTag == PlayerTagType.STATISTICS) 1F else 0.5F
     }
 }
 
