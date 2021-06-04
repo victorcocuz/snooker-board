@@ -6,13 +6,13 @@
     <data>
         <variable
             name="playerTagType"
-            type="com.example.snookerscore.utils.PlayerTagType" />
+            type="com.quickpoint.snookerboard.utils.PlayerTagType" />
         <variable
             name="application"
             type="android.app.Application" />
         <variable
             name="varGameViewModel"
-            type="com.example.snookerscore.fragments.game.GameViewModel" />
+            type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

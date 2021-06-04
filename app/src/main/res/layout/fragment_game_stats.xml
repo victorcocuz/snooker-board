@@ -11,13 +11,13 @@
 
         <variable
             name="varStatsViewModel"
-            type="com.example.snookerscore.fragments.gamestatistics.GameStatsViewModel" />
+            type="com.quickpoint.snookerboard.fragments.gamestatistics.GameStatsViewModel" />
 
-        <import type="com.example.snookerscore.utils.MatchAction" />
+        <import type="com.quickpoint.snookerboard.utils.MatchAction" />
 
         <variable
             name="varEventsViewModel"
-            type="com.example.snookerscore.GenericEventsViewModel" />
+            type="com.quickpoint.snookerboard.GenericEventsViewModel" />
 
         <variable
             name="varMaxHeight"

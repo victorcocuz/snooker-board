@@ -8,10 +8,10 @@
             type="int" />
         <variable
             name="ball"
-            type="com.example.snookerscore.domain.DomainBall" />
+            type="com.quickpoint.snookerboard.domain.DomainBall" />
         <variable
             name="clickListener"
-            type="com.example.snookerscore.fragments.game.BallListener" />
+            type="com.quickpoint.snookerboard.fragments.game.BallListener" />
     </data>
 
     <FrameLayout

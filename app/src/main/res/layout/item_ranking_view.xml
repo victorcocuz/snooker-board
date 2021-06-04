@@ -6,7 +6,7 @@
     <data>
         <variable
             name="ranking"
-            type="com.example.snookerscore.domain.DomainRanking" />
+            type="com.quickpoint.snookerboard.domain.DomainRanking" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

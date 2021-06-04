@@ -9,7 +9,7 @@
             type="android.app.Application" />
         <variable
             name="varGameViewModel"
-            type="com.example.snookerscore.fragments.game.GameViewModel" />
+            type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

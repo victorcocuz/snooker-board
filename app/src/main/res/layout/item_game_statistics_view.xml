@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.example.snookerscore.utils.StatisticsType" />
+        <import type="com.quickpoint.snookerboard.utils.StatisticsType" />
         <variable
             name="frameScoreA"
-            type="com.example.snookerscore.domain.DomainPlayerScore" />
+            type="com.quickpoint.snookerboard.domain.DomainPlayerScore" />
         <variable
             name="frameScoreB"
-            type="com.example.snookerscore.domain.DomainPlayerScore" />
+            type="com.quickpoint.snookerboard.domain.DomainPlayerScore" />
         <variable
             name="varBgType"
             type="int"/>

@@ -11,7 +11,7 @@ android {
     buildToolsVersion "30.0.0"
 
     defaultConfig {
-        applicationId "com.example.snookerscore"
+        applicationId "com.quickpoint.snookerboard"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1

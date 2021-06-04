@@ -5,15 +5,15 @@
 
     <data>
 
-        <import type="com.example.snookerscore.utils.MatchAction" />
+        <import type="com.quickpoint.snookerboard.utils.MatchAction" />
 
         <variable
             name="varPlayViewModel"
-            type="com.example.snookerscore.fragments.play.PlayFragmentViewModel" />
+            type="com.quickpoint.snookerboard.fragments.play.PlayFragmentViewModel" />
 
         <variable
             name="varEventsViewModel"
-            type="com.example.snookerscore.GenericEventsViewModel" />
+            type="com.quickpoint.snookerboard.GenericEventsViewModel" />
 
         <variable
             name="varNameFirstA"

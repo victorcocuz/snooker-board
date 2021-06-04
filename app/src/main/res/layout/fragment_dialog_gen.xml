@@ -5,27 +5,27 @@
 
     <data>
 
-        <import type="com.example.snookerscore.utils.MatchAction" />
+        <import type="com.quickpoint.snookerboard.utils.MatchAction" />
 
         <variable
             name="gameViewModel"
-            type="com.example.snookerscore.fragments.game.GameViewModel" />
+            type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
 
         <variable
             name="dialogMatchActionA"
-            type="com.example.snookerscore.utils.MatchAction" />
+            type="com.quickpoint.snookerboard.utils.MatchAction" />
 
         <variable
             name="dialogMatchActionB"
-            type="com.example.snookerscore.utils.MatchAction" />
+            type="com.quickpoint.snookerboard.utils.MatchAction" />
 
         <variable
             name="dialogMatchActionC"
-            type="com.example.snookerscore.utils.MatchAction" />
+            type="com.quickpoint.snookerboard.utils.MatchAction" />
 
         <variable
             name="genericEventsViewModel"
-            type="com.example.snookerscore.GenericEventsViewModel" />
+            type="com.quickpoint.snookerboard.GenericEventsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

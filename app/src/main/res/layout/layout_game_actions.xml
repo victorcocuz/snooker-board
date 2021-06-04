@@ -4,17 +4,17 @@
 
     <data>
 
-        <import type="com.example.snookerscore.domain.DomainPot" />
+        <import type="com.quickpoint.snookerboard.domain.DomainPot" />
 
-        <import type="com.example.snookerscore.utils.FrameEvent" />
+        <import type="com.quickpoint.snookerboard.utils.FrameEvent" />
 
         <variable
             name="genericEventsViewModel"
-            type="com.example.snookerscore.GenericEventsViewModel" />
+            type="com.quickpoint.snookerboard.GenericEventsViewModel" />
 
         <variable
             name="gameViewModel"
-            type="com.example.snookerscore.fragments.game.GameViewModel" />
+            type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

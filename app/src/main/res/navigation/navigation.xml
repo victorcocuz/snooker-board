@@ -6,15 +6,15 @@
     <!-- Main Fragments -->
     <fragment
         android:id="@+id/rankingsFragment"
-        android:name="com.example.snookerscore.fragments.rankings.RankingsFragment"
+        android:name="com.quickpoint.snookerboard.fragments.rankings.RankingsFragment"
         android:label="RankingsFragment" />
     <fragment
         android:id="@+id/friendsFragment"
-        android:name="com.example.snookerscore.fragments.main.FriendsFragment"
+        android:name="com.quickpoint.snookerboard.fragments.main.FriendsFragment"
         android:label="FriendsFragment" />
     <fragment
         android:id="@+id/playFragment"
-        android:name="com.example.snookerscore.fragments.play.PlayFragment"
+        android:name="com.quickpoint.snookerboard.fragments.play.PlayFragment"
         android:label="PlayFragment" >
         <action
             android:id="@+id/action_playFragment_to_gameFragment"
@@ -24,29 +24,26 @@
         <action
             android:id="@+id/action_playFragment_to_gameGenericDialogFragment"
             app:destination="@id/gameGenericDialogFragment" />
-        <action
-            android:id="@+id/action_playFragment_to_textDialogFragment"
-            app:destination="@id/textDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
-        android:name="com.example.snookerscore.fragments.main.HistoryFragment"
+        android:name="com.quickpoint.snookerboard.fragments.main.HistoryFragment"
         android:label="HistoryFragment" />
     <fragment
         android:id="@+id/statisticsFragment"
-        android:name="com.example.snookerscore.fragments.main.StatisticsFragment"
+        android:name="com.quickpoint.snookerboard.fragments.main.StatisticsFragment"
         android:label="StatisticsFragment" />
 
     <!-- Authentication Fragments -->
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.snookerscore.fragments.authentication.LoginFragment"
+        android:name="com.quickpoint.snookerboard.fragments.authentication.LoginFragment"
         android:label="LoginFragment" />
 
     <!-- Game Fragments -->
     <fragment
         android:id="@+id/gameFragment"
-        android:name="com.example.snookerscore.fragments.game.GameFragment"
+        android:name="com.quickpoint.snookerboard.fragments.game.GameFragment"
         android:label="GameFragment" >
         <action
             android:id="@+id/action_gameFragment_to_gameGenericDialogFragment"
@@ -67,7 +64,7 @@
     </fragment>
     <fragment
         android:id="@+id/gameStatsFragment"
-        android:name="com.example.snookerscore.fragments.gamestatistics.GameStatsFragment"
+        android:name="com.quickpoint.snookerboard.fragments.gamestatistics.GameStatsFragment"
         android:label="GameStatsFragment" >
         <action
             android:id="@+id/action_gameStatsFragment_to_playFragment"
@@ -77,28 +74,20 @@
     </fragment>
     <dialog
         android:id="@+id/gameGenericDialogFragment"
-        android:name="com.example.snookerscore.fragments.gamedialogs.GameGenericDialogFragment"
+        android:name="com.quickpoint.snookerboard.fragments.gamedialogs.GameGenericDialogFragment"
         android:label="GameGenericDialogFragment" >
         <argument
             android:name="matchActionA"
-            app:argType="com.example.snookerscore.utils.MatchAction" />
+            app:argType="com.quickpoint.snookerboard.utils.MatchAction" />
         <argument
             android:name="matchActionB"
-            app:argType="com.example.snookerscore.utils.MatchAction" />
+            app:argType="com.quickpoint.snookerboard.utils.MatchAction" />
         <argument
             android:name="matchActionC"
-            app:argType="com.example.snookerscore.utils.MatchAction" />
+            app:argType="com.quickpoint.snookerboard.utils.MatchAction" />
     </dialog>
     <dialog
         android:id="@+id/gameFoulDialogFragment"
-        android:name="com.example.snookerscore.fragments.gamedialogs.GameFoulDialogFragment"
+        android:name="com.quickpoint.snookerboard.fragments.gamedialogs.GameFoulDialogFragment"
         android:label="GameFoulDialogFragment" />
-    <dialog
-        android:id="@+id/textDialogFragment"
-        android:name="com.example.snookerscore.fragments.gamedialogs.TextDialogFragment"
-        android:label="TextDialogFragment" >
-        <argument
-            android:name="matchAction"
-            app:argType="com.example.snookerscore.utils.MatchAction" />
-    </dialog>
 </navigation>
