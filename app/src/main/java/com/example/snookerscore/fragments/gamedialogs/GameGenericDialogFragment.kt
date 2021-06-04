@@ -8,7 +8,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.snookerscore.GenericEventsViewModel
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentDialogGenBinding
-import com.example.snookerscore.domain.MatchAction
+import com.example.snookerscore.utils.MatchAction
 import com.example.snookerscore.fragments.game.GameViewModel
 import com.example.snookerscore.utils.EventObserver
 import com.example.snookerscore.utils.setSize

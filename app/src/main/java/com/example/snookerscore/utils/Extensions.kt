@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
 import android.text.SpannableString
@@ -13,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.ScrollView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -79,6 +81,29 @@ fun Context.hideKeyboard(view: View) {
 fun MenuItem.setStateOpacity() {
     icon.alpha = if (isEnabled) 255 else 120
     val s = SpannableString(title)
-    s.setSpan(ForegroundColorSpan(if (isEnabled) Color.argb(255, 255, 255,255) else Color.argb(120, 255, 255,255)), 0, s.length, 0)
+    s.setSpan(ForegroundColorSpan(if (isEnabled) Color.argb(255, 255, 255, 255) else Color.argb(120, 255, 255, 255)), 0, s.length, 0)
     title = s
+}
+
+fun ScrollView.assignScrollHeight(scrollHeight: Int, ghostHeight: Int) {
+    val params = layoutParams
+    if (scrollHeight > ghostHeight) {
+        params.height = ghostHeight
+    }
+}
+
+fun ScrollView.scrollToBottom() {
+    val lastChild = getChildAt(childCount - 1)
+    val bottom = lastChild.bottom + paddingBottom
+    val delta = bottom - (scrollY + height)
+    smoothScrollBy(0, delta)
+}
+
+fun Context.getFactoredDimen(factor: Int): Int {
+    val width = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+        resources.displayMetrics.widthPixels
+    } else {
+        resources.displayMetrics.heightPixels
+    }
+    return width / factor
 }

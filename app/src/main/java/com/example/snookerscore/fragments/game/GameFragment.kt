@@ -15,11 +15,12 @@ import com.example.snookerscore.databinding.FragmentGameBinding
 import com.example.snookerscore.domain.*
 import com.example.snookerscore.domain.DomainBall.*
 import com.example.snookerscore.repository.SnookerRepository
-import com.example.snookerscore.utils.EventObserver
-import com.example.snookerscore.utils.setStateOpacity
+import com.example.snookerscore.utils.*
+import kotlinx.android.synthetic.main.fragment_game_stats.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 
 class GameFragment : androidx.fragment.app.Fragment() {
@@ -29,6 +30,8 @@ class GameFragment : androidx.fragment.app.Fragment() {
     private lateinit var snookerRepository: SnookerRepository
     private lateinit var ballAdapter: BallAdapter
     private lateinit var binding: FragmentGameBinding
+    private var scrollHeight = 0
+    private var ghostHeight = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,17 +64,35 @@ class GameFragment : androidx.fragment.app.Fragment() {
                 varGameViewModel = gameViewModel
                 application = requireActivity().application
             }
+
             fragGameScore.apply {
                 varGameViewModel = this@GameFragment.gameViewModel
                 application = requireActivity().application
             }
+
+            fragGameGhostLayout.viewTreeObserver.addOnGlobalLayoutListener {
+                ghostHeight = fragGameGhostLayout.measuredHeight
+                fragGameScrollView.assignScrollHeight(scrollHeight, ghostHeight)
+            }
+
+            fragGameScrollView.viewTreeObserver.addOnGlobalLayoutListener {
+                scrollHeight = fragGameScrollView.measuredHeight
+                fragGameScrollView.assignScrollHeight(scrollHeight, ghostHeight)
+                fragGameScrollView.scrollToBottom()
+            }
+
             fragGameBreakRv.apply {
                 adapter = BreakAdapter(requireActivity())
                 itemAnimator = null
+                (layoutManager as LinearLayoutManager).stackFromEnd = true
             }
+
             fragGameActionButtons.apply {
                 gameViewModel = this@GameFragment.gameViewModel
                 genericEventsViewModel = eventsViewModel
+                Timber.e("wtf ${requireContext().getFactoredDimen(BALL_HEIGHT_FACTOR_MATCH_ACTION)}")
+                Timber.e("wtf ${resources.getDimension(R.dimen.margin_layout_offset) * 2}")
+                fragGameBallsLl.layoutParams.height = requireContext().getFactoredDimen(BALL_HEIGHT_FACTOR_MATCH_ACTION) + resources.getDimension(R.dimen.margin_layout_offset).toInt() * 2
                 fragGameBallsRv.apply {
                     layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
                     itemAnimator = null
@@ -170,21 +191,16 @@ class GameFragment : androidx.fragment.app.Fragment() {
                 setStateOpacity()
             }
             menu.findItem(R.id.match_action_rerack).apply {
-                isEnabled = (frameStack.size) > 0 && !(gameViewModel.isFrameUpdateInProgress.value ?: false)
-//                setStateOpacity()
+                isEnabled = !(gameViewModel.isFrameUpdateInProgress.value ?: false)
             }
             menu.findItem(R.id.match_action_add_red).apply {
                 isEnabled = (ballStack.size) in (10..36).filter { it % 2 == 0 } && !(gameViewModel.isFrameUpdateInProgress.value ?: false)
-//                setStateOpacity()
             }
-//            menu.findItem(R.id.match_action_cancel_match).setStateOpacity()
             menu.findItem(R.id.match_action_concede_frame).apply {
                 isEnabled = getFrameScoreDiff() != 0 && !(gameViewModel.isFrameUpdateInProgress.value ?: false)
-//                setStateOpacity()
             }
             menu.findItem(R.id.match_action_concede_match).apply {
                 isEnabled = getFrameScoreDiff() != 0 || getMatchScoreDiff() != 0 && !(gameViewModel.isFrameUpdateInProgress.value ?: false)
-//                setStateOpacity()
             }
         }
     }

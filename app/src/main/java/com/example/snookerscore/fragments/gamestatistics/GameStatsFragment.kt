@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
-import android.widget.ScrollView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -18,12 +16,12 @@ import com.example.snookerscore.R
 import com.example.snookerscore.database.SnookerDatabase
 import com.example.snookerscore.databinding.FragmentGameStatsBinding
 import com.example.snookerscore.domain.DomainPlayerScore
-import com.example.snookerscore.domain.MatchAction
-import com.example.snookerscore.domain.PlayerTagType
+import com.example.snookerscore.utils.MatchAction
 import com.example.snookerscore.repository.SnookerRepository
 import com.example.snookerscore.utils.EventObserver
+import com.example.snookerscore.utils.PlayerTagType
+import com.example.snookerscore.utils.assignScrollHeight
 import kotlinx.android.synthetic.main.item_game_statistics_view.*
-import timber.log.Timber
 
 class GameStatsFragment : Fragment() {
 
@@ -70,11 +68,11 @@ class GameStatsFragment : Fragment() {
 
             gameStatsScrollView.viewTreeObserver.addOnGlobalLayoutListener {
                 scrollHeight = gameStatsScrollView.measuredHeight
-                gameStatsScrollView.assignScrollHeight()
+                gameStatsScrollView.assignScrollHeight(scrollHeight, ghostHeight)
             }
             gameStatsGhostFrameForHeight.viewTreeObserver.addOnGlobalLayoutListener {
                 ghostHeight = gameStatsGhostFrameForHeight.measuredHeight
-                gameStatsScrollView.assignScrollHeight()
+                gameStatsScrollView.assignScrollHeight(scrollHeight, ghostHeight)
             }
 
             // Header format
@@ -106,12 +104,5 @@ class GameStatsFragment : Fragment() {
         }
 
         return binding.root
-    }
-
-    private fun ScrollView.assignScrollHeight() {
-        val params = layoutParams
-        if (scrollHeight > ghostHeight) {
-            params.height = ghostHeight
-        }
     }
 }

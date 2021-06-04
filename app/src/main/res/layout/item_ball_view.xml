@@ -24,7 +24,7 @@
                 app:ballImage="@{ball}"
                 android:onClick="@{() -> clickListener.onClick(ball)}"
                 android:layout_width="match_parent"
-                android:elevation="4dp"
+                android:elevation="@dimen/toolbar_elevation"
                 android:layout_height="match_parent"/>
             <TextView
                 app:ballValue="@{ball}"

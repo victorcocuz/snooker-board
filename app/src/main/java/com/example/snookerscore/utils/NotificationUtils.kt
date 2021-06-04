@@ -19,7 +19,7 @@ fun NotificationManager.sendNotification(messageBody: String, applicationContext
         applicationContext,
         applicationContext.getString(R.string.game_notification_channel_id)
     )
-        .setSmallIcon(R.drawable.ball_red)
+        .setSmallIcon(R.drawable.ic_ball_red)
         .setContentTitle(applicationContext.getString(R.string.notification_title))
         .setContentText(messageBody)
 

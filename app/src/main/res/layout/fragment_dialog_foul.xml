@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="com.example.snookerscore.domain.MatchAction" />
+        <import type="com.example.snookerscore.utils.MatchAction" />
 
         <variable
             name="ballAdapter"

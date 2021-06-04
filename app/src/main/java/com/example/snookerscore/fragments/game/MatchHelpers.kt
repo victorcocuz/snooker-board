@@ -49,7 +49,7 @@ fun MutableList<DomainBreak>.getDisplayShots(): MutableList<DomainBreak> {
 
 // Score
 fun CurrentScore.calculatePoints(pot: DomainPot, pol: Int, lastBall: DomainBall, matchFoul: Int, frameStack: MutableList<DomainBreak>) {
-    var points = 0
+    val points: Int
     when (pot.potType) {
         in listOf(HIT, FREE, ADDRED) -> {
             points = if (pot.potType == FREE) lastBall.points else pot.ball.points

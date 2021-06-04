@@ -81,13 +81,13 @@
         android:label="GameGenericDialogFragment" >
         <argument
             android:name="matchActionA"
-            app:argType="com.example.snookerscore.domain.MatchAction" />
+            app:argType="com.example.snookerscore.utils.MatchAction" />
         <argument
             android:name="matchActionB"
-            app:argType="com.example.snookerscore.domain.MatchAction" />
+            app:argType="com.example.snookerscore.utils.MatchAction" />
         <argument
             android:name="matchActionC"
-            app:argType="com.example.snookerscore.domain.MatchAction" />
+            app:argType="com.example.snookerscore.utils.MatchAction" />
     </dialog>
     <dialog
         android:id="@+id/gameFoulDialogFragment"
@@ -99,6 +99,6 @@
         android:label="TextDialogFragment" >
         <argument
             android:name="matchAction"
-            app:argType="com.example.snookerscore.domain.MatchAction" />
+            app:argType="com.example.snookerscore.utils.MatchAction" />
     </dialog>
 </navigation>

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="playerTagType"
-            type="com.example.snookerscore.domain.PlayerTagType" />
+            type="com.example.snookerscore.utils.PlayerTagType" />
         <variable
             name="application"
             type="android.app.Application" />
@@ -37,8 +37,8 @@
             app:theme="@style/ToolbarTheme">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/icon_logo"
+                android:layout_height="@dimen/icon_logo"
                 android:layout_gravity="center"
                 android:contentDescription="@string/cd_logo"
                 android:src="@drawable/logo" />
@@ -55,8 +55,8 @@
 
             <TextView
                 android:id="@+id/game_label_name_first_a"
-                style="@style/TextRegular"
-                android:layout_marginBottom="-4dp"
+                style="@style/TextCaption"
+                android:layout_marginBottom="@dimen/subtitle_offset"
                 app:getNameApplication="@{application}"
                 app:getNamePref="@{@string/shared_pref_match_name_first_a}"
                 tools:text="@string/fragment_game_label_player_a" />
@@ -80,8 +80,8 @@
 
             <TextView
                 android:id="@+id/game_label_name_first_b"
-                style="@style/TextRegular"
-                android:layout_marginBottom="-4dp"
+                style="@style/TextCaption"
+                android:layout_marginBottom="@dimen/subtitle_offset"
                 app:getNameApplication="@{application}"
                 app:getNamePref="@{@string/shared_pref_match_name_first_b}"
                 tools:text="@string/fragment_game_label_player_b" />

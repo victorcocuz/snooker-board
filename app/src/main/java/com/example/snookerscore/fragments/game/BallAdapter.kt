@@ -8,9 +8,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snookerscore.databinding.ItemBallViewBinding
-import com.example.snookerscore.domain.BallAdapterType
 import com.example.snookerscore.domain.DomainBall
 import com.example.snookerscore.domain.DomainFrame
+import com.example.snookerscore.utils.BALL_HEIGHT_FACTOR_MATCH_ACTION
+import com.example.snookerscore.utils.BallAdapterType
+import com.example.snookerscore.utils.getFactoredDimen
 
 class BallAdapter(private val clickListener: BallListener?, private val frame: LiveData<DomainFrame>?, private val adapterType: BallAdapterType): ListAdapter<DomainBall, BallAdapter.ViewHolder>(BallAdapterCallback()) {
 
@@ -34,7 +36,7 @@ class BallAdapter(private val clickListener: BallListener?, private val frame: L
             binding.apply {
                 ball = item
                 val factor = when (adapterType) {
-                    BallAdapterType.MATCH -> 7
+                    BallAdapterType.MATCH -> BALL_HEIGHT_FACTOR_MATCH_ACTION
                     BallAdapterType.FOUL -> 7
                     BallAdapterType.BREAK -> 20
                 }
@@ -44,10 +46,10 @@ class BallAdapter(private val clickListener: BallListener?, private val frame: L
                     BallAdapterType.BREAK -> 4
                 }
                 itemBallViewFrameLayout.apply {
-                    layoutParams.width = context.resources.displayMetrics.widthPixels / factor
-                    layoutParams.height = context.resources.displayMetrics.widthPixels / factor
+                    layoutParams.width = context.getFactoredDimen(factor)
+                    layoutParams.height = context.getFactoredDimen(factor)
                     setPadding(padding, padding, padding, padding)
-                    val params = this.layoutParams as ViewGroup.MarginLayoutParams
+//                    val params = this.layoutParams as ViewGroup.MarginLayoutParams
 //                    params.setMargins(padding, padding, padding, padding)
                 }
 

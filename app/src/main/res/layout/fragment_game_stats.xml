@@ -13,7 +13,7 @@
             name="varStatsViewModel"
             type="com.example.snookerscore.fragments.gamestatistics.GameStatsViewModel" />
 
-        <import type="com.example.snookerscore.domain.MatchAction" />
+        <import type="com.example.snookerscore.utils.MatchAction" />
 
         <variable
             name="varEventsViewModel"
@@ -83,7 +83,7 @@
             android:id="@+id/game_stats_header"
             layout="@layout/item_game_statistics_view"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/btn_stretched_height"
+            android:layout_height="@dimen/toolbar_height"
             android:layout_marginTop="@dimen/margin_header_above"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

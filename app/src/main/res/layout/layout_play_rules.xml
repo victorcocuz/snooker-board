@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="com.example.snookerscore.domain.MatchAction" />
+        <import type="com.example.snookerscore.utils.MatchAction" />
 
         <variable
             name="varPlayViewModel"
@@ -212,12 +212,13 @@
 
             <ImageView
                 android:id="@+id/frag_play_btn_foul_modifier_info"
-                android:layout_width="20dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="8dp"
+                android:layout_width="@dimen/icon_info"
+                android:layout_height="@dimen/icon_info"
+                android:layout_marginStart="@dimen/margin_xxxsmall"
                 android:contentDescription="@string/cd_foul_modifier_info"
                 android:onClick="@{() -> varEventsViewModel.onEventMatchActionConfirmed(MatchAction.INFO_FOUL)}"
                 app:layout_constraintBottom_toBottomOf="@+id/frag_play_label_foul_modifier"
+                app:layout_constraintTop_toTopOf="@+id/frag_play_label_foul_modifier"
                 app:layout_constraintStart_toEndOf="@+id/frag_play_label_foul_modifier"
                 app:srcCompat="@drawable/ic_temp_info" />
 

@@ -4,7 +4,7 @@
 
     <data>
 
-        <import type="com.example.snookerscore.domain.MatchAction" />
+        <import type="com.example.snookerscore.utils.MatchAction" />
 
         <variable
             name="varEventsViewModel"
@@ -24,8 +24,8 @@
             app:theme="@style/ToolbarTheme">
 
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/icon_logo"
+                android:layout_height="@dimen/icon_logo"
                 android:layout_gravity="center"
                 android:contentDescription="@string/cd_logo"
                 android:src="@drawable/logo" />

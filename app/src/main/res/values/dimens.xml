@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="toolbar_height">56dp</dimen>
+    <!-- Buttons -->>
+    <dimen name="toolbar_height">48dp</dimen>
     <dimen name="bottom_height">120dp</dimen>
     <dimen name="btn_width_large">120dp</dimen>
     <dimen name="btn_width">66dp</dimen>
-    <dimen name="btn_height">36dp</dimen>
-    <dimen name="btn_stretched_height">44dp</dimen>
+    <dimen name="btn_height">40dp</dimen>
+    <dimen name="btn_stretched_height">40dp</dimen>
+    <dimen name="btn_balls_height">72dp</dimen>
     <dimen name="dialog_title_height">32dp</dimen>
-    <dimen name="name_tag_height">64dp</dimen>
+    <dimen name="name_tag_height">44dp</dimen>
 
     <!-- Margins -->
     <dimen name="margin_xxxsmall">4dp</dimen>
@@ -18,8 +20,8 @@
     <dimen name="margin_large">32dp</dimen>
     <dimen name="margin_xlarge">64dp</dimen>
 
-    <dimen name="margin_header_below">12dp</dimen>
-    <dimen name="margin_header_above">16dp</dimen>
+    <dimen name="margin_header_below">6dp</dimen>
+    <dimen name="margin_header_above">8dp</dimen>
     <dimen name="margin_layout_offset">8dp</dimen>
     <dimen name="margin_layout_offset_mid">4dp</dimen>
     <dimen name="margin_btn">4dp</dimen>
@@ -27,24 +29,35 @@
     <!-- Padding -->
     <dimen name="padding_xsmall">4dp</dimen>
     <dimen name="padding_button_small">4dp</dimen>
+    <dimen name="padding_shape">8dp</dimen>
     <dimen name="padding_button">16dp</dimen>
     <dimen name="padding_medium">16dp</dimen>
 
     <!-- Icons -->
-    <dimen name="ball_size">36dp</dimen>
-    <dimen name="icon_bottom_nav_size">24dp</dimen>
+    <dimen name="icon_ball_size">48dp</dimen>
+    <dimen name="icon_bar">8dp</dimen>
+    <dimen name="icon_btn_nav_size">24dp</dimen>
     <dimen name="icon_launcher">108dp</dimen>
+    <dimen name="icon_logo">40dp</dimen>
+    <dimen name="icon_info">20dp</dimen>
 
-    <!-- Strokes -->
+    <!-- Other -->
+    <dimen name="text_width_icon_bar">36dp</dimen>
     <dimen name="stroke_single">1dp</dimen>
-
-    <!-- Text -->
-    <dimen name="text_regular">16sp</dimen>
-    <dimen name="ball_size_small">18dp</dimen>
-
+    <dimen name="stroke_double">2dp</dimen>
+    <dimen name="border_offset">-3dp</dimen>
+    <dimen name="subtitle_offset">-4dp</dimen>
     <dimen name="dialog_factor">1.0px</dimen>
+    <dimen name="corner_radius">4dp</dimen>
 
-    <!-- Elevation -->
+    <!-- Elevations -->
     <dimen name="button_elevation">2dp</dimen>
     <dimen name="toolbar_elevation">4dp</dimen>
+
+    <!-- Text -->
+    <dimen name="text_title">24sp</dimen>
+    <dimen name="text_subtitle">20sp</dimen>
+    <dimen name="text_header">16sp</dimen>
+    <dimen name="text_regular">14sp</dimen>
+    <dimen name="text_caption">12sp</dimen>
 </resources>

@@ -8,9 +8,7 @@ import com.example.snookerscore.domain.*
 import com.example.snookerscore.domain.DomainBall.*
 import com.example.snookerscore.domain.PotType.*
 import com.example.snookerscore.repository.SnookerRepository
-import com.example.snookerscore.utils.Event
-import com.example.snookerscore.utils.getSharedPref
-import com.example.snookerscore.utils.setMatchInProgress
+import com.example.snookerscore.utils.*
 import kotlinx.coroutines.launch
 
 class GameViewModel(
@@ -155,6 +153,7 @@ class GameViewModel(
         getWinner().addMatchPoint()
         getFirst().frameId = frameCount
         getSecond().frameId = frameCount
+        updateFrameStatus()
         viewModelScope.launch {
             snookerRepository.saveCurrentFrame(displayFrame.value!!)
             this@GameViewModel.resetFrame()

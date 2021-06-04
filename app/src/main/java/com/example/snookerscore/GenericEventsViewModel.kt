@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.snookerscore.domain.DomainBall
 import com.example.snookerscore.domain.DomainPot
-import com.example.snookerscore.domain.MatchAction
 import com.example.snookerscore.domain.PotAction
 import com.example.snookerscore.utils.Event
+import com.example.snookerscore.utils.MatchAction
 
 class GenericEventsViewModel : ViewModel() {
     // Live Data

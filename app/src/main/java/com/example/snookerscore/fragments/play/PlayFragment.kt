@@ -14,7 +14,7 @@ import com.example.snookerscore.R
 import com.example.snookerscore.database.SnookerDatabase
 import com.example.snookerscore.database.asDomainFrame
 import com.example.snookerscore.databinding.FragmentPlayBinding
-import com.example.snookerscore.domain.MatchAction
+import com.example.snookerscore.utils.MatchAction
 import com.example.snookerscore.fragments.game.GameViewModel
 import com.example.snookerscore.repository.SnookerRepository
 import com.example.snookerscore.utils.EventObserver

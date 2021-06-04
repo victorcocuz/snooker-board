@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.snookerscore.databinding.ItemBreakViewBinding
-import com.example.snookerscore.domain.BallAdapterType
+import com.example.snookerscore.utils.BallAdapterType
 import com.example.snookerscore.domain.DomainBreak
 
 class BreakAdapter(private val activity: Activity) :

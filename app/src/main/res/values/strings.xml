@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Snooker Score</string>
+    <string name="app_name">Snooker Board</string>
 
     <!-- Menu Bottom -->
     <string name="menu_bottom_rankings">Rankings</string>

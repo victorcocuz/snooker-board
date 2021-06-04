@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <import type="com.example.snookerscore.domain.DomainPot" />
 
-        <import type="com.example.snookerscore.domain.FrameEvent" />
+        <import type="com.example.snookerscore.utils.FrameEvent" />
 
         <variable
             name="genericEventsViewModel"
@@ -101,9 +100,7 @@
         <LinearLayout
             android:id="@+id/frag_game_balls_ll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_header_below"
-            android:layout_marginBottom="@dimen/margin_header_below"
+            android:layout_height="@dimen/btn_balls_height"
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -114,11 +111,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/frag_game_balls_rv"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
                 app:bindMatchBallsRv="@{gameViewModel.displayFrame.ballStack}" />
-
         </LinearLayout>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -10,7 +10,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.snookerscore.GenericEventsViewModel
 import com.example.snookerscore.R
 import com.example.snookerscore.databinding.FragmentDialogFoulBinding
@@ -19,9 +18,7 @@ import com.example.snookerscore.domain.DomainBall.*
 import com.example.snookerscore.fragments.game.BallAdapter
 import com.example.snookerscore.fragments.game.BallListener
 import com.example.snookerscore.fragments.game.GameViewModel
-import com.example.snookerscore.utils.EventObserver
-import com.example.snookerscore.utils.setSize
-import com.example.snookerscore.utils.toast
+import com.example.snookerscore.utils.*
 import java.util.*
 
 class GameFoulDialogFragment : DialogFragment() {
@@ -39,7 +36,6 @@ class GameFoulDialogFragment : DialogFragment() {
             DataBindingUtil.inflate(inflater, R.layout.fragment_dialog_foul, container, false)
 
         // Bind RV, VM, adapter
-        val linearLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         val ballAdapter = BallAdapter(
             BallListener { ball -> eventsViewModel.onBallClicked(ball) },
             MutableLiveData(),

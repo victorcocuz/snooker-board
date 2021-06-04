@@ -16,10 +16,11 @@ import com.example.snookerscore.fragments.game.BreakAdapter
 import com.example.snookerscore.fragments.game.getDisplayShots
 import com.example.snookerscore.fragments.gamestatistics.GameStatsAdapter
 import java.text.DecimalFormat
+import java.util.*
 
 // General
 @BindingAdapter("setSelected")
-fun TextView.setSelected(selected: Boolean) {
+fun TextView.setViewSelected(selected: Boolean) {
     isSelected = selected
     setTextColor(
         ContextCompat.getColor(
@@ -75,6 +76,12 @@ fun TextView.getNameApplication(application: Application, name: String) {
 fun LinearLayout.setBarWeight(scoreFirst: Int, scoreSecond: Int) {
     layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, scoreFirst.toFloat() / scoreSecond.toFloat())
 }
+
+//@BindingAdapter("setActionBallsHeight")
+//fun LinearLayout.setActionBallsHeight() {
+//    Timber.e("its happening")
+//    layoutParams.height = context.getFactoredDimen(BALL_HEIGHT_FACTOR_MATCH_ACTION) + R.dimen.margin_layout_offset * 2
+//}
 
 // Statistics Adapters
 @BindingAdapter("setFrameScorePercentage")
@@ -248,15 +255,15 @@ fun ImageView.setBallImage(item: DomainBall?) {
     item?.let {
         setBackgroundResource(
             when (item) {
-                is RED -> R.drawable.ball_red
-                is YELLOW -> R.drawable.ball_yellow
-                is GREEN -> R.drawable.ball_green
-                is BROWN -> R.drawable.ball_brown
-                is BLUE -> R.drawable.ball_blue
-                is PINK -> R.drawable.ball_pink
-                is BLACK -> R.drawable.ball_black
-                is FREEBALL -> R.drawable.ball_grey
-                else -> R.drawable.ball_white
+                is RED -> R.drawable.ic_ball_red
+                is YELLOW -> R.drawable.ic_ball_yellow
+                is GREEN -> R.drawable.ic_ball_green
+                is BROWN -> R.drawable.ic_ball_brown
+                is BLUE -> R.drawable.ic_ball_blue
+                is PINK -> R.drawable.ic_ball_pink
+                is BLACK -> R.drawable.ic_ball_black
+                is FREEBALL -> R.drawable.ic_ball_grey
+                else -> R.drawable.ic_ball_white
             }
         )
     }
