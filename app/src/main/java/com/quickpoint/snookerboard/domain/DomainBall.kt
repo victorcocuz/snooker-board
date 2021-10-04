@@ -1,5 +1,6 @@
 package com.quickpoint.snookerboard.domain
 
+// The DOMAIN Ball is the simplest game data unit. It stores ball information
 sealed class DomainBall(
     var points: Int,
     var foul: Int
@@ -16,15 +17,15 @@ sealed class DomainBall(
     class COLOR(points: Int = 1, foul: Int = 4) : DomainBall(points, foul)
     class FREEBALL(points: Int = 1, foul: Int = 4) : DomainBall(points, foul)
 
-    fun assignNewPoints(points: Int) {
+    fun setCustomPointValue(points: Int) { // Point values can be overwritten (e.g. assigning a freeball value)
         this.points = points
     }
 
-    fun assignNewFoul(foul: Int) {
+    fun setCustomFoulValue(foul: Int) { // Foul values can be overwritten (e.g. potting white when min foul > 4)
         this.foul = foul
     }
 
-    fun getBallOrdinal() : Int {
+    fun getBallOrdinal() : Int { // Get a numeric correspondent for each ball to store in database
         return when(this) {
             is NOBALL -> 0
             is WHITE -> 1
@@ -41,7 +42,7 @@ sealed class DomainBall(
     }
 }
 
-fun getBallFromValues(position: Int, points: Int, foul: Int) : DomainBall {
+fun getBallFromValues(position: Int, points: Int, foul: Int) : DomainBall { // Return a DOMAIN ball from a list of values
     return when(position) {
         0 -> DomainBall.NOBALL(points, foul)
         1 -> DomainBall.WHITE(points, foul)

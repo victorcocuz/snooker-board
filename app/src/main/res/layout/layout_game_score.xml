@@ -5,7 +5,7 @@
 
     <data>
         <variable
-            name="application"
+            name="varApplication"
             type="android.app.Application" />
         <variable
             name="varGameViewModel"
@@ -90,7 +90,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/game_text_score_a"
             app:layout_constraintEnd_toStartOf="@+id/game_guide_vert_mid"
             app:layout_constraintStart_toStartOf="@+id/game_guide_vert_mid"
-            app:setTotalScore="@{application}"
+            app:setTotalScore="@{varApplication}"
             tools:text="(37)" />
 
         <LinearLayout

@@ -11,16 +11,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.quickpoint.snookerboard.GenericEventsViewModel
-import com.quickpoint.snookerboard.GenericViewModelFactory
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.database.SnookerDatabase
 import com.quickpoint.snookerboard.databinding.FragmentGameStatsBinding
 import com.quickpoint.snookerboard.domain.DomainPlayerScore
 import com.quickpoint.snookerboard.repository.SnookerRepository
-import com.quickpoint.snookerboard.utils.EventObserver
-import com.quickpoint.snookerboard.utils.MatchAction
-import com.quickpoint.snookerboard.utils.PlayerTagType
-import com.quickpoint.snookerboard.utils.assignScrollHeight
+import com.quickpoint.snookerboard.utils.*
 import kotlinx.android.synthetic.main.item_game_statistics_view.*
 
 class GameStatsFragment : Fragment() {
@@ -35,7 +31,7 @@ class GameStatsFragment : Fragment() {
             )
         ).get(GameStatsViewModel::class.java)
     }
-    private val eventsViewModel: GenericEventsViewModel by activityViewModels()
+    private val genericEventsViewModel: GenericEventsViewModel by activityViewModels()
     private var scrollHeight = 0
     private var ghostHeight = 0
 
@@ -46,37 +42,37 @@ class GameStatsFragment : Fragment() {
         val binding: FragmentGameStatsBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_game_stats, container, false)
 
-        gameStatsViewModel.getTotals()
+        gameStatsViewModel.getTotals() // Gets the score from repository and stores it in live data within the vm
 
-        // Listeners
+        // Bind all required elements from the view
         binding.apply {
             lifecycleOwner = this@GameStatsFragment
             varStatsViewModel = gameStatsViewModel
-            varEventsViewModel = eventsViewModel
-            application = requireActivity().application
+            varEventsViewModel = genericEventsViewModel
+            varApplication = requireActivity().application
 
-            gameStatsRv.adapter = GameStatsAdapter()
+            fragStatsRv.adapter = GameStatsAdapter()
 
-            fragGameTop.apply {
+            fragStatsLayoutTop.apply {
                 (activity as AppCompatActivity).apply {
                     setSupportActionBar(fragGameToolbar)
                     supportActionBar?.setDisplayShowTitleEnabled(false)
                 }
-                playerTagType = PlayerTagType.STATISTICS
-                application = requireActivity().application
+                varPlayerTagType = PlayerTagType.STATISTICS
+                varApplication = requireActivity().application
             }
 
-            gameStatsScrollView.viewTreeObserver.addOnGlobalLayoutListener {
-                scrollHeight = gameStatsScrollView.measuredHeight
-                gameStatsScrollView.assignScrollHeight(scrollHeight, ghostHeight)
+            fragStatsScrollView.viewTreeObserver.addOnGlobalLayoutListener { // Assign ghost & scroll view height that lines up with the top of the action button
+                scrollHeight = fragStatsScrollView.measuredHeight
+                fragStatsScrollView.assignScrollHeight(scrollHeight, ghostHeight)
             }
-            gameStatsGhostFrameForHeight.viewTreeObserver.addOnGlobalLayoutListener {
-                ghostHeight = gameStatsGhostFrameForHeight.measuredHeight
-                gameStatsScrollView.assignScrollHeight(scrollHeight, ghostHeight)
+            fragStatsGhostFrameForHeight.viewTreeObserver.addOnGlobalLayoutListener { // Assign ghost & scroll view height that lines up with the top of the action button
+                ghostHeight = fragStatsGhostFrameForHeight.measuredHeight
+                fragStatsScrollView.assignScrollHeight(scrollHeight, ghostHeight)
             }
 
             // Header format
-            gameStatsHeader.apply {
+            fragStatsHeader.apply {
                 varBgType = 2
                 varTextType = 1
                 frameScoreA = DomainPlayerScore(-1, -1, -1, -1, -1, 0, -1, -1)
@@ -84,7 +80,7 @@ class GameStatsFragment : Fragment() {
             }
 
             // Footer format
-            gameStatsFooter.apply {
+            fragStatsFooter.apply {
                 varBgType = 2
                 varTextType = 1
                 gameStatsViewModel.totalsA.observe(viewLifecycleOwner, {
@@ -96,7 +92,7 @@ class GameStatsFragment : Fragment() {
             }
 
             // VM Observers
-            eventsViewModel.apply {
+            genericEventsViewModel.apply {
                 eventMatchActionConfirmed.observe(viewLifecycleOwner, EventObserver { matchAction ->
                     if (matchAction == MatchAction.APP_TO_MAIN) findNavController().navigate(GameStatsFragmentDirections.actionGameStatsFragmentToPlayFragment())
                 })

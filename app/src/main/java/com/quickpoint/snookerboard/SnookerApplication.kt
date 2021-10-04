@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
+// Override the Application class to add plugins and setup recuring work
 class SnookerApplication : Application() {
 
     private val applicationScope = CoroutineScope(Dispatchers.Default)

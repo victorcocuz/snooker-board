@@ -14,6 +14,7 @@ private const val NOTIFICATION_ID = 0
 //private val REQUEST_CODE = 0
 //private val FLAGS = 0
 
+// This was used as part of a project submission. Not needed at the moment
 fun NotificationManager.sendNotification(messageBody: String, applicationContext: Context) {
     val builder = NotificationCompat.Builder(
         applicationContext,

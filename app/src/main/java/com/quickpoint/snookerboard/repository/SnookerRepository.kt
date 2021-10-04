@@ -8,11 +8,12 @@ import com.quickpoint.snookerboard.domain.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+// Used to connect database to domain packages
 class SnookerRepository(database: SnookerDatabase) {
 
     private val snookerDbDao = database.snookerDatabaseDao
 
-    // Rankings
+    // Rankings - this is not in use anymore
     //    val rankings: LiveData<List<DomainRanking>> = Transformations.map(snookerDbDao.getAllRankings()) {
     //        it.asDomainRankings()
     //    }
@@ -29,6 +30,7 @@ class SnookerRepository(database: SnookerDatabase) {
     //        }
     //    }
 
+    // Return total score for end of game statistics
     suspend fun getTotals(playerId: Int): DomainPlayerScore {
         return withContext(Dispatchers.IO) {
             return@withContext DomainPlayerScore(
@@ -44,7 +46,7 @@ class SnookerRepository(database: SnookerDatabase) {
         }
     }
 
-    // State
+    // Save the latest frame to the database
     suspend fun saveCurrentFrame(frame: DomainFrame) = withContext(Dispatchers.IO) {
         snookerDbDao.apply {
             insertMatchFrame(frame.asDbFrame())
@@ -57,16 +59,7 @@ class SnookerRepository(database: SnookerDatabase) {
         }
     }
 
-    suspend fun deleteCurrentMatch() = withContext(Dispatchers.IO) {
-        snookerDbDao.apply {
-            deleteMatchScore()
-            deleteMatchBreaks()
-            deleteBreakPots()
-            deleteMatchBalls()
-            deleteMatchFrames()
-        }
-    }
-
+    // Delete the latest frame from the database
     suspend fun deleteCurrentFrame(frameId: Int) = withContext(Dispatchers.IO) {
         snookerDbDao.apply {
             deleteCurrentFrame(frameId)
@@ -80,16 +73,29 @@ class SnookerRepository(database: SnookerDatabase) {
         }
     }
 
+    // Delete match from database
+    suspend fun deleteCurrentMatch() = withContext(Dispatchers.IO) {
+        snookerDbDao.apply {
+            deleteMatchScore()
+            deleteMatchBreaks()
+            deleteBreakPots()
+            deleteMatchBalls()
+            deleteMatchFrames()
+        }
+    }
 
+    // Add a live data object that stores the value of a frameId when called; used below
     private val frameCount: MutableLiveData<Int> = MutableLiveData()
     fun searchByCount(frameId: Int) {
         frameCount.value = frameId
     }
 
+    // Get current frame information by frameId
     val crtFrame: LiveData<DbFrameWithScoreAndBreakWithPotsAndBallStack?> = Transformations.switchMap(frameCount) { frameId ->
         snookerDbDao.getCurrentFrame(frameId)
     }
 
+    // Get the current score from the database
     val score: LiveData<ArrayList<Pair<DomainPlayerScore, DomainPlayerScore>>> = Transformations.map(snookerDbDao.getMatchScore()) {
         it.asDomainFrameScoreList()
     }

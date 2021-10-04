@@ -5,10 +5,10 @@
 
     <data>
         <variable
-            name="playerTagType"
+            name="varPlayerTagType"
             type="com.quickpoint.snookerboard.utils.PlayerTagType" />
         <variable
-            name="application"
+            name="varApplication"
             type="android.app.Application" />
         <variable
             name="varGameViewModel"
@@ -50,21 +50,21 @@
             app:layout_constraintEnd_toStartOf="@+id/game_guide_vert_mid"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/frag_game_toolbar"
-            app:setActivePlayerTag="@{playerTagType}"
+            app:setActivePlayerTag="@{varPlayerTagType}"
             app:setActivePlayer="@{varGameViewModel.displayScore == varGameViewModel.displayScore.getFirst()}">
 
             <TextView
                 android:id="@+id/game_label_name_first_a"
                 style="@style/TextCaption"
                 android:layout_marginBottom="@dimen/subtitle_offset"
-                app:getNameApplication="@{application}"
+                app:getNameApplication="@{varApplication}"
                 app:getNamePref="@{@string/shared_pref_match_name_first_a}"
                 tools:text="@string/fragment_game_label_player_a" />
 
             <TextView
                 android:id="@+id/game_label_name_last_a"
                 style="@style/TextSubtitle"
-                app:getNameApplication="@{application}"
+                app:getNameApplication="@{varApplication}"
                 app:getNamePref="@{@string/shared_pref_match_name_last_a}"
                 tools:text="@string/fragment_game_label_player_a" />
         </LinearLayout>
@@ -75,21 +75,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/game_guide_vert_mid"
             app:layout_constraintTop_toBottomOf="@+id/frag_game_toolbar"
-            app:setActivePlayerTag="@{playerTagType}"
+            app:setActivePlayerTag="@{varPlayerTagType}"
             app:setActivePlayer="@{varGameViewModel.displayScore == varGameViewModel.displayScore.getSecond()}">
 
             <TextView
                 android:id="@+id/game_label_name_first_b"
                 style="@style/TextCaption"
                 android:layout_marginBottom="@dimen/subtitle_offset"
-                app:getNameApplication="@{application}"
+                app:getNameApplication="@{varApplication}"
                 app:getNamePref="@{@string/shared_pref_match_name_first_b}"
                 tools:text="@string/fragment_game_label_player_b" />
 
             <TextView
                 android:id="@+id/game_label_name_last_b"
                 style="@style/TextSubtitle"
-                app:getNameApplication="@{application}"
+                app:getNameApplication="@{varApplication}"
                 app:getNamePref="@{@string/shared_pref_match_name_last_b}"
                 tools:text="@string/fragment_game_label_player_b" />
         </LinearLayout>

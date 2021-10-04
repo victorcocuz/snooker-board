@@ -2,8 +2,9 @@ package com.quickpoint.snookerboard.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.quickpoint.snookerboard.domain.*
+import com.quickpoint.snookerboard.domain.DomainRanking
 
+// IGNORE for now - was part of a world ranking screen. NOT IN USE
 @Entity(tableName = "rankings_table")
 data class DatabaseRanking constructor(
     @PrimaryKey

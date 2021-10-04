@@ -16,15 +16,13 @@ import com.quickpoint.snookerboard.database.asDomainFrame
 import com.quickpoint.snookerboard.databinding.FragmentPlayBinding
 import com.quickpoint.snookerboard.fragments.game.GameViewModel
 import com.quickpoint.snookerboard.repository.SnookerRepository
-import com.quickpoint.snookerboard.utils.EventObserver
-import com.quickpoint.snookerboard.utils.MatchAction
-import com.quickpoint.snookerboard.utils.getSharedPref
-import com.quickpoint.snookerboard.utils.hideKeyboard
+import com.quickpoint.snookerboard.utils.*
 
 class PlayFragment : androidx.fragment.app.Fragment() {
-    private val playFragmentViewModel: PlayFragmentViewModel by viewModels()
+    // Variables
     private val gameViewModel: GameViewModel by activityViewModels()
-    private val eventsViewModel: GenericEventsViewModel by activityViewModels()
+    private val genericEventsViewModel: GenericEventsViewModel by activityViewModels()
+    private val playFragmentViewModel: PlayFragmentViewModel by viewModels()
     private lateinit var snookerRepository: SnookerRepository
     private lateinit var sharedPref: SharedPreferences
 
@@ -32,21 +30,22 @@ class PlayFragment : androidx.fragment.app.Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding: FragmentPlayBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_play, container, false)
 
-        hideKeyboard()
-
+        // Bind layout, initial setup
+        val binding: FragmentPlayBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_play, container, false)
         snookerRepository = SnookerRepository(SnookerDatabase.getDatabase(requireActivity().application))
         sharedPref = requireActivity().getSharedPref()
+        hideKeyboard()
 
+        // Bind layout elements
         binding.apply {
             lifecycleOwner = this@PlayFragment
-            varEventsViewModel = this@PlayFragment.eventsViewModel
+            varEventsViewModel = this@PlayFragment.genericEventsViewModel
 
+            // Bind fragment rules elements
             fragPlayRules.apply {
                 varPlayViewModel = playFragmentViewModel
-                varEventsViewModel = this@PlayFragment.eventsViewModel
+                varEventsViewModel = this@PlayFragment.genericEventsViewModel
                 varNameFirstA = sharedPref.getString(getString(R.string.shared_pref_match_name_first_a), "")
                 varNameLastA = sharedPref.getString(getString(R.string.shared_pref_match_name_last_a), "")
                 varNameFirstB = sharedPref.getString(getString(R.string.shared_pref_match_name_first_b), "")
@@ -55,45 +54,44 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                     minValue = 1
                     maxValue = 19
                     value = 2
-                    displayedValues = (minValue until maxValue * 2).filter { it % 2 != 0 }.map { it.toString() }.toTypedArray()
+                    displayedValues = (minValue until maxValue * 2).filter { it % 2 != 0 }.map { it.toString() }
+                        .toTypedArray() // get an array of odd numbers for the number of frames
                 }
 
-                // When new match is selected reset match, otherwise continue the existing match
-                this@PlayFragment.eventsViewModel.apply {
+                // Observe eventMatchActionConfirmed
+                this@PlayFragment.genericEventsViewModel.apply {
                     eventMatchActionConfirmed.observe(viewLifecycleOwner, EventObserver {
                         when (it) {
-                            // If match is saved open dialog, else start a new match
-                            MatchAction.MATCH_START -> {
-                                if (sharedPref.getBoolean(requireContext().getString(R.string.shared_pref_match_is_in_progress), false)) {
+                            MatchAction.MATCH_START -> { // When pressing the button to start the match
+                                if (sharedPref.getBoolean(
+                                        requireContext().getString(R.string.shared_pref_match_is_in_progress),
+                                        false
+                                    )
+                                ) { // If the match is in progress open dialog
                                     findNavController().navigate(
                                         PlayFragmentDirections.actionPlayFragmentToGameGenericDialogFragment(
                                             MatchAction.MATCH_START_NEW,
                                             MatchAction.NO_ACTION,
-                                            MatchAction.MATCH_RELOAD
+                                            MatchAction.MATCH_LOAD
                                         )
                                     )
-                                } else {
+                                } else { // Else start a new match
                                     startNewMatch(varNameFirstA, varNameLastA, varNameFirstB, varNameLastB)
                                     findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
                                 }
                             }
-                            MatchAction.MATCH_START_NEW -> {
+                            MatchAction.MATCH_START_NEW -> { // Start a new match
                                 startNewMatch(varNameFirstA, varNameLastA, varNameFirstB, varNameLastB)
                                 findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
                             }
-                            MatchAction.MATCH_RELOAD -> {
+                            MatchAction.MATCH_LOAD -> { // Reload an existing match
                                 snookerRepository.searchByCount(sharedPref.getInt(getString(R.string.shared_pref_match_crt_frame), 0))
                                 snookerRepository.crtFrame.observe(viewLifecycleOwner, { domainFrame ->
                                     gameViewModel.loadMatch(domainFrame?.asDomainFrame())
                                     findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
                                 })
                             }
-//                            in listOf(MatchAction.NAME_CHANGE_A_QUERIED, MatchAction.NAME_CHANGE_B_QUERIED) -> {
-//                                findNavController().navigate(
-//                                    PlayFragmentDirections.actionPlayFragmentToTextDialogFragment(it)
-//                                )
-//                            }
-                            MatchAction.INFO_FOUL -> {
+                            MatchAction.INFO_FOUL -> { // Open the foul info dialog
                                 findNavController().navigate(
                                     PlayFragmentDirections.actionPlayFragmentToGameGenericDialogFragment(
                                         MatchAction.IGNORE,
@@ -102,7 +100,7 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                                     )
                                 )
                             }
-                            else -> {
+                            else -> { // Empty else req'd
                             }
                         }
                     })
@@ -112,16 +110,19 @@ class PlayFragment : androidx.fragment.app.Fragment() {
         return binding.root
     }
 
-    private fun startNewMatch(nameFirstA: String?, nameLastA: String?, nameFirstB: String?, nameLastB: String?) = sharedPref.edit().apply {
-        putString(getString(R.string.shared_pref_match_name_first_a), nameFirstA ?: "")
-        putString(getString(R.string.shared_pref_match_name_last_a), nameLastA ?: "")
-        putString(getString(R.string.shared_pref_match_name_first_b), nameFirstB ?: "")
-        putString(getString(R.string.shared_pref_match_name_last_b), nameLastB ?: "")
-        putInt(getString(R.string.shared_pref_match_frames), playFragmentViewModel.eventFrames.value!!)
-        putInt(getString(R.string.shared_pref_match_reds), playFragmentViewModel.reds.value!!)
-        putInt(getString(R.string.shared_pref_match_foul), playFragmentViewModel.eventFoulModifier.value!!)
-        putInt(getString(R.string.shared_pref_match_first), playFragmentViewModel.eventBreaksFirst.value!!)
-        apply()
-        gameViewModel.startNewMatch()
+    // When starting a new match, add new shared prefs, trigger the startNewMatch within frameViewModel
+    private fun startNewMatch(nameFirstA: String?, nameLastA: String?, nameFirstB: String?, nameLastB: String?) {
+        sharedPref.edit().apply {
+            putString(getString(R.string.shared_pref_match_name_first_a), nameFirstA ?: "")
+            putString(getString(R.string.shared_pref_match_name_last_a), nameLastA ?: "")
+            putString(getString(R.string.shared_pref_match_name_first_b), nameFirstB ?: "")
+            putString(getString(R.string.shared_pref_match_name_last_b), nameLastB ?: "")
+            putInt(getString(R.string.shared_pref_match_frames), playFragmentViewModel.eventFrames.value!!)
+            putInt(getString(R.string.shared_pref_match_reds), playFragmentViewModel.reds.value!!)
+            putInt(getString(R.string.shared_pref_match_foul), playFragmentViewModel.eventFoulModifier.value!!)
+            putInt(getString(R.string.shared_pref_match_first), playFragmentViewModel.eventBreaksFirst.value!!)
+            apply()
+            gameViewModel.startNewMatch()
+        }
     }
 }

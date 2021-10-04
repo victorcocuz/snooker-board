@@ -8,15 +8,11 @@
         <import type="com.quickpoint.snookerboard.utils.MatchAction" />
 
         <variable
-            name="ballAdapter"
-            type="com.quickpoint.snookerboard.fragments.game.BallAdapter" />
-
-        <variable
             name="varEventsViewModel"
             type="com.quickpoint.snookerboard.GenericEventsViewModel" />
 
         <variable
-            name="gameViewModel"
+            name="varGameViewModel"
             type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
 
         <import type="com.quickpoint.snookerboard.domain.PotAction" />
@@ -70,7 +66,7 @@
                 android:id="@+id/foul_balls_list_rv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:bindFoulBalls="@{gameViewModel.displayFrame.ballStack}" />
+                app:bindFoulBalls="@{varGameViewModel.displayFrame.ballStack}" />
         </LinearLayout>
 
         <FrameLayout
@@ -121,7 +117,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/foul_action_continue"
-            app:setEnabled="@{gameViewModel.displayFrame.getFrameScoreRemaining() > gameViewModel.displayFrame.getFrameScoreDiff()}"
+            app:setEnabled="@{varGameViewModel.displayFrame.getFrameScoreRemaining() > varGameViewModel.displayFrame.getFrameScoreDiff()}"
             app:setSelected="@{varEventsViewModel.actionClicked == PotAction.CONTINUE}" />
 
         <FrameLayout
@@ -172,7 +168,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/foul_action_free_ball"
-            app:setEnabled="@{gameViewModel.displayFrame.ballStack.size() > 8}"
+            app:setEnabled="@{varGameViewModel.displayFrame.ballStack.size() > 8}"
             app:setSelected="@{varEventsViewModel.isRemoveRed}" />
 
         <FrameLayout

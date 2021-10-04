@@ -1,31 +1,36 @@
 package com.quickpoint.snookerboard.domain
 
-import com.quickpoint.snookerboard.database.*
+import com.quickpoint.snookerboard.database.DbBall
+import com.quickpoint.snookerboard.database.DbBreak
+import com.quickpoint.snookerboard.database.DbFrame
+import com.quickpoint.snookerboard.database.DbScore
 import kotlin.math.abs
 
+// The DOMAIN Frame is a class containing all frame information
 data class DomainFrame(
     val frameId: Int,
-    val frameScore: MutableList<DomainPlayerScore>,
-    val frameStack: MutableList<DomainBreak>,
-    val ballStack: MutableList<DomainBall>,
-    val frameMax: Int
+    val ballStack: MutableList<DomainBall>, // Keep track of all DOMAIN Balls (i.e. a list of all balls potted, in order)
+    val frameScore: MutableList<DomainPlayerScore>, // Two element array to keep track of DOMAIN Player Score and not the Current Score (i.e. overrides latest score)
+    val frameStack: MutableList<DomainBreak>, // Keep track of all DOMAIN Breaks (i.e. a list of all breaks)
+    val frameMax: Int // Keep track of maximum remaining points
 ) {
     fun getFrameScoreDiff() = abs(frameScore[0].framePoints - frameScore[1].framePoints)
     fun getMatchScoreDiff() = abs(frameScore[0].matchPoints - frameScore[1].matchPoints)
-    fun getFrameScoreRemaining() = ballStack.size.apply {
+    fun getFrameScoreRemaining() = ballStack.size.apply { // Formula to calculate remaining available points
         return if (this <= 7) (-(8 - this) * (8 - this) - (8 - this) + 56) / 2
         else 27 + ((this - 7) / 2) * 8
     }
     fun isFrameInProgress() = getFrameScoreRemaining() > getFrameScoreDiff()
 }
 
-fun DomainFrame.asDbFrame(): DbFrame {
+fun DomainFrame.asDbFrame(): DbFrame { // Converts the DOMAIN Frame into a DATABASE Frame
     return DbFrame(
         frameId = frameId,
         frameMax = frameMax
     )
 }
 
+// CONVERTER method from DOMAIN frame to a list of DATABASE Score
 fun DomainFrame.asDbCrtScore(): List<DbScore> {
     return frameScore.map { playerScore ->
         DbScore(
@@ -41,6 +46,7 @@ fun DomainFrame.asDbCrtScore(): List<DbScore> {
     }
 }
 
+// CONVERTER method from DOMAIN Frame a list of DATABASE Balls
 fun DomainFrame.asDbBallStack(): List<DbBall> {
     return ballStack.map { ball ->
         DbBall(
@@ -52,26 +58,13 @@ fun DomainFrame.asDbBallStack(): List<DbBall> {
     }
 }
 
+// CONVERTER method from DOMAIN Frame a list of DATABASE Breaks
 fun DomainFrame.asDbBreak(): List<DbBreak> {
     return frameStack.map {
         DbBreak(
             player = it.player,
             frameId = it.frameId,
-//            breakId = it.breakId,
             breakSize = it.breakSize
-        )
-    }
-}
-
-fun DomainBreak.asDbPot(breakId: Long): List<DbPot> {
-    return pots.map { pot ->
-        DbPot(
-            breakId = breakId,
-            ball = pot.ball.getBallOrdinal(),
-            ballPoints = pot.ball.points,
-            ballFoul = pot.ball.foul,
-            potType = pot.potType.ordinal,
-            potAction = pot.potAction.ordinal
         )
     }
 }

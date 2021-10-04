@@ -1,8 +1,7 @@
 package com.quickpoint.snookerboard.domain
 
-import com.quickpoint.snookerboard.database.DbScore
-
-sealed class CurrentScore(
+// Keeps a dynamic live score for both players
+sealed class CurrentPlayer(
     var frameId: Int,
     var framePoints: Int,
     var matchPoints: Int,
@@ -11,8 +10,8 @@ sealed class CurrentScore(
     var fouls: Int,
     var highestBreak: Int
 ) {
-    object PlayerA : CurrentScore(0, 0, 0, 0, 0, 0, 0)
-    object PlayerB : CurrentScore(0, 0, 0, 0, 0, 0, 0)
+    object PLAYER01 : CurrentPlayer(0, 0, 0, 0, 0, 0, 0)
+    object PLAYER02 : CurrentPlayer(0, 0, 0, 0, 0, 0, 0)
 
     fun initPlayer(
         frameId: Int,
@@ -32,20 +31,20 @@ sealed class CurrentScore(
         this.highestBreak = highestBreak
     }
 
-    fun getFirst() = PlayerA
-    fun getSecond() = PlayerB
+    fun getFirst() = PLAYER01
+    fun getSecond() = PLAYER02
 
     fun getOther() = when (this) {
-        PlayerA -> PlayerB
-        PlayerB -> PlayerA
+        PLAYER01 -> PLAYER02
+        PLAYER02 -> PLAYER01
     }
 
     fun getPlayerAsInt(): Int = when (this) {
-        PlayerA -> 0
-        PlayerB -> 1
+        PLAYER01 -> 0
+        PLAYER02 -> 1
     }
 
-    fun getPlayerFromInt(player: Int) = if (player == 0) PlayerA else PlayerB
+    fun getPlayerFromInt(player: Int) = if (player == 0) PLAYER01 else PLAYER02
 
     fun getWinner() = if (this.framePoints > this.getOther().framePoints) this else this.getOther()
 
@@ -102,23 +101,19 @@ sealed class CurrentScore(
     }
 }
 
-fun CurrentScore.asDbFrameScore(): DbScore {
-    return DbScore(
-        frameId = this.frameId,
-        playerId = when (this) {
-            CurrentScore.PlayerA -> 0
-            CurrentScore.PlayerB -> 1
-        },
-        framePoints = this.framePoints,
-        matchPoints = this.matchPoints,
-        successShots = this.successShots,
-        missedShots = this.missedShots,
-        fouls = this.fouls,
-        highestBreak = this.highestBreak
-    )
-}
+// DOMAIN Player Score
+data class DomainPlayerScore(
+    val frameId: Int,
+    val playerId: Int,
+    val framePoints: Int,
+    val matchPoints: Int,
+    val successShots: Int,
+    val missedShots: Int,
+    val fouls: Int,
+    val highestBreak: Int
+)
 
-fun CurrentScore.asDomainPlayerScore(): DomainPlayerScore {
+fun CurrentPlayer.asDomainPlayerScore(): DomainPlayerScore { // Converts the current score into a domain score
     return DomainPlayerScore(
         frameId = this.frameId,
         playerId = this.getPlayerAsInt(),
@@ -131,20 +126,9 @@ fun CurrentScore.asDomainPlayerScore(): DomainPlayerScore {
     )
 }
 
-data class DomainPlayerScore(
-    val frameId: Int,
-    val playerId: Int,
-    val framePoints: Int,
-    val matchPoints: Int,
-    val successShots: Int,
-    val missedShots: Int,
-    val fouls: Int,
-    val highestBreak: Int
-)
-
-fun MutableList<DomainPlayerScore>.asCurrentScore(): CurrentScore? {
+fun MutableList<DomainPlayerScore>.asCurrentScore(): CurrentPlayer? { // Converts the domain player score into the current score
     if (this.size > 1) {
-        val currentScore: CurrentScore = CurrentScore.PlayerA
+        val currentScore: CurrentPlayer = CurrentPlayer.PLAYER01
         val dbPlayerA = this[this.lastIndex - 1]
         val dbPlayerB = this[this.lastIndex]
         currentScore.getFirst().initPlayer(

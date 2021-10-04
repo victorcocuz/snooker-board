@@ -10,6 +10,7 @@ class RefreshDataWorker(appContext: Context, params: WorkerParameters) : Corouti
         const val WORK_NAME = "RefreshDataWorker"
     }
 
+    // This is meant to refresh the data in the app once in a while in the background. not needed at the moment
     override suspend fun doWork(): Result {
 //        val database = getDatabase(applicationContext)
 //        val repository = SnookerRepository(database)

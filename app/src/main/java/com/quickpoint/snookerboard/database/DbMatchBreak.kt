@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 import com.quickpoint.snookerboard.domain.DomainBreak
 
+// Used to store the match breaks in the DATABASE
 @Entity(tableName = "match_breaks_table")
 data class DbBreak(
     @PrimaryKey(autoGenerate = true)
@@ -15,6 +16,7 @@ data class DbBreak(
     val breakSize: Int
 )
 
+// Used to combine Break and Pots information for DATABASE storage
 data class DbBreakWithPots(
     @Embedded val matchBreak: DbBreak,
     @Relation(
@@ -24,12 +26,12 @@ data class DbBreakWithPots(
     val matchPots: List<DbPot>
 )
 
+// CONVERTER method from list of DATABASE Break to list of DOMAIN Break
 fun List<DbBreakWithPots>.asDomainBreakList(): MutableList<DomainBreak> {
     return map {
         DomainBreak(
             player = it.matchBreak.player,
             frameId = it.matchBreak.frameId,
-//            breakId = it.matchBreak.breakId,
             pots = it.matchPots.asDomainPotList(),
             breakSize = it.matchBreak.breakSize
         )

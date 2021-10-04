@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.quickpoint.snookerboard.databinding.ItemRankingViewBinding
 import com.quickpoint.snookerboard.domain.DomainRanking
 
+// IGNORE for now - was part of a world ranking screen. NOT IN USE
 class RankingsAdapter:
     ListAdapter<DomainRanking, RankingsAdapter.ViewHolder>(DiffCallback) {
 

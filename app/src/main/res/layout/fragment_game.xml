@@ -6,10 +6,6 @@
     <data>
 
         <variable
-            name="application"
-            type="android.app.Application" />
-
-        <variable
             name="varGameViewModel"
             type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
     </data>
@@ -20,7 +16,7 @@
         tools:context=".fragments.game.GameFragment">
 
         <include
-            android:id="@+id/frag_game_top"
+            android:id="@+id/frag_game_layout_top"
             layout="@layout/layout_game_top"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -29,7 +25,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <include
-            android:id="@+id/frag_game_score"
+            android:id="@+id/frag_game_layout_score"
             layout="@layout/layout_game_score"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,25 +33,25 @@
             android:layout_marginEnd="@dimen/margin_layout_offset"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frag_game_top" />
+            app:layout_constraintTop_toBottomOf="@+id/frag_game_layout_top" />
 
         <FrameLayout
             android:id="@+id/frag_game_ghost_layout"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/frag_game_action_buttons"
+            app:layout_constraintBottom_toTopOf="@+id/frag_game_layout_action_buttons"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frag_game_score" />
+            app:layout_constraintTop_toBottomOf="@+id/frag_game_layout_score" />
 
         <ScrollView
             android:id="@+id/frag_game_scroll_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/frag_game_action_buttons"
+            app:layout_constraintBottom_toTopOf="@+id/frag_game_layout_action_buttons"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frag_game_score"
+            app:layout_constraintTop_toBottomOf="@+id/frag_game_layout_score"
             app:layout_constraintVertical_bias="0.0">
 
             <androidx.recyclerview.widget.RecyclerView
@@ -70,7 +66,7 @@
         </ScrollView>
 
         <include
-            android:id="@+id/frag_game_action_buttons"
+            android:id="@+id/frag_game_layout_action_buttons"
             layout="@layout/layout_game_actions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -10,38 +10,31 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.quickpoint.snookerboard.GenericEventsViewModel
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.database.SnookerDatabase
 import com.quickpoint.snookerboard.databinding.FragmentGameBinding
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.DomainBall.*
-import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.*
 import kotlinx.android.synthetic.main.fragment_game_stats.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.*
 
 class GameFragment : androidx.fragment.app.Fragment() {
     private val gameFragmentScope = CoroutineScope(Dispatchers.Default)
     private val gameViewModel: GameViewModel by activityViewModels()
     private val eventsViewModel: GenericEventsViewModel by activityViewModels()
-    private lateinit var snookerRepository: SnookerRepository
     private lateinit var ballAdapter: BallAdapter
     private lateinit var binding: FragmentGameBinding
     private var scrollHeight = 0
-    private var ghostHeight = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false)
-        snookerRepository = SnookerRepository(SnookerDatabase.getDatabase(requireActivity().application))
-
-        ballAdapter = BallAdapter(
-            BallListener { ball ->
+        ballAdapter = BallAdapter( // Create a ball adapter for the balls recycler view
+            BallListener { ball -> // Add a listener to the adapter to handle clicking
                 requireActivity().invalidateOptionsMenu()
                 gameViewModel.handleFrameEvent(FrameEvent.HANDLE_POT, DomainPot.HIT(ball), null, null)
             },
@@ -49,35 +42,32 @@ class GameFragment : androidx.fragment.app.Fragment() {
             BallAdapterType.MATCH
         )
 
+        // Bind all required elements from the view
         binding.apply {
             lifecycleOwner = this@GameFragment
             setHasOptionsMenu(true)
-
-            application = requireActivity().application
             varGameViewModel = this@GameFragment.gameViewModel
-            fragGameTop.apply {
+
+            fragGameLayoutTop.apply {
                 (activity as AppCompatActivity).apply {
                     setSupportActionBar(fragGameToolbar)
                     supportActionBar?.setDisplayShowTitleEnabled(false)
                 }
-                playerTagType = PlayerTagType.MATCH
-                varGameViewModel = gameViewModel
-                application = requireActivity().application
-            }
-
-            fragGameScore.apply {
+                varPlayerTagType = PlayerTagType.MATCH
                 varGameViewModel = this@GameFragment.gameViewModel
-                application = requireActivity().application
+                varApplication = requireActivity().application
             }
 
-            fragGameGhostLayout.viewTreeObserver.addOnGlobalLayoutListener {
-                ghostHeight = fragGameGhostLayout.measuredHeight
-                fragGameScrollView.assignScrollHeight(scrollHeight, ghostHeight)
+            fragGameLayoutScore.apply {
+                varGameViewModel = this@GameFragment.gameViewModel
+                varApplication = requireActivity().application
             }
 
-            fragGameScrollView.viewTreeObserver.addOnGlobalLayoutListener {
-                scrollHeight = fragGameScrollView.measuredHeight
-                fragGameScrollView.assignScrollHeight(scrollHeight, ghostHeight)
+            fragGameGhostLayout.viewTreeObserver.addOnGlobalLayoutListener { // Assign ghost & scroll view height that lines up with the top of the action layout
+                fragGameScrollView.assignScrollHeight(scrollHeight, fragGameGhostLayout.measuredHeight)
+            }
+            fragGameScrollView.viewTreeObserver.addOnGlobalLayoutListener { // Assign ghost & scroll view height that lines up with the top of the action layout
+                fragGameScrollView.assignScrollHeight(scrollHeight, fragGameScrollView.measuredHeight)
                 fragGameScrollView.scrollToBottom()
             }
 
@@ -87,12 +77,12 @@ class GameFragment : androidx.fragment.app.Fragment() {
                 (layoutManager as LinearLayoutManager).stackFromEnd = true
             }
 
-            fragGameActionButtons.apply {
+            fragGameLayoutActionButtons.apply {
                 gameViewModel = this@GameFragment.gameViewModel
                 genericEventsViewModel = eventsViewModel
-                Timber.e("wtf ${requireContext().getFactoredDimen(BALL_HEIGHT_FACTOR_MATCH_ACTION)}")
-                Timber.e("wtf ${resources.getDimension(R.dimen.margin_layout_offset) * 2}")
-                fragGameBallsLl.layoutParams.height = requireContext().getFactoredDimen(BALL_HEIGHT_FACTOR_MATCH_ACTION) + resources.getDimension(R.dimen.margin_layout_offset).toInt() * 2
+                fragGameBallsLl.layoutParams.height =
+                    requireContext().getFactoredDimen(BALL_HEIGHT_FACTOR_MATCH_ACTION) + resources.getDimension(R.dimen.margin_layout_offset)
+                        .toInt() * 2
                 fragGameBallsRv.apply {
                     layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
                     itemAnimator = null
@@ -103,26 +93,28 @@ class GameFragment : androidx.fragment.app.Fragment() {
 
         // VM Observers
         gameViewModel.apply {
-            eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
-                findNavController().navigate(
+            // Match actions relating generic dialog
+            eventGameAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
+                findNavController().navigate( // Assign match actions for generic dialog, then navigate
                     GameFragmentDirections.actionGameFragmentToGameGenericDialogFragment(
                         MatchAction.NO_ACTION,
-                        if (matchAction == MatchAction.MATCH_END_QUERY) MatchAction.MATCH_END_CONFIRM_DISCARD else MatchAction.NO_ACTION,
+                        if (matchAction == MatchAction.MATCH_END_QUERY) MatchAction.MATCH_END_CONFIRMED_AND_DISCARD_CURRENT_FRAME else MatchAction.NO_ACTION,
                         matchAction
                     )
                 )
             })
-            eventFrameUpdated.observe(viewLifecycleOwner, EventObserver {
-                requireActivity().invalidateOptionsMenu()
+            eventFrameResetComplete.observe(viewLifecycleOwner, EventObserver {
+                requireActivity().invalidateOptionsMenu() // Reset the menu every time the frame has been updated
             })
         }
         eventsViewModel.apply {
-            eventFoulQueried.observe(viewLifecycleOwner, EventObserver {
-                findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameFoulDialogFragment())
-            })
             eventMatchActionConfirmed.observe(viewLifecycleOwner, EventObserver { matchAction ->
                 gameViewModel.apply {
                     when (matchAction) {
+                        // Match actions foul related
+                        MatchAction.FOUL_DIALOG_QUERIED -> {
+                            findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameFoulDialogFragment())
+                        }
                         MatchAction.FOUL_CONFIRMED -> {
                             handleFrameEvent(
                                 FrameEvent.HANDLE_FOUL,
@@ -132,21 +124,23 @@ class GameFragment : androidx.fragment.app.Fragment() {
                             )
                             eventsViewModel.resetFoul()
                         }
-                        MatchAction.MATCH_CANCEL -> {
+                        in listOf(MatchAction.FRAME_END_QUERY, MatchAction.FRAME_END_CONFIRMED) -> {
+                            saveAndStartNewFrame()
+                        }
+
+                        // Match actions that require navigation
+                        in listOf(
+                            MatchAction.MATCH_END_QUERY,
+                            MatchAction.MATCH_END_CONFIRMED,
+                            MatchAction.MATCH_END_CONFIRMED_AND_DISCARD_CURRENT_FRAME
+                        ) -> {
+                            matchEnded(matchAction) // Feed the mach action in the game view model to assess whether frame should be kept
+                            findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameStatsFragment())
+                        }
+                        MatchAction.MATCH_CANCEL -> { // On a match cancel, cancel match and go back to play fragment
                             cancelMatch()
                             findNavController().navigate(GameFragmentDirections.actionGameFragmentToPlayFragment())
                         }
-                        in listOf(MatchAction.FRAME_END_QUERY, MatchAction.FRAME_END_CONFIRM) -> {
-                            frameEnded()
-                        }
-                        in listOf(MatchAction.MATCH_END_QUERY, MatchAction.MATCH_END_CONFIRM, MatchAction.MATCH_END_CONFIRM_DISCARD) -> {
-                            matchEnded(matchAction)
-                            findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameStatsFragment())
-                        }
-                        MatchAction.MATCH_RELOAD -> {
-                            eventsViewModel.onEventMatchActionConfirmed(MatchAction.MATCH_RELOAD)
-                        }
-                        MatchAction.MATCH_START_NEW -> eventsViewModel.onEventMatchActionConfirmed(MatchAction.MATCH_START_NEW)
                         else -> {
                         }
                     }
@@ -154,6 +148,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
             })
         }
 
+        // when pressing back, save match before killing fragment
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 gameFragmentScope.launch {
@@ -177,14 +172,14 @@ class GameFragment : androidx.fragment.app.Fragment() {
             R.id.match_action_add_red -> gameViewModel.handleFrameEvent(FrameEvent.HANDLE_POT, DomainPot.ADDRED, null, null)
             R.id.match_action_rerack -> gameViewModel.resetFrame()
             R.id.match_action_concede_frame -> gameViewModel.queryEndFrame()
-            R.id.match_action_cancel_match -> gameViewModel.assignMatchAction(MatchAction.MATCH_CANCEL)
+            R.id.match_action_cancel_match -> gameViewModel.assignEventGameAction(MatchAction.MATCH_CANCEL)
             R.id.match_action_concede_match -> gameViewModel.queryEndMatch()
         }
-        requireActivity().invalidateOptionsMenu()
+        requireActivity().invalidateOptionsMenu() // Reset options menu every time a button is pressed
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu) { // Buttons cannot be enabled when update is in progress
+    override fun onPrepareOptionsMenu(menu: Menu) { // Buttons cannot be enabled while update is in progress
         gameViewModel.displayFrame.value?.apply {
             menu.findItem(R.id.match_action_undo).apply {
                 isEnabled = (frameStack.size) > 0 && !(gameViewModel.isFrameUpdateInProgress.value ?: false)

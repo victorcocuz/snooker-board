@@ -7,6 +7,7 @@ import com.quickpoint.snookerboard.domain.PotAction
 import com.quickpoint.snookerboard.domain.PotType
 import com.quickpoint.snookerboard.domain.getBallFromValues
 
+// Used to store pots information in the DATABASE
 @Entity(tableName = "match_pots_table")
 data class DbPot(
     @PrimaryKey(autoGenerate = true)
@@ -19,6 +20,7 @@ data class DbPot(
     val potAction: Int
 )
 
+// CONVERTER method from list of DATABASE list to list of DOMAIN Pots
 fun List<DbPot>.asDomainPotList(): MutableList<DomainPot> {
     return map { pot ->
         when (PotType.values()[pot.potType]) {

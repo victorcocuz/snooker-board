@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.quickpoint.snookerboard.GenericViewModelFactory
+import com.quickpoint.snookerboard.utils.GenericViewModelFactory
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.database.SnookerDatabase
 import com.quickpoint.snookerboard.databinding.FragmentRankingsBinding

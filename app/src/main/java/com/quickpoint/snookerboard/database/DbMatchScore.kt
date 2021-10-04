@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.quickpoint.snookerboard.domain.DomainPlayerScore
 
+// Used to store score info in the Database
 @Entity(tableName = "match_score_table")
 data class DbScore(
     @PrimaryKey(autoGenerate = true)
@@ -18,20 +19,7 @@ data class DbScore(
     val highestBreak: Int
 )
 
-//@Entity(tableName = "current_score_table")
-//data class DbScore(
-//    @PrimaryKey(autoGenerate = true)
-//    val scoreId: Int = 0,
-//    val frameId: Int,
-//    val playerId: Int,
-//    val framePoints: Int,
-//    val matchPoints: Int,
-//    val successShots: Int,
-//    val missedShots: Int,
-//    val fouls: Int,
-//    val highestBreak: Int
-//)
-
+// CONVERTER method from list of DATABASE Score to a list of pairs of DOMAIN Player Scores
 fun List<DbScore>.asDomainFrameScoreList(): ArrayList<Pair<DomainPlayerScore, DomainPlayerScore>> {
     val frameScoreList = ArrayList<Pair<DomainPlayerScore, DomainPlayerScore>>()
     for (i in this.indices step 2) {
@@ -60,7 +48,8 @@ fun List<DbScore>.asDomainFrameScoreList(): ArrayList<Pair<DomainPlayerScore, Do
     return frameScoreList
 }
 
-fun List<DbScore>.asDomainCrtFrameScoreList(): MutableList<DomainPlayerScore> {
+// CONVERTER method from list of DATABASE Break to list of DOMAIN Player Score
+fun List<DbScore>.asDomainPlayerScoreList(): MutableList<DomainPlayerScore> {
     return map {
         DomainPlayerScore(
             frameId = it.frameId,

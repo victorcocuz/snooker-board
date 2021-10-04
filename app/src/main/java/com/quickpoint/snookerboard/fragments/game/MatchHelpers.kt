@@ -1,6 +1,6 @@
 package com.quickpoint.snookerboard.fragments.game
 
-import com.quickpoint.snookerboard.domain.CurrentScore
+import com.quickpoint.snookerboard.domain.CurrentPlayer
 import com.quickpoint.snookerboard.domain.DomainBall
 import com.quickpoint.snookerboard.domain.DomainBall.*
 import com.quickpoint.snookerboard.domain.DomainBreak
@@ -47,19 +47,19 @@ fun MutableList<DomainBreak>.getDisplayShots(): MutableList<DomainBreak> {
     return list
 }
 
-// Score
-fun CurrentScore.calculatePoints(pot: DomainPot, pol: Int, lastBall: DomainBall, matchFoul: Int, frameStack: MutableList<DomainBreak>) {
+// Score - polarity is used to reverse score on undo
+fun CurrentPlayer.calculatePoints(pot: DomainPot, pol: Int, lastBall: DomainBall, matchFoul: Int, frameStack: MutableList<DomainBreak>) {
     val points: Int
     when (pot.potType) {
         in listOf(HIT, FREE, ADDRED) -> {
             points = if (pot.potType == FREE) lastBall.points else pot.ball.points
             addFramePoints(pol * points)
-            pot.ball.assignNewPoints(points)
+            pot.ball.setCustomPointValue(points)
             addSuccessShots(pol)
         }
         FOUL -> {
-            points = (matchFoul + if (pot.ball is WHITE) max(lastBall.foul, 4) else pot.ball.foul)
-            pot.ball.assignNewFoul(points)
+            points = matchFoul + if (pot.ball is WHITE) max(lastBall.foul, 4) else pot.ball.foul
+            pot.ball.setCustomFoulValue(points)
             getOther().addFramePoints(pol * points)
             addMissedShots(pol)
             addFouls(pol)

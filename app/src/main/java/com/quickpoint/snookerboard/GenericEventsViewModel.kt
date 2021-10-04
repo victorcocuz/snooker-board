@@ -10,71 +10,50 @@ import com.quickpoint.snookerboard.utils.Event
 import com.quickpoint.snookerboard.utils.MatchAction
 
 class GenericEventsViewModel : ViewModel() {
-    // Live Data
-    private val _eventFoulQueried = MutableLiveData<Event<Unit>>()
-    val eventFoulQueried: LiveData<Event<Unit>> = _eventFoulQueried
-
+    // Events observables
     private val _eventMatchActionQueried = MutableLiveData<Event<MatchAction>>()
     val eventMatchActionQueried: LiveData<Event<MatchAction>> = _eventMatchActionQueried
-
-    private val _eventMatchActionConfirmed = MutableLiveData<Event<MatchAction>>()
-    val eventMatchActionConfirmed: LiveData<Event<MatchAction>> = _eventMatchActionConfirmed
-
-
-    // Event handlers
-    fun onFoulClicked() {
-        _eventFoulQueried.value = Event(Unit)
-    }
-
     fun onEventMatchActionQueried(matchAction: MatchAction) {
         _eventMatchActionQueried.value = Event(matchAction)
     }
 
+    private val _eventMatchActionConfirmed = MutableLiveData<Event<MatchAction>>()
+    val eventMatchActionConfirmed: LiveData<Event<MatchAction>> = _eventMatchActionConfirmed
     fun onEventMatchActionConfirmed(matchAction: MatchAction) {
         _eventMatchActionConfirmed.value = Event(matchAction)
     }
 
-    // Observables
-    private val _actionClicked = MutableLiveData<PotAction?>(null)
-    val actionClicked: LiveData<PotAction?> = _actionClicked
-
-    private val _isFreeBall = MutableLiveData(false)
-    val isFreeBall: LiveData<Boolean> = _isFreeBall
-
-    private val _isRemoveRed = MutableLiveData(false)
-    val isRemoveRed: LiveData<Boolean> = _isRemoveRed
-
-    // Variables
-    private var ballClicked: DomainBall? = null
-
-    // Handlers
+    // Foul Dialog observables and helpers
+    private val _ballClicked = MutableLiveData<DomainBall?>(null) // Only local, not sure if needed
     fun onBallClicked(ball: DomainBall) {
-        ballClicked = ball
+        _ballClicked.value = ball
     }
 
+    private val _actionClicked = MutableLiveData<PotAction?>(null)
+    val actionClicked: LiveData<PotAction?> = _actionClicked
     fun onActionClicked(action: PotAction) {
         _actionClicked.value = action
         if (action == PotAction.CONTINUE) _isFreeBall.value = false
     }
 
-    fun onRemoveRedClicked() {
-        _isRemoveRed.value = !_isRemoveRed.value!!
-    }
-
+    private val _isFreeBall = MutableLiveData(false)
+    val isFreeBall: LiveData<Boolean> = _isFreeBall
     fun onFreeballClicked() {
         _isFreeBall.value = !_isFreeBall.value!!
     }
 
-    fun foulIsValid() = ballClicked != null && actionClicked.value != null
-
-    fun getFoul() : DomainPot {
-        return DomainPot.FOUL(ballClicked!!, actionClicked.value!!)
+    private val _isRemoveRed = MutableLiveData(false)
+    val isRemoveRed: LiveData<Boolean> = _isRemoveRed
+    fun onRemoveRedClicked() {
+        _isRemoveRed.value = !_isRemoveRed.value!!
     }
 
+    fun foulIsValid() = _ballClicked.value != null && actionClicked.value != null
+    fun getFoul() = DomainPot.FOUL(_ballClicked.value!!, actionClicked.value!!)
     fun resetFoul() {
         _actionClicked.value = null
+        _ballClicked.value = null
         _isFreeBall.value = false
         _isRemoveRed.value = false
-        ballClicked = null
     }
 }

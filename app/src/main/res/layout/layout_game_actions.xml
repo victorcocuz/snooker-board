@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <import type="com.quickpoint.snookerboard.domain.DomainPot" />
 
         <import type="com.quickpoint.snookerboard.utils.FrameEvent" />
+        <import type="com.quickpoint.snookerboard.utils.MatchAction" />
 
         <variable
             name="genericEventsViewModel"
@@ -80,7 +80,7 @@
             android:id="@+id/game_btn_act_foul"
             style="@style/ButtonStretched"
             android:layout_width="0dp"
-            android:onClick="@{() -> genericEventsViewModel.onFoulClicked()}"
+            android:onClick="@{() -> genericEventsViewModel.onEventMatchActionConfirmed(MatchAction.FOUL_DIALOG_QUERIED)}"
             android:text="@string/action_foul"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toEndOf="parent"
