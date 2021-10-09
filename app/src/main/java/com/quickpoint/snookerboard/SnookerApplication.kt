@@ -1,8 +1,11 @@
 package com.quickpoint.snookerboard
 
 import android.app.Application
+import android.content.Context
 import android.os.Build
 import androidx.work.*
+import com.quickpoint.snookerboard.database.SnookerDatabase
+import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.work.RefreshDataWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -10,10 +13,22 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-// Override the Application class to add plugins and setup recuring work
+// Override the Application class to add plugins and setup recurring work
 class SnookerApplication : Application() {
 
+    init {
+        instance = this
+    }
+
     private val applicationScope = CoroutineScope(Dispatchers.Default)
+
+    companion object {
+        private var instance: SnookerApplication? = null
+        private fun applicationContext(): Context {
+            return instance!!.applicationContext
+        }
+        fun getSnookerRepository() = SnookerRepository(SnookerDatabase.getDatabase(applicationContext()))
+    }
 
     override fun onCreate() {
         super.onCreate()

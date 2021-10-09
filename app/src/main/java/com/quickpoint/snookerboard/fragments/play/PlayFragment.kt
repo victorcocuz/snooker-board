@@ -11,11 +11,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.quickpoint.snookerboard.GenericEventsViewModel
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.database.SnookerDatabase
 import com.quickpoint.snookerboard.database.asDomainFrame
 import com.quickpoint.snookerboard.databinding.FragmentPlayBinding
 import com.quickpoint.snookerboard.fragments.game.GameViewModel
-import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.*
 
 class PlayFragment : androidx.fragment.app.Fragment() {
@@ -23,17 +21,15 @@ class PlayFragment : androidx.fragment.app.Fragment() {
     private val gameViewModel: GameViewModel by activityViewModels()
     private val genericEventsViewModel: GenericEventsViewModel by activityViewModels()
     private val playFragmentViewModel: PlayFragmentViewModel by viewModels()
-    private lateinit var snookerRepository: SnookerRepository
     private lateinit var sharedPref: SharedPreferences
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View {
 
         // Bind layout, initial setup
         val binding: FragmentPlayBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_play, container, false)
-        snookerRepository = SnookerRepository(SnookerDatabase.getDatabase(requireActivity().application))
         sharedPref = requireActivity().getSharedPref()
         hideKeyboard()
 
@@ -55,7 +51,17 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                     maxValue = 19
                     value = 2
                     displayedValues = (minValue until maxValue * 2).filter { it % 2 != 0 }.map { it.toString() }
-                        .toTypedArray() // get an array of odd numbers for the number of frames
+                            .toTypedArray() // get an array of odd numbers for the number of frames
+                }
+
+                // Observe eventGameAction
+                this@PlayFragment.gameViewModel.apply {
+                    // Match loading
+                    crtFrame.observe(viewLifecycleOwner, { crtFrame ->
+                        gameViewModel.loadMatch(crtFrame?.asDomainFrame())
+                        gameViewModel.repoDeleteCurrentFrame()
+                        findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
+                    })
                 }
 
                 // Observe eventMatchActionConfirmed
@@ -64,16 +70,16 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                         when (it) {
                             MatchAction.MATCH_START -> { // When pressing the button to start the match
                                 if (sharedPref.getBoolean(
-                                        requireContext().getString(R.string.shared_pref_match_is_in_progress),
-                                        false
-                                    )
+                                                requireContext().getString(R.string.shared_pref_match_is_in_progress),
+                                                false
+                                        )
                                 ) { // If the match is in progress open dialog
                                     findNavController().navigate(
-                                        PlayFragmentDirections.actionPlayFragmentToGameGenericDialogFragment(
-                                            MatchAction.MATCH_START_NEW,
-                                            MatchAction.NO_ACTION,
-                                            MatchAction.MATCH_LOAD
-                                        )
+                                            PlayFragmentDirections.actionPlayFragmentToGameGenericDialogFragment(
+                                                    MatchAction.MATCH_START_NEW,
+                                                    MatchAction.NO_ACTION,
+                                                    MatchAction.MATCH_LOAD
+                                            )
                                     )
                                 } else { // Else start a new match
                                     startNewMatch(varNameFirstA, varNameLastA, varNameFirstB, varNameLastB)
@@ -84,20 +90,16 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                                 startNewMatch(varNameFirstA, varNameLastA, varNameFirstB, varNameLastB)
                                 findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
                             }
-                            MatchAction.MATCH_LOAD -> { // Reload an existing match
-                                snookerRepository.searchByCount(sharedPref.getInt(getString(R.string.shared_pref_match_crt_frame), 0))
-                                snookerRepository.crtFrame.observe(viewLifecycleOwner, { domainFrame ->
-                                    gameViewModel.loadMatch(domainFrame?.asDomainFrame())
-                                    findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
-                                })
+                            MatchAction.MATCH_LOAD -> { // Attempt to load match from database
+                                gameViewModel.repoUpdateCrtFrameId()
                             }
                             MatchAction.INFO_FOUL -> { // Open the foul info dialog
                                 findNavController().navigate(
-                                    PlayFragmentDirections.actionPlayFragmentToGameGenericDialogFragment(
-                                        MatchAction.IGNORE,
-                                        MatchAction.IGNORE,
-                                        MatchAction.INFO_FOUL
-                                    )
+                                        PlayFragmentDirections.actionPlayFragmentToGameGenericDialogFragment(
+                                                MatchAction.IGNORE,
+                                                MatchAction.IGNORE,
+                                                MatchAction.INFO_FOUL
+                                        )
                                 )
                             }
                             else -> { // Empty else req'd

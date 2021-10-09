@@ -7,11 +7,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.quickpoint.snookerboard.utils.GenericViewModelFactory
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.database.SnookerDatabase
 import com.quickpoint.snookerboard.databinding.FragmentRankingsBinding
-import com.quickpoint.snookerboard.repository.SnookerRepository
+import com.quickpoint.snookerboard.utils.GenericViewModelFactory
 
 class RankingsFragment : Fragment() {
     //    private val gameFragmentViewModel: GameFragmentViewModel by activityViewModels()
@@ -19,7 +17,6 @@ class RankingsFragment : Fragment() {
         ViewModelProvider(
             this, GenericViewModelFactory(
                 requireNotNull(this.activity).application,
-                SnookerRepository(SnookerDatabase.getDatabase(requireNotNull(this.activity).application)),
                 this,
                 null
             )

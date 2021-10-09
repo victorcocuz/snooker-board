@@ -11,10 +11,8 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import com.quickpoint.snookerboard.database.SnookerDatabase
 import com.quickpoint.snookerboard.databinding.ActivityMainBinding
 import com.quickpoint.snookerboard.fragments.game.GameViewModel
-import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.GenericViewModelFactory
 import com.quickpoint.snookerboard.utils.getSharedPref
 import kotlinx.coroutines.CoroutineScope
@@ -26,7 +24,6 @@ class MainActivity : AppCompatActivity() {
     private val activityScope = CoroutineScope(Dispatchers.Default)
     private lateinit var binding: ActivityMainBinding
     private lateinit var gameViewModel: GameViewModel
-    private lateinit var snookerRepository: SnookerRepository
     private lateinit var sharedPref: SharedPreferences
     // private lateinit var navController: NavController
 
@@ -37,10 +34,9 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         // Generate the Game View Model from the get go; pass in the application and an instance of the snookerRepository
-        snookerRepository = SnookerRepository(SnookerDatabase.getDatabase(this.application))
         gameViewModel = ViewModelProvider(
             this,
-            GenericViewModelFactory(this.application, snookerRepository, this, null)
+            GenericViewModelFactory(this.application, this, null)
         ).get(GameViewModel::class.java)
         sharedPref = getSharedPref()
 

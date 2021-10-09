@@ -90,7 +90,7 @@ class SnookerRepository(database: SnookerDatabase) {
         frameCount.value = frameId
     }
 
-    // Get current frame information by frameId
+    // Get current frame information by frameId, will update automatically once frameID changes
     val crtFrame: LiveData<DbFrameWithScoreAndBreakWithPotsAndBallStack?> = Transformations.switchMap(frameCount) { frameId ->
         snookerDbDao.getCurrentFrame(frameId)
     }

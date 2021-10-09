@@ -4,14 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.quickpoint.snookerboard.database.SnookerDatabase
+import com.quickpoint.snookerboard.SnookerApplication
 import com.quickpoint.snookerboard.domain.DomainPlayerScore
-import com.quickpoint.snookerboard.repository.SnookerRepository
 import kotlinx.coroutines.launch
 
 class GameStatsViewModel(application: Application) : AndroidViewModel(application) {
-    private val database = SnookerDatabase.getDatabase(application)
-    private val snookerRepository = SnookerRepository(database)
+    private val snookerRepository = SnookerApplication.getSnookerRepository()
 
     private val _totalsA = MutableLiveData<DomainPlayerScore>()
     val totalsA: MutableLiveData<DomainPlayerScore> = _totalsA

@@ -35,9 +35,11 @@ class GameViewModel(
         )
     }
 
+    val crtFrame = snookerRepository.crtFrame
+
     private val _eventGameAction = MutableLiveData<Event<MatchAction>>()
     val eventGameAction: LiveData<Event<MatchAction>> = _eventGameAction
-    fun assignEventGameAction(matchAction: MatchAction) { // Such as cancelling a match, ending a frame, etc.
+    fun assignEventMatchAction(matchAction: MatchAction) { // Such as cancelling a match, ending a frame, etc.
         _eventGameAction.value = Event(matchAction)
     }
 
@@ -92,16 +94,25 @@ class GameViewModel(
         }
     }
 
-    fun loadMatch(frame: DomainFrame?) = frame?.let { // When actioned from main menu
+    fun repoUpdateCrtFrameId() { // When actioned from main menu
         viewModelScope.launch {
-            snookerRepository.deleteCurrentFrame(frameCount)
+            snookerRepository.searchByCount(sharedPref.getInt(getApplication<Application>().resources.getString(R.string.shared_pref_match_crt_frame), 0))
         }
+    }
+
+    fun loadMatch(frame: DomainFrame?) = frame?.let {
         player = it.frameScore.asCurrentScore() ?: player
         frameStack = it.frameStack
         ballStack = it.ballStack
         frameMax = it.frameMax
         getSharedPrefRules()
         updateFrameInfo()
+    }
+
+    fun repoDeleteCurrentFrame() {
+        viewModelScope.launch {
+            snookerRepository.deleteCurrentFrame(frameCount)
+        }
     }
 
     fun matchEnded(matchAction: MatchAction) { // When the match ends, reset frame only so you can access the data for the stats screen - temp solution until firebase is created
@@ -135,7 +146,7 @@ class GameViewModel(
     }
 
     // Frame & Match ending queries
-    fun queryEndFrame() = assignEventGameAction( // When actioned from options menu or if last ball has been potted
+    fun queryEndFrame() = assignEventMatchAction( // When actioned from options menu or if last ball has been potted
         if (_displayFrame.value!!.isFrameInProgress()) { // If score shows frame in progress, assign a match/frame end QUERY action
             if (player.isWinningTheMatch(matchFrames)) MatchAction.MATCH_END_QUERY
             else MatchAction.FRAME_END_QUERY
@@ -145,7 +156,7 @@ class GameViewModel(
         }
     )
 
-    fun queryEndMatch() = assignEventGameAction( // When actioned from options menu
+    fun queryEndMatch() = assignEventMatchAction( // When actioned from options menu
         when {
             _displayFrame.value!!.isFrameInProgress() -> MatchAction.MATCH_END_QUERY // If score shows frame in progress, assign a match end QUERY
             player.isWinningTheMatch(matchFrames) -> MatchAction.MATCH_END_CONFIRMED // If both frame and match are over assign a match end CONFIRMED action

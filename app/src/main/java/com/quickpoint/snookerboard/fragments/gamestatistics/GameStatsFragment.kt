@@ -12,10 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.quickpoint.snookerboard.GenericEventsViewModel
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.database.SnookerDatabase
 import com.quickpoint.snookerboard.databinding.FragmentGameStatsBinding
 import com.quickpoint.snookerboard.domain.DomainPlayerScore
-import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.*
 import kotlinx.android.synthetic.main.item_game_statistics_view.*
 
@@ -25,7 +23,6 @@ class GameStatsFragment : Fragment() {
         ViewModelProvider(
             this, GenericViewModelFactory(
                 requireNotNull(this.activity).application,
-                SnookerRepository(SnookerDatabase.getDatabase(requireNotNull(this.activity).application)),
                 this,
                 null
             )

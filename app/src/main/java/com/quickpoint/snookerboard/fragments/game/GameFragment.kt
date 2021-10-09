@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.quickpoint.snookerboard.GenericEventsViewModel
 import com.quickpoint.snookerboard.R
+import com.quickpoint.snookerboard.database.asDomainFrame
 import com.quickpoint.snookerboard.databinding.FragmentGameBinding
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.DomainBall.*
@@ -78,8 +79,8 @@ class GameFragment : androidx.fragment.app.Fragment() {
             }
 
             fragGameLayoutActionButtons.apply {
-                gameViewModel = this@GameFragment.gameViewModel
-                genericEventsViewModel = eventsViewModel
+                varGameViewModel = this@GameFragment.gameViewModel
+                varGenericEventsViewModel = eventsViewModel
                 fragGameBallsLl.layoutParams.height =
                     requireContext().getFactoredDimen(BALL_HEIGHT_FACTOR_MATCH_ACTION) + resources.getDimension(R.dimen.margin_layout_offset)
                         .toInt() * 2
@@ -124,6 +125,8 @@ class GameFragment : androidx.fragment.app.Fragment() {
                             )
                             eventsViewModel.resetFoul()
                         }
+
+                        // Match actions frame related
                         in listOf(MatchAction.FRAME_END_QUERY, MatchAction.FRAME_END_CONFIRMED) -> {
                             saveAndStartNewFrame()
                         }
@@ -172,7 +175,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
             R.id.match_action_add_red -> gameViewModel.handleFrameEvent(FrameEvent.HANDLE_POT, DomainPot.ADDRED, null, null)
             R.id.match_action_rerack -> gameViewModel.resetFrame()
             R.id.match_action_concede_frame -> gameViewModel.queryEndFrame()
-            R.id.match_action_cancel_match -> gameViewModel.assignEventGameAction(MatchAction.MATCH_CANCEL)
+            R.id.match_action_cancel_match -> gameViewModel.assignEventMatchAction(MatchAction.MATCH_CANCEL)
             R.id.match_action_concede_match -> gameViewModel.queryEndMatch()
         }
         requireActivity().invalidateOptionsMenu() // Reset options menu every time a button is pressed
