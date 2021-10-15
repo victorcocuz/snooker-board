@@ -8,8 +8,8 @@
             name="varApplication"
             type="android.app.Application" />
         <variable
-            name="varGameViewModel"
-            type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
+            name="varMatchViewModel"
+            type="com.quickpoint.snookerboard.MatchViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -50,7 +50,7 @@
         <TextView
             android:id="@+id/game_text_score_a"
             style="@style/TextTitle"
-            android:text="@{String.valueOf(varGameViewModel.displayFrame.frameScore[0].framePoints)}"
+            android:text="@{String.valueOf(varMatchViewModel.displayFrame.frameScore[0].framePoints)}"
             app:layout_constraintEnd_toStartOf="@+id/game_text_score_frames_a"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/game_line_chapter_score"
@@ -59,7 +59,7 @@
         <TextView
             android:id="@+id/game_text_score_b"
             style="@style/TextTitle"
-            android:text="@{String.valueOf(varGameViewModel.displayFrame.frameScore[1].framePoints)}"
+            android:text="@{String.valueOf(varMatchViewModel.displayFrame.frameScore[1].framePoints)}"
             app:layout_constraintBottom_toBottomOf="@+id/game_text_score_a"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/game_text_score_frames_b"
@@ -69,7 +69,7 @@
             android:id="@+id/game_text_score_frames_a"
             style="@style/TextSubtitle"
             android:layout_marginEnd="@dimen/margin_layout_offset"
-            android:text="@{String.valueOf(varGameViewModel.displayFrame.frameScore[0].matchPoints)}"
+            android:text="@{String.valueOf(varMatchViewModel.displayFrame.frameScore[0].matchPoints)}"
             app:layout_constraintBottom_toBottomOf="@+id/game_text_score_total"
             app:layout_constraintEnd_toStartOf="@+id/game_text_score_total"
             tools:text="13" />
@@ -78,7 +78,7 @@
             android:id="@+id/game_text_score_frames_b"
             style="@style/TextSubtitle"
             android:layout_marginStart="@dimen/margin_layout_offset"
-            android:text="@{String.valueOf(varGameViewModel.displayFrame.frameScore[1].matchPoints)}"
+            android:text="@{String.valueOf(varMatchViewModel.displayFrame.frameScore[1].matchPoints)}"
             app:layout_constraintBottom_toBottomOf="@+id/game_text_score_total"
             app:layout_constraintStart_toEndOf="@+id/game_text_score_total"
             tools:text="15" />
@@ -116,7 +116,7 @@
         <TextView
             android:id="@+id/game_text_score_break_a"
             style="@style/TextHeaderBold"
-            android:text="@{String.valueOf(varGameViewModel.displayFrame.frameScore[0].highestBreak)}"
+            android:text="@{String.valueOf(varMatchViewModel.displayFrame.frameScore[0].highestBreak)}"
             app:layout_constraintBottom_toBottomOf="@+id/game_label_break"
             app:layout_constraintEnd_toStartOf="@+id/game_label_break"
             app:layout_constraintStart_toStartOf="parent"
@@ -127,7 +127,7 @@
             android:id="@+id/game_label_break"
             style="@style/TextHeader"
             android:layout_marginTop="@dimen/margin_header_below"
-            android:text="@string/fragment_game_label_break"
+            android:text="@string/f_game_label_break"
             app:layout_constraintEnd_toStartOf="@+id/game_guide_vert_mid"
             app:layout_constraintStart_toStartOf="@+id/game_guide_vert_mid"
             app:layout_constraintTop_toBottomOf="@+id/game_line_chapter_statistics" />
@@ -135,7 +135,7 @@
         <TextView
             android:id="@+id/game_text_score_break_b"
             style="@style/TextHeaderBold"
-            android:text="@{String.valueOf(varGameViewModel.displayFrame.frameScore[1].highestBreak)}"
+            android:text="@{String.valueOf(varMatchViewModel.displayFrame.frameScore[1].highestBreak)}"
             app:layout_constraintBottom_toBottomOf="@+id/game_label_break"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/game_label_break"
@@ -149,14 +149,14 @@
             app:layout_constraintEnd_toEndOf="@+id/game_text_score_break_a"
             app:layout_constraintStart_toStartOf="@+id/game_text_score_break_a"
             app:layout_constraintTop_toTopOf="@+id/game_label_percentage"
-            app:setFrameScorePercentage="@{varGameViewModel.displayFrame.frameScore[0]}"
+            app:setFrameScorePercentage="@{varMatchViewModel.displayFrame.frameScore[0]}"
             tools:text="55%" />
 
         <TextView
             android:id="@+id/game_label_percentage"
             style="@style/TextHeader"
             android:layout_marginTop="@dimen/margin_xxxsmall"
-            android:text="@string/fragment_game_label_percentage"
+            android:text="@string/f_game_label_percentage"
             app:layout_constraintEnd_toStartOf="@+id/game_guide_vert_mid"
             app:layout_constraintStart_toStartOf="@+id/game_guide_vert_mid"
             app:layout_constraintTop_toBottomOf="@+id/game_label_break" />
@@ -168,13 +168,13 @@
             app:layout_constraintEnd_toEndOf="@+id/game_text_score_break_b"
             app:layout_constraintStart_toStartOf="@+id/game_text_score_break_b"
             app:layout_constraintTop_toTopOf="@+id/game_label_percentage"
-            app:setFrameScorePercentage="@{varGameViewModel.displayFrame.frameScore[1]}"
+            app:setFrameScorePercentage="@{varMatchViewModel.displayFrame.frameScore[1]}"
             tools:text="58%" />
 
         <TextView
             android:id="@+id/game_text_score_foul_a"
             style="@style/TextHeaderBold"
-            android:text="@{String.valueOf(varGameViewModel.displayFrame.frameScore[0].fouls)}"
+            android:text="@{String.valueOf(varMatchViewModel.displayFrame.frameScore[0].fouls)}"
             app:layout_constraintBottom_toBottomOf="@+id/game_label_fouls"
             app:layout_constraintEnd_toEndOf="@+id/game_text_score_percentage_a"
             app:layout_constraintStart_toStartOf="@+id/game_text_score_percentage_a"
@@ -185,7 +185,7 @@
             android:id="@+id/game_label_fouls"
             style="@style/TextHeader"
             android:layout_marginTop="@dimen/margin_xxxsmall"
-            android:text="@string/fragment_game_label_fouls"
+            android:text="@string/f_game_label_fouls"
             app:layout_constraintEnd_toStartOf="@+id/game_guide_vert_mid"
             app:layout_constraintStart_toStartOf="@+id/game_guide_vert_mid"
             app:layout_constraintTop_toBottomOf="@+id/game_label_percentage" />
@@ -193,7 +193,7 @@
         <TextView
             android:id="@+id/game_text_score_foul_b"
             style="@style/TextHeaderBold"
-            android:text="@{String.valueOf(varGameViewModel.displayFrame.frameScore[1].fouls)}"
+            android:text="@{String.valueOf(varMatchViewModel.displayFrame.frameScore[1].fouls)}"
             app:layout_constraintBottom_toBottomOf="@+id/game_label_fouls"
             app:layout_constraintEnd_toEndOf="@+id/game_text_score_percentage_b"
             app:layout_constraintStart_toStartOf="@+id/game_text_score_percentage_b"
@@ -204,7 +204,7 @@
             android:id="@+id/game_label_remaining"
             style="@style/TextHeader"
             android:layout_marginTop="@dimen/margin_header_below"
-            android:text="@string/fragment_game_label_remaining"
+            android:text="@string/f_game_label_remaining"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/game_label_fouls" />
 
@@ -224,16 +224,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                app:setBarWeightScoreFirst="@{varGameViewModel.displayFrame.getFrameScoreRemaining()}"
-                app:setBarWeightScoreSecond="@{varGameViewModel.displayFrame.frameMax}"
+                app:setBarWeightScoreFirst="@{varMatchViewModel.displayFrame.getFrameScoreRemaining()}"
+                app:setBarWeightScoreSecond="@{varMatchViewModel.displayFrame.frameMax}"
                 tools:layout_weight="0.7" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="?attr/colorPrimaryVariant"
-                app:setBarWeightScoreFirst="@{varGameViewModel.displayFrame.frameMax - varGameViewModel.displayFrame.getFrameScoreRemaining()}"
-                app:setBarWeightScoreSecond="@{varGameViewModel.displayFrame.frameMax}"
+                app:setBarWeightScoreFirst="@{varMatchViewModel.displayFrame.frameMax - varMatchViewModel.displayFrame.getFrameScoreRemaining()}"
+                app:setBarWeightScoreSecond="@{varMatchViewModel.displayFrame.frameMax}"
                 tools:layout_weight="0.3" />
         </LinearLayout>
 
@@ -242,7 +242,7 @@
             style="@style/TextHeaderBold"
             android:layout_width="@dimen/text_width_icon_bar"
             android:gravity="end"
-            android:text="@{String.valueOf(varGameViewModel.displayFrame.getFrameScoreRemaining())}"
+            android:text="@{String.valueOf(varMatchViewModel.displayFrame.getFrameScoreRemaining())}"
             app:layout_constraintBottom_toBottomOf="@+id/game_label_remaining"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/game_label_remaining"
@@ -252,7 +252,7 @@
             android:id="@+id/game_label_diff"
             style="@style/TextHeader"
             android:layout_marginTop="@dimen/margin_xxsmall"
-            android:text="@string/fragment_game_label_difference"
+            android:text="@string/f_game_label_difference"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/game_label_remaining" />
 
@@ -270,23 +270,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                app:setBarWeightScoreFirst="@{varGameViewModel.displayFrame.getFrameScoreDiff()}"
-                app:setBarWeightScoreSecond="@{varGameViewModel.displayFrame.frameMax}"
+                app:setBarWeightScoreFirst="@{varMatchViewModel.displayFrame.getFrameScoreDiff()}"
+                app:setBarWeightScoreSecond="@{varMatchViewModel.displayFrame.frameMax}"
                 tools:layout_weight="0.7" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="?attr/colorPrimaryVariant"
-                app:setBarWeightScoreFirst="@{varGameViewModel.displayFrame.frameMax - varGameViewModel.displayFrame.getFrameScoreDiff()}"
-                app:setBarWeightScoreSecond="@{varGameViewModel.displayFrame.frameMax}"
+                app:setBarWeightScoreFirst="@{varMatchViewModel.displayFrame.frameMax - varMatchViewModel.displayFrame.getFrameScoreDiff()}"
+                app:setBarWeightScoreSecond="@{varMatchViewModel.displayFrame.frameMax}"
                 tools:layout_weight="0.3" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/game_text_score_diff"
             style="@style/TextHeaderBold"
-            android:text="@{String.valueOf(varGameViewModel.displayFrame.getFrameScoreDiff())}"
+            android:text="@{String.valueOf(varMatchViewModel.displayFrame.getFrameScoreDiff())}"
             app:layout_constraintBottom_toBottomOf="@+id/game_label_diff"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/game_label_diff"

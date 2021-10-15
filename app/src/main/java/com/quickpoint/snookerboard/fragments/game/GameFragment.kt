@@ -9,6 +9,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.quickpoint.snookerboard.GenericEventsViewModel
+import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.database.asDomainFrame
 import com.quickpoint.snookerboard.databinding.FragmentGameBinding
@@ -24,10 +25,12 @@ import java.util.*
 class GameFragment : androidx.fragment.app.Fragment() {
     private val gameFragmentScope = CoroutineScope(Dispatchers.Default)
     private val gameViewModel: GameViewModel by activityViewModels()
-    private val eventsViewModel: GenericEventsViewModel by activityViewModels()
+    private val genericEventsViewModel: GenericEventsViewModel by activityViewModels()
+    private val matchViewModel: MatchViewModel by activityViewModels()
     private lateinit var ballAdapter: BallAdapter
     private lateinit var binding: FragmentGameBinding
     private var scrollHeight = 0
+    private var player: CurrentPlayer = CurrentPlayer.PLAYER01
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +42,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
                 requireActivity().invalidateOptionsMenu()
                 gameViewModel.handleFrameEvent(FrameEvent.HANDLE_POT, DomainPot.HIT(ball), null, null)
             },
-            gameViewModel.displayFrame,
+            matchViewModel.displayFrame,
             BallAdapterType.MATCH
         )
 
@@ -47,7 +50,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
         binding.apply {
             lifecycleOwner = this@GameFragment
             setHasOptionsMenu(true)
-            varGameViewModel = this@GameFragment.gameViewModel
+            varMatchViewModel = this@GameFragment.matchViewModel
 
             fragGameLayoutTop.apply {
                 (activity as AppCompatActivity).apply {
@@ -55,12 +58,12 @@ class GameFragment : androidx.fragment.app.Fragment() {
                     supportActionBar?.setDisplayShowTitleEnabled(false)
                 }
                 varPlayerTagType = PlayerTagType.MATCH
-                varGameViewModel = this@GameFragment.gameViewModel
+                varMatchViewModel = this@GameFragment.matchViewModel
                 varApplication = requireActivity().application
             }
 
             fragGameLayoutScore.apply {
-                varGameViewModel = this@GameFragment.gameViewModel
+                varMatchViewModel = this@GameFragment.matchViewModel
                 varApplication = requireActivity().application
             }
 
@@ -80,7 +83,8 @@ class GameFragment : androidx.fragment.app.Fragment() {
 
             fragGameLayoutActionButtons.apply {
                 varGameViewModel = this@GameFragment.gameViewModel
-                varGenericEventsViewModel = eventsViewModel
+                varMatchViewModel = this@GameFragment.matchViewModel
+                varGenericEventsViewModel = genericEventsViewModel
                 fragGameBallsLl.layoutParams.height =
                     requireContext().getFactoredDimen(BALL_HEIGHT_FACTOR_MATCH_ACTION) + resources.getDimension(R.dimen.margin_layout_offset)
                         .toInt() * 2
@@ -94,58 +98,88 @@ class GameFragment : androidx.fragment.app.Fragment() {
 
         // VM Observers
         gameViewModel.apply {
-            // Match actions relating generic dialog
-            eventGameAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
-                findNavController().navigate( // Assign match actions for generic dialog, then navigate
-                    GameFragmentDirections.actionGameFragmentToGameGenericDialogFragment(
-                        MatchAction.NO_ACTION,
-                        if (matchAction == MatchAction.MATCH_END_QUERY) MatchAction.MATCH_END_CONFIRMED_AND_DISCARD_CURRENT_FRAME else MatchAction.NO_ACTION,
-                        matchAction
+            eventGameAction.observe(viewLifecycleOwner, EventObserver {
+                when (it) {
+                    MatchAction.FRAME_RESET_COMPLETE -> requireActivity().invalidateOptionsMenu() // Reset the menu every time the frame has been updated
+                    MatchAction.FRAME_UPDATE_RECORD -> matchViewModel.updateFrameInfo( // Push score and history update in the match vm
+                        player,
+                        DomainFrame(
+                            rules.matchFrameCount,
+                            ballStack,
+                            mutableListOf(
+                                player.getFirst().asDomainPlayerScore(),
+                                player.getSecond().asDomainPlayerScore()
+                            ),
+                            frameStack,
+                            rules.frameMax
+                        )
                     )
-                )
-            })
-            eventFrameResetComplete.observe(viewLifecycleOwner, EventObserver {
-                requireActivity().invalidateOptionsMenu() // Reset the menu every time the frame has been updated
+                    else -> {
+                    }
+                }
             })
         }
-        eventsViewModel.apply {
-            eventMatchActionConfirmed.observe(viewLifecycleOwner, EventObserver { matchAction ->
-                gameViewModel.apply {
-                    when (matchAction) {
-                        // Match actions foul related
-                        MatchAction.FOUL_DIALOG_QUERIED -> {
-                            findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameFoulDialogFragment())
-                        }
-                        MatchAction.FOUL_CONFIRMED -> {
-                            handleFrameEvent(
-                                FrameEvent.HANDLE_FOUL,
-                                getFoul(),
-                                eventsViewModel.isRemoveRed.value!!,
-                                eventsViewModel.isFreeBall.value!!
+        matchViewModel.apply {
+            crtFrame.observe(viewLifecycleOwner, { crtFrame -> // Load mach once frame is pointing correctly
+                gameViewModel.loadMatchPartBLoadIntoVm(crtFrame?.asDomainFrame())
+                loadMatchPartCDeleteCurrentFrame()
+            })
+            displayFrame.observe(viewLifecycleOwner, { domainFrame -> // Query end frame if last ball has been potted
+                if (domainFrame.ballStack.size == 1 && !player.isFrameEqual()) matchViewModel.queryEndFrame()
+            })
+            eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
+                when (matchAction) {
+                    MatchAction.FRAME_RESET -> gameViewModel.resetFrame()
+                    in listOf(
+                        MatchAction.MATCH_END_QUERIED,
+                        MatchAction.MATCH_END_CONFIRMED,
+                        MatchAction.FRAME_END_QUERIED,
+                        MatchAction.FRAME_END_CONFIRMED
+                    ) -> { // Assign match actions for generic dialog, then navigate
+                        findNavController().navigate(
+                            GameFragmentDirections.actionGameFragmentToGameGenericDialogFragment(
+                                MatchAction.NO_ACTION,
+                                if (matchAction == MatchAction.MATCH_END_QUERIED) MatchAction.MATCH_END_CONFIRM_AND_DISCARD_CRT_FRAME else MatchAction.NO_ACTION,
+                                matchAction
                             )
-                            eventsViewModel.resetFoul()
-                        }
-
-                        // Match actions frame related
-                        in listOf(MatchAction.FRAME_END_QUERY, MatchAction.FRAME_END_CONFIRMED) -> {
-                            saveAndStartNewFrame()
-                        }
-
-                        // Match actions that require navigation
-                        in listOf(
-                            MatchAction.MATCH_END_QUERY,
-                            MatchAction.MATCH_END_CONFIRMED,
-                            MatchAction.MATCH_END_CONFIRMED_AND_DISCARD_CURRENT_FRAME
-                        ) -> {
-                            matchEnded(matchAction) // Feed the mach action in the game view model to assess whether frame should be kept
-                            findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameStatsFragment())
-                        }
-                        MatchAction.MATCH_CANCEL -> { // On a match cancel, cancel match and go back to play fragment
-                            cancelMatch()
-                            findNavController().navigate(GameFragmentDirections.actionGameFragmentToPlayFragment())
-                        }
-                        else -> {
-                        }
+                        )
+                    }
+                    MatchAction.MATCH_CANCEL -> { // On a match cancel, cancel match and go back to play fragment
+                        findNavController().navigate(GameFragmentDirections.actionGameFragmentToPlayFragment())
+                        cancelMatch()
+                    }
+                    MatchAction.FOUL_DIALOG_QUERIED -> { // Navigate to foul dialog when queried
+                        findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameFoulDialogFragment())
+                    }
+                    else -> {
+                    }
+                }
+            })
+        }
+        genericEventsViewModel.apply {
+            eventGeneralAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
+                when (matchAction) {
+                    in listOf(MatchAction.FRAME_END_QUERIED, MatchAction.FRAME_END_CONFIRMED) -> { // Match actions frame related
+                        matchViewModel.saveAndStartNewFrame()
+                    }
+                    in listOf(
+                        MatchAction.MATCH_END_QUERIED,
+                        MatchAction.MATCH_END_CONFIRMED,
+                        MatchAction.MATCH_END_CONFIRM_AND_DISCARD_CRT_FRAME
+                    ) -> { // Feed the mach action in the game view model to assess whether frame should be kept
+                        matchViewModel.matchEnded(matchAction)
+                        findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameStatsFragment())
+                    }
+                    MatchAction.FOUL_CONFIRMED -> { // Send foul action for handling
+                        gameViewModel.handleFrameEvent(
+                            FrameEvent.HANDLE_FOUL,
+                            getFoul(),
+                            genericEventsViewModel.isRemoveRed.value!!,
+                            genericEventsViewModel.isFreeBall.value!!
+                        )
+                        genericEventsViewModel.resetFoul()
+                    }
+                    else -> {
                     }
                 }
             })
@@ -155,7 +189,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 gameFragmentScope.launch {
-                    gameViewModel.saveMatch()
+                    matchViewModel.saveMatch()
                 }
                 findNavController().navigate(GameFragmentDirections.actionGameFragmentToPlayFragment())
             }
@@ -164,6 +198,8 @@ class GameFragment : androidx.fragment.app.Fragment() {
         return binding.root
     }
 
+
+    // Menu items
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_game_overflow, menu)
@@ -174,16 +210,16 @@ class GameFragment : androidx.fragment.app.Fragment() {
             R.id.match_action_undo -> gameViewModel.handleFrameEvent(FrameEvent.HANDLE_UNDO, null, null, null)
             R.id.match_action_add_red -> gameViewModel.handleFrameEvent(FrameEvent.HANDLE_POT, DomainPot.ADDRED, null, null)
             R.id.match_action_rerack -> gameViewModel.resetFrame()
-            R.id.match_action_concede_frame -> gameViewModel.queryEndFrame()
-            R.id.match_action_cancel_match -> gameViewModel.assignEventMatchAction(MatchAction.MATCH_CANCEL)
-            R.id.match_action_concede_match -> gameViewModel.queryEndMatch()
+            R.id.match_action_concede_frame -> matchViewModel.queryEndFrame()
+            R.id.match_action_cancel_match -> matchViewModel.assignEventMatchAction(MatchAction.MATCH_CANCEL)
+            R.id.match_action_concede_match -> matchViewModel.queryEndMatch()
         }
         requireActivity().invalidateOptionsMenu() // Reset options menu every time a button is pressed
         return super.onOptionsItemSelected(item)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) { // Buttons cannot be enabled while update is in progress
-        gameViewModel.displayFrame.value?.apply {
+        matchViewModel.displayFrame.value?.apply {
             menu.findItem(R.id.match_action_undo).apply {
                 isEnabled = (frameStack.size) > 0 && !(gameViewModel.isFrameUpdateInProgress.value ?: false)
                 setStateOpacity()

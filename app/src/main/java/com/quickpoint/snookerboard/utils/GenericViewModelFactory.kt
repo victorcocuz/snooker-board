@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
 import com.quickpoint.snookerboard.SnookerApplication
 import com.quickpoint.snookerboard.fragments.game.GameViewModel
+import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.fragments.gamestatistics.GameStatsViewModel
 import com.quickpoint.snookerboard.fragments.rankings.RankingsFragmentViewModel
 
@@ -22,10 +23,13 @@ class GenericViewModelFactory(
             return RankingsFragmentViewModel(application) as T
         }
         if (modelClass.isAssignableFrom(GameStatsViewModel::class.java)) {
-            return GameStatsViewModel(application) as T
+            return GameStatsViewModel(application, SnookerApplication.getSnookerRepository()) as T
         }
         if (modelClass.isAssignableFrom(GameViewModel::class.java)) {
-            return GameViewModel(application, SnookerApplication.getSnookerRepository()) as T
+            return GameViewModel() as T
+        }
+        if (modelClass.isAssignableFrom(MatchViewModel::class.java)) {
+            return MatchViewModel(application, SnookerApplication.getSnookerRepository(), application.getSharedPref()) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")    }
 }

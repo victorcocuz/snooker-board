@@ -6,9 +6,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.quickpoint.snookerboard.GenericEventsViewModel
+import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentDialogGenBinding
-import com.quickpoint.snookerboard.fragments.game.GameViewModel
 import com.quickpoint.snookerboard.utils.EventObserver
 import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.setLayoutSizeByFactor
@@ -16,7 +16,7 @@ import com.quickpoint.snookerboard.utils.setLayoutSizeByFactor
 
 class GameGenericDialogFragment : DialogFragment() {
     private val genericEventsViewModel: GenericEventsViewModel by activityViewModels()
-    private val gameViewModel: GameViewModel by activityViewModels()
+    private val matchViewModel: MatchViewModel by activityViewModels()
     private lateinit var matchAction: MatchAction
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -35,7 +35,7 @@ class GameGenericDialogFragment : DialogFragment() {
         binding.apply {
             lifecycleOwner = this@GameGenericDialogFragment
             varGenericEventsViewModel = genericEventsViewModel
-            varGameViewModel = this@GameGenericDialogFragment.gameViewModel
+            varMatchViewModel = this@GameGenericDialogFragment.matchViewModel
             GameGenericDialogFragmentArgs.fromBundle(requireArguments()).apply {
                 varDialogMatchActionA = matchActionA
                 varDialogMatchActionB = matchActionB
@@ -47,7 +47,7 @@ class GameGenericDialogFragment : DialogFragment() {
         }
 
         // Observers
-        genericEventsViewModel.eventMatchActionQueried.observe(viewLifecycleOwner, EventObserver {
+        genericEventsViewModel.eventMatchActionDialog.observe(viewLifecycleOwner, EventObserver {
             dismiss() // Close dialog once a match action as been clicked on
             matchAction = it // Save the recorded match action to be passed on in onDestroy
         })
@@ -56,7 +56,7 @@ class GameGenericDialogFragment : DialogFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (this::matchAction.isInitialized) genericEventsViewModel.onEventMatchActionConfirmed(matchAction) // Pass match action to view model
+        if (this::matchAction.isInitialized) genericEventsViewModel.assignEventGeneralAction(matchAction) // Pass match action to view model
     }
 }
 

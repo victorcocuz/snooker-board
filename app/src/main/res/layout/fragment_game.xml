@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="varGameViewModel"
-            type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
+            name="varMatchViewModel"
+            type="com.quickpoint.snookerboard.MatchViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -58,7 +58,7 @@
                 android:id="@+id/frag_game_break_rv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:bindBreakData="@{varGameViewModel.displayFrame.frameStack}"
+                app:bindBreakData="@{varMatchViewModel.displayFrame.frameStack}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="16"
                 tools:listitem="@layout/item_break_view" />

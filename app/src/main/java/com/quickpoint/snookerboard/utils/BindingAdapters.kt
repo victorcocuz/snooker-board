@@ -62,7 +62,7 @@ fun LinearLayout.setActivePlayer(activePlayer: Boolean, activePlayerTag: PlayerT
 
 @BindingAdapter("setTotalScore")
 fun TextView.setTotalScore(application: Application) {
-    val frames = application.getSharedPref().getInt(application.getString(R.string.shared_pref_match_frames), 0)
+    val frames = application.getSharedPref().getInt(application.getString(R.string.sp_match_frames), 0)
     text = context.getString(R.string.game_total_score, (frames * 2 - 1))
 }
 
@@ -89,7 +89,7 @@ fun TextView.setFrameScorePercentage(frameScore: DomainPlayerScore?) = frameScor
     val df = DecimalFormat("##%")
     text = when ((successShots + missedShots)) {
         in (1..10000) -> df.format((successShots.toDouble() / (successShots.toDouble() + missedShots.toDouble())))
-        -1 -> context.getString(R.string.fragment_statistics_header_percentage)
+        -1 -> context.getString(R.string.f_statistics_header_percentage)
         else -> "N/A"
     }
 }
@@ -97,7 +97,7 @@ fun TextView.setFrameScorePercentage(frameScore: DomainPlayerScore?) = frameScor
 @BindingAdapter("matchPointsPlayerA", "matchPointsPlayerB")
 fun TextView.setMatchPoints(matchPointsPlayerA: Int, matchPointsPlayerB: Int) {
     text = when (matchPointsPlayerA) {
-        -1 -> context.getString(R.string.fragment_statistics_header_score)
+        -1 -> context.getString(R.string.f_statistics_header_score)
         else -> context.getString(R.string.game_match_score, matchPointsPlayerA, matchPointsPlayerB)
     }
 }
@@ -106,11 +106,11 @@ fun TextView.setMatchPoints(matchPointsPlayerA: Int, matchPointsPlayerB: Int) {
 fun TextView.setGameStatsValue(type: StatisticsType, value: Int) {
     text = when (value) {
         -1 -> when (type) {
-            StatisticsType.FRAME_ID -> context.getString(R.string.fragment_statistics_header_frame_id)
-            StatisticsType.HIGHEST_BREAK -> context.getString(R.string.fragment_statistics_header_break)
-            StatisticsType.FRAME_POINTS -> context.getString(R.string.fragment_statistics_header_points)
+            StatisticsType.FRAME_ID -> context.getString(R.string.f_statistics_header_frame_id)
+            StatisticsType.HIGHEST_BREAK -> context.getString(R.string.f_statistics_header_break)
+            StatisticsType.FRAME_POINTS -> context.getString(R.string.f_statistics_header_points)
         }
-        -2 -> context.getString(R.string.fragment_statistics_footer_total)
+        -2 -> context.getString(R.string.f_statistics_footer_total)
         else -> value.toString()
     }
 }
@@ -145,8 +145,8 @@ fun TextView.setStatsTableStyle(type: Int) {
 fun TextView.setDialogGameGenLabel(matchAction: MatchAction) {
     text = when (matchAction) {
         MatchAction.MATCH_CANCEL -> "Cancel match"
-        MatchAction.FRAME_END_QUERY -> "Concede frame"
-        MatchAction.MATCH_END_QUERY -> "Concede match"
+        MatchAction.FRAME_END_QUERIED -> "Concede frame"
+        MatchAction.MATCH_END_QUERIED -> "Concede match"
         MatchAction.FRAME_END_CONFIRMED -> "Frame ended"
         MatchAction.MATCH_END_CONFIRMED -> "Match ended"
         MatchAction.MATCH_LOAD -> "Match in progress"
@@ -159,8 +159,8 @@ fun TextView.setDialogGameGenLabel(matchAction: MatchAction) {
 fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
     text = when (matchAction) {
         MatchAction.MATCH_CANCEL -> "Are you sure you want to cancel the current match? You will lose all match progress."
-        MatchAction.FRAME_END_QUERY -> "This frame is still in progress, are you sure you want to end it?"
-        MatchAction.MATCH_END_QUERY -> "This match is still in progress, are you sure you wan to end it?"
+        MatchAction.FRAME_END_QUERIED -> "This frame is still in progress, are you sure you want to end it?"
+        MatchAction.MATCH_END_QUERIED -> "This match is still in progress, are you sure you wan to end it?"
         MatchAction.FRAME_END_CONFIRMED -> "This frame will end. Would you like to proceed?"
         MatchAction.MATCH_END_CONFIRMED -> "This match will end. Would you like to proceed?"
         MatchAction.MATCH_LOAD -> "You have a match in progress, do you want to resume playing or start a new match?"
@@ -173,8 +173,8 @@ fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
 fun TextView.setDialogGameA(matchAction: MatchAction) {
     text = when (matchAction) {
         MatchAction.MATCH_CANCEL -> "No"
-        MatchAction.FRAME_END_QUERY -> "No"
-        MatchAction.MATCH_END_QUERY -> "No"
+        MatchAction.FRAME_END_QUERIED -> "No"
+        MatchAction.MATCH_END_QUERIED -> "No"
         MatchAction.FRAME_END_CONFIRMED -> "No"
         MatchAction.MATCH_END_CONFIRMED -> "No"
         MatchAction.MATCH_LOAD -> "Start New Match"
@@ -187,22 +187,22 @@ fun TextView.setDialogGameB(matchAction: MatchAction, score: CurrentPlayer?) {
     visibility = when {
         score == null -> View.GONE
         score.getFirst().matchPoints + score.getSecond().matchPoints == 0 -> View.GONE
-        matchAction == MatchAction.MATCH_END_CONFIRMED_AND_DISCARD_CURRENT_FRAME -> View.VISIBLE
+        matchAction == MatchAction.MATCH_END_CONFIRM_AND_DISCARD_CRT_FRAME -> View.VISIBLE
         else -> View.GONE
     }
     text = when (matchAction) {
-        MatchAction.MATCH_END_CONFIRMED_AND_DISCARD_CURRENT_FRAME -> "Yes & Remove Frame"
+        MatchAction.MATCH_END_CONFIRM_AND_DISCARD_CRT_FRAME -> "Yes & Remove Frame"
         else -> ""
     }
 }
 
 @BindingAdapter("dialogGameGenC", "dialogGameGenCActionB", "dialogGameGenCScore")
 fun TextView.setDialogGameC(matchAction: MatchAction, matchActionB: MatchAction, score: CurrentPlayer?) {
-    isEnabled = !(matchActionB == MatchAction.MATCH_END_CONFIRMED_AND_DISCARD_CURRENT_FRAME && (score?.isFrameEqual() ?: false)) // This needs adjusting.
+    isEnabled = !(matchActionB == MatchAction.MATCH_END_CONFIRM_AND_DISCARD_CRT_FRAME && (score?.isFrameEqual() ?: false)) // This needs adjusting.
     text = when (matchAction) {
         MatchAction.MATCH_CANCEL -> "Yes"
-        MatchAction.FRAME_END_QUERY -> "Yes"
-        MatchAction.MATCH_END_QUERY -> "Yes"
+        MatchAction.FRAME_END_QUERIED -> "Yes"
+        MatchAction.MATCH_END_QUERIED -> "Yes"
         MatchAction.FRAME_END_CONFIRMED -> "Yes"
         MatchAction.MATCH_END_CONFIRMED -> "Yes"
         MatchAction.MATCH_LOAD -> "Continue Match"
@@ -212,7 +212,7 @@ fun TextView.setDialogGameC(matchAction: MatchAction, matchActionB: MatchAction,
 
 @BindingAdapter("dialogGameNote", "dialogGameNoteScore")
 fun TextView.setDialogGameNote(matchAction: MatchAction, score: CurrentPlayer?) {
-    visibility = if (matchAction == MatchAction.MATCH_END_CONFIRMED_AND_DISCARD_CURRENT_FRAME) View.VISIBLE else View.GONE
+    visibility = if (matchAction == MatchAction.MATCH_END_CONFIRM_AND_DISCARD_CRT_FRAME) View.VISIBLE else View.GONE
     text = when {
         score == null -> ""
         score.getFirst().matchPoints + score.getFirst().matchPoints == 0 -> ""

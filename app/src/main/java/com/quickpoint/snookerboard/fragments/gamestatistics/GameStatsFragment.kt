@@ -90,7 +90,7 @@ class GameStatsFragment : Fragment() {
 
             // VM Observers
             genericEventsViewModel.apply {
-                eventMatchActionConfirmed.observe(viewLifecycleOwner, EventObserver { matchAction ->
+                eventGeneralAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                     if (matchAction == MatchAction.APP_TO_MAIN) findNavController().navigate(GameStatsFragmentDirections.actionGameStatsFragmentToPlayFragment())
                 })
             }

@@ -66,79 +66,79 @@
 
     <!-- Fragment Play -->
     <string name="you">You</string>
-    <string name="fragment_play_label_vs">VS</string>
     <string name="guest">Guest</string>
     <string name="hint_first_name">First Name</string>
     <string name="hint_last_name">Last Name</string>
 
-    <string name="fragment_play_label_player_a">Player 1</string>
-    <string name="fragment_play_label_player_b">Player 2</string>
-    <string name="fragment_play_contentd_desc_ball_first">Ball to click to choose who goes first</string>
-    <string name="fragment_play_label_frames">Number of Frames</string>
-    <string name="fragment_play_label_reds">Number of Reds</string>
-    <string name="fragment_play_btn_reds_six">6</string>
-    <string name="fragment_play_btn_reds_ten">10</string>
-    <string name="fragment_play_btn_reds_fifteen">15</string>
-    <string name="fragment_play_label_foul_modifier">Standard Foul Value</string>
-    <string name="fragment_play_btn_foul_one">1</string>
-    <string name="fragment_play_btn_foul_two">2</string>
-    <string name="fragment_play_btn_foul_three">3</string>
-    <string name="fragment_play_btn_foul_four">4</string>
-    <string name="fragment_play_label_breaks_first">Player to Break</string>
-    <string name="fragment_play_btn_break_random">Random</string>
-    <string name="fragment_play_btn_play">START</string>
+    <string name="f_play_label_player_a">Player 1</string>
+    <string name="f_play_label_player_b">Player 2</string>
+    <string name="f_play_label_vs">VS</string>
+    <string name="f_play_contentd_desc_ball_first">Ball to click to choose who goes first</string>
+    <string name="f_play_label_frames">Number of Frames</string>
+    <string name="f_play_label_reds">Number of Reds</string>
+    <string name="f_play_btn_reds_six">6</string>
+    <string name="f_play_btn_reds_ten">10</string>
+    <string name="f_play_btn_reds_fifteen">15</string>
+    <string name="f_play_label_foul_modifier">Standard Foul Value</string>
+    <string name="f_play_btn_foul_one">1</string>
+    <string name="f_play_btn_foul_two">2</string>
+    <string name="f_play_btn_foul_three">3</string>
+    <string name="f_play_btn_foul_four">4</string>
+    <string name="f_play_label_breaks_first">Player to Break</string>
+    <string name="f_play_btn_break_random">Random</string>
+    <string name="f_play_btn_play">START</string>
 
     <!-- Fragment Game -->
-    <string name="fragment_game_label_player_a">Player A</string>
-    <string name="fragment_game_label_player_b">Player B</string>
-    <string name="fragment_game_label_remaining">Remaining</string>
-    <string name="fragment_game_label_difference">Difference</string>
+    <string name="f_game_label_player_a">Player A</string>
+    <string name="f_game_label_player_b">Player B</string>
+    <string name="f_game_label_remaining">Remaining</string>
+    <string name="f_game_label_difference">Difference</string>
+    <string name="f_game_label_fouls">Number of Fouls</string>
+    <string name="f_game_label_percentage">Pot Success</string>
+    <string name="f_game_label_break">Highest Break</string>
     <string name="chapter_score">Frame Score</string>
     <string name="chapter_statistics">Frame Statistics</string>
     <string name="chapter_breakdown">Frame Breakdown</string>
 
     <!-- Fragment Foul -->
-    <string name="fragment_foul_label_title">Foul</string>
-    <string name="fragment_foul_label_choose_ball">Which ball was fouled?</string>
-    <string name="fragment_foul_label_choose_action">Do you wish to continue?</string>
-    <string name="fragment_game_foul_action_continue">Ok, I will play</string>
-    <string name="fragment_foul_action_force_continue">Force continue</string>
-    <string name="fragment_foul_label_other_actions">Any other actions?</string>
-    <string name="fragment_foul_action_free_ball">Free Ball</string>
-    <string name="fragment_foul_action_remove_red">Remove Red</string>
-    <string name="fragment_foul_cancel">Cancel</string>
-    <string name="fragment_foul_ok">Ok</string>
+    <string name="f_foul_label_title">Foul</string>
+    <string name="f_foul_label_choose_ball">Which ball was fouled?</string>
+    <string name="f_foul_label_choose_action">Do you wish to continue?</string>
+    <string name="f_game_foul_action_continue">Ok, I will play</string>
+    <string name="f_foul_action_force_continue">Force continue</string>
+    <string name="f_foul_label_other_actions">Any other actions?</string>
+    <string name="f_foul_action_free_ball">Free Ball</string>
+    <string name="f_foul_action_remove_red">Remove Red</string>
+    <string name="f_foul_cancel">Cancel</string>
+    <string name="f_foul_ok">Ok</string>
     <string name="toast_foul_invalid">Select a ball and an action to continue</string>
 
     <!-- Fragment Game Statistics -->
-    <string name="fragment_statistics_header_break">Break</string>
-    <string name="fragment_statistics_header_points">Points</string>
-    <string name="fragment_statistics_header_score">Score</string>
-    <string name="fragment_statistics_footer_total">Total</string>
-    <string name="fragment_statistics_header_frame_id">#</string>
-    <string name="fragment_statistics_header_percentage">%</string>
+    <string name="f_statistics_header_break">Break</string>
+    <string name="f_statistics_header_points">Points</string>
+    <string name="f_statistics_header_score">Score</string>
+    <string name="f_statistics_footer_total">Total</string>
+    <string name="f_statistics_header_frame_id">#</string>
+    <string name="f_statistics_header_percentage">%</string>
 
     <!-- Shared Preferences -->
-    <string name="preference_file_key">PREFERENCE_FILE_KEY</string>
-    <string name="shared_pref_match_frames">matchFrames</string>
-    <string name="shared_pref_match_reds">matchReds</string>
-    <string name="shared_pref_match_foul">matchFoul</string>
-    <string name="shared_pref_match_first">matchFirst</string>
-    <string name="shared_pref_match_crt_frame">matchCrtFrame</string>
-    <string name="shared_pref_match_broke_last">matchBrokeLast</string>
-    <string name="shared_pref_match_crt_player">matchCrtPlayer</string>
-    <string name="shared_pref_match_is_in_progress">isMatchInProgress</string>
-    <string name="shared_pref_match_name_first_a">matchNameFirstA</string>
-    <string name="shared_pref_match_name_first_b">matchNameFirstB</string>
-    <string name="shared_pref_match_name_last_a">matchNameLastA</string>
-    <string name="shared_pref_match_name_last_b">matchNameLastB</string>
+    <string name="sp_file_key">PREFERENCE_FILE_KEY</string>
+    <string name="sp_match_frames">matchFrames</string>
+    <string name="sp_match_reds">matchReds</string>
+    <string name="sp_match_foul">matchFoul</string>
+    <string name="sp_match_first">matchFirst</string>
+    <string name="sp_match_frame_count">matchCrtFrame</string>
+    <string name="sp_match_broke_last">matchBrokeLast</string>
+    <string name="sp_match_crt_player">matchCrtPlayer</string>
+    <string name="sp_match_is_in_progress">isMatchInProgress</string>
+    <string name="sp_match_name_first_a">matchNameFirstA</string>
+    <string name="sp_match_name_first_b">matchNameFirstB</string>
+    <string name="sp_match_name_last_a">matchNameLastA</string>
+    <string name="sp_match_name_last_b">matchNameLastB</string>
     <string name="cd_foul_modifier_info">Foul Modifier Info</string>
     <string name="cd_logo">Logo</string>
     <string name="autofill_name_given">personGivenName</string>
     <string name="autofill_name_family">personFamilyName</string>
-    <string name="fragment_game_label_fouls">Number of Fouls</string>
-    <string name="fragment_game_label_percentage">Pot Success</string>
-    <string name="fragment_game_label_break">Highest Break</string>
     <string name="shared_pref_frame_max">frameMax</string>
     <string name="vs">VS</string>
 </resources>

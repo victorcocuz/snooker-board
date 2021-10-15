@@ -18,9 +18,6 @@ import android.widget.ScrollView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import com.quickpoint.snookerboard.R
 
 // General
@@ -34,15 +31,18 @@ fun MenuItem.setStateOpacity() {
 }
 
 // Shared preferences
+fun Fragment.getSharedPref(): SharedPreferences = this.requireActivity().getSharedPref()
 fun Activity.getSharedPref(): SharedPreferences = application.getSharedPref()
 fun Application.getSharedPref(): SharedPreferences = getSharedPreferences(
-    getString(R.string.preference_file_key),
+    getString(R.string.sp_file_key),
     Context.MODE_PRIVATE
 )
 
 fun SharedPreferences.setMatchInProgress(isInProgress: Boolean) {
     this.edit().putBoolean("isMatchInProgress", isInProgress).apply()
 }
+
+fun SharedPreferences.isMatchInProgress() = this.getBoolean("isMatchInProgress", false)
 
 // Keyboard
 fun Fragment.hideKeyboard() {

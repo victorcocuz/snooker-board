@@ -12,8 +12,8 @@
             type="com.quickpoint.snookerboard.GenericEventsViewModel" />
 
         <variable
-            name="varGameViewModel"
-            type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
+            name="varMatchViewModel"
+            type="com.quickpoint.snookerboard.MatchViewModel" />
 
         <import type="com.quickpoint.snookerboard.domain.PotAction" />
     </data>
@@ -45,7 +45,7 @@
             android:layout_marginTop="@dimen/margin_header_above"
             android:paddingStart="@dimen/margin_layout_offset"
             android:paddingEnd="@dimen/margin_layout_offset"
-            android:text="@string/fragment_foul_label_choose_ball"
+            android:text="@string/f_foul_label_choose_ball"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/foul_title" />
 
@@ -66,7 +66,7 @@
                 android:id="@+id/foul_balls_list_rv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:bindFoulBalls="@{varGameViewModel.displayFrame.ballStack}" />
+                app:bindFoulBalls="@{varMatchViewModel.displayFrame.ballStack}" />
         </LinearLayout>
 
         <FrameLayout
@@ -85,7 +85,7 @@
             android:layout_marginTop="@dimen/margin_header_above"
             android:paddingStart="@dimen/margin_layout_offset"
             android:paddingEnd="@dimen/margin_layout_offset"
-            android:text="@string/fragment_foul_label_choose_action"
+            android:text="@string/f_foul_label_choose_action"
             app:layout_constraintStart_toStartOf="@+id/foul_label_balls"
             app:layout_constraintTop_toBottomOf="@+id/foul_line_hor_one" />
 
@@ -97,7 +97,7 @@
             android:layout_marginTop="@dimen/margin_header_below"
             android:layout_marginEnd="@dimen/margin_layout_offset_mid"
             android:onClick="@{() -> varEventsViewModel.onActionClicked(PotAction.SWITCH)}"
-            android:text="@string/fragment_game_foul_action_continue"
+            android:text="@string/f_game_foul_action_continue"
             app:layout_constraintEnd_toStartOf="@+id/foul_action_force_continue"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread"
@@ -112,12 +112,12 @@
             android:layout_marginStart="@dimen/margin_layout_offset_mid"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             android:onClick="@{() -> varEventsViewModel.onActionClicked(PotAction.CONTINUE)}"
-            android:text="@string/fragment_foul_action_force_continue"
+            android:text="@string/f_foul_action_force_continue"
             app:layout_constraintBottom_toBottomOf="@+id/foul_action_continue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/foul_action_continue"
-            app:setEnabled="@{varGameViewModel.displayFrame.getFrameScoreRemaining() > varGameViewModel.displayFrame.getFrameScoreDiff()}"
+            app:setEnabled="@{varMatchViewModel.displayFrame.getFrameScoreRemaining() > varMatchViewModel.displayFrame.getFrameScoreDiff()}"
             app:setSelected="@{varEventsViewModel.actionClicked == PotAction.CONTINUE}" />
 
         <FrameLayout
@@ -136,7 +136,7 @@
             android:layout_marginTop="@dimen/margin_header_above"
             android:paddingStart="@dimen/margin_layout_offset"
             android:paddingEnd="@dimen/margin_layout_offset"
-            android:text="@string/fragment_foul_label_other_actions"
+            android:text="@string/f_foul_label_other_actions"
             app:layout_constraintStart_toStartOf="@+id/foul_label_choose_action"
             app:layout_constraintTop_toBottomOf="@+id/foul_line_hor_two" />
 
@@ -148,7 +148,7 @@
             android:layout_marginTop="@dimen/margin_header_below"
             android:layout_marginEnd="@dimen/margin_layout_offset_mid"
             android:onClick="@{() -> varEventsViewModel.onFreeballClicked()}"
-            android:text="@string/fragment_foul_action_free_ball"
+            android:text="@string/f_foul_action_free_ball"
             app:layout_constraintEnd_toStartOf="@+id/foul_action_remove_red"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -163,12 +163,12 @@
             android:layout_marginStart="@dimen/margin_layout_offset_mid"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             android:onClick="@{() -> varEventsViewModel.onRemoveRedClicked()}"
-            android:text="@string/fragment_foul_action_remove_red"
+            android:text="@string/f_foul_action_remove_red"
             app:layout_constraintBottom_toBottomOf="@+id/foul_action_free_ball"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/foul_action_free_ball"
-            app:setEnabled="@{varGameViewModel.displayFrame.ballStack.size() > 8}"
+            app:setEnabled="@{varMatchViewModel.displayFrame.ballStack.size() > 8}"
             app:setSelected="@{varEventsViewModel.isRemoveRed}" />
 
         <FrameLayout
@@ -184,8 +184,8 @@
             style="@style/ButtonNarrow"
             android:layout_width="wrap_content"
             android:layout_marginEnd="@dimen/margin_layout_offset"
-            android:onClick="@{() -> varEventsViewModel.onEventMatchActionQueried(MatchAction.NO_ACTION)}"
-            android:text="@string/fragment_foul_cancel"
+            android:onClick="@{() -> varEventsViewModel.assignEventMatchActionDialog(MatchAction.NO_ACTION)}"
+            android:text="@string/f_foul_cancel"
             app:layout_constraintBottom_toBottomOf="@+id/foul_ok"
             app:layout_constraintEnd_toStartOf="@+id/foul_ok" />
 
@@ -196,8 +196,8 @@
             android:layout_marginTop="@dimen/margin_header_above"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             android:layout_marginBottom="@dimen/margin_layout_offset"
-            android:onClick="@{() -> varEventsViewModel.onEventMatchActionQueried(MatchAction.FOUL_QUERIED)}"
-            android:text="@string/fragment_foul_ok"
+            android:onClick="@{() -> varEventsViewModel.assignEventMatchActionDialog(MatchAction.FOUL_QUERIED)}"
+            android:text="@string/f_foul_ok"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/foul_line_hor_three"

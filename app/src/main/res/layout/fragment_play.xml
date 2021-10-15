@@ -62,8 +62,8 @@
             android:id="@+id/frag_play_btn_play"
             style="@style/ButtonStretched"
             android:layout_width="match_parent"
-            android:onClick="@{() -> varEventsViewModel.onEventMatchActionConfirmed(MatchAction.MATCH_START)}"
-            android:text="@string/fragment_play_btn_play"
+            android:onClick="@{() -> varEventsViewModel.assignEventGeneralAction(MatchAction.MATCH_START)}"
+            android:text="@string/f_play_btn_play"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

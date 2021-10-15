@@ -14,15 +14,20 @@ enum class MatchAction {
     FOUL_CONFIRMED, // Foul has been confirmed and will be processed
 
     // Frame Actions
-    FRAME_END_QUERY, // On clicking the concede frame button while the frame is still ongoing
+    FRAME_UPDATE_RECORD, // Update frame score and history
+    FRAME_RESET, // Action to reset frame
+    FRAME_RESET_COMPLETE, // Action that confirms the frame has been reset
+    FRAME_END_QUERIED, // On clicking the concede frame button while the frame is still ongoing
     FRAME_END_CONFIRMED, // Frame end has been confirmed and will be processed. On clicking the concede frame button when the point difference is big enough, or automatically triggered when only one ball left
 
     // Match Actions
     MATCH_START, // Action that starts match
-    MATCH_END_QUERY, // On clicking the concede match button while the match is still in play
-    MATCH_END_CONFIRMED_AND_DISCARD_CURRENT_FRAME, // On clicking the conceding button when the current play can affect who wins
+    MATCH_RESET, // Action to reset match rules when starting a new match or on game cancel
+    MATCH_END_QUERIED, // On clicking the concede match button while the match is still in play
+    MATCH_END_CONFIRM_AND_DISCARD_CRT_FRAME, // On clicking the conceding button when the current play can affect who wins
     MATCH_END_CONFIRMED, // Match end has been confirmed and will be processed. On clicking the concede frame / match button after the frame is mathematically complete and if it is enough to win the game
     MATCH_LOAD, // On confirming the dialog at the beginning that you wish to continue match
+    MATCH_LOAD_TO_GAME_VM, // Action to continue the loading to the game view model
     MATCH_START_NEW, // On confirming the dialog at the beginning that you wish to start a new match, or if there are no matches in progress
     MATCH_CANCEL, // On clicking cancel match
 

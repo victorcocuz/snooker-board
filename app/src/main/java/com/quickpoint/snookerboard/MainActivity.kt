@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.quickpoint.snookerboard.databinding.ActivityMainBinding
-import com.quickpoint.snookerboard.fragments.game.GameViewModel
 import com.quickpoint.snookerboard.utils.GenericViewModelFactory
 import com.quickpoint.snookerboard.utils.getSharedPref
 import kotlinx.coroutines.CoroutineScope
@@ -23,7 +22,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
     private val activityScope = CoroutineScope(Dispatchers.Default)
     private lateinit var binding: ActivityMainBinding
-    private lateinit var gameViewModel: GameViewModel
+    private lateinit var matchViewModel: MatchViewModel
     private lateinit var sharedPref: SharedPreferences
     // private lateinit var navController: NavController
 
@@ -34,10 +33,10 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         // Generate the Game View Model from the get go; pass in the application and an instance of the snookerRepository
-        gameViewModel = ViewModelProvider(
+        matchViewModel = ViewModelProvider(
             this,
             GenericViewModelFactory(this.application, this, null)
-        ).get(GameViewModel::class.java)
+        ).get(MatchViewModel::class.java)
         sharedPref = getSharedPref()
 
         // To be used when more fragments are needed
@@ -58,8 +57,8 @@ class MainActivity : AppCompatActivity() {
     // When saving instance, check if the view model is initialised (game has started) and if the match is in progress (game hasn't ended). If so, save match
     override fun onSaveInstanceState(outState: Bundle) {
         activityScope.launch {
-            if (::gameViewModel.isInitialized && sharedPref.getBoolean(getString(R.string.shared_pref_match_is_in_progress), false)) {
-                gameViewModel.saveMatch()
+            if (::matchViewModel.isInitialized && sharedPref.getBoolean(getString(R.string.sp_match_is_in_progress), false)) {
+                matchViewModel.saveMatch()
             }
         }
         super.onSaveInstanceState(outState)
