@@ -2,12 +2,12 @@ package com.quickpoint.snookerboard.domain
 
 // The DOMAIN rules
 sealed class DomainMatchInfo(
-    var matchFrames: Int,
-    var matchReds: Int,
-    var matchFoul: Int,
-    var matchFirst: Int,
-    var matchCrtPlayer: Int,
-    var matchFrameCount: Int,
+    var frames: Int,
+    var reds: Int,
+    var foul: Int,
+    var first: Int,
+    var crtPlayer: Int,
+    var frameCount: Int,
     var frameMax: Int
 ) {
     object RULES : DomainMatchInfo(0, 0, 0, 0, 1, 0, 0)
@@ -15,40 +15,42 @@ sealed class DomainMatchInfo(
     fun getCrt() = RULES
 
     fun assignRules(
-        matchFrames: Int,
-        matchReds: Int,
-        matchFoul: Int,
-        matchFirst: Int,
-        matchCrtPlayer: Int,
-        matchFrameCount: Int,
+        frames: Int,
+        reds: Int,
+        foul: Int,
+        first: Int,
+        crtPlayer: Int,
+        frameCount: Int,
         frameMax: Int
     ) {
-        this.matchFrames = matchFrames
-        this.matchReds = matchReds
-        this.matchFoul = matchFoul
-        this.matchFirst = matchFirst
-        this.matchCrtPlayer = matchCrtPlayer
-        this.matchFrameCount = matchFrameCount
+        this.frames = frames
+        this.reds = reds
+        this.foul = foul
+        this.first = first
+        this.crtPlayer = crtPlayer
+        this.frameCount = frameCount
         this.frameMax = frameMax
     }
 
+    fun getRulesText() = "Frames: ${this.frames}, Reds: ${this.reds}, Foul: ${this.foul}, First: ${this.first}, CrtPlayer: ${this.crtPlayer}, Count: ${this.frameCount}, Max: ${this.frames}"
+
     fun assignMatchFrames(matchFrames: Int) {
-        this.matchFrames = matchFrames
+        this.frames = matchFrames
     }
 
     fun assignMatchReds(matchReds: Int) {
-        this.matchReds = matchReds
+        this.reds = matchReds
     }
 
     fun assignMatchFoul(matchFoul: Int) {
-        this.matchFoul = matchFoul
+        this.foul = matchFoul
     }
 
     fun assignMatchFirst(matchFirst: Int) {
-        this.matchFirst = matchFirst
+        this.first = matchFirst
     }
 
     fun switchPlayers() {
-        this.matchFirst = 1 - this.matchFirst
+        this.first = 1 - this.first
     }
 }

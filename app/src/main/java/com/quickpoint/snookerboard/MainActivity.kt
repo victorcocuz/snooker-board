@@ -1,7 +1,6 @@
 package com.quickpoint.snookerboard
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.MotionEvent
@@ -23,7 +22,6 @@ class MainActivity : AppCompatActivity() {
     private val activityScope = CoroutineScope(Dispatchers.Default)
     private lateinit var binding: ActivityMainBinding
     private lateinit var matchViewModel: MatchViewModel
-    private lateinit var sharedPref: SharedPreferences
     // private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +35,6 @@ class MainActivity : AppCompatActivity() {
             this,
             GenericViewModelFactory(this.application, this, null)
         ).get(MatchViewModel::class.java)
-        sharedPref = getSharedPref()
 
         // To be used when more fragments are needed
         //        binding.apply {
@@ -57,7 +54,7 @@ class MainActivity : AppCompatActivity() {
     // When saving instance, check if the view model is initialised (game has started) and if the match is in progress (game hasn't ended). If so, save match
     override fun onSaveInstanceState(outState: Bundle) {
         activityScope.launch {
-            if (::matchViewModel.isInitialized && sharedPref.getBoolean(getString(R.string.sp_match_is_in_progress), false)) {
+            if (::matchViewModel.isInitialized && getSharedPref().getBoolean(getString(R.string.sp_match_is_in_progress), false)) {
                 matchViewModel.saveMatch()
             }
         }

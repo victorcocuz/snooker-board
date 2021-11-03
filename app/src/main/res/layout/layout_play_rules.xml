@@ -12,8 +12,8 @@
             type="com.quickpoint.snookerboard.fragments.play.PlayFragmentViewModel" />
 
         <variable
-            name="varEventsViewModel"
-            type="com.quickpoint.snookerboard.GenericEventsViewModel" />
+            name="varMatchViewModel"
+            type="com.quickpoint.snookerboard.MatchViewModel" />
 
         <variable
             name="varNameFirstA"
@@ -216,7 +216,7 @@
                 android:layout_height="@dimen/icon_info"
                 android:layout_marginStart="@dimen/margin_xxxsmall"
                 android:contentDescription="@string/cd_foul_modifier_info"
-                android:onClick="@{() -> varEventsViewModel.assignEventGeneralAction(MatchAction.INFO_FOUL)}"
+                android:onClick="@{() -> varMatchViewModel.assignEventMatchAction(MatchAction.INFO_FOUL)}"
                 app:layout_constraintBottom_toBottomOf="@+id/frag_play_label_foul_modifier"
                 app:layout_constraintTop_toTopOf="@+id/frag_play_label_foul_modifier"
                 app:layout_constraintStart_toEndOf="@+id/frag_play_label_foul_modifier"
@@ -318,14 +318,6 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/frag_play_btn_break_random"
                 app:setSelected="@{varPlayViewModel.eventBreaksFirst == 1}" />
-
-<!--            <FrameLayout-->
-<!--                android:id="@+id/frag_play_bottom_line"-->
-<!--                style="@style/LineHorizontalTransparent"-->
-<!--                android:layout_marginTop="@dimen/margin_header_above"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/frag_play_btn_break_player_a" />-->
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

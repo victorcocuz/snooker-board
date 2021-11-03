@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.quickpoint.snookerboard.GenericEventsViewModel
+import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentGameStatsBinding
 import com.quickpoint.snookerboard.domain.DomainPlayerScore
@@ -28,7 +28,7 @@ class GameStatsFragment : Fragment() {
             )
         ).get(GameStatsViewModel::class.java)
     }
-    private val genericEventsViewModel: GenericEventsViewModel by activityViewModels()
+    private val matchViewModel: MatchViewModel by activityViewModels()
     private var scrollHeight = 0
     private var ghostHeight = 0
 
@@ -45,7 +45,7 @@ class GameStatsFragment : Fragment() {
         binding.apply {
             lifecycleOwner = this@GameStatsFragment
             varStatsViewModel = gameStatsViewModel
-            varEventsViewModel = genericEventsViewModel
+            varMatchViewModel = this@GameStatsFragment.matchViewModel
             varApplication = requireActivity().application
 
             fragStatsRv.adapter = GameStatsAdapter()
@@ -89,8 +89,8 @@ class GameStatsFragment : Fragment() {
             }
 
             // VM Observers
-            genericEventsViewModel.apply {
-                eventGeneralAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
+            matchViewModel.apply {
+                eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                     if (matchAction == MatchAction.APP_TO_MAIN) findNavController().navigate(GameStatsFragmentDirections.actionGameStatsFragmentToPlayFragment())
                 })
             }

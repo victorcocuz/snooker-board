@@ -9,7 +9,7 @@
 
         <variable
             name="varEventsViewModel"
-            type="com.quickpoint.snookerboard.GenericEventsViewModel" />
+            type="com.quickpoint.snookerboard.DialogViewModel" />
 
         <variable
             name="varMatchViewModel"
@@ -36,7 +36,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:setDialogGameGenLabel="@{MatchAction.INFO_FOUL}" />
+            app:setDialogGameGenLabel="@{MatchAction.DIALOG_FOUL}" />
 
         <TextView
             android:id="@+id/foul_label_balls"
@@ -184,7 +184,7 @@
             style="@style/ButtonNarrow"
             android:layout_width="wrap_content"
             android:layout_marginEnd="@dimen/margin_layout_offset"
-            android:onClick="@{() -> varEventsViewModel.assignEventMatchActionDialog(MatchAction.NO_ACTION)}"
+            android:onClick="@{() -> varEventsViewModel.assignEventDialogAction(MatchAction.NO_ACTION)}"
             android:text="@string/f_foul_cancel"
             app:layout_constraintBottom_toBottomOf="@+id/foul_ok"
             app:layout_constraintEnd_toStartOf="@+id/foul_ok" />
@@ -196,7 +196,7 @@
             android:layout_marginTop="@dimen/margin_header_above"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             android:layout_marginBottom="@dimen/margin_layout_offset"
-            android:onClick="@{() -> varEventsViewModel.assignEventMatchActionDialog(MatchAction.FOUL_QUERIED)}"
+            android:onClick="@{() -> varEventsViewModel.assignEventDialogAction(MatchAction.FOUL_QUERY)}"
             android:text="@string/f_foul_ok"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

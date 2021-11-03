@@ -29,31 +29,30 @@ class GameViewModel: ViewModel() {
     var frameStack: MutableList<DomainBreak> = mutableListOf()
     var rules = DomainMatchInfo.RULES
 
-    fun loadMatchPartBLoadIntoVm(frame: DomainFrame?) = frame?.let { // Will load latest frame once observed from play fragment
-        Timber.i("LOAD MATCH PART B LOAD INTO VM")
+    fun loadMatchPartBLoadFrame(frame: DomainFrame?) = frame?.let { // Will load latest frame once observed from play fragment
+        Timber.i("loadMatchPartBLoadFrame()")
         player = it.frameScore.asCurrentScore() ?: player
         frameStack = it.frameStack
         ballStack = it.ballStack
         rules.frameMax = it.frameMax
-        assignEventGameAction(MatchAction.FRAME_UPDATE_RECORD)
+        assignEventGameAction(MatchAction.FRAME_INFO_UPDATED)
     }
 
     fun resetFrame() { // Reset all frame values on match end if chosen to discard current frame, when resetting match , when starting a new frame or on rerack action from the options menu
-        Timber.i("RESET FRAME")
-        rules.frameMax = rules.matchReds * 8 + 27
+        Timber.i("resetFrame()")
+        rules.frameMax = rules.reds * 8 + 27
         player.getFirst().resetFrameScore()
         player.getSecond().resetFrameScore()
         frameStack.clear()
         ballStack.clear()
         ballStack.addBalls(WHITE(), BLACK(), PINK(), BLUE(), BROWN(), GREEN(), YELLOW())
-        repeat(rules.matchReds) { ballStack.addBalls(COLOR(), RED()) }
-        assignEventGameAction(MatchAction.FRAME_RESET_COMPLETE) // Once the reset is complete, create a new event to be triggered
-        assignEventGameAction(MatchAction.FRAME_UPDATE_RECORD)
+        repeat(rules.reds) { ballStack.addBalls(COLOR(), RED()) }
+        assignEventGameAction(MatchAction.FRAME_INFO_UPDATED)
     }
 
     // Handler functions
     fun handleFrameEvent(frameEvent: FrameEvent, pot: DomainPot?, removeRed: Boolean?, freeBall: Boolean?) {
-        Timber.i("HANDLE FRAME EVENT")
+        Timber.i("handleFrameEvent()")
         _isFrameUpdateInProgress.value = true
         when (frameEvent) {
             FrameEvent.HANDLE_FOUL -> handleFoul(pot!!, removeRed!!, freeBall!!)
@@ -61,19 +60,18 @@ class GameViewModel: ViewModel() {
             FrameEvent.HANDLE_UNDO -> handleUndo()
         }
         _isFrameUpdateInProgress.value = false
-        assignEventGameAction(MatchAction.FRAME_RESET_COMPLETE)
-        assignEventGameAction(MatchAction.FRAME_UPDATE_RECORD)
+        assignEventGameAction(MatchAction.FRAME_INFO_UPDATED)
     }
 
     private fun handleFoul(pot: DomainPot, removeRed: Boolean, freeBall: Boolean) {
-        Timber.i("HANDLE FOUL")
+        Timber.i("handleFoul()")
         handleFrameUpdate(pot)
         if (removeRed) handleFrameUpdate(DomainPot.REMOVERED)
         if (freeBall) rules.frameMax += ballStack.addFreeBall()
     }
 
     private fun handleFrameUpdate(pot: DomainPot) = ballStack.apply {
-        Timber.i("HANDLE FRAME UPDATE")
+        Timber.i("handleFrameUpdate()")
         frameStack.addToFrameStack(
             when (pot.potType) {
                 in listOf(HIT, FREE, ADDRED) -> DomainPot.HIT(pot.ball)
@@ -81,15 +79,15 @@ class GameViewModel: ViewModel() {
                 else -> pot
             },
             player.getPlayerAsInt(),
-            rules.matchFrameCount
+            rules.frameCount
         )
-        player.calculatePoints(pot, 1, this.last(), rules.matchFoul, frameStack)
+        player.calculatePoints(pot, 1, this.last(), rules.foul, frameStack)
         when (pot.potType) {
             in listOf(HIT, FREE) -> removeBalls(1)
             in listOf(REMOVERED, ADDRED) -> removeBalls(2)
             else -> {
                 if (last() is FREEBALL) {
-                    frameStack.addToFrameStack(DomainPot.FREEMISS, player.getPlayerAsInt(), rules.matchFrameCount)
+                    frameStack.addToFrameStack(DomainPot.FREEMISS, player.getPlayerAsInt(), rules.frameCount)
                     rules.frameMax -= removeFreeBall()
                 }
                 if (last() is COLOR) removeBalls(1)
@@ -100,14 +98,14 @@ class GameViewModel: ViewModel() {
     }
 
     private fun handleUndo(): Any = ballStack.apply {
-        Timber.i("HANDLE UNDO")
+        Timber.i("handleUndo()")
         player = player.getPlayerFromInt(frameStack.last().player)
         val lastPot = frameStack.removeFromFrameStack()
         when (lastPot.potType) {
             HIT -> addBalls(if (isNextColor()) COLOR() else lastPot.ball)
             ADDRED -> addBalls(RED(), COLOR())
             FREE -> {
-                rules.frameMax += addFreeBall()
+                rules.frameMax -= addFreeBall()
                 handleUndo()
             }
             REMOVERED -> {
@@ -122,6 +120,6 @@ class GameViewModel: ViewModel() {
             SAFE -> if (frameStack.isPreviousRed() && isNextColor()) addBalls(COLOR())
             MISS -> if (frameStack.isPreviousRed() && isNextColor()) addBalls(COLOR())
         }
-        player.calculatePoints(lastPot, -1, ballStack.last(), rules.matchFoul, frameStack)
+        player.calculatePoints(lastPot, -1, ballStack.last(), rules.foul, frameStack)
     }
 }

@@ -25,7 +25,7 @@
 
         <variable
             name="varGenericEventsViewModel"
-            type="com.quickpoint.snookerboard.GenericEventsViewModel" />
+            type="com.quickpoint.snookerboard.DialogViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -79,7 +79,7 @@
             style="@style/ButtonNarrow"
             android:layout_width="wrap_content"
             android:layout_marginEnd="@dimen/margin_layout_offset"
-            android:onClick="@{() -> varGenericEventsViewModel.assignEventMatchActionDialog(varDialogMatchActionA)}"
+            android:onClick="@{() -> varGenericEventsViewModel.assignEventDialogAction(varDialogMatchActionA)}"
             app:dialogGameGenA="@{varDialogMatchActionC}"
             app:layout_constraintBottom_toBottomOf="@+id/game_dialog_gen_c"
             app:layout_constraintEnd_toStartOf="@+id/game_dialog_gen_b"
@@ -89,7 +89,7 @@
             android:id="@+id/game_dialog_gen_b"
             style="@style/ButtonNarrow"
             android:layout_width="wrap_content"
-            android:onClick="@{() -> varGenericEventsViewModel.assignEventMatchActionDialog(varDialogMatchActionB)}"
+            android:onClick="@{() -> varGenericEventsViewModel.assignEventDialogAction(varDialogMatchActionB)}"
             app:dialogGameGenB="@{varDialogMatchActionB}"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             app:dialogGameGenBScore="@{varMatchViewModel.displayScore}"
@@ -104,7 +104,7 @@
             android:layout_marginTop="@dimen/margin_header_above"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             android:layout_marginBottom="@dimen/margin_layout_offset"
-            android:onClick="@{() -> varGenericEventsViewModel.assignEventMatchActionDialog(varDialogMatchActionC)}"
+            android:onClick="@{() -> varGenericEventsViewModel.assignEventDialogAction(varDialogMatchActionC)}"
             app:dialogGameGenC="@{varDialogMatchActionC}"
             app:dialogGameGenCActionB="@{varDialogMatchActionB}"
             app:dialogGameGenCScore="@{varMatchViewModel.displayScore}"

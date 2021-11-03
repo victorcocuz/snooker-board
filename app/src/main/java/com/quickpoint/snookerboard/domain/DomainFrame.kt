@@ -20,10 +20,12 @@ data class DomainFrame(
         return if (this <= 7) (-(8 - this) * (8 - this) - (8 - this) + 56) / 2
         else 27 + ((this - 7) / 2) * 8
     }
-    fun isFrameInProgress() = getFrameScoreRemaining() > getFrameScoreDiff()
+    fun isFrameOver() = getFrameScoreRemaining() < getFrameScoreDiff()
+    fun isLastBall() = ballStack.size == 1
 }
 
-fun DomainFrame.asDbFrame(): DbFrame { // Converts the DOMAIN Frame into a DATABASE Frame
+// CONVERTER method from DOMAIN frame to a list of DATABASE Frame
+fun DomainFrame.asDbFrame(): DbFrame {
     return DbFrame(
         frameId = frameId,
         frameMax = frameMax

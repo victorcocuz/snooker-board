@@ -10,7 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.GridLayoutManager
-import com.quickpoint.snookerboard.GenericEventsViewModel
+import com.quickpoint.snookerboard.DialogViewModel
 import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentDialogFoulBinding
@@ -22,7 +22,7 @@ import com.quickpoint.snookerboard.utils.*
 import java.util.*
 
 class GameFoulDialogFragment : DialogFragment() {
-    private val genericEventsViewModel: GenericEventsViewModel by activityViewModels()
+    private val dialogViewModel: DialogViewModel by activityViewModels()
     private val matchViewModel: MatchViewModel by activityViewModels()
     private lateinit var matchAction: MatchAction
 
@@ -37,7 +37,7 @@ class GameFoulDialogFragment : DialogFragment() {
 
         // Bind RV, VM, adapter
         val ballAdapter = BallAdapter(
-            BallListener { ball -> genericEventsViewModel.onBallClicked(ball) },
+            BallListener { ball -> dialogViewModel.onBallClicked(ball) },
             MutableLiveData(),
             BallAdapterType.FOUL
         )
@@ -46,25 +46,28 @@ class GameFoulDialogFragment : DialogFragment() {
         binding.apply {
             lifecycleOwner = this@GameFoulDialogFragment
             varMatchViewModel = this@GameFoulDialogFragment.matchViewModel
-            varEventsViewModel = this@GameFoulDialogFragment.genericEventsViewModel
+            varEventsViewModel = this@GameFoulDialogFragment.dialogViewModel
             foulBallsListRv.apply {
                 layoutManager = GridLayoutManager(activity, 4)
                 adapter = ballAdapter
             }
         }
 
-        // VM Observers
-        genericEventsViewModel.apply {
-            eventMatchActionDialog.observe(viewLifecycleOwner, EventObserver {
-                if (it == MatchAction.FOUL_QUERIED) {
-                    if (foulIsValid()) {
-                        matchAction = MatchAction.FOUL_CONFIRMED
+        // Observers
+        dialogViewModel.apply {
+            eventDialogAction.observe(viewLifecycleOwner, EventObserver {
+                when (it) {
+                    MatchAction.FOUL_QUERY -> {
+                        if (foulIsValid()) {
+                            matchAction = MatchAction.FOUL_CONFIRM
+                            dismiss()
+                        } else requireContext().toast(getString(R.string.toast_foul_invalid))
+                    }
+                    else -> {
+                        dialogViewModel.resetFoul()
+                        matchAction = it
                         dismiss()
-                    } else requireContext().toast(getString(R.string.toast_foul_invalid))
-                } else {
-                    genericEventsViewModel.resetFoul()
-                    matchAction = MatchAction.NO_ACTION
-                    dismiss()
+                    }
                 }
             })
         }
@@ -73,10 +76,10 @@ class GameFoulDialogFragment : DialogFragment() {
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        genericEventsViewModel.resetFoul()
+        dialogViewModel.resetFoul()
     }
 
-    override fun onDestroy() {
+    override fun onDestroy() { // Pass match action to view model
         super.onDestroy()
         if (this::matchAction.isInitialized) matchViewModel.assignEventMatchAction(matchAction)
     }

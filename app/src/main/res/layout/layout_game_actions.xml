@@ -9,10 +9,6 @@
         <import type="com.quickpoint.snookerboard.utils.MatchAction" />
 
         <variable
-            name="varGenericEventsViewModel"
-            type="com.quickpoint.snookerboard.GenericEventsViewModel" />
-
-        <variable
             name="varMatchViewModel"
             type="com.quickpoint.snookerboard.MatchViewModel" />
 
@@ -84,7 +80,7 @@
             android:id="@+id/game_btn_act_foul"
             style="@style/ButtonStretched"
             android:layout_width="0dp"
-            android:onClick="@{() -> varMatchViewModel.assignEventMatchAction(MatchAction.FOUL_DIALOG_QUERIED)}"
+            android:onClick="@{() -> varMatchViewModel.assignEventMatchAction(MatchAction.DIALOG_FOUL)}"
             android:text="@string/action_foul"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toEndOf="parent"

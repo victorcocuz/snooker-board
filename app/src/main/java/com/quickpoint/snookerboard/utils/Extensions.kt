@@ -19,6 +19,7 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.quickpoint.snookerboard.R
+import timber.log.Timber
 
 // General
 fun Context.toast(message: CharSequence) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
@@ -40,6 +41,7 @@ fun Application.getSharedPref(): SharedPreferences = getSharedPreferences(
 
 fun SharedPreferences.setMatchInProgress(isInProgress: Boolean) {
     this.edit().putBoolean("isMatchInProgress", isInProgress).apply()
+    Timber.i("setMatchInProgress() $isInProgress")
 }
 
 fun SharedPreferences.isMatchInProgress() = this.getBoolean("isMatchInProgress", false)

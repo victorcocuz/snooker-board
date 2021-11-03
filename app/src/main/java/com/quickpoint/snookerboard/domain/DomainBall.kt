@@ -42,6 +42,7 @@ sealed class DomainBall(
     }
 }
 
+// CONVERTER method from values to DOMAIN Ball
 fun getBallFromValues(position: Int, points: Int, foul: Int) : DomainBall { // Return a DOMAIN ball from a list of values
     return when(position) {
         0 -> DomainBall.NOBALL(points, foul)
@@ -57,3 +58,26 @@ fun getBallFromValues(position: Int, points: Int, foul: Int) : DomainBall { // R
         else -> DomainBall.FREEBALL()
     }
 }
+
+// Helpers
+fun MutableList<DomainBall>.inColors(): Boolean = this.size <= 7
+fun MutableList<DomainBall>.isNextColor(): Boolean = this.size in (7..37).filter { it % 2 != 0 }
+fun MutableList<DomainBall>.removeBalls(times: Int): Int = if (times == 1) {
+    this.removeLast().points
+} else {
+    repeat(times) { this.removeLast() }
+    8
+}
+fun MutableList<DomainBall>.addBalls(vararg balls: DomainBall) {
+    for (ball in balls) this.add(ball)
+}
+fun MutableList<DomainBall>.addFreeBall(): Int {
+    return if (inColors()) {
+        addBalls(DomainBall.FREEBALL())
+        last().points
+    } else {
+        addBalls(DomainBall.COLOR(), DomainBall.FREEBALL())
+        8
+    }
+}
+fun MutableList<DomainBall>.removeFreeBall(): Int = if (inColors()) removeBalls(1) else removeBalls(2)

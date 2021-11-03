@@ -1,5 +1,7 @@
 package com.quickpoint.snookerboard.domain
 
+import kotlin.math.max
+
 // Keeps a dynamic live score for both players
 sealed class CurrentPlayer(
     var frameId: Int,
@@ -48,7 +50,7 @@ sealed class CurrentPlayer(
 
     fun getWinner() = if (this.framePoints > this.getOther().framePoints) this else this.getOther()
 
-    fun isWinningTheMatch(matchFrames: Int) = this.getWinner().matchPoints + 1 == matchFrames
+    fun isMatchEnding(matchFrames: Int) = this.getWinner().matchPoints + 1 == matchFrames
 
     fun isFrameEqual() = this.framePoints == this.getOther().framePoints
 
@@ -98,6 +100,30 @@ sealed class CurrentPlayer(
     fun resetMatchScore() {
         this.matchPoints = 0
         this.frameId = 0
+    }
+
+    // Polarity is used to reverse score on undo
+    fun calculatePoints(pot: DomainPot, pol: Int, lastBall: DomainBall, matchFoul: Int, frameStack: MutableList<DomainBreak>) {
+        val points: Int
+        when (pot.potType) {
+            in listOf(PotType.HIT, PotType.FREE, PotType.ADDRED) -> {
+                points = if (pot.potType == PotType.FREE) lastBall.points else pot.ball.points
+                addFramePoints(pol * points)
+                pot.ball.setCustomPointValue(points)
+                addSuccessShots(pol)
+            }
+            PotType.FOUL -> {
+                points = matchFoul + if (pot.ball is DomainBall.WHITE) max(lastBall.foul, 4) else pot.ball.foul
+                pot.ball.setCustomFoulValue(points)
+                getOther().addFramePoints(pol * points)
+                addMissedShots(pol)
+                addFouls(pol)
+            }
+            PotType.MISS -> addMissedShots(pol)
+            else -> {
+            }
+        }
+        findMaxBreak(frameStack)
     }
 }
 

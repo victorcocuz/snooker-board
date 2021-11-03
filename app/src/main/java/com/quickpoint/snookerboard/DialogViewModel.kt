@@ -8,22 +8,13 @@ import com.quickpoint.snookerboard.domain.DomainPot
 import com.quickpoint.snookerboard.domain.PotAction
 import com.quickpoint.snookerboard.utils.Event
 import com.quickpoint.snookerboard.utils.MatchAction
-import timber.log.Timber
 
-class GenericEventsViewModel : ViewModel() {
+class DialogViewModel : ViewModel() {
     // Dialog events must be observed separately to allow to close dialog window before taking action
-    private val _eventMatchActionDialog = MutableLiveData<Event<MatchAction>>()
-    val eventMatchActionDialog: LiveData<Event<MatchAction>> = _eventMatchActionDialog
-    fun assignEventMatchActionDialog(matchAction: MatchAction) {
-        _eventMatchActionDialog.value = Event(matchAction)
-    }
-
-    // Default match actions
-    private val _eventGeneralAction = MutableLiveData<Event<MatchAction>>()
-    val eventGeneralAction: LiveData<Event<MatchAction>> = _eventGeneralAction
-    fun assignEventGeneralAction(matchAction: MatchAction) {
-        Timber.e("Action confirmed $matchAction")
-        _eventGeneralAction.value = Event(matchAction)
+    private val _eventDialogAction = MutableLiveData<Event<MatchAction>>()
+    val eventDialogAction: LiveData<Event<MatchAction>> = _eventDialogAction
+    fun assignEventDialogAction(matchAction: MatchAction) {
+        _eventDialogAction.value = Event(matchAction)
     }
 
     // Foul Dialog observables and helpers
