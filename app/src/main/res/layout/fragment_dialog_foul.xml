@@ -184,7 +184,7 @@
             style="@style/ButtonNarrow"
             android:layout_width="wrap_content"
             android:layout_marginEnd="@dimen/margin_layout_offset"
-            android:onClick="@{() -> varEventsViewModel.assignEventDialogAction(MatchAction.NO_ACTION)}"
+            android:onClick="@{() -> varEventsViewModel.assignEventDialogAction(MatchAction.CLOSE_DIALOG)}"
             android:text="@string/f_foul_cancel"
             app:layout_constraintBottom_toBottomOf="@+id/foul_ok"
             app:layout_constraintEnd_toStartOf="@+id/foul_ok" />

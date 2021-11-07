@@ -26,10 +26,11 @@ fun DomainBreak.asDbPot(breakId: Long): List<DbPot> {
 
 // Helper methods
 fun MutableList<DomainBreak>.isPreviousRed() = this.lastOrNull()?.pots?.lastOrNull()?.ball is DomainBall.RED
+
 fun MutableList<DomainBreak>.addToFrameStack(pot: DomainPot, playerAsInt: Int, frameCount: Int) {
     if (pot.potType !in listOf(PotType.HIT, PotType.FREE, PotType.ADDRED)
-        || this.size == 0
         || this.last().pots.last().potType !in listOf(PotType.HIT, PotType.FREE, PotType.ADDRED)
+        || this.size == 0
         || this.last().player != playerAsInt
     ) this.add(
         DomainBreak(
@@ -51,10 +52,11 @@ fun MutableList<DomainBreak>.removeFromFrameStack(): DomainPot {
     return crtPot
 }
 
+// Create a list of pots which are relevant to show within the break rv (SAFE, MISS, REMOVERED are not shown)
 fun MutableList<DomainBreak>.getDisplayShots(): MutableList<DomainBreak> {
     val list = mutableListOf<DomainBreak>()
     this.forEach {
-        if (it.pots.last().potType in listOf(PotType.HIT, PotType.ADDRED, PotType.FREE, PotType.FOUL)
+        if (it.pots.last().potType in listOf(PotType.HIT, PotType.FREE, PotType.FOUL, PotType.ADDRED)
             && it.pots.last().ball != DomainBall.NOBALL()
         ) {
             list.add(it.copy())

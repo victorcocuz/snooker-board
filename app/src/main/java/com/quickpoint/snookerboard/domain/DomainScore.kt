@@ -58,7 +58,7 @@ sealed class CurrentPlayer(
 
     fun isFrameInProgress() = (this.framePoints + this.getOther().framePoints > 0)
 
-    fun isMatchInProgress() = this.framePoints + this.matchPoints + this.getOther().framePoints + this.getOther().matchPoints > 0
+    fun hasMatchStarted() = this.framePoints + this.matchPoints + this.getOther().framePoints + this.getOther().matchPoints > 0
 
     fun addFramePoints(points: Int) {
         this.framePoints += points

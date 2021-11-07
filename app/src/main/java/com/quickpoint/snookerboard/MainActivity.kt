@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         activityScope.launch {
             if (::matchViewModel.isInitialized && getSharedPref().getBoolean(getString(R.string.sp_match_is_in_progress), false)) {
-                matchViewModel.saveMatch()
+                matchViewModel.autoSaveMatch()
             }
         }
         super.onSaveInstanceState(outState)

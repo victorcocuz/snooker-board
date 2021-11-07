@@ -67,7 +67,7 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                             findNavController().navigate(
                                 PlayFragmentDirections.actionPlayFragmentToGameGenericDialogFragment(
                                     MatchAction.MATCH_START,
-                                    MatchAction.NO_ACTION,
+                                    MatchAction.CLOSE_DIALOG,
                                     MatchAction.MATCH_LOAD
                                 )
                             )

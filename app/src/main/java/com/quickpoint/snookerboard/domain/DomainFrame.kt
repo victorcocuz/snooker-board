@@ -32,6 +32,18 @@ fun DomainFrame.asDbFrame(): DbFrame {
     )
 }
 
+// CONVERTER method from DOMAIN Frame a list of DATABASE Balls
+fun DomainFrame.asDbBallStack(): List<DbBall> {
+    return ballStack.map { ball ->
+        DbBall(
+            frameId = frameId,
+            ballValue = ball.getBallOrdinal(),
+            ballPoints = ball.points,
+            ballFoul = ball.foul
+        )
+    }
+}
+
 // CONVERTER method from DOMAIN frame to a list of DATABASE Score
 fun DomainFrame.asDbCrtScore(): List<DbScore> {
     return frameScore.map { playerScore ->
@@ -44,18 +56,6 @@ fun DomainFrame.asDbCrtScore(): List<DbScore> {
             missedShots = playerScore.missedShots,
             fouls = playerScore.fouls,
             highestBreak = playerScore.highestBreak
-        )
-    }
-}
-
-// CONVERTER method from DOMAIN Frame a list of DATABASE Balls
-fun DomainFrame.asDbBallStack(): List<DbBall> {
-    return ballStack.map { ball ->
-        DbBall(
-            frameId = frameId,
-            ballValue = ball.getBallOrdinal(),
-            ballPoints = ball.points,
-            ballFoul = ball.foul
         )
     }
 }

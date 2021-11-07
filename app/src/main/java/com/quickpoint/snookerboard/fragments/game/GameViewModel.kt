@@ -11,7 +11,7 @@ import com.quickpoint.snookerboard.utils.FrameEvent
 import com.quickpoint.snookerboard.utils.MatchAction
 import timber.log.Timber
 
-class GameViewModel: ViewModel() {
+class GameViewModel : ViewModel() {
 
     // Observables
     private val _eventGameAction = MutableLiveData<Event<MatchAction>>()
@@ -29,7 +29,7 @@ class GameViewModel: ViewModel() {
     var frameStack: MutableList<DomainBreak> = mutableListOf()
     var rules = DomainMatchInfo.RULES
 
-    fun loadMatchPartBLoadFrame(frame: DomainFrame?) = frame?.let { // Will load latest frame once observed from play fragment
+    fun loadMatchBLoadFrame(frame: DomainFrame?) = frame?.let { // Will load latest frame once observed from play fragment
         Timber.i("loadMatchPartBLoadFrame()")
         player = it.frameScore.asCurrentScore() ?: player
         frameStack = it.frameStack
@@ -76,7 +76,7 @@ class GameViewModel: ViewModel() {
             when (pot.potType) {
                 in listOf(HIT, FREE, ADDRED) -> DomainPot.HIT(pot.ball)
                 FOUL -> DomainPot.FOUL(pot.ball, pot.potAction)
-                else -> pot
+                else -> pot // For SAFE, MISS, REMOVERED
             },
             player.getPlayerAsInt(),
             rules.frameCount
@@ -85,12 +85,14 @@ class GameViewModel: ViewModel() {
         when (pot.potType) {
             in listOf(HIT, FREE) -> removeBalls(1)
             in listOf(REMOVERED, ADDRED) -> removeBalls(2)
-            else -> {
+            in listOf(SAFE, MISS, FOUL) -> {
                 if (last() is FREEBALL) {
                     frameStack.addToFrameStack(DomainPot.FREEMISS, player.getPlayerAsInt(), rules.frameCount)
                     rules.frameMax -= removeFreeBall()
                 }
                 if (last() is COLOR) removeBalls(1)
+            }
+            else -> {
             }
         }
         if (size == 1) if (player.isFrameEqual()) addBalls(BLACK()) // Query end frame exception; see fragment
@@ -109,7 +111,7 @@ class GameViewModel: ViewModel() {
                 handleUndo()
             }
             REMOVERED -> {
-                if (last() is FREEBALL) removeBalls(if (inColors()) 1 else 2)
+                if (last() is FREEBALL) removeBalls(if (isInColors()) 1 else 2)
                 if (isNextColor()) addBalls(COLOR(), RED()) else addBalls(RED(), COLOR())
                 handleUndo()
             }

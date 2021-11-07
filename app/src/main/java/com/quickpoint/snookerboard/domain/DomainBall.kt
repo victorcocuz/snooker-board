@@ -60,7 +60,7 @@ fun getBallFromValues(position: Int, points: Int, foul: Int) : DomainBall { // R
 }
 
 // Helpers
-fun MutableList<DomainBall>.inColors(): Boolean = this.size <= 7
+fun MutableList<DomainBall>.isInColors(): Boolean = this.size <= 7
 fun MutableList<DomainBall>.isNextColor(): Boolean = this.size in (7..37).filter { it % 2 != 0 }
 fun MutableList<DomainBall>.removeBalls(times: Int): Int = if (times == 1) {
     this.removeLast().points
@@ -72,7 +72,7 @@ fun MutableList<DomainBall>.addBalls(vararg balls: DomainBall) {
     for (ball in balls) this.add(ball)
 }
 fun MutableList<DomainBall>.addFreeBall(): Int {
-    return if (inColors()) {
+    return if (isInColors()) {
         addBalls(DomainBall.FREEBALL())
         last().points
     } else {
@@ -80,4 +80,4 @@ fun MutableList<DomainBall>.addFreeBall(): Int {
         8
     }
 }
-fun MutableList<DomainBall>.removeFreeBall(): Int = if (inColors()) removeBalls(1) else removeBalls(2)
+fun MutableList<DomainBall>.removeFreeBall(): Int = if (isInColors()) removeBalls(1) else removeBalls(2)

@@ -103,7 +103,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
         GameFragmentArgs.fromBundle(requireArguments()).apply {
             Timber.i("Init: start match as $matchAction")
             when (matchAction) {
-                MatchAction.MATCH_LOAD -> matchViewModel.loadMatchPartAPointToCurrentFrame()
+                MatchAction.MATCH_LOAD -> matchViewModel.loadMatchAPointToCrtFrame()
                 MatchAction.MATCH_START -> {
                     matchViewModel.startNewMatch(
                         matchNameFirstA, matchNameFirstB, matchNameLastA, matchNameLastB,
@@ -146,8 +146,8 @@ class GameFragment : androidx.fragment.app.Fragment() {
         }
         matchViewModel.apply {
             crtFrame.observe(viewLifecycleOwner, { crtFrame -> // Load mach once frame is pointing correctly
-                gameViewModel.loadMatchPartBLoadFrame(crtFrame?.asDomainFrame())
-                loadMatchPartCDeleteCurrentFrame()
+                gameViewModel.loadMatchBLoadFrame(crtFrame?.asDomainFrame())
+                loadMatchCDeleteCrtFrame()
             })
             displayFrame.observe(viewLifecycleOwner, { domainFrame -> // Query end frame if last ball has been potted
                 if (domainFrame.isLastBall() && !player.isFrameEqual()) matchViewModel.assignEventMatchAction(MatchAction.FRAME_END_QUERY)
@@ -164,8 +164,8 @@ class GameFragment : androidx.fragment.app.Fragment() {
                     }
                     in listOf(MatchAction.FRAME_END_QUERY, MatchAction.MATCH_END_QUERY) -> findNavController().navigate(
                         GameFragmentDirections.actionGameFragmentToGameGenericDialogFragment(
-                            MatchAction.NO_ACTION,
-                            if (queryEndFrameOrMatch(matchAction) == MatchAction.MATCH_TO_END) MatchAction.MATCH_ENDED_DISCARD_FRAME else MatchAction.NO_ACTION,
+                            MatchAction.CLOSE_DIALOG,
+                            if (queryEndFrameOrMatch(matchAction) == MatchAction.MATCH_TO_END) MatchAction.MATCH_ENDED_DISCARD_FRAME else MatchAction.CLOSE_DIALOG,
                             queryEndFrameOrMatch(matchAction)
                         )
                     )
@@ -202,7 +202,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 gameFragmentScope.launch {
-                    matchViewModel.saveMatch()
+                    matchViewModel.autoSaveMatch()
                 }
                 findNavController().navigate(GameFragmentDirections.actionGameFragmentToPlayFragment())
             }

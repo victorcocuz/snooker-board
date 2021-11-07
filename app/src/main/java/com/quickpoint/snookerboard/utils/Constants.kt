@@ -35,6 +35,6 @@ enum class MatchAction {
     INFO_FOUL, // On clicking the info foul button on the rules screen, it will open a generic dialog
 
     // Redundant Actions
-    NO_ACTION, // Used when the action is to continue current state
+    CLOSE_DIALOG, // Used when the action is to continue current state
     IGNORE // Used when action should not be shown
 }

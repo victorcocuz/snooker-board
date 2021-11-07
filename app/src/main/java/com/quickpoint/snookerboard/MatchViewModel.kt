@@ -82,7 +82,7 @@ class MatchViewModel(
         sharedPref.setMatchInProgress(true)
     }
 
-    fun loadMatchPartAPointToCurrentFrame() { // When actioned from main menu, to load a game
+    fun loadMatchAPointToCrtFrame() { // When actioned from main menu, to load a game
         Timber.i("loadMatchPartAPointToCurrentFrame()")
         viewModelScope.launch {
             snookerRepository.searchByCount(sharedPref.getInt(app.resources.getString(R.string.sp_match_frame_count), 0))
@@ -91,7 +91,7 @@ class MatchViewModel(
     }
 
     // Game Fragment actions
-    fun  loadMatchPartCDeleteCurrentFrame() { // After loading the game, will delete the current frame from the db
+    fun  loadMatchCDeleteCrtFrame() { // After loading the game, will delete the current frame from the db
         Timber.i("loadMatchPartCDeleteCurrentFrame()")
         viewModelScope.launch {
             snookerRepository.deleteCurrentFrame(sharedPref.getInt(app.resources.getString(R.string.sp_match_frame_count), 0))
@@ -105,9 +105,9 @@ class MatchViewModel(
         sharedPref.setMatchInProgress(false)
     }
 
-    suspend fun saveMatch() { // TWhen the back button is pressed or when instance state is saved
+    suspend fun autoSaveMatch() { // TWhen the back button is pressed or when instance state is saved
         Timber.i("saveMatch()")
-        if (player.isMatchInProgress()) {
+        if (player.hasMatchStarted()) {
             snookerRepository.saveCurrentFrame(displayFrame.value!!)
             sharedPref.edit().apply {
                 app.resources.apply {
@@ -189,7 +189,7 @@ class MatchViewModel(
     }
 
     private fun nominatePlayerAtTable() { // With every new frame switch players, else, if match just started, get the player as selected
-        if (player.isMatchInProgress()) rules.switchPlayers() // Will switch between 0 and 1
+        if (player.hasMatchStarted()) rules.switchPlayers() // Will switch between 0 and 1
         player = player.getPlayerFromInt(rules.first)
         Timber.i("nominatePlayerAtTable(): Player ${player.getPlayerAsInt()}")
     }
