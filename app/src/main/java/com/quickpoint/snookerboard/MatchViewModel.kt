@@ -91,7 +91,7 @@ class MatchViewModel(
     }
 
     // Game Fragment actions
-    fun loadMatchPartCDeleteCurrentFrame() { // After loading the game, will delete the current frame from the db
+    fun  loadMatchPartCDeleteCurrentFrame() { // After loading the game, will delete the current frame from the db
         Timber.i("loadMatchPartCDeleteCurrentFrame()")
         viewModelScope.launch {
             snookerRepository.deleteCurrentFrame(sharedPref.getInt(app.resources.getString(R.string.sp_match_frame_count), 0))

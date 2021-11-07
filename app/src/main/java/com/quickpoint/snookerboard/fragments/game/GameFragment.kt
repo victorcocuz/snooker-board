@@ -6,6 +6,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.quickpoint.snookerboard.DialogViewModel
@@ -25,7 +26,7 @@ import java.util.*
 
 class GameFragment : androidx.fragment.app.Fragment() {
     private val gameFragmentScope = CoroutineScope(Dispatchers.Default)
-    private val gameViewModel: GameViewModel by activityViewModels()
+    private val gameViewModel: GameViewModel by viewModels()
     private val dialogsViewModel: DialogViewModel by activityViewModels()
     private val matchViewModel: MatchViewModel by activityViewModels()
     private lateinit var ballAdapter: BallAdapter
@@ -46,26 +47,6 @@ class GameFragment : androidx.fragment.app.Fragment() {
             matchViewModel.displayFrame,
             BallAdapterType.MATCH
         )
-
-        // Start or load match
-        GameFragmentArgs.fromBundle(requireArguments()).apply {
-            Timber.i("Init: start match as $matchAction")
-            when (matchAction) {
-                MatchAction.MATCH_START -> {
-                    matchViewModel.startNewMatch(
-                        matchNameFirstA, matchNameFirstB, matchNameLastA, matchNameLastB,
-                        matchFrames,
-                        matchReds,
-                        matchFoul,
-                        matchFirst
-                    )
-                    gameViewModel.resetFrame()
-                }
-                MatchAction.MATCH_LOAD -> matchViewModel.loadMatchPartAPointToCurrentFrame()
-                else -> {
-                }
-            }
-        }
 
         // Bind all required elements from the view
         binding.apply {
@@ -118,6 +99,26 @@ class GameFragment : androidx.fragment.app.Fragment() {
             }
         }
 
+        // Start or load match
+        GameFragmentArgs.fromBundle(requireArguments()).apply {
+            Timber.i("Init: start match as $matchAction")
+            when (matchAction) {
+                MatchAction.MATCH_LOAD -> matchViewModel.loadMatchPartAPointToCurrentFrame()
+                MatchAction.MATCH_START -> {
+                    matchViewModel.startNewMatch(
+                        matchNameFirstA, matchNameFirstB, matchNameLastA, matchNameLastB,
+                        matchFrames,
+                        matchReds,
+                        matchFoul,
+                        matchFirst
+                    )
+                    gameViewModel.resetFrame()
+                }
+                else -> {
+                }
+            }
+        }
+
         // VM Observers
         gameViewModel.apply {
             eventGameAction.observe(viewLifecycleOwner, EventObserver {
@@ -154,11 +155,11 @@ class GameFragment : androidx.fragment.app.Fragment() {
             eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                 Timber.i("Observed eventMatchAction: $matchAction")
                 when (matchAction) {
-                    MatchAction.FRAME_RESET -> {
-                        gameViewModel.resetFrame()
-                    }
                     MatchAction.MATCH_CANCEL -> { // On a match cancel, cancel match and go back to play fragment
                         findNavController().navigate(GameFragmentDirections.actionGameFragmentToPlayFragment())
+                        gameViewModel.resetFrame()
+                    }
+                    MatchAction.FRAME_RESET -> {
                         gameViewModel.resetFrame()
                     }
                     in listOf(MatchAction.FRAME_END_QUERY, MatchAction.MATCH_END_QUERY) -> findNavController().navigate(

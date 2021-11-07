@@ -9,7 +9,7 @@
 
         <variable
             name="varPlayViewModel"
-            type="com.quickpoint.snookerboard.fragments.play.PlayFragmentViewModel" />
+            type="com.quickpoint.snookerboard.fragments.play.PlayViewModel" />
 
         <variable
             name="varMatchViewModel"

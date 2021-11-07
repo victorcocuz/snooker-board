@@ -1,5 +1,7 @@
 package com.quickpoint.snookerboard.domain
 
+import com.quickpoint.snookerboard.utils.FrameEvent
+
 // Classes that define all pot types and pot actions
 enum class PotType { HIT, FREE, SAFE, MISS, FOUL, REMOVERED, ADDRED }
 enum class PotAction { CONTINUE, SWITCH }
@@ -18,3 +20,10 @@ sealed class DomainPot(
     object REMOVERED : DomainPot(DomainBall.NOBALL(), PotType.REMOVERED, PotAction.CONTINUE) // Static action for removing a red ball
     object ADDRED : DomainPot(DomainBall.RED(), PotType.ADDRED, PotAction.CONTINUE) // Static action for adding a red ball (i.e. when more than one red is sunk at once)
 }
+
+data class DomainPotEvent(
+    val frameEvent: FrameEvent,
+    val pot: DomainPot,
+    val removeRed: Boolean,
+    val freeBall: Boolean
+)

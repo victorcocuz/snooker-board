@@ -21,7 +21,7 @@ import com.quickpoint.snookerboard.fragments.game.BallListener
 import com.quickpoint.snookerboard.utils.*
 import java.util.*
 
-class GameFoulDialogFragment : DialogFragment() {
+class FoulDialogFragment : DialogFragment() {
     private val dialogViewModel: DialogViewModel by activityViewModels()
     private val matchViewModel: MatchViewModel by activityViewModels()
     private lateinit var matchAction: MatchAction
@@ -44,9 +44,9 @@ class GameFoulDialogFragment : DialogFragment() {
 
         // Bind all required elements from the view
         binding.apply {
-            lifecycleOwner = this@GameFoulDialogFragment
-            varMatchViewModel = this@GameFoulDialogFragment.matchViewModel
-            varEventsViewModel = this@GameFoulDialogFragment.dialogViewModel
+            lifecycleOwner = this@FoulDialogFragment
+            varMatchViewModel = this@FoulDialogFragment.matchViewModel
+            varEventsViewModel = this@FoulDialogFragment.dialogViewModel
             foulBallsListRv.apply {
                 layoutManager = GridLayoutManager(activity, 4)
                 adapter = ballAdapter

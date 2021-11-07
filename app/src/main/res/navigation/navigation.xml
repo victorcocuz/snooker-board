@@ -109,7 +109,7 @@
     </fragment>
     <dialog
         android:id="@+id/gameGenericDialogFragment"
-        android:name="com.quickpoint.snookerboard.fragments.gamedialogs.GameGenericDialogFragment"
+        android:name="com.quickpoint.snookerboard.fragments.gamedialogs.GenericDialogFragment"
         android:label="GameGenericDialogFragment" >
         <argument
             android:name="matchActionA"
@@ -123,6 +123,6 @@
     </dialog>
     <dialog
         android:id="@+id/gameFoulDialogFragment"
-        android:name="com.quickpoint.snookerboard.fragments.gamedialogs.GameFoulDialogFragment"
+        android:name="com.quickpoint.snookerboard.fragments.gamedialogs.FoulDialogFragment"
         android:label="GameFoulDialogFragment" />
 </navigation>

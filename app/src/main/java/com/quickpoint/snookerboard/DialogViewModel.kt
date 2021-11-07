@@ -44,6 +44,12 @@ class DialogViewModel : ViewModel() {
 
     fun foulIsValid() = _ballClicked.value != null && actionClicked.value != null
     fun getFoul() = DomainPot.FOUL(_ballClicked.value!!, actionClicked.value!!)
+//    fun getFoul() = DomainPotEvent(
+//    FrameEvent.HANDLE_FOUL,
+//    DomainPot.FOUL(_ballClicked.value!!, actionClicked.value!!),
+//    _isRemoveRed.value!!,
+//    _isFreeBall.value!!
+//    )
     fun resetFoul() {
         _actionClicked.value = null
         _ballClicked.value = null

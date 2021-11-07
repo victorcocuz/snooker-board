@@ -16,7 +16,7 @@ import com.quickpoint.snookerboard.utils.*
 
 class PlayFragment : androidx.fragment.app.Fragment() {
     // Variables
-    private val playViewModel: PlayFragmentViewModel by viewModels()
+    private val playViewModel: PlayViewModel by viewModels()
     private val matchViewModel: MatchViewModel by activityViewModels()
     private lateinit var sharedPref: SharedPreferences
 

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class PlayFragmentViewModel: ViewModel() {
+class PlayViewModel: ViewModel() {
     // Live Data
     private val _eventFrames = MutableLiveData<Int>()
     val eventFrames: LiveData<Int> = _eventFrames

@@ -14,7 +14,7 @@ import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.setLayoutSizeByFactor
 
 
-class GameGenericDialogFragment : DialogFragment() {
+class GenericDialogFragment : DialogFragment() {
     private val dialogViewModel: DialogViewModel by activityViewModels()
     private val matchViewModel: MatchViewModel by activityViewModels()
     private lateinit var matchAction: MatchAction
@@ -33,15 +33,15 @@ class GameGenericDialogFragment : DialogFragment() {
 
         // Bind all required elements from the view
         binding.apply {
-            lifecycleOwner = this@GameGenericDialogFragment
+            lifecycleOwner = this@GenericDialogFragment
             varGenericEventsViewModel = dialogViewModel
-            varMatchViewModel = this@GameGenericDialogFragment.matchViewModel
-            GameGenericDialogFragmentArgs.fromBundle(requireArguments()).apply {
+            varMatchViewModel = this@GenericDialogFragment.matchViewModel
+            GenericDialogFragmentArgs.fromBundle(requireArguments()).apply {
                 varDialogMatchActionA = matchActionA
                 varDialogMatchActionB = matchActionB
                 varDialogMatchActionC = matchActionC
                 if (varDialogMatchActionC in listOf(MatchAction.MATCH_ENDED, MatchAction.FRAME_ENDED)) {
-                    this@GameGenericDialogFragment.isCancelable = false // Action must be taken if game or match are ended
+                    this@GenericDialogFragment.isCancelable = false // Action must be taken if game or match are ended
                 }
             }
         }
