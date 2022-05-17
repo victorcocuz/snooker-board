@@ -1,6 +1,5 @@
 package com.quickpoint.snookerboard.network
 
-import com.quickpoint.snookerboard.database.DatabaseRanking
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -21,12 +20,12 @@ data class NetworkPlayer(
     @Json(name = "LastName") val lastName: String,
 )
 
-fun NetworkRankingContainer.asDatabaseModel(listPlayers: List<NetworkPlayer>): Array<DatabaseRanking> {
-    return rankings.map { networkRanking ->
-        DatabaseRanking(
-            position = networkRanking.position,
-            name = listPlayers.find { it.id == networkRanking.id }?.firstName + " " + listPlayers.find { it.id == networkRanking.id }?.lastName,
-            points = networkRanking.points
-        )
-    }.toTypedArray()
-}
+//fun NetworkRankingContainer.asDatabaseModel(listPlayers: List<NetworkPlayer>): Array<DatabaseRanking> {
+//    return rankings.map { networkRanking ->
+//        DatabaseRanking(
+//            position = networkRanking.position,
+//            name = listPlayers.find { it.id == networkRanking.id }?.firstName + " " + listPlayers.find { it.id == networkRanking.id }?.lastName,
+//            points = networkRanking.points
+//        )
+//    }.toTypedArray()
+//}

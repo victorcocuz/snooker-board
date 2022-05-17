@@ -15,7 +15,6 @@ import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentGameStatsBinding
 import com.quickpoint.snookerboard.domain.DomainPlayerScore
 import com.quickpoint.snookerboard.utils.*
-import kotlinx.android.synthetic.main.item_game_statistics_view.*
 
 class GameStatsFragment : Fragment() {
 

@@ -14,15 +14,15 @@ import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.database.asDomainFrame
 import com.quickpoint.snookerboard.databinding.FragmentGameBinding
-import com.quickpoint.snookerboard.domain.*
-import com.quickpoint.snookerboard.domain.DomainBall.*
+import com.quickpoint.snookerboard.domain.CurrentPlayer
+import com.quickpoint.snookerboard.domain.DomainFrame
+import com.quickpoint.snookerboard.domain.DomainPot
+import com.quickpoint.snookerboard.domain.asDomainPlayerScore
 import com.quickpoint.snookerboard.utils.*
-import kotlinx.android.synthetic.main.fragment_game_stats.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.*
 
 class GameFragment : androidx.fragment.app.Fragment() {
     private val gameFragmentScope = CoroutineScope(Dispatchers.Default)

@@ -7,7 +7,6 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [
-        DatabaseRanking::class,
         DbScore::class,
         DbBreak::class,
         DbPot::class,

@@ -1,19 +1,19 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'kotlin-android-extensions'
     id 'kotlin-kapt'    // Data binding
     id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.0"
-
+    compileSdkVersion 32
+    buildFeatures {
+        viewBinding true
+    }
     defaultConfig {
         applicationId "com.quickpoint.snookerboard"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 32
         versionCode 1
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
@@ -37,6 +37,7 @@ android {
     buildFeatures {
         dataBinding true
     }
+    namespace 'com.quickpoint.snookerboard'
     configurations.all {
         resolutionStrategy {
             force("org.antlr:antlr4-runtime:4.9.1")
@@ -47,7 +48,6 @@ android {
 
 dependencies {
     // Init
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$version_kotlin"
     implementation "androidx.core:core-ktx:$version_core"
     implementation "androidx.appcompat:appcompat:$version_appcompat"
     implementation "androidx.legacy:legacy-support-v4:$version_legacy_support"
@@ -75,15 +75,16 @@ dependencies {
     implementation "androidx.room:room-runtime:$version_room"
     implementation "androidx.room:room-ktx:$version_room"
     kapt "androidx.room:room-compiler:$version_room"
+    annotationProcessor "androidx.room:room-compiler:$version_room"
 
 
     // Work
-    implementation "android.arch.work:work-runtime-ktx:$version_work"
+    implementation "androidx.work:work-runtime-ktx:$version_work"
 
     // Others
     implementation "com.jakewharton.timber:timber:$version_timber" // Timber
-    implementation 'com.shawnlin:number-picker:2.4.12' // Number Picker
-    implementation 'com.google.code.gson:gson:2.8.6' // Gson
+    implementation 'io.github.ShawnLin013:number-picker:2.4.13' // Number Picker
+    implementation 'com.google.code.gson:gson:2.8.9' // Gson
 
     // Test Implementations
     testImplementation "junit:junit:$version_junit"
@@ -91,5 +92,5 @@ dependencies {
     // Android Test Implementations
     androidTestImplementation "androidx.test.ext:junit:$version_test_junit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$version_test_espresso_core"
-    annotationProcessor 'androidx.room:room-compiler:2.2.6'
+
 }

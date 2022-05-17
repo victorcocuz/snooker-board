@@ -29,8 +29,8 @@ fun MutableList<DomainBreak>.isPreviousRed() = this.lastOrNull()?.pots?.lastOrNu
 
 fun MutableList<DomainBreak>.addToFrameStack(pot: DomainPot, playerAsInt: Int, frameCount: Int) {
     if (pot.potType !in listOf(PotType.HIT, PotType.FREE, PotType.ADDRED)
-        || this.last().pots.last().potType !in listOf(PotType.HIT, PotType.FREE, PotType.ADDRED)
         || this.size == 0
+        || this.last().pots.last().potType !in listOf(PotType.HIT, PotType.FREE, PotType.ADDRED)
         || this.last().player != playerAsInt
     ) this.add(
         DomainBreak(
