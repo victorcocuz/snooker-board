@@ -84,7 +84,7 @@ dependencies {
     // Others
     implementation "com.jakewharton.timber:timber:$version_timber" // Timber
     implementation 'io.github.ShawnLin013:number-picker:2.4.13' // Number Picker
-    implementation 'com.google.code.gson:gson:2.8.9' // Gson
+    implementation 'com.google.code.gson:gson:2.9.1' // Gson
 
     // Test Implementations
     testImplementation "junit:junit:$version_junit"
