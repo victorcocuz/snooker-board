@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="varMatchViewModel"
             type="com.quickpoint.snookerboard.MatchViewModel" />
@@ -47,7 +46,7 @@
         <ScrollView
             android:id="@+id/frag_game_scroll_view"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/frag_game_layout_action_buttons"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -24,24 +24,25 @@ class SnookerApplication : Application() {
 
     companion object {
         private var instance: SnookerApplication? = null
-        private fun applicationContext(): Context {
-            return instance!!.applicationContext
-        }
+        private fun applicationContext(): Context = instance!!.applicationContext
         fun getSnookerRepository() = SnookerRepository(SnookerDatabase.getDatabase(applicationContext()))
     }
 
+    // Apply all plugins and setup delayed recurring work
     override fun onCreate() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())
-//        delayedInit()
+    //  delayedInit()
     }
 
+    // Create a delayed initialization within a coroutine to setup recurring work
     private fun delayedInit() {
         applicationScope.launch {
             setupRecurringWork()
         }
     }
 
+    // Within the recurring work, build a repeating request with given constraints to refresh the application
     private fun setupRecurringWork() {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.UNMETERED)
@@ -57,7 +58,7 @@ class SnookerApplication : Application() {
             .setConstraints(constraints)
             .build()
 
-        WorkManager.getInstance().enqueueUniquePeriodicWork(
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             RefreshDataWorker.WORK_NAME,
             ExistingPeriodicWorkPolicy.KEEP,
             repeatingRequest

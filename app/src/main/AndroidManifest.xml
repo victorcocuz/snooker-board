@@ -14,14 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SnookerScore"
         android:usesCleartextTraffic="true"
-        tools:ignore="UnusedAttribute">
-        <activity android:name="com.quickpoint.snookerboard.MainActivity"
+        tools:ignore="UnusedAttribute"
+        android:dataExtractionRules="@xml/data_extraction_rules">
+        <activity
+            android:name="com.quickpoint.snookerboard.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action
                     android:name="android.intent.action.MAIN"
                     android:screenOrientation="sensorPortrait" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

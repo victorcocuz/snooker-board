@@ -54,34 +54,6 @@ class MatchViewModel(
         )
     }
 
-    fun startNewMatch(
-        nameFirstA: String?,
-        nameLastA: String?,
-        nameFirstB: String?,
-        nameLastB: String?,
-        matchFrames: Int,
-        matchReds: Int,
-        matchFoul: Int,
-        matchFirst: Int
-    ) { // When actioned from main menu
-        Timber.i("startNewMatch()")
-        sharedPref.edit().apply {
-            app.resources.apply {
-                putString(getString(R.string.sp_match_name_first_a), nameFirstA ?: "")
-                putString(getString(R.string.sp_match_name_last_a), nameLastA ?: "")
-                putString(getString(R.string.sp_match_name_first_b), nameFirstB ?: "")
-                putString(getString(R.string.sp_match_name_last_b), nameLastB ?: "")
-                putInt(getString(R.string.sp_match_frames), matchFrames)
-                putInt(getString(R.string.sp_match_reds), matchReds)
-                putInt(getString(R.string.sp_match_foul), matchFoul)
-                putInt(getString(R.string.sp_match_first), matchFirst)
-                apply()
-            }
-        }
-        resetMatch()
-        sharedPref.setMatchInProgress(true)
-    }
-
     fun loadMatchAPointToCrtFrame() { // When actioned from main menu, to load a game
         Timber.i("loadMatchPartAPointToCurrentFrame()")
         viewModelScope.launch {
@@ -96,6 +68,12 @@ class MatchViewModel(
         viewModelScope.launch {
             snookerRepository.deleteCurrentFrame(sharedPref.getInt(app.resources.getString(R.string.sp_match_frame_count), 0))
         }
+    }
+
+    fun startNewMatch() { // When actioned from main menu
+        Timber.i("startNewMatch()")
+        resetMatch()
+        sharedPref.setMatchInProgress(true)
     }
 
     fun cancelMatch() { // When actioned from options menu
@@ -143,17 +121,17 @@ class MatchViewModel(
         Timber.i("queryEndFrameOrMatch()")
         return if (player.isMatchEnding(rules.frames)) { // If the frame would push player to win, assign a MATCH ending action
             if (displayFrame.value!!.isFrameOver()) MatchAction.MATCH_ENDED
-            else MatchAction.MATCH_TO_END
+            else MatchAction.MATCH_TO_END_DIALOG
         } else when { // Else assign a match action for a MATCH end query or else assign a FRAME ending action
-            matchAction == MatchAction.MATCH_END_QUERY -> MatchAction.MATCH_TO_END
+            matchAction == MatchAction.MATCH_ENDED_DIALOG -> MatchAction.MATCH_TO_END_DIALOG
             displayFrame.value!!.isFrameOver() -> MatchAction.FRAME_ENDED
-            else -> MatchAction.FRAME_TO_END
+            else -> MatchAction.FRAME_TO_END_DIALOG
         }
     }
 
     fun matchEnded(matchAction: MatchAction) { // When the match ends, reset frame only so you can access the data for the stats screen - temp solution until firebase is created
         Timber.i("matchEnded()")
-        if (matchAction == MatchAction.MATCH_ENDED_DISCARD_FRAME) { // Discard or save current frame
+        if (matchAction == MatchAction.MATCH_ENDED_DISCARD_FRAME_DIALOG) { // Discard or save current frame
             assignEventMatchAction(MatchAction.FRAME_RESET)
         } else saveAndStartNewFrame() // TEMP - the last frame should be saved, but a new one should not be started
         sharedPref.setMatchInProgress(false)

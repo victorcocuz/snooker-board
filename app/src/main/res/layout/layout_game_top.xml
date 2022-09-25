@@ -5,11 +5,11 @@
 
     <data>
         <variable
-            name="varPlayerTagType"
-            type="com.quickpoint.snookerboard.utils.PlayerTagType" />
-        <variable
             name="varApplication"
             type="android.app.Application" />
+        <variable
+            name="varPlayerTagType"
+            type="com.quickpoint.snookerboard.utils.PlayerTagType" />
         <variable
             name="varMatchViewModel"
             type="com.quickpoint.snookerboard.MatchViewModel" />

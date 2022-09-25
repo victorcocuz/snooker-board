@@ -30,11 +30,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        // Generate the Game View Model from the get go; pass in the application and an instance of the snookerRepository
+        // Generate the Game View Model from the get go so it can be accessed readily accessed from all fragments when needed
+        // Pass in the application and an instance of the snookerRepository
         matchViewModel = ViewModelProvider(
             this,
             GenericViewModelFactory(this.application, this, null)
-        ).get(MatchViewModel::class.java)
+        )[MatchViewModel::class.java]
 
         // To be used when more fragments are needed
         //        binding.apply {

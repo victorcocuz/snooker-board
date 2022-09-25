@@ -144,12 +144,12 @@ fun TextView.setStatsTableStyle(type: Int) {
 fun TextView.setDialogGameGenLabel(matchAction: MatchAction) {
     text = when (matchAction) {
         MatchAction.MATCH_CANCEL -> "Cancel match"
-        MatchAction.FRAME_TO_END -> "Concede frame"
-        MatchAction.MATCH_TO_END -> "Concede match"
+        MatchAction.FRAME_TO_END_DIALOG -> "Concede frame"
+        MatchAction.MATCH_TO_END_DIALOG -> "Concede match"
         MatchAction.FRAME_ENDED -> "Frame ended"
         MatchAction.MATCH_ENDED -> "Match ended"
         MatchAction.MATCH_LOAD -> "Match in progress"
-        MatchAction.DIALOG_FOUL -> "Foul"
+        MatchAction.FOUL_DIALOG -> "Foul"
         else -> "$matchAction not implemented"
     }
 }
@@ -158,12 +158,12 @@ fun TextView.setDialogGameGenLabel(matchAction: MatchAction) {
 fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
     text = when (matchAction) {
         MatchAction.MATCH_CANCEL -> "Are you sure you want to cancel the current match? You will lose all match progress."
-        MatchAction.FRAME_TO_END -> "This frame is still in progress, are you sure you want to end it?"
-        MatchAction.MATCH_TO_END -> "This match is still in progress, are you sure you wan to end it?"
+        MatchAction.FRAME_TO_END_DIALOG -> "This frame is still in progress, are you sure you want to end it?"
+        MatchAction.MATCH_TO_END_DIALOG -> "This match is still in progress, are you sure you wan to end it?"
         MatchAction.FRAME_ENDED -> "This frame will end. Would you like to proceed?"
         MatchAction.MATCH_ENDED -> "This match will end. Would you like to proceed?"
         MatchAction.MATCH_LOAD -> "You have a match in progress, do you want to resume playing or start a new match?"
-        MatchAction.INFO_FOUL -> "A typical foul in snooker is worth 4 points. You may wish to decrease this value."
+        MatchAction.INFO_FOUL_DIALOG -> "A typical foul in snooker is worth 4 points. You may wish to decrease this value."
         else -> "$matchAction not implemented"
     }
 }
@@ -172,8 +172,8 @@ fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
 fun TextView.setDialogGameA(matchAction: MatchAction) {
     text = when (matchAction) {
         MatchAction.MATCH_CANCEL -> "No"
-        MatchAction.FRAME_TO_END -> "No"
-        MatchAction.MATCH_TO_END -> "No"
+        MatchAction.FRAME_TO_END_DIALOG -> "No"
+        MatchAction.MATCH_TO_END_DIALOG -> "No"
         MatchAction.FRAME_ENDED -> "No"
         MatchAction.MATCH_ENDED -> "No"
         MatchAction.MATCH_LOAD -> "Start New Match"
@@ -186,22 +186,22 @@ fun TextView.setDialogGameB(matchAction: MatchAction, score: CurrentPlayer?) {
     visibility = when {
         score == null -> View.GONE
         score.getFirst().matchPoints + score.getSecond().matchPoints == 0 -> View.GONE
-        matchAction == MatchAction.MATCH_ENDED_DISCARD_FRAME -> View.VISIBLE
+        matchAction == MatchAction.MATCH_ENDED_DISCARD_FRAME_DIALOG -> View.VISIBLE
         else -> View.GONE
     }
     text = when (matchAction) {
-        MatchAction.MATCH_ENDED_DISCARD_FRAME -> "Yes & Remove Frame"
+        MatchAction.MATCH_ENDED_DISCARD_FRAME_DIALOG -> "Yes & Remove Frame"
         else -> ""
     }
 }
 
 @BindingAdapter("dialogGameGenC", "dialogGameGenCActionB", "dialogGameGenCScore")
 fun TextView.setDialogGameC(matchAction: MatchAction, matchActionB: MatchAction, score: CurrentPlayer?) {
-    isEnabled = !(matchActionB == MatchAction.MATCH_ENDED_DISCARD_FRAME && (score?.isFrameEqual() ?: false)) // This needs adjusting.
+    isEnabled = !(matchActionB == MatchAction.MATCH_ENDED_DISCARD_FRAME_DIALOG && (score?.isFrameEqual() ?: false)) // This needs adjusting.
     text = when (matchAction) {
         MatchAction.MATCH_CANCEL -> "Yes"
-        MatchAction.FRAME_TO_END -> "Yes"
-        MatchAction.MATCH_TO_END -> "Yes"
+        MatchAction.FRAME_TO_END_DIALOG -> "Yes"
+        MatchAction.MATCH_TO_END_DIALOG -> "Yes"
         MatchAction.FRAME_ENDED -> "Yes"
         MatchAction.MATCH_ENDED -> "Yes"
         MatchAction.MATCH_LOAD -> "Continue Match"
@@ -211,7 +211,7 @@ fun TextView.setDialogGameC(matchAction: MatchAction, matchActionB: MatchAction,
 
 @BindingAdapter("dialogGameNote", "dialogGameNoteScore")
 fun TextView.setDialogGameNote(matchAction: MatchAction, score: CurrentPlayer?) {
-    visibility = if (matchAction == MatchAction.MATCH_ENDED_DISCARD_FRAME) View.VISIBLE else View.GONE
+    visibility = if (matchAction == MatchAction.MATCH_ENDED_DISCARD_FRAME_DIALOG) View.VISIBLE else View.GONE
     text = when {
         score == null -> ""
         score.getFirst().matchPoints + score.getFirst().matchPoints == 0 -> ""

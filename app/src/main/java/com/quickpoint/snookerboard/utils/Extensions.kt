@@ -27,7 +27,12 @@ fun Context.toast(message: CharSequence) = Toast.makeText(this, message, Toast.L
 fun MenuItem.setStateOpacity() {
     icon.alpha = if (isEnabled) 255 else 120
     val s = SpannableString(title)
-    s.setSpan(ForegroundColorSpan(if (isEnabled) Color.argb(255, 255, 255, 255) else Color.argb(120, 255, 255, 255)), 0, s.length, 0)
+    s.setSpan(
+        ForegroundColorSpan(
+            if (isEnabled) Color.argb(255, 255, 255, 255)
+            else Color.argb(120, 255, 255, 255)
+        ), 0, s.length, 0
+    )
     title = s
 }
 

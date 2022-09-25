@@ -216,7 +216,7 @@
                 android:layout_height="@dimen/icon_info"
                 android:layout_marginStart="@dimen/margin_xxxsmall"
                 android:contentDescription="@string/cd_foul_modifier_info"
-                android:onClick="@{() -> varMatchViewModel.assignEventMatchAction(MatchAction.INFO_FOUL)}"
+                android:onClick="@{() -> varMatchViewModel.assignEventMatchAction(MatchAction.INFO_FOUL_DIALOG)}"
                 app:layout_constraintBottom_toBottomOf="@+id/frag_play_label_foul_modifier"
                 app:layout_constraintTop_toTopOf="@+id/frag_play_label_foul_modifier"
                 app:layout_constraintStart_toEndOf="@+id/frag_play_label_foul_modifier"

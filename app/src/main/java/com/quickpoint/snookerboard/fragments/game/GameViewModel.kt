@@ -21,7 +21,7 @@ class GameViewModel : ViewModel() {
     }
 
     private val _isFrameUpdateInProgress = MutableLiveData(false)
-    val isFrameUpdateInProgress: LiveData<Boolean> = _isFrameUpdateInProgress // Deactivate all buttons & options menu if frame is updating
+    val isUpdateInProgress: LiveData<Boolean> = _isFrameUpdateInProgress // Deactivate all buttons & options menu if frame is updating
 
     // Variables
     private var player: CurrentPlayer = CurrentPlayer.PLAYER01

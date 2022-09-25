@@ -20,6 +20,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:navGraph="@navigation/navigation" />
 
+<!--Bottom Navigation not needed at this point-->
 <!--        <com.google.android.material.bottomnavigation.BottomNavigationView-->
 <!--            android:id="@+id/nav_bottom"-->
 <!--            android:layout_width="match_parent"-->

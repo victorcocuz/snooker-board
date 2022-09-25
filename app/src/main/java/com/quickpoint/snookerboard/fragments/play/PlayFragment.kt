@@ -53,13 +53,26 @@ class PlayFragment : androidx.fragment.app.Fragment() {
 
                 // VM Observers
                 matchViewModel.eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
+                    sharedPref.edit().apply {
+                        resources.apply {
+                            putString(getString(R.string.sp_match_name_first_a), varNameFirstA ?: "")
+                            putString(getString(R.string.sp_match_name_last_a), varNameLastA ?: "")
+                            putString(getString(R.string.sp_match_name_first_b), varNameFirstB ?: "")
+                            putString(getString(R.string.sp_match_name_last_b), varNameLastB ?: "")
+                            putInt(getString(R.string.sp_match_frames), playViewModel.eventFrames.value!!)
+                            putInt(getString(R.string.sp_match_reds), playViewModel.reds.value!!)
+                            putInt(getString(R.string.sp_match_foul), playViewModel.eventFoulModifier.value!!)
+                            putInt(getString(R.string.sp_match_first), playViewModel.eventBreaksFirst.value!!)
+                            apply()
+                        }
+                    }
                     when (matchAction) {
-                        MatchAction.INFO_FOUL -> { // Open the foul info dialog
+                        MatchAction.INFO_FOUL_DIALOG -> { // Open the foul info dialog
                             findNavController().navigate(
                                 PlayFragmentDirections.actionPlayFragmentToGameGenericDialogFragment(
                                     MatchAction.IGNORE,
                                     MatchAction.IGNORE,
-                                    MatchAction.INFO_FOUL
+                                    MatchAction.INFO_FOUL_DIALOG
                                 )
                             )
                         }
@@ -67,22 +80,13 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                             findNavController().navigate(
                                 PlayFragmentDirections.actionPlayFragmentToGameGenericDialogFragment(
                                     MatchAction.MATCH_START,
-                                    MatchAction.CLOSE_DIALOG,
+                                    MatchAction.IGNORE,
                                     MatchAction.MATCH_LOAD
                                 )
                             )
                         }
                         in listOf(MatchAction.MATCH_START, MatchAction.MATCH_LOAD) -> {
-                            findNavController().navigate(
-                                PlayFragmentDirections.actionPlayFragmentToGameFragment(
-                                    matchAction,
-                                    varNameFirstA, varNameLastA, varNameFirstB, varNameLastB,
-                                    playViewModel.eventFrames.value!!,
-                                    playViewModel.reds.value!!,
-                                    playViewModel.eventFoulModifier.value!!,
-                                    playViewModel.eventBreaksFirst.value!!
-                                )
-                            )
+                            findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment(matchAction))
                         }
                         else -> {
                         }

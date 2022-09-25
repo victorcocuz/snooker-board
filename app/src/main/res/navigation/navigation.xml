@@ -34,7 +34,7 @@
         android:name="com.quickpoint.snookerboard.fragments.main.StatisticsFragment"
         android:label="StatisticsFragment" />
 
-    <!-- Authentication Fragments -->
+    <!-- Authentication Fragments, currently not in use -->
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.quickpoint.snookerboard.fragments.authentication.LoginFragment"
@@ -64,38 +64,6 @@
         <argument
             android:name="matchAction"
             app:argType="com.quickpoint.snookerboard.utils.MatchAction" />
-        <argument
-            android:name="matchNameFirstA"
-            app:argType="string"
-            app:nullable="true" />
-        <argument
-            android:name="matchNameLastA"
-            app:argType="string"
-            app:nullable="true" />
-        <argument
-            android:name="matchNameFirstB"
-            app:argType="string"
-            app:nullable="true" />
-        <argument
-            android:name="matchNameLastB"
-            app:argType="string"
-            app:nullable="true" />
-        <argument
-            android:name="matchFrames"
-            app:argType="integer"
-            android:defaultValue="0" />
-        <argument
-            android:name="matchReds"
-            app:argType="integer"
-            android:defaultValue="0" />
-        <argument
-            android:name="matchFoul"
-            app:argType="integer"
-            android:defaultValue="0" />
-        <argument
-            android:name="matchFirst"
-            app:argType="integer"
-            android:defaultValue="0" />
     </fragment>
     <fragment
         android:id="@+id/gameStatsFragment"
