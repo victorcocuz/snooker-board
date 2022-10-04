@@ -14,6 +14,7 @@ data class DomainFrame(
     val frameStack: MutableList<DomainBreak>, // Keep track of all DOMAIN Breaks (i.e. a list of all breaks)
     val frameMax: Int // Keep track of maximum remaining points
 ) {
+    fun isFrameEqual() = frameScore[0].framePoints == frameScore[1].framePoints
     fun getFrameScoreDiff() = abs(frameScore[0].framePoints - frameScore[1].framePoints)
     fun getMatchScoreDiff() = abs(frameScore[0].matchPoints - frameScore[1].matchPoints)
     fun getFrameScoreRemaining() = ballStack.size.apply { // Formula to calculate remaining available points

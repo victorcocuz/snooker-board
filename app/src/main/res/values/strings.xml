@@ -14,6 +14,7 @@
     <string name="menu_item_undo">Undo</string>
     <string name="menu_item_rerack">Rerack</string>
     <string name="menu_item_add_red">Add Red</string>
+    <string name="menu_item_remove_red">Remove Red</string>
     <string name="menu_item_concede_frame">Concede Frame</string>
     <string name="menu_item_concede_match">Concede Match</string>
     <string name="menu_item_cancel_match">Cancel Match</string>
@@ -135,10 +136,16 @@
     <string name="sp_match_name_first_b">matchNameFirstB</string>
     <string name="sp_match_name_last_a">matchNameLastA</string>
     <string name="sp_match_name_last_b">matchNameLastB</string>
+    <string name="sp_match_freeball_visibility">matchFreeballVisibility</string>
+    <string name="sp_match_freeball_selection">matchFreeballSelection</string>
     <string name="cd_foul_modifier_info">Foul Modifier Info</string>
     <string name="cd_logo">Logo</string>
     <string name="autofill_name_given">personGivenName</string>
     <string name="autofill_name_family">personFamilyName</string>
     <string name="shared_pref_frame_max">frameMax</string>
     <string name="vs">VS</string>
+
+    <!-- Helper   -->
+    <string name="helper_first_line">"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"</string>
+    <string name="helper_new_line">"----------------------------------------------------------------------------------------------------------------"</string>
 </resources>

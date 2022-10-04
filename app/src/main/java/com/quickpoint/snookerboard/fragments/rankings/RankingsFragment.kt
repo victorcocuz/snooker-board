@@ -30,13 +30,11 @@ class RankingsFragment : Fragment() {
         val binding: FragmentRankingsBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_rankings, container, false)
 
-
         binding.apply {
-            lifecycleOwner = this@RankingsFragment
+            lifecycleOwner = viewLifecycleOwner
             viewModel = rankingsViewModel
             rankingsRv.adapter = RankingsAdapter()
         }
-
 
         return binding.root
     }

@@ -14,20 +14,17 @@ import com.quickpoint.snookerboard.DialogViewModel
 import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentDialogFoulBinding
-import com.quickpoint.snookerboard.domain.*
-import com.quickpoint.snookerboard.domain.DomainBall.*
 import com.quickpoint.snookerboard.fragments.game.BallAdapter
 import com.quickpoint.snookerboard.fragments.game.BallListener
 import com.quickpoint.snookerboard.utils.*
-import java.util.*
 
 class FoulDialogFragment : DialogFragment() {
     private val dialogViewModel: DialogViewModel by activityViewModels()
     private val matchViewModel: MatchViewModel by activityViewModels()
     private lateinit var matchAction: MatchAction
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setLayoutSizeByFactor(resources.getDimension(R.dimen.dialog_factor))
     }
 
@@ -44,9 +41,9 @@ class FoulDialogFragment : DialogFragment() {
 
         // Bind all required elements from the view
         binding.apply {
-            lifecycleOwner = this@FoulDialogFragment
+            lifecycleOwner = viewLifecycleOwner
             varMatchViewModel = this@FoulDialogFragment.matchViewModel
-            varEventsViewModel = this@FoulDialogFragment.dialogViewModel
+            varDialogViewModel = this@FoulDialogFragment.dialogViewModel
             foulBallsListRv.apply {
                 layoutManager = GridLayoutManager(activity, 4)
                 adapter = ballAdapter
@@ -61,7 +58,7 @@ class FoulDialogFragment : DialogFragment() {
                         if (foulIsValid()) {
                             matchAction = MatchAction.FOUL_CONFIRM
                             dismiss()
-                        } else requireContext().toast(getString(R.string.toast_foul_invalid))
+                        } else toast(getString(R.string.toast_foul_invalid))
                     }
                     else -> {
                         dialogViewModel.resetFoul()

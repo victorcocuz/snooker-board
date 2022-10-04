@@ -10,16 +10,24 @@
         <entry key="..\:/Users/victo/OneDrive/Desktop/20210322-Snooker_score/android/app/src/main/res/layout/layout_game_score.xml" value="0.1" />
         <entry key="..\:/Users/victo/OneDrive/Desktop/20210322-Snooker_score/android/app/src/main/res/layout/layout_game_top.xml" value="0.1" />
         <entry key="..\:/Users/victo/OneDrive/Desktop/20210322-Snooker_score/android/app/src/main/res/layout/layout_play_rules.xml" value="0.17831813576494426" />
+        <entry key="..\:/Users/victo/StudioProjects/snooker-board/app/src/main/res/drawable/ic_temp_action_concede_frame.xml" value="0.1" />
+        <entry key="..\:/Users/victo/StudioProjects/snooker-board/app/src/main/res/drawable/ic_temp_action_freeball.xml" value="0.1595" />
+        <entry key="..\:/Users/victo/StudioProjects/snooker-board/app/src/main/res/drawable/ic_temp_action_remove_red.xml" value="0.1595" />
+        <entry key="..\:/Users/victo/StudioProjects/snooker-board/app/src/main/res/drawable/ic_temp_action_rerack.xml" value="0.1595" />
+        <entry key="..\:/Users/victo/StudioProjects/snooker-board/app/src/main/res/drawable/ic_temp_action_undo.xml" value="0.1" />
         <entry key="..\:/Users/victo/StudioProjects/snooker-board/app/src/main/res/layout/activity_main.xml" value="0.4008152173913043" />
         <entry key="..\:/Users/victo/StudioProjects/snooker-board/app/src/main/res/layout/fragment_dialog_foul.xml" value="0.22864583333333333" />
         <entry key="..\:/Users/victo/StudioProjects/snooker-board/app/src/main/res/layout/fragment_dialog_gen.xml" value="0.22864583333333333" />
         <entry key="..\:/Users/victo/StudioProjects/snooker-board/app/src/main/res/layout/fragment_game.xml" value="0.1" />
         <entry key="..\:/Users/victo/StudioProjects/snooker-board/app/src/main/res/layout/fragment_game_stats.xml" value="0.22864583333333333" />
-        <entry key="..\:/Users/victo/StudioProjects/snooker-board/app/src/main/res/layout/fragment_play.xml" value="0.389945652173913" />
+        <entry key="..\:/Users/victo/StudioProjects/snooker-board/app/src/main/res/layout/fragment_play.xml" value="0.1" />
+        <entry key="..\:/Users/victo/StudioProjects/snooker-board/app/src/main/res/layout/item_ball_view.xml" value="0.27853260869565216" />
         <entry key="..\:/Users/victo/StudioProjects/snooker-board/app/src/main/res/layout/layout_game_actions.xml" value="0.22864583333333333" />
+        <entry key="..\:/Users/victo/StudioProjects/snooker-board/app/src/main/res/layout/layout_game_score.xml" value="0.26510416666666664" />
         <entry key="..\:/Users/victo/StudioProjects/snooker-board/app/src/main/res/layout/layout_game_top.xml" value="0.389945652173913" />
-        <entry key="..\:/Users/victo/StudioProjects/snooker-board/app/src/main/res/layout/layout_play_rules.xml" value="0.22864583333333333" />
+        <entry key="..\:/Users/victo/StudioProjects/snooker-board/app/src/main/res/layout/layout_play_rules.xml" value="0.10285714285714286" />
         <entry key="..\:/Users/victo/StudioProjects/snooker-board/app/src/main/res/menu/menu_bottom_nav.xml" value="0.4270833333333333" />
+        <entry key="..\:/Users/victo/StudioProjects/snooker-board/app/src/main/res/menu/menu_game_overflow.xml" value="0.4270833333333333" />
       </map>
     </option>
   </component>

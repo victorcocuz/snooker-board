@@ -4,9 +4,8 @@
 
     <data>
         <import type="com.quickpoint.snookerboard.domain.DomainPot" />
-
-        <import type="com.quickpoint.snookerboard.utils.FrameEvent" />
         <import type="com.quickpoint.snookerboard.utils.MatchAction" />
+        <import type="com.quickpoint.snookerboard.domain.PotAction" />
 
         <variable
             name="varMatchViewModel"
@@ -15,6 +14,9 @@
         <variable
             name="varGameViewModel"
             type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
+        <variable
+            name="varDialogViewModel"
+            type="com.quickpoint.snookerboard.DialogViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,7 +36,7 @@
             android:id="@+id/game_btn_act_safe"
             style="@style/ButtonStretched"
             android:layout_width="0dp"
-            android:onClick="@{() -> varGameViewModel.handleFrameEvent(FrameEvent.HANDLE_POT, DomainPot.SAFE.INSTANCE, false, false)}"
+            android:onClick="@{() -> varGameViewModel.handlePot(DomainPot.SAFE.INSTANCE)}"
             android:text="@string/action_safe"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_line_vert_one"
             app:layout_constraintHorizontal_bias="0.5"
@@ -56,7 +58,7 @@
             android:id="@+id/game_btn_act_miss"
             style="@style/ButtonStretched"
             android:layout_width="0dp"
-            android:onClick="@{() -> varGameViewModel.handleFrameEvent(FrameEvent.HANDLE_POT, DomainPot.MISS.INSTANCE, false, false)}"
+            android:onClick="@{() -> varGameViewModel.handlePot(DomainPot.MISS.INSTANCE)}"
             android:text="@string/action_miss"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toStartOf="@+id/game_btn_line_vert_two"
@@ -96,6 +98,22 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/game_btn_act_safe" />
+
+        <TextView
+            android:id="@+id/foul_action_free_ball"
+            style="@style/ButtonNarrow"
+            android:layout_width="0dp"
+            android:layout_marginStart="@dimen/margin_layout_offset"
+            android:layout_marginTop="@dimen/margin_header_below"
+            android:layout_marginEnd="@dimen/margin_layout_offset_mid"
+            android:onClick="@{() -> varGameViewModel.handlePot(DomainPot.FREETOGGLE.INSTANCE)}"
+            android:text="@string/f_foul_action_free_ball"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/game_btn_act_safe"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:setVisible="@{varGameViewModel.freeballControls.visible}"
+            app:setSelected="@{varGameViewModel.freeballControls.selected}" />
 
         <LinearLayout
             android:id="@+id/frag_game_balls_ll"

@@ -1,6 +1,8 @@
 package com.quickpoint.snookerboard.domain
 
 import kotlin.math.max
+import com.quickpoint.snookerboard.domain.PotType.*
+import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
 
 // Keeps a dynamic live score for both players
 sealed class CurrentPlayer(
@@ -41,49 +43,55 @@ sealed class CurrentPlayer(
         PLAYER02 -> PLAYER01
     }
 
+    fun setOther(): CurrentPlayer {
+        RULES.switchCrtPlayer()
+        return getOther()
+    }
+
     fun getPlayerAsInt(): Int = when (this) {
         PLAYER01 -> 0
         PLAYER02 -> 1
     }
 
-    fun getPlayerFromInt(player: Int) = if (player == 0) PLAYER01 else PLAYER02
+    fun getFirstPlayerFromRules() = if (RULES.first == 0) PLAYER01 else PLAYER02
+    fun getCrtPlayerFromRules() = if (RULES.crtPlayer == 0) PLAYER01 else PLAYER02
 
-    fun getWinner() = if (this.framePoints > this.getOther().framePoints) this else this.getOther()
+    fun getWinner() = if (framePoints > getOther().framePoints) this else getOther()
 
-    fun isMatchEnding(matchFrames: Int) = this.getWinner().matchPoints + 1 == matchFrames
+    fun isMatchEnding(matchFrames: Int) = getWinner().matchPoints + 1 == matchFrames
 
-    fun isFrameEqual() = this.framePoints == this.getOther().framePoints
+    fun isFrameEqual() = framePoints == getOther().framePoints
 
-    fun isMatchEqual() = this.matchPoints == this.getOther().matchPoints
+    fun isMatchEqual() = matchPoints == getOther().matchPoints
 
-    fun isFrameInProgress() = (this.framePoints + this.getOther().framePoints > 0)
+    fun isFrameInProgress() = (framePoints + getOther().framePoints > 0)
 
-    fun hasMatchStarted() = this.framePoints + this.matchPoints + this.getOther().framePoints + this.getOther().matchPoints > 0
+    fun hasMatchStarted() = framePoints + matchPoints + getOther().framePoints + getOther().matchPoints > 0
 
     fun addFramePoints(points: Int) {
-        this.framePoints += points
+        framePoints += points
     }
 
     fun addSuccessShots(pol: Int) {
-        this.successShots += pol
+        successShots += pol
     }
 
     fun addMissedShots(pol: Int) {
-        this.missedShots += pol
+        missedShots += pol
     }
 
     fun addFouls(pol: Int) {
-        this.fouls += pol
+        fouls += pol
     }
 
     fun addMatchPoint() {
-        this.matchPoints += 1
+        matchPoints += 1
     }
 
     fun findMaxBreak(frameStack: MutableList<DomainBreak>) {
         var highestBreak = 0
         frameStack.forEach { crtBreak ->
-            if (this.getPlayerAsInt() == crtBreak.player && crtBreak.breakSize > highestBreak) {
+            if (getPlayerAsInt() == crtBreak.player && crtBreak.breakSize > highestBreak) {
                 highestBreak = crtBreak.breakSize
             }
         }
@@ -91,35 +99,35 @@ sealed class CurrentPlayer(
     }
 
     fun resetFrameScore() {
-        this.framePoints = 0
-        this.highestBreak = 0
-        this.missedShots = 0
-        this.successShots = 0
+        framePoints = 0
+        highestBreak = 0
+        missedShots = 0
+        successShots = 0
     }
 
     fun resetMatchScore() {
-        this.matchPoints = 0
-        this.frameId = 0
+        matchPoints = 0
+        frameId = 0
     }
 
     // Polarity is used to reverse score on undo
-    fun calculatePoints(pot: DomainPot, pol: Int, lastBall: DomainBall, matchFoul: Int, frameStack: MutableList<DomainBreak>) {
+    fun calculatePoints(pot: DomainPot, pol: Int, lastBall: DomainBall, frameStack: MutableList<DomainBreak>) {
         val points: Int
         when (pot.potType) {
-            in listOf(PotType.HIT, PotType.FREE, PotType.ADDRED) -> {
-                points = if (pot.potType == PotType.FREE) lastBall.points else pot.ball.points
+            TYPE_HIT, TYPE_FREE, TYPE_ADDRED -> {
+                points = if (pot.potType == TYPE_FREE) lastBall.points else pot.ball.points
                 addFramePoints(pol * points)
                 pot.ball.setCustomPointValue(points)
                 addSuccessShots(pol)
             }
-            PotType.FOUL -> {
-                points = matchFoul + if (pot.ball is DomainBall.WHITE) max(lastBall.foul, 4) else pot.ball.foul
+            TYPE_FOUL -> {
+                points = RULES.foul + if (pot.ball is DomainBall.WHITE) max(lastBall.foul, 4) else pot.ball.foul
                 pot.ball.setCustomFoulValue(points)
                 getOther().addFramePoints(pol * points)
                 addMissedShots(pol)
                 addFouls(pol)
             }
-            PotType.MISS -> addMissedShots(pol)
+            TYPE_MISS -> addMissedShots(pol)
             else -> {
             }
         }

@@ -5,123 +5,85 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.DomainBall.*
+import com.quickpoint.snookerboard.domain.DomainFreeBallInfo.FREEBALLINFO
+import com.quickpoint.snookerboard.domain.DomainMatchInfo.*
+import com.quickpoint.snookerboard.domain.DomainPot.*
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.utils.Event
-import com.quickpoint.snookerboard.utils.FrameEvent
-import com.quickpoint.snookerboard.utils.MatchAction
 import timber.log.Timber
 
 class GameViewModel : ViewModel() {
 
     // Observables
-    private val _eventGameAction = MutableLiveData<Event<MatchAction>>()
-    val eventGameAction: LiveData<Event<MatchAction>> = _eventGameAction
-    private fun assignEventGameAction(matchAction: MatchAction) {
-        _eventGameAction.value = Event(matchAction)
+    private val _isUpdateInProgress = MutableLiveData(false)
+    val isUpdateInProgress: LiveData<Boolean> = _isUpdateInProgress // Deactivate all buttons & options menu if frame is updating
+
+    private val _freeballControls = MutableLiveData(FREEBALLINFO)
+    val freeballControls: LiveData<FREEBALLINFO> = _freeballControls
+
+    private val _eventFrameUpdated = MutableLiveData<Event<Boolean>>()
+    val eventFrameUpdated: LiveData<Event<Boolean>> = _eventFrameUpdated
+    private fun onEventFrameUpdated() {
+        _freeballControls.value = FREEBALLINFO
+        _isUpdateInProgress.value = false
+        _eventFrameUpdated.value = Event(true)
     }
 
-    private val _isFrameUpdateInProgress = MutableLiveData(false)
-    val isUpdateInProgress: LiveData<Boolean> = _isFrameUpdateInProgress // Deactivate all buttons & options menu if frame is updating
-
     // Variables
-    private var player: CurrentPlayer = CurrentPlayer.PLAYER01
+    var player: CurrentPlayer = CurrentPlayer.PLAYER01
     var ballStack: MutableList<DomainBall> = mutableListOf()
     var frameStack: MutableList<DomainBreak> = mutableListOf()
-    var rules = DomainMatchInfo.RULES
 
+    // Handler functions
     fun loadMatchBLoadFrame(frame: DomainFrame?) = frame?.let { // Will load latest frame once observed from play fragment
         Timber.i("loadMatchPartBLoadFrame()")
         player = it.frameScore.asCurrentScore() ?: player
         frameStack = it.frameStack
         ballStack = it.ballStack
-        rules.frameMax = it.frameMax
-        assignEventGameAction(MatchAction.FRAME_INFO_UPDATED)
+        RULES.frameMax = it.frameMax
+        onEventFrameUpdated()
     }
 
     fun resetFrame() { // Reset all frame values on match end if chosen to discard current frame, when resetting match , when starting a new frame or on rerack action from the options menu
         Timber.i("resetFrame()")
-        rules.frameMax = rules.reds * 8 + 27
+        RULES.frameMax = RULES.reds * 8 + 27
         player.getFirst().resetFrameScore()
         player.getSecond().resetFrameScore()
+        player = player.getFirstPlayerFromRules()
         frameStack.clear()
         ballStack.clear()
         ballStack.addBalls(WHITE(), BLACK(), PINK(), BLUE(), BROWN(), GREEN(), YELLOW())
-        repeat(rules.reds) { ballStack.addBalls(COLOR(), RED()) }
-        assignEventGameAction(MatchAction.FRAME_INFO_UPDATED)
+        repeat(RULES.reds) { ballStack.addBalls(COLOR(), RED()) }
+        onEventFrameUpdated()
     }
 
-    // Handler functions
-    fun handleFrameEvent(frameEvent: FrameEvent, pot: DomainPot?, removeRed: Boolean?, freeBall: Boolean?) {
-        Timber.i("handleFrameEvent()")
-        _isFrameUpdateInProgress.value = true
-        when (frameEvent) {
-            FrameEvent.HANDLE_FOUL -> handleFoul(pot!!, removeRed!!, freeBall!!)
-            FrameEvent.HANDLE_POT -> handleFrameUpdate(pot!!)
-            FrameEvent.HANDLE_UNDO -> handleUndo()
+    fun handlePot(pot: DomainPot) {
+        _isUpdateInProgress.value = true
+        frameStack.apply { // Add to frameStack all pots, but remove repeated freeball toggles
+            if (pot.potType == TYPE_FREETOGGLE && lastPotType() == TYPE_FREETOGGLE) removeLastPotFromFrameStack()
+            else addToFrameStack(pot)
         }
-        _isFrameUpdateInProgress.value = false
-        assignEventGameAction(MatchAction.FRAME_INFO_UPDATED)
-    }
 
-    private fun handleFoul(pot: DomainPot, removeRed: Boolean, freeBall: Boolean) {
-        Timber.i("handleFoul()")
-        handleFrameUpdate(pot)
-        if (removeRed) handleFrameUpdate(DomainPot.REMOVERED)
-        if (freeBall) rules.frameMax += ballStack.addFreeBall()
-    }
-
-    private fun handleFrameUpdate(pot: DomainPot) = ballStack.apply {
-        Timber.i("handleFrameUpdate()")
-        frameStack.addToFrameStack(
-            when (pot.potType) {
-                in listOf(HIT, FREE, ADDRED) -> DomainPot.HIT(pot.ball)
-                FOUL -> DomainPot.FOUL(pot.ball, pot.potAction)
-                else -> pot // For SAFE, MISS, REMOVERED
-            },
-            player.getPlayerAsInt(),
-            rules.frameCount
-        )
-        player.calculatePoints(pot, 1, this.last(), rules.foul, frameStack)
-        when (pot.potType) {
-            in listOf(HIT, FREE) -> removeBalls(1)
-            in listOf(REMOVERED, ADDRED) -> removeBalls(2)
-            in listOf(SAFE, MISS, FOUL) -> {
-                if (last() is FREEBALL) {
-                    frameStack.addToFrameStack(DomainPot.FREEMISS, player.getPlayerAsInt(), rules.frameCount)
-                    rules.frameMax -= removeFreeBall()
-                }
-                if (last() is COLOR) removeBalls(1)
-            }
-            else -> {
-            }
+        FREEBALLINFO.handlePotFreeballInfo(pot)
+        ballStack.apply {
+            player.calculatePoints(pot, 1, last(), frameStack)
+            handlePotBallStack(pot.potType, player.isFrameEqual())
         }
-        if (size == 1) if (player.isFrameEqual()) addBalls(BLACK()) // Query end frame exception; see fragment
-        if (pot.potAction == PotAction.SWITCH) player = player.getOther()
+
+        Timber.i("handlePot: ${pot.potType}, ball: ${pot.ball.ballType}, player: ${player.getPlayerAsInt()}, breakCount: ${frameStack.size}")
+        player = player.getCrtPlayerFromRules()
+        onEventFrameUpdated()
+        if (pot.isFreeballAvailable()) handlePot(FREEAVAILABLE) // make freeball toggle available after foul
     }
 
-    private fun handleUndo(): Any = ballStack.apply {
-        Timber.i("handleUndo()")
-        player = player.getPlayerFromInt(frameStack.last().player)
-        val lastPot = frameStack.removeFromFrameStack()
-        when (lastPot.potType) {
-            HIT -> addBalls(if (isNextColor()) COLOR() else lastPot.ball)
-            ADDRED -> addBalls(RED(), COLOR())
-            FREE -> {
-                rules.frameMax -= addFreeBall()
-                handleUndo()
-            }
-            REMOVERED -> {
-                if (last() is FREEBALL) removeBalls(if (isInColors()) 1 else 2)
-                if (isNextColor()) addBalls(COLOR(), RED()) else addBalls(RED(), COLOR())
-                handleUndo()
-            }
-            FOUL -> {
-                if (last() is FREEBALL) rules.frameMax -= removeFreeBall()
-                if (frameStack.isPreviousRed() && isNextColor()) addBalls(COLOR())
-            }
-            SAFE -> if (frameStack.isPreviousRed() && isNextColor()) addBalls(COLOR())
-            MISS -> if (frameStack.isPreviousRed() && isNextColor()) addBalls(COLOR())
-        }
-        player.calculatePoints(lastPot, -1, ballStack.last(), rules.foul, frameStack)
+    fun handleUndo() {
+        _isUpdateInProgress.value = true
+        val pot = frameStack.removeLastPotFromFrameStack()
+        player = player.getCrtPlayerFromRules()
+        Timber.i("handleUndo ${pot.potType}, ball: ${pot.ball.ballType}, player: ${player.getPlayerAsInt()}, breakCount ${frameStack.size}")
+        ballStack.handleUndoBallStack(pot, frameStack)
+        FREEBALLINFO.handleUndoFreeballInfo(pot, frameStack)
+        player.calculatePoints(pot, -1, ballStack.last(), frameStack)
+        onEventFrameUpdated()
     }
 }

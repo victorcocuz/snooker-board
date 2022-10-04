@@ -12,6 +12,8 @@ import com.quickpoint.snookerboard.databinding.FragmentDialogGenBinding
 import com.quickpoint.snookerboard.utils.EventObserver
 import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.setLayoutSizeByFactor
+import com.quickpoint.snookerboard.utils.MatchAction.*
+
 
 
 class GenericDialogFragment : DialogFragment() {
@@ -19,8 +21,8 @@ class GenericDialogFragment : DialogFragment() {
     private val matchViewModel: MatchViewModel by activityViewModels()
     private lateinit var matchAction: MatchAction
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setLayoutSizeByFactor(resources.getDimension(R.dimen.dialog_factor))
     }
 
@@ -33,15 +35,15 @@ class GenericDialogFragment : DialogFragment() {
 
         // Bind all required elements from the view
         binding.apply {
-            lifecycleOwner = this@GenericDialogFragment
+            lifecycleOwner = viewLifecycleOwner
             varGenericEventsViewModel = dialogViewModel
             varMatchViewModel = this@GenericDialogFragment.matchViewModel
             GenericDialogFragmentArgs.fromBundle(requireArguments()).apply {
                 varDialogMatchActionA = matchActionA
                 varDialogMatchActionB = matchActionB
                 varDialogMatchActionC = matchActionC
-                if (varDialogMatchActionC in listOf(MatchAction.MATCH_ENDED, MatchAction.FRAME_ENDED)) {
-                    this@GenericDialogFragment.isCancelable = false // Action must be taken if game or match are ended
+                if (varDialogMatchActionC in listOf(MATCH_ENDED, FRAME_ENDED)) {
+                    this@GenericDialogFragment.isCancelable = false // An action has to be taken if game or match are ended
                 }
             }
         }

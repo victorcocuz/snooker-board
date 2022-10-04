@@ -3,7 +3,6 @@ package com.quickpoint.snookerboard.utils
 const val BALL_HEIGHT_FACTOR_MATCH_ACTION = 7
 
 enum class BallAdapterType { MATCH, FOUL, BREAK }
-enum class FrameEvent { HANDLE_POT, HANDLE_FOUL, HANDLE_UNDO }
 enum class StatisticsType { FRAME_ID, HIGHEST_BREAK, FRAME_POINTS }
 enum class PlayerTagType { MATCH, STATISTICS } // Create different player tags for display during match and for statistics
 
@@ -14,7 +13,7 @@ enum class MatchAction {
     FOUL_DIALOG, // Open foul dialog fragment
 
     // Frame Actions
-    FRAME_INFO_UPDATED, // Update frame score and history
+    FRAME_RESET_DIALOG, // On clicking rerack button
     FRAME_RESET, // Action to reset frame
     FRAME_ENDED_DIALOG, // Open frame end dialog
     FRAME_TO_END_DIALOG, // On clicking the concede frame button while the frame is still ongoing
@@ -24,7 +23,8 @@ enum class MatchAction {
     MATCH_START_DIALOG, // Open the dialog to decide whether to start new match or continue old one
     MATCH_LOAD, // On confirming the dialog at the beginning that you wish to continue match
     MATCH_START, // On confirming the dialog at the beginning that you wish to start a new match, or if there are no matches in progress
-    MATCH_CANCEL, // On clicking cancel match
+    MATCH_CANCEL_DIALOG, // On clicking cancel match
+    MATCH_CANCEL, // Action to cancel match
     MATCH_ENDED_DIALOG, // Open match ending dialog
     MATCH_ENDED_DISCARD_FRAME_DIALOG, // On clicking the conceding button when keeping/discarding current score can affect winner
     MATCH_TO_END_DIALOG, // On clicking the concede match button while the match is still in play

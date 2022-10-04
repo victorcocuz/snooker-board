@@ -27,33 +27,12 @@ class DialogViewModel : ViewModel() {
     val actionClicked: LiveData<PotAction?> = _actionClicked
     fun onActionClicked(action: PotAction) {
         _actionClicked.value = action
-        if (action == PotAction.CONTINUE) _isFreeBall.value = false
-    }
-
-    private val _isFreeBall = MutableLiveData(false)
-    val isFreeBall: LiveData<Boolean> = _isFreeBall
-    fun onFreeballClicked() {
-        _isFreeBall.value = !_isFreeBall.value!!
-    }
-
-    private val _isRemoveRed = MutableLiveData(false)
-    val isRemoveRed: LiveData<Boolean> = _isRemoveRed
-    fun onRemoveRedClicked() {
-        _isRemoveRed.value = !_isRemoveRed.value!!
     }
 
     fun foulIsValid() = _ballClicked.value != null && actionClicked.value != null
     fun getFoul() = DomainPot.FOUL(_ballClicked.value!!, actionClicked.value!!)
-//    fun getFoul() = DomainPotEvent(
-//    FrameEvent.HANDLE_FOUL,
-//    DomainPot.FOUL(_ballClicked.value!!, actionClicked.value!!),
-//    _isRemoveRed.value!!,
-//    _isFreeBall.value!!
-//    )
     fun resetFoul() {
         _actionClicked.value = null
         _ballClicked.value = null
-        _isFreeBall.value = false
-        _isRemoveRed.value = false
     }
 }

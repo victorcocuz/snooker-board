@@ -9,6 +9,9 @@
         <variable
             name="varMatchViewModel"
             type="com.quickpoint.snookerboard.MatchViewModel" />
+        <variable
+            name="varPlayViewModel"
+            type="com.quickpoint.snookerboard.fragments.play.PlayViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,7 +24,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:theme="@style/ToolbarTheme">
+            android:theme="@style/ToolbarTheme">
 
             <ImageView
                 android:layout_width="@dimen/icon_logo"
@@ -62,7 +65,7 @@
             android:id="@+id/frag_play_btn_play"
             style="@style/ButtonStretched"
             android:layout_width="match_parent"
-            android:onClick="@{() -> varMatchViewModel.startMatchQuery()}"
+            android:onClick="@{() -> varMatchViewModel.startMatchQuery(varPlayViewModel.eventRules)}"
             android:text="@string/f_play_btn_play"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

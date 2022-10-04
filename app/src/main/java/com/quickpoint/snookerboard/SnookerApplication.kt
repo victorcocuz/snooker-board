@@ -32,7 +32,8 @@ class SnookerApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())
-    //  delayedInit()
+        Timber.i(getString(R.string.helper_first_line))
+        //  delayedInit()
     }
 
     // Create a delayed initialization within a coroutine to setup recurring work

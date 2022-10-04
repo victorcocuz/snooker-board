@@ -1,5 +1,7 @@
 package com.quickpoint.snookerboard.domain
 
+import timber.log.Timber
+
 // The DOMAIN rules
 sealed class DomainMatchInfo(
     var frames: Int,
@@ -10,47 +12,66 @@ sealed class DomainMatchInfo(
     var frameCount: Int,
     var frameMax: Int
 ) {
-    object RULES : DomainMatchInfo(0, 0, 0, 0, 1, 0, 0)
+    object RULES : DomainMatchInfo(2, 15, 0, -1, -1, 1, 0) {
 
-    fun getCrt() = RULES
+        fun assignRules(
+            frames: Int,
+            reds: Int,
+            foul: Int,
+            first: Int,
+            crtPlayer: Int,
+            frameCount: Int,
+            frameMax: Int
+        ) {
+            this.frames = frames
+            this.reds = reds
+            this.foul = foul
+            this.first = first
+            this.crtPlayer = crtPlayer
+            this.frameCount = frameCount
+            this.frameMax = frameMax
+            Timber.i("assignRules(): ${getRulesText()}")
+        }
 
-    fun assignRules(
-        frames: Int,
-        reds: Int,
-        foul: Int,
-        first: Int,
-        crtPlayer: Int,
-        frameCount: Int,
-        frameMax: Int
-    ) {
-        this.frames = frames
-        this.reds = reds
-        this.foul = foul
-        this.first = first
-        this.crtPlayer = crtPlayer
-        this.frameCount = frameCount
-        this.frameMax = frameMax
-    }
+        fun resetRules() {
+            frames = 2
+            reds = 15
+            foul = 0
+            first = -1
+            crtPlayer = -1
+            frameCount = 1
+            frameMax = 0
+        }
 
-    fun getRulesText() = "Frames: ${this.frames}, Reds: ${this.reds}, Foul: ${this.foul}, First: ${this.first}, CrtPlayer: ${this.crtPlayer}, Count: ${this.frameCount}, Max: ${this.frames}"
+        private fun getRulesText() =
+            "Frames: ${frames}, Reds: ${reds}, Foul: ${foul}, First: ${first}, CrtPlayer: ${crtPlayer}, Count: ${frameCount}, Max: ${frames}"
 
-    fun assignMatchFrames(matchFrames: Int) {
-        this.frames = matchFrames
-    }
+        fun updateFrames(number: Int) : RULES {
+            frames = number
+            return this
+        }
 
-    fun assignMatchReds(matchReds: Int) {
-        this.reds = matchReds
-    }
+        fun updateReds(number: Int) : RULES {
+            reds = number
+            return this
+        }
 
-    fun assignMatchFoul(matchFoul: Int) {
-        this.foul = matchFoul
-    }
+        fun updateFoul(number: Int) : RULES {
+            foul = number
+            return this
+        }
 
-    fun assignMatchFirst(matchFirst: Int) {
-        this.first = matchFirst
-    }
+        fun updateFirst(position: Int) : RULES {
+            first = if (position == 2) (0..1).random() else position
+            return this
+        }
 
-    fun switchPlayers() {
-        this.first = 1 - this.first
+        fun switchFirst() {
+            first = 1 - first
+        }
+
+        fun switchCrtPlayer() {
+            crtPlayer = 1 - crtPlayer
+        }
     }
 }

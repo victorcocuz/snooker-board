@@ -42,7 +42,7 @@ class GameStatsFragment : Fragment() {
 
         // Bind all required elements from the view
         binding.apply {
-            lifecycleOwner = this@GameStatsFragment
+            lifecycleOwner = viewLifecycleOwner
             varStatsViewModel = gameStatsViewModel
             varMatchViewModel = this@GameStatsFragment.matchViewModel
             varApplication = requireActivity().application

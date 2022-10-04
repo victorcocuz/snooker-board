@@ -24,13 +24,15 @@ data class DbPot(
 fun List<DbPot>.asDomainPotList(): MutableList<DomainPot> {
     return map { pot ->
         when (PotType.values()[pot.potType]) {
-            PotType.HIT -> DomainPot.HIT(getBallFromValues(pot.ball, pot.ballPoints, pot.ballFoul))
-            PotType.FREE -> DomainPot.FREEMISS
-            PotType.SAFE -> DomainPot.SAFE
-            PotType.MISS -> DomainPot.MISS
-            PotType.FOUL -> DomainPot.FOUL(getBallFromValues(pot.ball, pot.ballPoints, pot.ballFoul), PotAction.values()[pot.potAction])
-            PotType.REMOVERED -> DomainPot.REMOVERED
-            PotType.ADDRED -> DomainPot.ADDRED
+            PotType.TYPE_HIT -> DomainPot.HIT(getBallFromValues(pot.ball, pot.ballPoints, pot.ballFoul))
+            PotType.TYPE_FREE -> DomainPot.FREETOGGLE
+            PotType.TYPE_SAFE -> DomainPot.SAFE
+            PotType.TYPE_MISS -> DomainPot.MISS
+            PotType.TYPE_FOUL -> DomainPot.FOUL(getBallFromValues(pot.ball, pot.ballPoints, pot.ballFoul), PotAction.values()[pot.potAction])
+            PotType.TYPE_REMOVERED -> DomainPot.REMOVERED
+            PotType.TYPE_ADDRED -> DomainPot.ADDRED
+            PotType.TYPE_FREEAVAILABLE -> DomainPot.FREEAVAILABLE
+            PotType.TYPE_FREETOGGLE -> DomainPot.FREETOGGLE
         }
     }.toMutableList()
 }

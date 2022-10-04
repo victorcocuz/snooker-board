@@ -4,8 +4,17 @@
       <w>addred</w>
       <w>autofill</w>
       <w>contentd</w>
+      <w>freeavailable</w>
       <w>freeball</w>
+      <w>freeballavailable</w>
+      <w>freeballcontrols</w>
+      <w>freeballenabled</w>
+      <w>freeballinfo</w>
+      <w>freeballtoggle</w>
+      <w>freeenabled</w>
+      <w>freeetoggle</w>
       <w>freemiss</w>
+      <w>freetoggle</w>
       <w>gamedialogs</w>
       <w>gamestatistics</w>
       <w>gamestats</w>
@@ -13,6 +22,8 @@
       <w>lateinit</w>
       <w>moshi</w>
       <w>noball</w>
+      <w>nopot</w>
+      <w>notype</w>
       <w>playera</w>
       <w>playerb</w>
       <w>quickpoint</w>

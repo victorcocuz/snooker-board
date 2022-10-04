@@ -16,13 +16,16 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.ScrollView
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 import com.quickpoint.snookerboard.R
 import timber.log.Timber
 
 // General
-fun Context.toast(message: CharSequence) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+fun Fragment.toast(message: CharSequence) = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+fun Application.toast(message: CharSequence) = Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
 
 fun MenuItem.setStateOpacity() {
     icon.alpha = if (isEnabled) 255 else 120
@@ -50,7 +53,6 @@ fun SharedPreferences.setMatchInProgress(isInProgress: Boolean) {
 }
 
 fun SharedPreferences.isMatchInProgress() = this.getBoolean("isMatchInProgress", false)
-
 // Keyboard
 fun Fragment.hideKeyboard() {
     view?.let {

@@ -48,17 +48,16 @@ fun createChannel(channelId: String, channelName: String, activity: Activity) {
     }
 }
 
-fun setupGameNotification(activity: Activity) {
-    val application = activity.application
+fun setupGameNotification(activity: Activity) = activity.application.apply {
     createChannel(
-        application.getString(R.string.game_notification_channel_id),
-        application.getString(R.string.game_notification_channel_name),
+        getString(R.string.game_notification_channel_id),
+        getString(R.string.game_notification_channel_name),
         activity
     )
 
     val notificationManager = ContextCompat.getSystemService(
-        application,
+        this,
         NotificationManager::class.java
     ) as NotificationManager
-    notificationManager.sendNotification(application.getString(R.string.notification_text), activity)
+    notificationManager.sendNotification(getString(R.string.notification_text), activity)
 }
