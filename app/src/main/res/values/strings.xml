@@ -89,6 +89,14 @@
     <string name="f_play_btn_break_random">Random</string>
     <string name="f_play_btn_play">START</string>
 
+    <string name="toast_play_no_name">Please add player names to start a new match</string>
+    <string name="toast_play_select_who_breaks">Please select who is breaking first</string>
+
+    <!-- Fragment Play Continue -->
+    <string name="f_play_continue_game_description">There is a match in progress, what would you like to do?</string>
+    <string name="f_play_continue_game_continue">Continue current match</string>
+    <string name="f_play_continue_game_cancel">Cancel current match</string>
+
     <!-- Fragment Game -->
     <string name="f_game_label_player_a">Player A</string>
     <string name="f_game_label_player_b">Player B</string>
@@ -105,13 +113,13 @@
     <string name="f_foul_label_title">Foul</string>
     <string name="f_foul_label_choose_ball">Which ball was fouled?</string>
     <string name="f_foul_label_choose_action">Do you wish to continue?</string>
-    <string name="f_game_foul_action_continue">Ok, I will play</string>
+    <string name="f_game_foul_action_continue">OK, I will play</string>
     <string name="f_foul_action_force_continue">Force continue</string>
     <string name="f_foul_label_other_actions">Any other actions?</string>
     <string name="f_foul_action_free_ball">Free Ball</string>
     <string name="f_foul_action_remove_red">Remove Red</string>
     <string name="f_foul_cancel">Cancel</string>
-    <string name="f_foul_ok">Ok</string>
+    <string name="f_foul_ok">OK</string>
     <string name="toast_foul_invalid">Select a ball and an action to continue</string>
 
     <!-- Fragment Game Statistics -->
@@ -129,6 +137,7 @@
     <string name="sp_match_foul">matchFoul</string>
     <string name="sp_match_first">matchFirst</string>
     <string name="sp_match_frame_count">matchCrtFrame</string>
+    <string name="sp_match_frame_max">matchFrameMax</string>
     <string name="sp_match_broke_last">matchBrokeLast</string>
     <string name="sp_match_crt_player">matchCrtPlayer</string>
     <string name="sp_match_is_in_progress">isMatchInProgress</string>
@@ -145,7 +154,9 @@
     <string name="shared_pref_frame_max">frameMax</string>
     <string name="vs">VS</string>
 
+    <!-- Toasts and messages -->
+
     <!-- Helper   -->
     <string name="helper_first_line">"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"</string>
-    <string name="helper_new_line">"----------------------------------------------------------------------------------------------------------------"</string>
+    <string name="helper_update_frame_info">"---------------------------------------------FRAME UPDATED------------------------------------------------"</string>
 </resources>

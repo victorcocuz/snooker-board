@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.quickpoint.snookerboard.utils.MatchAction" />
+
+        <variable
+            name="varMatchVm"
+            type="com.quickpoint.snookerboard.MatchViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:id="@+id/frag_game_query_constraint_layout"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent">
+
+        <TextView
+            android:id="@+id/frag_game_query_description"
+            style="@style/TextHeaderBold"
+            android:layout_width="wrap_content"
+            android:padding="@dimen/text_header"
+            android:text="@string/f_play_continue_game_description"
+            app:layout_constraintBottom_toTopOf="@id/frag_game_query_continue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/frag_game_query_continue"
+            style="@style/ButtonStretched"
+            android:layout_width="wrap_content"
+            android:onClick="@{() -> varMatchVm.assignEventMatchAction(MatchAction.MATCH_CONTINUE)}"
+            android:text="@string/f_play_continue_game_continue"
+            app:layout_constraintBottom_toTopOf="@id/frag_game_query_cancel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frag_game_query_description" />
+
+        <TextView
+            android:id="@+id/frag_game_query_cancel"
+            style="@style/ButtonStretched"
+            android:layout_width="wrap_content"
+            android:onClick="@{() -> varMatchVm.assignEventMatchAction(MatchAction.MATCH_CANCEL)}"
+            android:text="@string/f_play_continue_game_cancel"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frag_game_query_continue" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

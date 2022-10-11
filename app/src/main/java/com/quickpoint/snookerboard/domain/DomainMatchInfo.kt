@@ -43,35 +43,41 @@ sealed class DomainMatchInfo(
             frameMax = 0
         }
 
-        private fun getRulesText() =
+        fun getRulesText() =
             "Frames: ${frames}, Reds: ${reds}, Foul: ${foul}, First: ${first}, CrtPlayer: ${crtPlayer}, Count: ${frameCount}, Max: ${frames}"
 
-        fun updateFrames(number: Int) : RULES {
+        fun setFrames(number: Int): Int {
             frames = number
-            return this
+            return frames
         }
 
-        fun updateReds(number: Int) : RULES {
+        fun setReds(number: Int): Int  {
             reds = number
-            return this
+            return reds
         }
 
-        fun updateFoul(number: Int) : RULES {
+        fun setFoul(number: Int) : Int {
             foul = number
-            return this
+            return foul
         }
 
-        fun updateFirst(position: Int) : RULES {
+        fun setFirst(position: Int) : Int {
             first = if (position == 2) (0..1).random() else position
-            return this
+            return first
         }
 
-        fun switchFirst() {
-            first = 1 - first
+        fun nominatePlayerAtTable(hasMatchStarted: Boolean) {
+            if (hasMatchStarted) first = 1 - first
+            crtPlayer = first
         }
 
         fun switchCrtPlayer() {
             crtPlayer = 1 - crtPlayer
+        }
+
+        fun getDisplayFrames() = "(" + (frames * 2 - 1).toString() + ")"
+        fun rerackBalls() {
+            frameMax = reds * 8 + 27
         }
     }
 }

@@ -5,8 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.quickpoint.snookerboard.database.*
 import com.quickpoint.snookerboard.domain.*
+import com.quickpoint.snookerboard.utils.Event
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 // Used to connect database to domain packages
 class SnookerRepository(database: SnookerDatabase) {
@@ -48,6 +50,7 @@ class SnookerRepository(database: SnookerDatabase) {
 
     // Save the latest frame to the database
     suspend fun saveCurrentFrame(frame: DomainFrame) = withContext(Dispatchers.IO) {
+        Timber.i("saveCurrentFrame(): ${frame.getTextInfo()}")
         snookerDbDao.apply {
             insertMatchFrame(frame.asDbFrame())
             insertMatchScore(frame.asDbCrtScore())
@@ -85,13 +88,19 @@ class SnookerRepository(database: SnookerDatabase) {
     }
 
     // Add a live data object that stores the value of a frameId when called; used below
-    private val frameCount: MutableLiveData<Int> = MutableLiveData()
+    private val _frameCount = MutableLiveData<Int>()
     fun searchByCount(frameId: Int) {
-        frameCount.value = frameId
+        _frameCount.value = frameId
+    }
+
+    private val _isUpdateFrame = MutableLiveData(false)
+    val isUpdateFrame: LiveData<Boolean> = _isUpdateFrame
+    fun onFrameUpdate(updateFrame: Boolean) {
+        _isUpdateFrame.value = updateFrame
     }
 
     // Get current frame information by frameId, will update automatically once frameID changes
-    val crtFrame: LiveData<DbFrameWithScoreAndBreakWithPotsAndBallStack?> = Transformations.switchMap(frameCount) { frameId ->
+    val crtFrame: LiveData<DbFrameWithScoreAndBreakWithPotsAndBallStack?> = Transformations.switchMap(_frameCount) { frameId ->
         snookerDbDao.getCurrentFrame(frameId)
     }
 

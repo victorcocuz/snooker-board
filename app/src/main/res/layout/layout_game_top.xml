@@ -4,14 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable
-            name="varApplication"
-            type="android.app.Application" />
+        <import type="com.quickpoint.snookerboard.domain.DomainPlayer"/>
         <variable
             name="varPlayerTagType"
             type="com.quickpoint.snookerboard.utils.PlayerTagType" />
         <variable
-            name="varMatchViewModel"
+            name="varMatchVm"
             type="com.quickpoint.snookerboard.MatchViewModel" />
     </data>
 
@@ -51,22 +49,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/frag_game_toolbar"
             app:setActivePlayerTag="@{varPlayerTagType}"
-            app:setActivePlayer="@{varMatchViewModel.displayScore == varMatchViewModel.displayScore.getFirst()}">
+            app:setActivePlayer="@{varMatchVm.eventRules.crtPlayer == 0}">
 
             <TextView
                 android:id="@+id/game_label_name_first_a"
                 style="@style/TextCaption"
                 android:layout_marginBottom="@dimen/subtitle_offset"
-                app:getNameApplication="@{varApplication}"
-                app:getNamePref="@{@string/sp_match_name_first_a}"
-                tools:text="@string/f_game_label_player_a" />
+                android:text="@={DomainPlayer.PLAYER01.INSTANCE.firstName}"/>
 
             <TextView
                 android:id="@+id/game_label_name_last_a"
                 style="@style/TextSubtitle"
-                app:getNameApplication="@{varApplication}"
-                app:getNamePref="@{@string/sp_match_name_last_a}"
-                tools:text="@string/f_game_label_player_a" />
+                android:text="@={DomainPlayer.PLAYER01.INSTANCE.lastName}"/>
         </LinearLayout>
 
         <LinearLayout
@@ -76,22 +70,18 @@
             app:layout_constraintStart_toEndOf="@+id/game_guide_vert_mid"
             app:layout_constraintTop_toBottomOf="@+id/frag_game_toolbar"
             app:setActivePlayerTag="@{varPlayerTagType}"
-            app:setActivePlayer="@{varMatchViewModel.displayScore == varMatchViewModel.displayScore.getSecond()}">
+            app:setActivePlayer="@{varMatchVm.eventRules.crtPlayer == 1}">
 
             <TextView
                 android:id="@+id/game_label_name_first_b"
                 style="@style/TextCaption"
                 android:layout_marginBottom="@dimen/subtitle_offset"
-                app:getNameApplication="@{varApplication}"
-                app:getNamePref="@{@string/sp_match_name_first_b}"
-                tools:text="@string/f_game_label_player_b" />
+                android:text="@={DomainPlayer.PLAYER02.INSTANCE.firstName}"/>
 
             <TextView
                 android:id="@+id/game_label_name_last_b"
                 style="@style/TextSubtitle"
-                app:getNameApplication="@{varApplication}"
-                app:getNamePref="@{@string/sp_match_name_last_b}"
-                tools:text="@string/f_game_label_player_b" />
+                android:text="@={DomainPlayer.PLAYER02.INSTANCE.lastName}"/>
         </LinearLayout>
 
 

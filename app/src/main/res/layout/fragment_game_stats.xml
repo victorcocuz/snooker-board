@@ -4,19 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES"/>
 
         <variable
-            name="varApplication"
-            type="android.app.Application" />
-
-        <variable
-            name="varStatsViewModel"
+            name="varStatsVm"
             type="com.quickpoint.snookerboard.fragments.gamestatistics.GameStatsViewModel" />
 
         <import type="com.quickpoint.snookerboard.utils.MatchAction" />
 
         <variable
-            name="varMatchViewModel"
+            name="varMatchVm"
             type="com.quickpoint.snookerboard.MatchViewModel" />
 
         <variable
@@ -52,7 +49,7 @@
             style="@style/TextTitle"
             android:layout_marginStart="@dimen/margin_layout_offset"
             android:layout_marginEnd="@dimen/margin_layout_offset"
-            android:text="@{String.valueOf(varStatsViewModel.totalsA.matchPoints)}"
+            android:text="@{String.valueOf(varStatsVm.totalsA.matchPoints)}"
             app:layout_constraintEnd_toStartOf="@+id/frag_stats_text_score_total"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/frag_stats_layout_top"
@@ -65,15 +62,14 @@
             app:layout_constraintEnd_toEndOf="@+id/frag_stats_guide_vert_mid"
             app:layout_constraintStart_toStartOf="@+id/frag_stats_guide_vert_mid"
             app:layout_constraintTop_toTopOf="@+id/frag_stats_text_score_frames_a"
-            app:setTotalScore="@{varApplication}"
-            tools:text="(37)" />
+            android:text="@{String.valueOf(RULES.INSTANCE.getDisplayFrames())}" />
 
         <TextView
             android:id="@+id/frag_stats_text_score_frames_b"
             style="@style/TextTitle"
             android:layout_marginStart="@dimen/margin_layout_offset"
             android:layout_marginEnd="@dimen/margin_layout_offset"
-            android:text="@{String.valueOf(varStatsViewModel.totalsB.matchPoints)}"
+            android:text="@{String.valueOf(varStatsVm.totalsB.matchPoints)}"
             app:layout_constraintBottom_toBottomOf="@+id/frag_stats_text_score_frames_a"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/frag_stats_text_score_total"
@@ -112,7 +108,7 @@
                 android:id="@+id/frag_stats_rv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:bindGameStatsData="@{varStatsViewModel.score}"
+                app:bindGameStatsData="@{varStatsVm.score}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="16"
                 tools:layout_editor_absoluteX="0dp"
@@ -148,7 +144,7 @@
             android:id="@+id/frag_stats_btn"
             style="@style/ButtonStretched"
             android:layout_width="match_parent"
-            android:onClick="@{() -> varMatchViewModel.assignEventMatchAction(MatchAction.NAVIGATE_HOME)}"
+            android:onClick="@{() -> varMatchVm.assignEventMatchAction(MatchAction.NAVIGATE_HOME)}"
             android:text="@string/fragment_game_stats_btn_go_to_play"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

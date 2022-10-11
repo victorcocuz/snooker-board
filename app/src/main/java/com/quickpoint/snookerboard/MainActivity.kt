@@ -10,9 +10,10 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import com.quickpoint.snookerboard.databinding.ActivityMainBinding
-import com.quickpoint.snookerboard.utils.GenericViewModelFactory
-import com.quickpoint.snookerboard.utils.getSharedPref
+import com.quickpoint.snookerboard.utils.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,27 +22,33 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
     private val activityScope = CoroutineScope(Dispatchers.Default)
     private lateinit var binding: ActivityMainBinding
-    private lateinit var matchViewModel: MatchViewModel
-    // private lateinit var navController: NavController
+    private lateinit var matchVm: MatchViewModel
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         // Create activity, bind layout
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        hideKeyboard()
 
-        // Generate the Game View Model from the get go so it can be accessed readily accessed from all fragments when needed
-        // Pass in the application and an instance of the snookerRepository
-        matchViewModel = ViewModelProvider(
+        // Generate the matchVm from the get to be readily accessed from all fragments when needed, pass in application and repository
+        matchVm = ViewModelProvider(
             this,
-            GenericViewModelFactory(this.application, this, null)
+            GenericViewModelFactory(application, this, null)
         )[MatchViewModel::class.java]
+
+        // Condition navigation entry point depending if there is a game in progress or not
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+        val navGraph = navController.navInflater.inflate(R.navigation.navigation_graph)
+        navGraph.setStartDestination(if (getSharedPref().isMatchInProgress()) R.id.gameFragment else R.id.playFragment)
+        navController.graph = navGraph
+
 
         // To be used when more fragments are needed
         //        binding.apply {
         //            navBottom.setupWithNavController(navController)
-
-        // Hide bottom navigation when not needed
         //            navController.addOnDestinationChangedListener { _, nd: NavDestination, _ ->
         //                navBottom.visibility = View.GONE
         //                navBottom.visibility = when (nd.id) {
@@ -52,12 +59,10 @@ class MainActivity : AppCompatActivity() {
         //        }
     }
 
-    // When saving instance, check if the view model is initialised (game has started) and if the match is in progress (game hasn't ended). If so, save match
+    // When saving instance, check if the view model is initialised and if the match is in progress (game hasn't ended). If so, save match
     override fun onSaveInstanceState(outState: Bundle) {
         activityScope.launch {
-            if (::matchViewModel.isInitialized && getSharedPref().getBoolean(getString(R.string.sp_match_is_in_progress), false)) {
-                matchViewModel.autoSaveMatch()
-            }
+            matchVm.saveMatch()
         }
         super.onSaveInstanceState(outState)
     }

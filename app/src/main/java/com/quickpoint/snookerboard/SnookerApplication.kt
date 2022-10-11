@@ -6,6 +6,8 @@ import android.os.Build
 import androidx.work.*
 import com.quickpoint.snookerboard.database.SnookerDatabase
 import com.quickpoint.snookerboard.repository.SnookerRepository
+import com.quickpoint.snookerboard.utils.getSharedPref
+import com.quickpoint.snookerboard.utils.loadPrefNames
 import com.quickpoint.snookerboard.work.RefreshDataWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,6 +35,9 @@ class SnookerApplication : Application() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())
         Timber.i(getString(R.string.helper_first_line))
+
+        getSharedPref().loadPrefNames(this)
+
         //  delayedInit()
     }
 

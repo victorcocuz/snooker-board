@@ -1,6 +1,5 @@
 package com.quickpoint.snookerboard.utils
 
-import android.app.Application
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -60,28 +59,10 @@ fun LinearLayout.setActivePlayer(activePlayer: Boolean, activePlayerTag: PlayerT
     }
 }
 
-@BindingAdapter("setTotalScore")
-fun TextView.setTotalScore(application: Application) {
-    val frames = application.getSharedPref().getInt(application.getString(R.string.sp_match_frames), 0)
-    text = context.getString(R.string.game_total_score, (frames * 2 - 1))
-}
-
-@BindingAdapter("getNameApplication", "getNamePref")
-fun TextView.getNameApplication(application: Application, name: String) {
-
-    text = application.getSharedPref().getString(name, "")
-}
-
 @BindingAdapter("setBarWeightScoreFirst", "setBarWeightScoreSecond")
 fun LinearLayout.setBarWeight(scoreFirst: Int, scoreSecond: Int) {
     layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, scoreFirst.toFloat() / scoreSecond.toFloat())
 }
-
-//@BindingAdapter("setActionBallsHeight")
-//fun LinearLayout.setActionBallsHeight() {
-//    Timber.e("its happening")
-//    layoutParams.height = context.getFactoredDimen(BALL_HEIGHT_FACTOR_MATCH_ACTION) + R.dimen.margin_layout_offset * 2
-//}
 
 // Statistics Adapters
 @BindingAdapter("setFrameScorePercentage")
@@ -186,10 +167,10 @@ fun TextView.setDialogGameA(matchAction: MatchAction) {
 }
 
 @BindingAdapter("dialogGameGenB", "dialogGameGenBScore")
-fun TextView.setDialogGameB(matchAction: MatchAction, score: CurrentPlayer?) {
+fun TextView.setDialogGameB(matchAction: MatchAction, frame: DomainFrame?) {
     visibility = when {
-        score == null -> View.GONE
-        score.getFirst().matchPoints + score.getSecond().matchPoints == 0 -> View.GONE
+        frame == null -> View.GONE
+        frame.isNoFrameFinished() -> View.GONE
         matchAction == MATCH_ENDED_DISCARD_FRAME_DIALOG -> View.VISIBLE
         else -> View.GONE
     }
@@ -200,8 +181,8 @@ fun TextView.setDialogGameB(matchAction: MatchAction, score: CurrentPlayer?) {
 }
 
 @BindingAdapter("dialogGameGenC", "dialogGameGenCActionB", "dialogGameGenCScore")
-fun TextView.setDialogGameC(matchAction: MatchAction, matchActionB: MatchAction, score: CurrentPlayer?) {
-    isEnabled = !(matchActionB == MATCH_ENDED_DISCARD_FRAME_DIALOG && (score?.isFrameEqual() ?: false)) // This needs adjusting.
+fun TextView.setDialogGameC(matchAction: MatchAction, matchActionB: MatchAction, frame: DomainFrame?) {
+    isEnabled = !(matchActionB == MATCH_ENDED_DISCARD_FRAME_DIALOG && (frame?.isFrameEqual() ?: false)) // This needs adjusting.
     text = when (matchAction) {
         MATCH_CANCEL -> "Yes"
         FRAME_RESET -> "Yes"
@@ -215,14 +196,13 @@ fun TextView.setDialogGameC(matchAction: MatchAction, matchActionB: MatchAction,
 }
 
 @BindingAdapter("dialogGameNote", "dialogGameNoteScore")
-fun TextView.setDialogGameNote(matchAction: MatchAction, score: CurrentPlayer?) {
+fun TextView.setDialogGameNote(matchAction: MatchAction, frame: DomainFrame?) {
     visibility = if (matchAction == MATCH_ENDED_DISCARD_FRAME_DIALOG) View.VISIBLE else View.GONE
     text = when {
-        score == null -> ""
-        score.getFirst().matchPoints + score.getFirst().matchPoints == 0 -> ""
-        score.getWinner().matchPoints + 1 == score.getWinner()
-            .getOther().matchPoints -> "NOTE: Keeping the current frame will result in a draw"
-        score.matchPoints == score.getOther().matchPoints -> "NOTE: Discarding the current frame will result in a draw"
+        frame == null -> ""
+        frame.isNoFrameFinished() -> ""
+        frame.isFrameWinResultingInMatchTie() -> "NOTE: Keeping the current frame will result in a draw"
+        frame.isMatchEqual() -> "NOTE: Discarding the current frame will result in a draw"
         else -> ""
     }
 }

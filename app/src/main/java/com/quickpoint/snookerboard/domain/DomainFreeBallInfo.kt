@@ -33,7 +33,7 @@ sealed class DomainFreeBallInfo(
         isSelected = !isSelected
     }
 
-    private fun resetFreeball() {
+    fun resetFreeball() {
         setInvisible()
         setUnselected()
     }

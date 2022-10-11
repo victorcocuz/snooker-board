@@ -84,44 +84,6 @@ fun MutableList<DomainBall>.removeBalls(times: Int): Int = if (times == 1) {
     8 * (-1)
 }
 
-fun MutableList<DomainBall>.handlePotBallStack(potType: PotType, isFrameEqual: Boolean) {
-    when (potType) {
-        TYPE_HIT, TYPE_FREE -> removeBalls(1)
-        TYPE_FREEAVAILABLE -> {}
-        TYPE_FREETOGGLE -> {
-            Timber.e("freetoggle ${FREEBALLINFO.isSelected}")
-            RULES.frameMax += if (FREEBALLINFO.isSelected) addFreeBall() else removeFreeBall()
-        }
-        TYPE_REMOVERED, TYPE_ADDRED -> removeBalls(2)
-        TYPE_SAFE, TYPE_MISS, TYPE_FOUL -> {
-            if (last() is COLOR) removeBalls(1)
-            if (last() is FREEBALL) RULES.frameMax += removeFreeBall()
-        }
-    }
-    if (size == 1) if (isFrameEqual) addBalls(BLACK()) // Query end frame exception; see fragment
-}
-
-fun MutableList<DomainBall>.handleUndoBallStack(pot: DomainPot, frameStack: MutableList<DomainBreak>) {
-    when (pot.potType) {
-        TYPE_HIT -> addBalls(if (isNextColor()) COLOR() else pot.ball)
-        TYPE_ADDRED -> addBalls(RED(), COLOR())
-        TYPE_FREE -> addBalls(FREEBALL())
-        TYPE_REMOVERED -> if (isNextColor()) addBalls(COLOR(), RED()) else addBalls(RED(), COLOR())
-        TYPE_SAFE, TYPE_MISS, TYPE_FOUL -> frameStack.apply {
-            when (lastBallType()) {
-                TYPE_RED, TYPE_FREEBALL -> if (isNextColor()) addBalls(COLOR())
-                TYPE_FREEBALLTOGGLE -> RULES.frameMax += addFreeBall()
-                else -> {}
-            }
-        }
-        TYPE_FREEAVAILABLE -> {}
-        TYPE_FREETOGGLE -> {
-            Timber.e("wtf")
-            RULES.frameMax += if (FREEBALLINFO.isSelected) removeFreeBall() else addFreeBall()
-        }
-    }
-}
-
 fun MutableList<DomainBall>.addBalls(vararg balls: DomainBall) {
     for (ball in balls) this.add(ball)
 }
@@ -137,3 +99,40 @@ fun MutableList<DomainBall>.addFreeBall(): Int {
 }
 
 fun MutableList<DomainBall>.removeFreeBall(): Int = if (isInColors()) removeBalls(1) else removeBalls(2)
+
+fun MutableList<DomainBall>.rerackBalls() {
+    clear()
+    addBalls(WHITE(), BLACK(), PINK(), BLUE(), BROWN(), GREEN(), YELLOW())
+    repeat(RULES.reds) { addBalls(COLOR(), RED()) }
+}
+
+fun MutableList<DomainBall>.handlePotBallStack(potType: PotType, isFrameEqual: Boolean) {
+    when (potType) {
+        TYPE_HIT, TYPE_FREE -> removeBalls(1)
+        TYPE_FREEAVAILABLE -> {}
+        TYPE_FREETOGGLE -> RULES.frameMax += if (FREEBALLINFO.isSelected) addFreeBall() else removeFreeBall()
+        TYPE_REMOVERED, TYPE_ADDRED -> removeBalls(2)
+        TYPE_SAFE, TYPE_MISS, TYPE_FOUL -> {
+            if (last() is COLOR) removeBalls(1)
+            if (last() is FREEBALL) RULES.frameMax += removeFreeBall()
+        }
+    }
+    if (size == 1) if (isFrameEqual) addBalls(BLACK()) // Query end frame exception; see fragment
+}
+
+fun MutableList<DomainBall>.handleUndoBallStack(pot: DomainPot, lastBallType: BallType) {
+    when (pot.potType) {
+        TYPE_HIT -> addBalls(if (isNextColor()) COLOR() else pot.ball)
+        TYPE_ADDRED -> addBalls(RED(), COLOR())
+        TYPE_FREE -> addBalls(FREEBALL())
+        TYPE_REMOVERED -> if (isNextColor()) addBalls(COLOR(), RED()) else addBalls(RED(), COLOR())
+        TYPE_SAFE, TYPE_MISS, TYPE_FOUL -> when (lastBallType) {
+            TYPE_RED, TYPE_FREEBALL -> if (isNextColor()) addBalls(COLOR())
+            TYPE_FREEBALLTOGGLE -> RULES.frameMax += addFreeBall()
+            else -> {}
+        }
+
+        TYPE_FREEAVAILABLE -> {}
+        TYPE_FREETOGGLE -> RULES.frameMax += if (FREEBALLINFO.isSelected) removeFreeBall() else addFreeBall()
+    }
+}

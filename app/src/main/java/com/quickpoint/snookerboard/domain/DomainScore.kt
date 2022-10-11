@@ -3,9 +3,10 @@ package com.quickpoint.snookerboard.domain
 import kotlin.math.max
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
+import timber.log.Timber
 
 // Keeps a dynamic live score for both players
-sealed class CurrentPlayer(
+sealed class CurrentScore(
     var frameId: Int,
     var framePoints: Int,
     var matchPoints: Int,
@@ -14,8 +15,8 @@ sealed class CurrentPlayer(
     var fouls: Int,
     var highestBreak: Int
 ) {
-    object PLAYER01 : CurrentPlayer(0, 0, 0, 0, 0, 0, 0)
-    object PLAYER02 : CurrentPlayer(0, 0, 0, 0, 0, 0, 0)
+    object SCORE01 : CurrentScore(0, 0, 0, 0, 0, 0, 0)
+    object SCORE02 : CurrentScore(0, 0, 0, 0, 0, 0, 0)
 
     fun initPlayer(
         frameId: Int,
@@ -35,26 +36,45 @@ sealed class CurrentPlayer(
         this.highestBreak = highestBreak
     }
 
-    fun getFirst() = PLAYER01
-    fun getSecond() = PLAYER02
+    fun getFirst() = SCORE01
+    fun getSecond() = SCORE02
 
-    fun getOther() = when (this) {
-        PLAYER01 -> PLAYER02
-        PLAYER02 -> PLAYER01
-    }
-
-    fun setOther(): CurrentPlayer {
-        RULES.switchCrtPlayer()
-        return getOther()
+    private fun getOther() = when (this) {
+        SCORE01 -> SCORE02
+        SCORE02 -> SCORE01
     }
 
     fun getPlayerAsInt(): Int = when (this) {
-        PLAYER01 -> 0
-        PLAYER02 -> 1
+        SCORE01 -> 0
+        SCORE02 -> 1
     }
 
-    fun getFirstPlayerFromRules() = if (RULES.first == 0) PLAYER01 else PLAYER02
-    fun getCrtPlayerFromRules() = if (RULES.crtPlayer == 0) PLAYER01 else PLAYER02
+    fun getCrtPlayerFromRules(): CurrentScore = if (RULES.crtPlayer == 0) SCORE01 else SCORE02
+
+    fun resetFrameScoreAndNominatePlayer(): CurrentScore {
+        this.resetFrameScoreEach()
+        this.getOther().resetFrameScoreEach()
+        val score = if (RULES.first == 0) SCORE01 else SCORE02
+        Timber.i("resetFrameScoreAndNominatePlayer($score)")
+        return score
+    }
+
+    private fun resetFrameScoreEach() {
+        framePoints = 0
+        highestBreak = 0
+        missedShots = 0
+        successShots = 0
+    }
+
+    fun resetMatchScore() {
+        this.resetMatchScoreEach()
+        this.getOther().resetMatchScoreEach()
+    }
+
+    private fun resetMatchScoreEach() {
+        matchPoints = 0
+        frameId = 0
+    }
 
     fun getWinner() = if (framePoints > getOther().framePoints) this else getOther()
 
@@ -68,27 +88,25 @@ sealed class CurrentPlayer(
 
     fun hasMatchStarted() = framePoints + matchPoints + getOther().framePoints + getOther().matchPoints > 0
 
-    fun addFramePoints(points: Int) {
+    private fun addFramePoints(points: Int) {
         framePoints += points
     }
 
-    fun addSuccessShots(pol: Int) {
-        successShots += pol
-    }
-
-    fun addMissedShots(pol: Int) {
+    private fun addMissedShots(pol: Int) {
         missedShots += pol
     }
 
-    fun addFouls(pol: Int) {
+    private fun addFouls(pol: Int) {
         fouls += pol
     }
 
-    fun addMatchPoint() {
+    fun addMatchPointAndAssignFrameId() {
         matchPoints += 1
+        this.frameId = RULES.frameCount // TEMP - Assign a frameId to later use to add frame info to DATABASE
+        this.getOther().frameId = RULES.frameCount // TEMP - Assign a frameId to later use to add frame info to DATABASE
     }
 
-    fun findMaxBreak(frameStack: MutableList<DomainBreak>) {
+    private fun findMaxBreak(frameStack: MutableList<DomainBreak>) {
         var highestBreak = 0
         frameStack.forEach { crtBreak ->
             if (getPlayerAsInt() == crtBreak.player && crtBreak.breakSize > highestBreak) {
@@ -96,18 +114,6 @@ sealed class CurrentPlayer(
             }
         }
         this.highestBreak = highestBreak
-    }
-
-    fun resetFrameScore() {
-        framePoints = 0
-        highestBreak = 0
-        missedShots = 0
-        successShots = 0
-    }
-
-    fun resetMatchScore() {
-        matchPoints = 0
-        frameId = 0
     }
 
     // Polarity is used to reverse score on undo
@@ -135,6 +141,10 @@ sealed class CurrentPlayer(
     }
 }
 
+fun CurrentScore.addSuccessShots(pol: Int) {
+    successShots += pol
+}
+
 // DOMAIN Player Score
 data class DomainPlayerScore(
     val frameId: Int,
@@ -147,7 +157,7 @@ data class DomainPlayerScore(
     val highestBreak: Int
 )
 
-fun CurrentPlayer.asDomainPlayerScore(): DomainPlayerScore { // Converts the current score into a domain score
+fun CurrentScore.asDomainPlayerScore(): DomainPlayerScore { // Converts the current score into a domain score
     return DomainPlayerScore(
         frameId = this.frameId,
         playerId = this.getPlayerAsInt(),
@@ -160,9 +170,9 @@ fun CurrentPlayer.asDomainPlayerScore(): DomainPlayerScore { // Converts the cur
     )
 }
 
-fun MutableList<DomainPlayerScore>.asCurrentScore(): CurrentPlayer? { // Converts the domain player score into the current score
+fun MutableList<DomainPlayerScore>.asCurrentScore(): CurrentScore? { // Converts the domain player score into the current score
     if (this.size > 1) {
-        val currentScore: CurrentPlayer = CurrentPlayer.PLAYER01
+        val currentScore: CurrentScore = CurrentScore.SCORE01
         val dbPlayerA = this[this.lastIndex - 1]
         val dbPlayerB = this[this.lastIndex]
         currentScore.getFirst().initPlayer(

@@ -18,16 +18,16 @@ import com.quickpoint.snookerboard.utils.*
 
 class GameStatsFragment : Fragment() {
 
-    private val gameStatsViewModel: GameStatsViewModel by lazy {
+    private val gameStatsVm: GameStatsViewModel by lazy {
         ViewModelProvider(
             this, GenericViewModelFactory(
                 requireNotNull(this.activity).application,
                 this,
                 null
             )
-        ).get(GameStatsViewModel::class.java)
+        )[GameStatsViewModel::class.java]
     }
-    private val matchViewModel: MatchViewModel by activityViewModels()
+    private val matchVm: MatchViewModel by activityViewModels()
     private var scrollHeight = 0
     private var ghostHeight = 0
 
@@ -38,14 +38,13 @@ class GameStatsFragment : Fragment() {
         val binding: FragmentGameStatsBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_game_stats, container, false)
 
-        gameStatsViewModel.getTotals() // Gets the score from repository and stores it in live data within the vm
+        gameStatsVm.getTotals() // Gets the score from repository and stores it in live data within the vm
 
         // Bind all required elements from the view
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
-            varStatsViewModel = gameStatsViewModel
-            varMatchViewModel = this@GameStatsFragment.matchViewModel
-            varApplication = requireActivity().application
+            varStatsVm = gameStatsVm
+            varMatchVm = this@GameStatsFragment.matchVm
 
             fragStatsRv.adapter = GameStatsAdapter()
 
@@ -55,7 +54,6 @@ class GameStatsFragment : Fragment() {
                     supportActionBar?.setDisplayShowTitleEnabled(false)
                 }
                 varPlayerTagType = PlayerTagType.STATISTICS
-                varApplication = requireActivity().application
             }
 
             fragStatsScrollView.viewTreeObserver.addOnGlobalLayoutListener { // Assign ghost & scroll view height that lines up with the top of the action button
@@ -79,16 +77,12 @@ class GameStatsFragment : Fragment() {
             fragStatsFooter.apply {
                 varBgType = 2
                 varTextType = 1
-                gameStatsViewModel.totalsA.observe(viewLifecycleOwner, {
-                    frameScoreA = it
-                })
-                gameStatsViewModel.totalsB.observe(viewLifecycleOwner, {
-                    frameScoreB = it
-                })
+                gameStatsVm.totalsA.observe(viewLifecycleOwner) { frameScoreA = it }
+                gameStatsVm.totalsB.observe(viewLifecycleOwner) { frameScoreB = it }
             }
 
             // VM Observers
-            matchViewModel.apply {
+            matchVm.apply {
                 eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                     if (matchAction == MatchAction.NAVIGATE_HOME) findNavController().navigate(GameStatsFragmentDirections.actionGameStatsFragmentToPlayFragment())
                 })

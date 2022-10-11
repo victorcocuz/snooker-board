@@ -7,10 +7,7 @@
         <import type="com.quickpoint.snookerboard.utils.MatchAction" />
 
         <variable
-            name="varMatchViewModel"
-            type="com.quickpoint.snookerboard.MatchViewModel" />
-        <variable
-            name="varPlayViewModel"
+            name="varPlayVm"
             type="com.quickpoint.snookerboard.fragments.play.PlayViewModel" />
     </data>
 
@@ -65,7 +62,7 @@
             android:id="@+id/frag_play_btn_play"
             style="@style/ButtonStretched"
             android:layout_width="match_parent"
-            android:onClick="@{() -> varMatchViewModel.startMatchQuery(varPlayViewModel.eventRules)}"
+            android:onClick="@{() -> varPlayVm.startMatchQuery()}"
             android:text="@string/f_play_btn_play"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

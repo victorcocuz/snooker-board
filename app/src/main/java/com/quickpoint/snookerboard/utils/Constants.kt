@@ -14,6 +14,7 @@ enum class MatchAction {
 
     // Frame Actions
     FRAME_RESET_DIALOG, // On clicking rerack button
+    FRAME_SAVE, // Action to save frame
     FRAME_RESET, // Action to reset frame
     FRAME_ENDED_DIALOG, // Open frame end dialog
     FRAME_TO_END_DIALOG, // On clicking the concede frame button while the frame is still ongoing
@@ -21,6 +22,7 @@ enum class MatchAction {
 
     // Match Actions
     MATCH_START_DIALOG, // Open the dialog to decide whether to start new match or continue old one
+    MATCH_CONTINUE,
     MATCH_LOAD, // On confirming the dialog at the beginning that you wish to continue match
     MATCH_START, // On confirming the dialog at the beginning that you wish to start a new match, or if there are no matches in progress
     MATCH_CANCEL_DIALOG, // On clicking cancel match

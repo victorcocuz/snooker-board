@@ -26,6 +26,17 @@
             app:destination="@id/gameGenericDialogFragment" />
     </fragment>
     <fragment
+        android:id="@+id/playContinueFragment"
+        android:name="com.quickpoint.snookerboard.fragments.play.PlayContinueFragment"
+        android:label="PlayContinueFragment">
+        <action
+            android:id="@+id/action_playContinueFragment_to_gameFragment"
+            app:destination="@id/gameFragment" />
+        <action
+            android:id="@+id/action_playContinueFragment_to_playFragment"
+            app:destination="@id/playFragment" />
+    </fragment>
+    <fragment
         android:id="@+id/historyFragment"
         android:name="com.quickpoint.snookerboard.fragments.main.HistoryFragment"
         android:label="HistoryFragment" />
@@ -61,9 +72,6 @@
             app:destination="@id/playFragment"
             app:popUpTo="@id/gameFragment"
             app:popUpToInclusive="true" />
-        <argument
-            android:name="matchAction"
-            app:argType="com.quickpoint.snookerboard.utils.MatchAction" />
     </fragment>
     <fragment
         android:id="@+id/gameStatsFragment"

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="varMatchVm"
+            type="com.quickpoint.snookerboard.MatchViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent">
+
+        <LinearLayout
+            android:id="@+id/game_line_chapter_breakdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_header_below"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <FrameLayout
+                style="@style/LineHorizontalChapter"
+                android:layout_marginEnd="@dimen/margin_layout_offset" />
+
+            <TextView
+                style="@style/TextChapter"
+                android:text="@string/chapter_breakdown" />
+
+            <FrameLayout
+                style="@style/LineHorizontalChapter"
+                android:layout_marginStart="@dimen/margin_layout_offset" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/game_ghost_layout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/game_line_chapter_breakdown" />
+
+        <ScrollView
+            android:id="@+id/game_scroll_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/game_line_chapter_breakdown"
+            app:layout_constraintVertical_bias="0.0">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/game_break_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:bindBreakData="@{varMatchVm.displayFrame.frameStack}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="16"
+                tools:listitem="@layout/item_break_view" />
+
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
