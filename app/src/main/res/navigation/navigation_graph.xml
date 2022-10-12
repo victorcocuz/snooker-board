@@ -75,7 +75,7 @@
     </fragment>
     <fragment
         android:id="@+id/gameStatsFragment"
-        android:name="com.quickpoint.snookerboard.fragments.gamestatistics.GameStatsFragment"
+        android:name="com.quickpoint.snookerboard.fragments.postgame.PostGameFragment"
         android:label="GameStatsFragment" >
         <action
             android:id="@+id/action_gameStatsFragment_to_playFragment"

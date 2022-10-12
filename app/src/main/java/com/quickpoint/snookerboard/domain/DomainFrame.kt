@@ -17,6 +17,7 @@ data class DomainFrame(
 ) {
     fun isFrameEqual() = frameScore[0].framePoints == frameScore[1].framePoints
     fun isMatchEqual() = frameScore[0].matchPoints == frameScore[1].matchPoints
+    fun isMatchInProgress() = (frameScore[0].framePoints + frameScore[0].matchPoints + frameScore[1].framePoints + frameScore[1].matchPoints) > 0
     fun getFrameScoreDiff() = abs(frameScore[0].framePoints - frameScore[1].framePoints)
     fun getMatchScoreDiff() = abs(frameScore[0].matchPoints - frameScore[1].matchPoints)
     fun getFrameScoreRemaining() = ballStack.size.apply { // Formula to calculate remaining available points

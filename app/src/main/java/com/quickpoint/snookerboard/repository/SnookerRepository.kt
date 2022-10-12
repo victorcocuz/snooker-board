@@ -50,7 +50,6 @@ class SnookerRepository(database: SnookerDatabase) {
 
     // Save the latest frame to the database
     suspend fun saveCurrentFrame(frame: DomainFrame) = withContext(Dispatchers.IO) {
-        Timber.i("saveCurrentFrame(): ${frame.getTextInfo()}")
         snookerDbDao.apply {
             insertMatchFrame(frame.asDbFrame())
             insertMatchScore(frame.asDbCrtScore())
@@ -60,6 +59,7 @@ class SnookerRepository(database: SnookerDatabase) {
             }
             insertMatchBalls(frame.asDbBallStack())
         }
+        Timber.i("saveCurrentFrameAfter(): $frame")
     }
 
     // Delete the latest frame from the database

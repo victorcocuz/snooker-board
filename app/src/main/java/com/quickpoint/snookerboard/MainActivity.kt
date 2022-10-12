@@ -13,10 +13,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.quickpoint.snookerboard.databinding.ActivityMainBinding
+import com.quickpoint.snookerboard.domain.DomainMatchInfo.*
+import com.quickpoint.snookerboard.domain.MatchState.*
 import com.quickpoint.snookerboard.utils.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 class MainActivity : AppCompatActivity() {
@@ -42,7 +44,14 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
         val navGraph = navController.navInflater.inflate(R.navigation.navigation_graph)
-        navGraph.setStartDestination(if (getSharedPref().isMatchInProgress()) R.id.gameFragment else R.id.playFragment)
+        Timber.e("State is ${RULES.state}")
+        navGraph.setStartDestination(
+            when (RULES.state) {
+                IDLE -> R.id.playFragment
+                IN_PROGRESS -> R.id.gameFragment
+                POST_MATCH -> R.id.gameStatsFragment
+            }
+        )
         navController.graph = navGraph
 
 
@@ -61,9 +70,7 @@ class MainActivity : AppCompatActivity() {
 
     // When saving instance, check if the view model is initialised and if the match is in progress (game hasn't ended). If so, save match
     override fun onSaveInstanceState(outState: Bundle) {
-        activityScope.launch {
-            matchVm.saveMatch()
-        }
+        matchVm.saveMatch()
         super.onSaveInstanceState(outState)
     }
 

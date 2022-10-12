@@ -9,8 +9,10 @@ import androidx.lifecycle.viewModelScope
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.DomainFreeBallInfo.*
 import com.quickpoint.snookerboard.domain.DomainMatchInfo.*
+import com.quickpoint.snookerboard.domain.MatchState.*
 import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.*
+import com.quickpoint.snookerboard.utils.MatchAction.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -47,7 +49,12 @@ class MatchViewModel(
             frameStack,
             RULES.frameMax
         )
-        if (_displayFrame.value?.isFrameEnded() == true) assignEventMatchAction(MatchAction.FRAME_ENDED_DIALOG)
+        _displayFrame.value?.apply {
+            if (isFrameEnded()) assignEventMatchAction(FRAME_ENDED_DIALOG)
+            if (RULES.state == IDLE && isMatchInProgress()) RULES.state = IN_PROGRESS
+            if (!isMatchInProgress()) RULES.state = IDLE
+        }
+        Timber.i(app.resources.getString(R.string.helper_update_frame_info))
     }
 
     private val _eventMatchAction = MutableLiveData<Event<MatchAction>>()
@@ -73,34 +80,35 @@ class MatchViewModel(
     fun startNewMatch() { // When actioned from main menu
         Timber.i("startNewMatch()")
         resetMatch()
-        sharedPref.setMatchInProgress(true)
     }
 
     fun cancelMatch() { // When actioned from options menu
         Timber.i("cancelMatch()")
         RULES.resetRules()
-        FREEBALLINFO.resetFreeball()
         resetMatch()
-        sharedPref.setMatchInProgress(false)
     }
 
     private fun resetMatch() { // When starting a new match or cancelling an existing match
         Timber.i("resetMatch()")
+        FREEBALLINFO.resetFreeball()
         score.resetMatchScore()
-        assignEventMatchAction(MatchAction.FRAME_RESET)
         viewModelScope.launch {
             snookerRepository.deleteCurrentMatch()
         }
+        assignEventMatchAction(FRAME_RESET)
+        RULES.state = IDLE
     }
 
-    fun saveAndStartNewFrame() = score.apply { // When confirmed from generic dialog or if decided on match end from a generic dialog
-        Timber.i("saveAndStartNewFrame()")
-        getWinner().addMatchPointAndAssignFrameId()
-        assignEventMatchAction(MatchAction.FRAME_SAVE)
+    fun saveAndResetFrame(matchAction: MatchAction?) { // When confirmed from generic dialog or if decided on match end from a generic dialog
+        Timber.i("saveAndResetFrame(): $matchAction")
         viewModelScope.launch {
             snookerRepository.saveCurrentFrame(displayFrame.value!!)
-            assignEventMatchAction(MatchAction.FRAME_RESET)
+            assignEventMatchAction(FRAME_RESET)
             RULES.frameCount += 1
+            if (matchAction == GO_TO_POST_GAME) {
+                RULES.state = POST_MATCH
+                assignEventMatchAction(GO_TO_POST_GAME)
+            }
         }
     }
 
@@ -108,32 +116,21 @@ class MatchViewModel(
     fun queryEndFrameOrMatch(matchAction: MatchAction): MatchAction { // When actioned from options menu or if last ball has been potted
         Timber.i("queryEndFrameOrMatch($matchAction)")
         return if (score.isMatchEnding(RULES.frames)) { // If the frame would push player to win, assign a MATCH ending action
-            if (displayFrame.value!!.isFrameOver()) MatchAction.MATCH_ENDED
-            else MatchAction.MATCH_TO_END_DIALOG
+            if (displayFrame.value!!.isFrameOver()) MATCH_ENDED
+            else MATCH_TO_END_DIALOG
         } else when { // Else assign a match action for a MATCH end query or else assign a FRAME ending action
-            matchAction == MatchAction.MATCH_ENDED_DIALOG -> MatchAction.MATCH_TO_END_DIALOG
-            displayFrame.value!!.isFrameOver() -> MatchAction.FRAME_ENDED
-            else -> MatchAction.FRAME_TO_END_DIALOG
+            matchAction == MATCH_ENDED_DIALOG -> MATCH_TO_END_DIALOG
+            displayFrame.value!!.isFrameOver() -> FRAME_ENDED
+            else -> FRAME_TO_END_DIALOG
         }
     }
 
-    fun matchEnded(matchAction: MatchAction) { // When the match ends, reset frame only so you can access the data for the stats screen - temp solution until firebase is created
-        Timber.i("matchEnded()")
-        if (matchAction == MatchAction.MATCH_ENDED_DISCARD_FRAME_DIALOG) assignEventMatchAction(MatchAction.FRAME_RESET)
-        else saveAndStartNewFrame() // TEMP - the last frame should be saved, but a new one should not be started
-        sharedPref.setMatchInProgress(false)
-    }
-
     // Separate threads
-    suspend fun saveMatch() = sharedPref.apply { // When the back button is pressed or when instance state is saved
-        Timber.i("saveMatch()")
-        savePrefNames(app)
-        if (score.hasMatchStarted()) {
+    fun saveMatch() = sharedPref.apply { // When the back button is pressed or when instance state is saved
+        savePrefStateAndNames(app)
+        if (RULES.state != IDLE) savePrefRulesAndFreeball(app)
+        if (RULES.state == IN_PROGRESS) viewModelScope.launch {
             snookerRepository.saveCurrentFrame(displayFrame.value!!)
-            savePrefRulesAndFreeball(app)
-            setMatchInProgress(true)
-        } else {
-            setMatchInProgress(false)
         }
     }
 }

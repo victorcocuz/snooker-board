@@ -120,7 +120,7 @@ fun MutableList<DomainBall>.handlePotBallStack(potType: PotType, isFrameEqual: B
     if (size == 1) if (isFrameEqual) addBalls(BLACK()) // Query end frame exception; see fragment
 }
 
-fun MutableList<DomainBall>.handleUndoBallStack(pot: DomainPot, lastBallType: BallType) {
+fun MutableList<DomainBall>.handleUndoBallStack(pot: DomainPot, lastBallType: BallType?) {
     when (pot.potType) {
         TYPE_HIT -> addBalls(if (isNextColor()) COLOR() else pot.ball)
         TYPE_ADDRED -> addBalls(RED(), COLOR())

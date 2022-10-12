@@ -20,7 +20,9 @@ import com.quickpoint.snookerboard.database.asDomainFrame
 import com.quickpoint.snookerboard.databinding.FragmentGameBinding
 import com.quickpoint.snookerboard.domain.DomainBall.*
 import com.quickpoint.snookerboard.domain.DomainFreeBallInfo.*
+import com.quickpoint.snookerboard.domain.DomainMatchInfo.*
 import com.quickpoint.snookerboard.domain.DomainPot.*
+import com.quickpoint.snookerboard.domain.MatchState.*
 import com.quickpoint.snookerboard.utils.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -109,7 +111,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
         }
 
         binding.apply { // Start or load match
-            if (getSharedPref().isMatchInProgress()) {
+            if (RULES.state == IN_PROGRESS) {
                 setQueryMatchVisibility()
                 matchVm.loadMatchAPointToCrtFrame()
             } else {
@@ -123,7 +125,6 @@ class GameFragment : androidx.fragment.app.Fragment() {
             eventFrameUpdated.observe(viewLifecycleOwner, EventObserver { // Reset the menu every time the frame has been updated
                 requireActivity().invalidateOptionsMenu()
                 matchVm.updateFrameInfo(ballStack, frameStack)
-                Timber.i(getString(R.string.helper_update_frame_info))
             })
         }
         matchVm.apply {
@@ -141,13 +142,12 @@ class GameFragment : androidx.fragment.app.Fragment() {
                         GameFragmentDirections.actionGameFragmentToGameGenericDialogFragment(CLOSE_DIALOG, CLOSE_DIALOG, MATCH_CANCEL)
                     )
                     MATCH_CANCEL -> { // On a match cancel, cancel match and go back to play fragment
-                        findNavController().navigate(GameFragmentDirections.actionGameFragmentToPlayFragment())
                         cancelMatch()
+                        findNavController().navigate(GameFragmentDirections.actionGameFragmentToPlayFragment())
                     }
                     FRAME_RESET_DIALOG -> findNavController().navigate(
                         GameFragmentDirections.actionGameFragmentToGameGenericDialogFragment(CLOSE_DIALOG, CLOSE_DIALOG, FRAME_RESET)
                     )
-                    FRAME_SAVE -> gameVm.saveFrame()
                     FRAME_RESET -> gameVm.resetFrame()
                     FRAME_ENDED_DIALOG, MATCH_ENDED_DIALOG -> findNavController().navigate(
                         GameFragmentDirections.actionGameFragmentToGameGenericDialogFragment(
@@ -156,11 +156,19 @@ class GameFragment : androidx.fragment.app.Fragment() {
                             queryEndFrameOrMatch(matchAction)
                         )
                     )
-                    FRAME_TO_END_DIALOG, FRAME_ENDED -> matchVm.saveAndStartNewFrame()
-                    MATCH_TO_END_DIALOG, MATCH_ENDED, MATCH_ENDED_DISCARD_FRAME_DIALOG -> { // End match
-                        matchVm.matchEnded(matchAction)
-                        findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameStatsFragment())
+                    FRAME_TO_END_DIALOG, FRAME_ENDED -> {
+                        gameVm.saveFrame()
+                        matchVm.saveAndResetFrame(null)
                     }
+                    MATCH_ENDED_DISCARD_FRAME_DIALOG -> {
+                        gameVm.resetFrame()
+                        matchVm.saveAndResetFrame(GO_TO_POST_GAME)
+                    }
+                    MATCH_TO_END_DIALOG, MATCH_ENDED -> {
+                        gameVm.saveFrame()
+                        matchVm.saveAndResetFrame(GO_TO_POST_GAME)
+                    }
+                    GO_TO_POST_GAME -> findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameStatsFragment())
                     FOUL_DIALOG -> { // Navigate to foul dialog when queried
                         dialogsVm.resetFoul()
                         findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameFoulDialogFragment())

@@ -9,7 +9,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 import com.quickpoint.snookerboard.SnookerApplication
 import com.quickpoint.snookerboard.fragments.game.GameViewModel
 import com.quickpoint.snookerboard.MatchViewModel
-import com.quickpoint.snookerboard.fragments.gamestatistics.GameStatsViewModel
+import com.quickpoint.snookerboard.fragments.postgame.PostGameViewModel
 import com.quickpoint.snookerboard.fragments.play.PlayViewModel
 import com.quickpoint.snookerboard.fragments.rankings.RankingsFragmentViewModel
 
@@ -26,8 +26,8 @@ class GenericViewModelFactory(
         if (modelClass.isAssignableFrom(PlayViewModel::class.java)) {
             return PlayViewModel(application) as T
         }
-        if (modelClass.isAssignableFrom(GameStatsViewModel::class.java)) {
-            return GameStatsViewModel(application, SnookerApplication.getSnookerRepository()) as T
+        if (modelClass.isAssignableFrom(PostGameViewModel::class.java)) {
+            return PostGameViewModel(application, SnookerApplication.getSnookerRepository()) as T
         }
         if (modelClass.isAssignableFrom(GameViewModel::class.java)) {
             return GameViewModel() as T

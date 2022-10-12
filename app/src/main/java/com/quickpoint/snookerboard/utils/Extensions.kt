@@ -11,22 +11,16 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.ScrollView
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentGameBinding
-import com.quickpoint.snookerboard.domain.DomainFreeBallInfo
 import com.quickpoint.snookerboard.domain.DomainFreeBallInfo.*
-import com.quickpoint.snookerboard.domain.DomainMatchInfo
 import com.quickpoint.snookerboard.domain.DomainMatchInfo.*
-import com.quickpoint.snookerboard.domain.DomainPlayer
 import com.quickpoint.snookerboard.domain.DomainPlayer.*
 import timber.log.Timber
 
@@ -54,35 +48,30 @@ fun Application.getSharedPref(): SharedPreferences = getSharedPreferences(
     Context.MODE_PRIVATE
 )
 
-fun SharedPreferences.setMatchInProgress(isInProgress: Boolean) {
-    this.edit().putBoolean("isMatchInProgress", isInProgress).apply()
-    Timber.i("setMatchInProgress() $isInProgress")
-}
-
-
-fun SharedPreferences.isMatchInProgress() = this.getBoolean("isMatchInProgress", false)
 fun SharedPreferences.getCurrentFrame(app: Application) = this.getInt(app.getString(R.string.sp_match_frame_count), 0)
-fun SharedPreferences.savePrefNames(application: Application) {
+fun SharedPreferences.savePrefStateAndNames(application: Application) {
     edit().apply {
         application.apply {
+            putInt(getString(R.string.sp_match_state), RULES.state.ordinal)
             putString(getString(R.string.sp_match_name_first_a), PLAYER01.firstName)
             putString(getString(R.string.sp_match_name_last_a), PLAYER01.lastName)
             putString(getString(R.string.sp_match_name_first_b), PLAYER02.firstName)
             putString(getString(R.string.sp_match_name_last_b), PLAYER02.lastName)
             apply()
         }
-        Timber.i("Add to sharedPref ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}")
+        Timber.i("Add to sharedPref ${RULES.state}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}")
     }
 }
 
-fun SharedPreferences.loadPrefNames(application: Application) {
+fun SharedPreferences.loadPrefStateAndNames(application: Application) {
     application.resources.apply {
+        RULES.getStateFromOrdinal(getInt(getString(R.string.sp_match_state), 0))
         PLAYER01.firstName = getString(getString(R.string.sp_match_name_first_a), "")
         PLAYER01.lastName = getString(getString(R.string.sp_match_name_last_a), "")
         PLAYER02.firstName = getString(getString(R.string.sp_match_name_first_b), "")
         PLAYER02.lastName = getString(getString(R.string.sp_match_name_last_b), "")
     }
-    Timber.i("Get from sharedPref ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}")
+    Timber.i("Get from sharedPref ${RULES.state}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}")
 }
 
 fun SharedPreferences.savePrefRulesAndFreeball(application: Application) {

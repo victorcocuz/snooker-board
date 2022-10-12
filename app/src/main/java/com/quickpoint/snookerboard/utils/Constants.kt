@@ -31,7 +31,7 @@ enum class MatchAction {
     MATCH_ENDED_DISCARD_FRAME_DIALOG, // On clicking the conceding button when keeping/discarding current score can affect winner
     MATCH_TO_END_DIALOG, // On clicking the concede match button while the match is still in play
     MATCH_ENDED, // Match end has been confirmed and will be processed. On clicking the concede frame / match button after the frame is mathematically complete and if it is enough to win the game
-
+    GO_TO_POST_GAME, // Last frame has been saved to repo so it's save to navigate to FragmentPostGame
     // Other
     NAVIGATE_HOME, // Go to main menu
     INFO_FOUL_DIALOG, // On clicking the info foul button on the rules screen, it will open a generic dialog

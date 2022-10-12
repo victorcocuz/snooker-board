@@ -12,7 +12,7 @@ import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.DomainBall.*
 import com.quickpoint.snookerboard.fragments.game.BallAdapter
 import com.quickpoint.snookerboard.fragments.game.BreakAdapter
-import com.quickpoint.snookerboard.fragments.gamestatistics.GameStatsAdapter
+import com.quickpoint.snookerboard.fragments.postgame.PostGameAdapter
 import com.quickpoint.snookerboard.utils.MatchAction.*
 import java.text.DecimalFormat
 import java.util.*
@@ -279,7 +279,7 @@ fun RecyclerView.bindFoulBalls(ballStack: MutableList<DomainBall>) {
 
 @BindingAdapter("bindGameStatsData")
 fun RecyclerView.bindGameStatsRv(data: ArrayList<Pair<DomainPlayerScore, DomainPlayerScore>>?) {
-    val adapter = this.adapter as GameStatsAdapter
+    val adapter = this.adapter as PostGameAdapter
     adapter.submitList(data)
 }
 

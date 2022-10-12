@@ -1,4 +1,4 @@
-package com.quickpoint.snookerboard.fragments.gamestatistics
+package com.quickpoint.snookerboard.fragments.postgame
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -8,7 +8,7 @@ import com.quickpoint.snookerboard.domain.DomainPlayerScore
 import com.quickpoint.snookerboard.repository.SnookerRepository
 import kotlinx.coroutines.launch
 
-class GameStatsViewModel(
+class PostGameViewModel(
     application: Application,
     private val snookerRepository: SnookerRepository
 ) : AndroidViewModel(application) {

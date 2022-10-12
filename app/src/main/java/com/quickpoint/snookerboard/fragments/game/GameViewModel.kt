@@ -44,6 +44,7 @@ class GameViewModel : ViewModel() {
 
     fun saveFrame() { // Update frame data in match view model
         Timber.i("saveFrame()")
+        score.getWinner().addMatchPointAndAssignFrameId()
         onEventFrameUpdated()
     }
 

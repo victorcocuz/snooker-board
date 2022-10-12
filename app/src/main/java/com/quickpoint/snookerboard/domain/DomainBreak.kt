@@ -29,8 +29,8 @@ fun DomainBreak.asDbPot(breakId: Long): List<DbPot> {
 }
 
 // Helper methods
-fun MutableList<DomainBreak>.lastPotType() = last().pots.last().potType
-fun MutableList<DomainBreak>.lastBallType() = last().pots.last().ball.ballType
+fun MutableList<DomainBreak>.lastPotType() = lastOrNull()?.pots?.last()?.potType
+fun MutableList<DomainBreak>.lastBallType() = lastOrNull()?.pots?.last()?.ball?.ballType
 
 fun MutableList<DomainBreak>.handlePot(pot: DomainPot) { // Add to frameStack all pots, but remove repeated freeball toggles
     if (pot.potType == TYPE_FREETOGGLE && lastPotType() == TYPE_FREETOGGLE) removeLastPotFromFrameStack()

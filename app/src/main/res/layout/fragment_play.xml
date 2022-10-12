@@ -18,6 +18,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/frag_game_toolbar"
             style="@style/Toolbar"
+            android:fitsSystemWindows="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
