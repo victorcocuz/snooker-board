@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.DomainFreeBallInfo.FREEBALLINFO
-import com.quickpoint.snookerboard.domain.DomainMatchInfo.*
-import com.quickpoint.snookerboard.domain.DomainPot.*
+import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
+import com.quickpoint.snookerboard.domain.DomainPot.FREEAVAILABLE
 import com.quickpoint.snookerboard.utils.Event
 import timber.log.Timber
 
@@ -32,7 +32,7 @@ class GameViewModel : ViewModel() {
     var ballStack: MutableList<DomainBall> = mutableListOf()
     var frameStack: MutableList<DomainBreak> = mutableListOf()
 
-    // Handler functions
+    // Match actions
     fun loadMatchBLoadFrame(frame: DomainFrame?) = frame?.let { // Will load latest frame once observed from play fragment
         Timber.i("loadMatchPartBLoadFrame(): ${frame.getTextInfo()}")
         RULES.frameMax = it.frameMax
@@ -42,15 +42,34 @@ class GameViewModel : ViewModel() {
         onEventFrameUpdated()
     }
 
+    fun cancelMatch() { // When cancelling or ending an existing match
+        Timber.i("cancelMatch()")
+        RULES.resetRules()
+        resetMatch()
+    }
+
+    fun resetMatch() { // When starting a new match or on cancelMatch()
+        Timber.i("resetMatch()")
+        FREEBALLINFO.resetFreeball()
+        score.resetMatchScore()
+        rerackFrame()
+    }
+
     fun saveFrame() { // Update frame data in match view model
         Timber.i("saveFrame()")
         score.getWinner().addMatchPointAndAssignFrameId()
         onEventFrameUpdated()
     }
 
-    fun resetFrame() { // Reset all frame values on match end if chosen to discard current frame, when resetting match , when starting a new frame or on rerack action from the options menu
-        Timber.i("resetFrame()")
-        RULES.rerackBalls()
+    fun startNewFrame() {
+        Timber.i("startNewFrame(): ${RULES.frameCount}")
+        RULES.frameCount += 1
+        rerackFrame()
+    }
+
+    fun rerackFrame() { // Reset all frame values on match end if chosen to discard current frame, when resetting match , when starting a new frame or on rerack action from the options menu
+        Timber.i("rerackFrame()")
+        RULES.resetFrameMax()
         RULES.nominatePlayerAtTable(score.hasMatchStarted())
         score = score.resetFrameScoreAndNominatePlayer()
         ballStack.rerackBalls()
@@ -58,6 +77,7 @@ class GameViewModel : ViewModel() {
         onEventFrameUpdated()
     }
 
+    // Score keeping
     fun handlePot(pot: DomainPot) {
         _isUpdateInProgress.value = true
         frameStack.handlePot(pot)

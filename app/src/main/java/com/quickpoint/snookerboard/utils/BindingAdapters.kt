@@ -15,7 +15,6 @@ import com.quickpoint.snookerboard.fragments.game.BreakAdapter
 import com.quickpoint.snookerboard.fragments.postgame.PostGameAdapter
 import com.quickpoint.snookerboard.utils.MatchAction.*
 import java.text.DecimalFormat
-import java.util.*
 
 // General
 @BindingAdapter("setSelected")
@@ -126,12 +125,11 @@ fun TextView.setStatsTableStyle(type: Int) {
 fun TextView.setDialogGameGenLabel(matchAction: MatchAction) {
     text = when (matchAction) {
         MATCH_CANCEL -> "Cancel match"
-        FRAME_RESET -> "Rerack"
+        FRAME_RERACK -> "Rerack"
         FRAME_TO_END_DIALOG -> "Concede frame"
         MATCH_TO_END_DIALOG -> "Concede match"
         FRAME_ENDED -> "Frame ended"
         MATCH_ENDED -> "Match ended"
-        MATCH_LOAD -> "Match in progress"
         FOUL_DIALOG -> "Foul"
         else -> "$matchAction not implemented"
     }
@@ -141,12 +139,11 @@ fun TextView.setDialogGameGenLabel(matchAction: MatchAction) {
 fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
     text = when (matchAction) {
         MATCH_CANCEL -> "Are you sure you want to cancel the current match? All match progress will be lost."
-        FRAME_RESET -> "Are you sure you want to rerack? All frame progress will be lost."
+        FRAME_RERACK -> "Are you sure you want to rerack? All frame progress will be lost."
         FRAME_TO_END_DIALOG -> "This frame is still in progress, are you sure you want to end it?"
         MATCH_TO_END_DIALOG -> "This match is still in progress, are you sure you wan to end it?"
         FRAME_ENDED -> "This frame will end. Would you like to proceed?"
         MATCH_ENDED -> "This match will end. Would you like to proceed?"
-        MATCH_LOAD -> "You have a match in progress, do you want to resume playing or start a new match?"
         INFO_FOUL_DIALOG -> "A typical foul in snooker is worth 4 points. You may wish to decrease this value."
         else -> "$matchAction not implemented"
     }
@@ -156,12 +153,11 @@ fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
 fun TextView.setDialogGameA(matchAction: MatchAction) {
     text = when (matchAction) {
         MATCH_CANCEL -> "No"
-        FRAME_RESET -> "No"
+        FRAME_RERACK -> "No"
         FRAME_TO_END_DIALOG -> "No"
         MATCH_TO_END_DIALOG -> "No"
         FRAME_ENDED -> "No"
         MATCH_ENDED -> "No"
-        MATCH_LOAD -> "Start New Match"
         else -> "$matchAction not implemented"
     }
 }
@@ -185,12 +181,11 @@ fun TextView.setDialogGameC(matchAction: MatchAction, matchActionB: MatchAction,
     isEnabled = !(matchActionB == MATCH_ENDED_DISCARD_FRAME_DIALOG && (frame?.isFrameEqual() ?: false)) // This needs adjusting.
     text = when (matchAction) {
         MATCH_CANCEL -> "Yes"
-        FRAME_RESET -> "Yes"
+        FRAME_RERACK -> "Yes"
         FRAME_TO_END_DIALOG -> "Yes"
         MATCH_TO_END_DIALOG -> "Yes"
         FRAME_ENDED -> "Yes"
         MATCH_ENDED -> "Yes"
-        MATCH_LOAD -> "Continue Match"
         else -> "$matchAction not implemented"
     }
 }

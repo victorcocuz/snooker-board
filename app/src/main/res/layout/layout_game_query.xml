@@ -31,7 +31,7 @@
             android:id="@+id/frag_game_query_continue"
             style="@style/ButtonStretched"
             android:layout_width="wrap_content"
-            android:onClick="@{() -> varMatchVm.assignEventMatchAction(MatchAction.MATCH_CONTINUE)}"
+            android:onClick="@{() -> varMatchVm.assignEventMatchAction(MatchAction.MATCH_LOAD)}"
             android:text="@string/f_play_continue_game_continue"
             app:layout_constraintBottom_toTopOf="@id/frag_game_query_cancel"
             app:layout_constraintEnd_toEndOf="parent"

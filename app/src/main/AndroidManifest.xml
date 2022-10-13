@@ -19,6 +19,7 @@
         tools:ignore="UnusedAttribute">
         <activity
             android:name="com.quickpoint.snookerboard.MainActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true">
             <intent-filter>
                 <action

@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.quickpoint.snookerboard.database.*
 import com.quickpoint.snookerboard.domain.*
-import com.quickpoint.snookerboard.utils.Event
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -93,10 +92,10 @@ class SnookerRepository(database: SnookerDatabase) {
         _frameCount.value = frameId
     }
 
-    private val _isUpdateFrame = MutableLiveData(false)
-    val isUpdateFrame: LiveData<Boolean> = _isUpdateFrame
-    fun onFrameUpdate(updateFrame: Boolean) {
-        _isUpdateFrame.value = updateFrame
+    private val _isFrameLoading = MutableLiveData(false)
+    val isFrameLoadingToggle: LiveData<Boolean> = _isFrameLoading
+    fun loadFrameToggle(isFrameLoading: Boolean) {
+        _isFrameLoading.value = isFrameLoading
     }
 
     // Get current frame information by frameId, will update automatically once frameID changes

@@ -12,11 +12,14 @@ import androidx.navigation.fragment.findNavController
 import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentPostGameBinding
-import com.quickpoint.snookerboard.domain.DomainMatchInfo.*
+import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
 import com.quickpoint.snookerboard.domain.DomainPlayerScore
-import com.quickpoint.snookerboard.domain.MatchState.*
-import com.quickpoint.snookerboard.utils.*
-import com.quickpoint.snookerboard.utils.MatchAction.*
+import com.quickpoint.snookerboard.domain.MatchState.IDLE
+import com.quickpoint.snookerboard.utils.EventObserver
+import com.quickpoint.snookerboard.utils.GenericViewModelFactory
+import com.quickpoint.snookerboard.utils.MatchAction.NAVIGATE_HOME
+import com.quickpoint.snookerboard.utils.PlayerTagType
+import com.quickpoint.snookerboard.utils.assignScrollHeight
 
 class PostGameFragment : androidx.fragment.app.Fragment() {
 
@@ -88,6 +91,7 @@ class PostGameFragment : androidx.fragment.app.Fragment() {
                 eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                     if (matchAction == NAVIGATE_HOME) {
                         RULES.state = IDLE
+                        deleteMatchFromDb()
                         findNavController().navigate(PostGameFragmentDirections.actionGameStatsFragmentToPlayFragment())
                     }
                 })

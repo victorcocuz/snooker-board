@@ -16,7 +16,7 @@ sealed class DomainMatchInfo(
     var frameCount: Int,
     var frameMax: Int
 ) {
-    object RULES : DomainMatchInfo(IDLE, 2, 15, 0, -1, -1, 1, 0) {
+    object RULES : DomainMatchInfo(IDLE, 2, 15, 0, -1, -1, 0, 0) {
 
         fun assignRules(
             frames: Int,
@@ -61,6 +61,7 @@ sealed class DomainMatchInfo(
         }
 
         fun resetRules() {
+            state = IDLE
             frames = 2
             reds = 15
             foul = 0
@@ -103,7 +104,8 @@ sealed class DomainMatchInfo(
         }
 
         fun getDisplayFrames() = "(" + (frames * 2 - 1).toString() + ")"
-        fun rerackBalls() {
+
+        fun resetFrameMax() {
             frameMax = reds * 8 + 27
         }
     }

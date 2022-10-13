@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
 import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentPlayBinding
@@ -48,7 +47,7 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                 // VM Observers
                 playVm.eventPlayAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                     when (matchAction) { // Start new match
-                        MATCH_START -> findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
+                        MATCH_PLAY -> findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
                         else -> {}
                     }
                 })

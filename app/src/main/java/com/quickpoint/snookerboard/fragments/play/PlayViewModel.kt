@@ -4,16 +4,14 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.domain.DomainMatchInfo
-import com.quickpoint.snookerboard.domain.DomainMatchInfo.*
-import com.quickpoint.snookerboard.domain.DomainPlayer
-import com.quickpoint.snookerboard.domain.DomainPlayer.*
+import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
+import com.quickpoint.snookerboard.domain.DomainPlayer.PLAYER01
+import com.quickpoint.snookerboard.domain.DomainPlayer.PLAYER02
 import com.quickpoint.snookerboard.utils.Event
 import com.quickpoint.snookerboard.utils.MatchAction
+import com.quickpoint.snookerboard.utils.MatchAction.MATCH_PLAY
 import com.quickpoint.snookerboard.utils.toast
-import timber.log.Timber
 
 class PlayViewModel(
     private val app: Application
@@ -27,6 +25,6 @@ class PlayViewModel(
     fun startMatchQuery() = when {
         PLAYER01.hasNoName() || PLAYER02.hasNoName() -> app.toast(app.getString(R.string.toast_play_no_name))
         (RULES.first < 0) -> app.toast(app.getString(R.string.toast_play_select_who_breaks))
-        else -> assignEventPlayAction(MatchAction.MATCH_START)
+        else -> assignEventPlayAction(MATCH_PLAY)
     }
 }

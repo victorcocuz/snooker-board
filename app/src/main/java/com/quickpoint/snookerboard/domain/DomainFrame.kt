@@ -4,6 +4,7 @@ import com.quickpoint.snookerboard.database.DbBall
 import com.quickpoint.snookerboard.database.DbBreak
 import com.quickpoint.snookerboard.database.DbFrame
 import com.quickpoint.snookerboard.database.DbScore
+import com.quickpoint.snookerboard.domain.DomainMatchInfo.*
 import timber.log.Timber
 import kotlin.math.abs
 
@@ -17,7 +18,8 @@ data class DomainFrame(
 ) {
     fun isFrameEqual() = frameScore[0].framePoints == frameScore[1].framePoints
     fun isMatchEqual() = frameScore[0].matchPoints == frameScore[1].matchPoints
-    fun isMatchInProgress() = (frameScore[0].framePoints + frameScore[0].matchPoints + frameScore[1].framePoints + frameScore[1].matchPoints) > 0
+    fun isFrameInProgress() = frameStack.size > 0
+    fun isMatchInProgress() = ((frameScore[0].matchPoints + frameScore[1].matchPoints) > 0) || (frameStack.size > 0)
     fun getFrameScoreDiff() = abs(frameScore[0].framePoints - frameScore[1].framePoints)
     fun getMatchScoreDiff() = abs(frameScore[0].matchPoints - frameScore[1].matchPoints)
     fun getFrameScoreRemaining() = ballStack.size.apply { // Formula to calculate remaining available points
@@ -30,6 +32,7 @@ data class DomainFrame(
     fun isLastBall() = ballStack.size == 1
     fun isNoFrameFinished() = frameScore[0].matchPoints + frameScore[1].matchPoints == 0
     fun isFrameWinResultingInMatchTie() = frameScore[getFrameWinner()].matchPoints + 1 == frameScore[1 - getFrameWinner()].matchPoints
+    fun isMatchEnding() = frameScore[getFrameWinner()].matchPoints + 1 == RULES.frames
     fun isFrameEnded() = isLastBall() && !isFrameEqual()
 //    fun isExtraBlackBallNeeded() = isLastBall() && isFrameEqual()
 }
