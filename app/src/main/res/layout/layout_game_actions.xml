@@ -42,7 +42,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/game_btn_line_hor_one"
-            app:setEnabled="@{varMatchVm.displayFrame.ballStack.size() > 1 &amp;&amp; !varGameVm.isUpdateInProgress}" />
+            app:setEnabled="@{!varGameVm.isUpdateInProgress}" />
 
         <FrameLayout
             android:id="@+id/game_btn_line_vert_one"
@@ -65,7 +65,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_btn_line_vert_one"
             app:layout_constraintTop_toTopOf="@+id/game_btn_act_safe"
-            app:setEnabled="@{varMatchVm.displayFrame.ballStack.size() > 1 &amp;&amp; !varGameVm.isUpdateInProgress}" />
+            app:setEnabled="@{!varGameVm.isUpdateInProgress}" />
 
         <FrameLayout
             android:id="@+id/game_btn_line_vert_two"
@@ -82,14 +82,14 @@
             android:id="@+id/game_btn_act_foul"
             style="@style/ButtonStretched"
             android:layout_width="0dp"
-            android:onClick="@{() -> varMatchVm.assignEventMatchAction(MatchAction.FOUL_DIALOG)}"
+            android:onClick="@{() -> varGameVm.handlePot(DomainPot.FOULATTEMPT.INSTANCE)}"
             android:text="@string/action_foul"
             app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/game_btn_line_vert_two"
             app:layout_constraintTop_toTopOf="@+id/game_btn_act_safe"
-            app:setEnabled="@{varMatchVm.displayFrame.ballStack.size() > 1 &amp;&amp; !varGameVm.isUpdateInProgress}" />
+            app:setEnabled="@{!varGameVm.isUpdateInProgress}" />
 
         <FrameLayout
             android:id="@+id/game_btn_line_hor_two"

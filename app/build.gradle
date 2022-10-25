@@ -6,16 +6,16 @@ plugins {
 }
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
     buildFeatures {
         viewBinding true
     }
     defaultConfig {
         applicationId "com.quickpoint.snookerboard"
         minSdk 22
-        targetSdkVersion 32
-        versionCode 3
-        versionName "1.0.2"
+        targetSdkVersion 33
+        versionCode 4
+        versionName "1.0.3"
         vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -53,6 +53,8 @@ dependencies {
     implementation "androidx.legacy:legacy-support-v4:$version_legacy_support"
     implementation "com.google.android.material:material:$version_material"
     implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
+    implementation "androidx.core:core-splashscreen:$version_splash_screen"
+    implementation "com.android.support:design:$version_design"
 
     // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$version_navigation"

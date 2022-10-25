@@ -8,7 +8,7 @@
         <import type="com.quickpoint.snookerboard.utils.MatchAction" />
 
         <variable
-            name="varMatchViewModel"
+            name="varMatchVm"
             type="com.quickpoint.snookerboard.MatchViewModel" />
 
         <variable
@@ -24,7 +24,7 @@
             type="com.quickpoint.snookerboard.utils.MatchAction" />
 
         <variable
-            name="varGenericEventsViewModel"
+            name="varDialogVm"
             type="com.quickpoint.snookerboard.DialogViewModel" />
     </data>
 
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             app:dialogGameNote="@{varDialogMatchActionB}"
             android:layout_marginTop="@dimen/margin_header_below"
-            app:dialogGameNoteScore="@{varMatchViewModel.displayFrame}"
+            app:dialogGameNoteScore="@{varMatchVm.displayFrame}"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="@dimen/margin_layout_offset"
             app:layout_constraintTop_toBottomOf="@+id/game_dialog_gen_q" />
@@ -79,7 +79,7 @@
             style="@style/ButtonNarrow"
             android:layout_width="wrap_content"
             android:layout_marginEnd="@dimen/margin_layout_offset"
-            android:onClick="@{() -> varGenericEventsViewModel.assignEventDialogAction(varDialogMatchActionA)}"
+            android:onClick="@{() -> varDialogVm.assignEventDialogAction(varDialogMatchActionA)}"
             app:dialogGameGenA="@{varDialogMatchActionC}"
             app:layout_constraintBottom_toBottomOf="@+id/game_dialog_gen_c"
             app:layout_constraintEnd_toStartOf="@+id/game_dialog_gen_b"
@@ -89,10 +89,10 @@
             android:id="@+id/game_dialog_gen_b"
             style="@style/ButtonNarrow"
             android:layout_width="wrap_content"
-            android:onClick="@{() -> varGenericEventsViewModel.assignEventDialogAction(varDialogMatchActionB)}"
+            android:onClick="@{() -> varDialogVm.assignEventDialogAction(varDialogMatchActionB)}"
             app:dialogGameGenB="@{varDialogMatchActionB}"
             android:layout_marginEnd="@dimen/margin_layout_offset"
-            app:dialogGameGenBScore="@{varMatchViewModel.displayFrame}"
+            app:dialogGameGenBScore="@{varMatchVm.displayFrame}"
             app:layout_constraintBottom_toBottomOf="@+id/game_dialog_gen_c"
             app:layout_constraintEnd_toStartOf="@+id/game_dialog_gen_c"
             app:setVisible="@{varDialogMatchActionB != MatchAction.IGNORE}" />
@@ -104,10 +104,10 @@
             android:layout_marginTop="@dimen/margin_header_above"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             android:layout_marginBottom="@dimen/margin_layout_offset"
-            android:onClick="@{() -> varGenericEventsViewModel.assignEventDialogAction(varDialogMatchActionC)}"
+            android:onClick="@{() -> varDialogVm.assignEventDialogAction(varDialogMatchActionC)}"
             app:dialogGameGenC="@{varDialogMatchActionC}"
             app:dialogGameGenCActionB="@{varDialogMatchActionB}"
-            app:dialogGameGenCScore="@{varMatchViewModel.displayFrame}"
+            app:dialogGameGenCScore="@{varMatchVm.displayFrame}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/game_dialog_note"

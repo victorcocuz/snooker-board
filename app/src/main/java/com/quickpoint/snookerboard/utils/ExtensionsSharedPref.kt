@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.fragment.app.Fragment
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.domain.DomainFreeBallInfo.FREEBALLINFO
 import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
@@ -13,7 +12,6 @@ import com.quickpoint.snookerboard.domain.DomainPlayer.PLAYER02
 import timber.log.Timber
 
 // Shared preferences
-fun Fragment.getSharedPref(): SharedPreferences = this.requireActivity().getSharedPref()
 fun Activity.getSharedPref(): SharedPreferences = application.getSharedPref()
 fun Application.getSharedPref(): SharedPreferences = getSharedPreferences(
     getString(R.string.sp_file_key),
@@ -23,7 +21,7 @@ fun Application.getSharedPref(): SharedPreferences = getSharedPreferences(
 fun SharedPreferences.savePref(application: Application) {
     edit().apply {
         application.apply {
-            putInt(getString(R.string.sp_match_state), RULES.state.ordinal)
+            putInt(getString(R.string.sp_match_state), RULES.matchState.ordinal)
             putString(getString(R.string.sp_match_name_first_a), PLAYER01.firstName)
             putString(getString(R.string.sp_match_name_last_a), PLAYER01.lastName)
             putString(getString(R.string.sp_match_name_first_b), PLAYER02.firstName)
@@ -39,7 +37,7 @@ fun SharedPreferences.savePref(application: Application) {
             putBoolean(getString(R.string.sp_match_freeball_selection), FREEBALLINFO.isSelected)
             apply()
         }
-        Timber.i("Add to sharedPref ${RULES.state}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}")
+        Timber.i("Add to sharedPref ${RULES.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}")
         Timber.i("Add to sharedPref ${RULES.getRulesText()}")
         Timber.i("Add to sharedPref freeball isVisible ${FREEBALLINFO.isVisible} and isSelected ${FREEBALLINFO.isSelected}")
     }
@@ -47,7 +45,7 @@ fun SharedPreferences.savePref(application: Application) {
 
 fun SharedPreferences.loadPref(application: Application) {
     application.resources.apply {
-        RULES.getStateFromOrdinal(getInt(getString(R.string.sp_match_state), 0))
+        RULES.getMatchStateFromOrdinal(getInt(getString(R.string.sp_match_state), 0))
         PLAYER01.firstName = getString(getString(R.string.sp_match_name_first_a), "")
         PLAYER01.lastName = getString(getString(R.string.sp_match_name_last_a), "")
         PLAYER02.firstName = getString(getString(R.string.sp_match_name_first_b), "")
@@ -66,7 +64,7 @@ fun SharedPreferences.loadPref(application: Application) {
             getBoolean(getString(R.string.sp_match_freeball_selection), false)
         )
     }
-    Timber.i("Get from sharedPref ${RULES.state}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}")
+    Timber.i("Get from sharedPref ${RULES.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}")
     Timber.i("Get from sharedPref ${RULES.getRulesText()}")
     Timber.i("Get from sharedPref freeball isVisible ${FREEBALLINFO.isVisible} and isSelected ${FREEBALLINFO.isSelected}")
 

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/margin_xxsmall"
+        tools:context=".fragments.play.AboutFragment">
+
+        <TextView
+            android:id="@+id/frag_about_title"
+            android:layout_marginTop="@dimen/margin_xxsmall"
+            style="@style/TextTitle"
+            android:text="@string/f_about_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/frag_about_text"
+            style="@style/TextHeaderBold"
+            android:layout_marginTop="@dimen/margin_xxsmall"
+            android:text="@string/f_about_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frag_about_title" />
+
+        <TextView
+            android:autoLink="email"
+            android:id="@+id/frag_about_email"
+            android:textColorLink="@color/white"
+            style="@style/TextSubtitle"
+            android:text="@string/f_about_email"
+            android:layout_marginTop="@dimen/margin_xsmall"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frag_about_text" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

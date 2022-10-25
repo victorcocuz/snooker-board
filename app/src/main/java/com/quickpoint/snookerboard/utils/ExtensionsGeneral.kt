@@ -16,14 +16,19 @@ import android.widget.ScrollView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import com.quickpoint.snookerboard.databinding.FragmentGameBinding
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 
 // General
+fun Fragment.navigate(directions: NavDirections) = findNavController().navigate(directions)
 fun Fragment.toast(message: CharSequence) = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
 fun Application.toast(message: CharSequence) = Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
+fun View.snackbar(message: CharSequence) = Snackbar.make(this, message, Snackbar.LENGTH_SHORT).show()
 
-fun MenuItem.setStateOpacity() {
-    icon.alpha = if (isEnabled) 255 else 120
+fun MenuItem.setItemActive(isEnabled: Boolean) {
+//    this.isEnabled = isEnabled
+    icon?.alpha = if (isEnabled) 255 else 120
     val s = SpannableString(title)
     s.setSpan(
         ForegroundColorSpan(
@@ -78,17 +83,4 @@ fun Context.getFactoredDimen(factor: Int): Int {
         resources.displayMetrics.heightPixels
     }
     return width / factor
-}
-
-// Binding
-fun FragmentGameBinding.setQueryMatchVisibility() {
-    fragGameLayoutBreak.root.visibility = View.GONE
-    fragGameLayoutActionButtons.root.visibility = View.GONE
-    fragGameLayoutQuery.root.visibility = View.VISIBLE
-}
-
-fun FragmentGameBinding.setPlayMatchVisibility() {
-    fragGameLayoutBreak.root.visibility = View.VISIBLE
-    fragGameLayoutActionButtons.root.visibility = View.VISIBLE
-    fragGameLayoutQuery.root.visibility = View.GONE
 }

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/match_action_undo"
+        android:id="@+id/menu_item_undo"
         android:icon="@drawable/ic_temp_action_undo"
         android:title="@string/menu_item_undo"
         app:showAsAction="ifRoom" />
@@ -13,29 +13,29 @@
         android:icon="@drawable/ic_menu_more">
         <menu>
             <item
-                android:id="@+id/match_action_add_red"
+                android:id="@+id/menu_item_add_red"
                 android:icon="@drawable/ic_temp_action_add_red"
                 android:title="@string/menu_item_add_red" />
             <item
-                android:id="@+id/match_action_remove_red"
+                android:id="@+id/menu_item_remove_red"
                 android:icon="@drawable/ic_temp_action_remove_red"
                 android:title="@string/menu_item_remove_red" />
             <item
-                android:id="@+id/match_action_rerack"
+                android:id="@+id/menu_item_rerack"
                 android:icon="@drawable/ic_temp_action_rerack"
                 android:title="@string/menu_item_rerack" />
             <item
-                android:id="@+id/match_action_cancel_match"
-                android:icon="@drawable/ic_temp_action_cancel_match"
-                android:title="@string/menu_item_cancel_match" />
-            <item
-                android:id="@+id/match_action_concede_frame"
+                android:id="@+id/menu_item_concede_frame"
                 android:icon="@drawable/ic_temp_action_concede_frame"
                 android:title="@string/menu_item_concede_frame" />
             <item
-                android:id="@+id/match_action_concede_match"
+                android:id="@+id/menu_item_concede_match"
                 android:icon="@drawable/ic_temp_action_concede_match"
                 android:title="@string/menu_item_concede_match" />
+            <item
+                android:id="@+id/menu_item_cancel_match"
+                android:icon="@drawable/ic_temp_action_cancel_match"
+                android:title="@string/menu_item_cancel_match" />
         </menu>
     </item>
 </menu>

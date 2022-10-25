@@ -1,65 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <data>
+
+        <variable
+            name="varMatchVm"
+            type="com.quickpoint.snookerboard.MatchViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/frag_game_cl"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".fragments.game.GameFragment">
+        android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/frag_game_layout_top"
-            layout="@layout/layout_game_top"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <include
-            android:id="@+id/frag_game_layout_score"
-            layout="@layout/layout_game_score"
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_layout_offset"
-            android:layout_marginEnd="@dimen/margin_layout_offset"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frag_game_layout_top" />
+            android:layout_height="match_parent"
+            app:layout_behavior="com.quickpoint.snookerboard.utils.MoveUpwardBehavior"
+            android:orientation="vertical">
 
-        <include
-            android:id="@+id/frag_game_layout_query"
-            layout="@layout/layout_game_query"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginStart="@dimen/margin_layout_offset"
-            android:layout_marginEnd="@dimen/margin_layout_offset"
-            app:layout_constraintBottom_toTopOf="@id/frag_game_layout_action_buttons"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frag_game_layout_score" />
+            <include
+                android:id="@+id/frag_game_layout_top"
+                layout="@layout/layout_game_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        <include
-            android:id="@+id/frag_game_layout_break"
-            layout="@layout/layout_game_break"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_layout_offset"
-            android:layout_marginEnd="@dimen/margin_layout_offset"
-            app:layout_constraintBottom_toTopOf="@id/frag_game_layout_action_buttons"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frag_game_layout_score"
-            app:layout_constraintVertical_bias="0" />
+            <include
+                android:id="@+id/frag_game_layout_score"
+                layout="@layout/layout_game_score"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_layout_offset"
+                android:layout_marginEnd="@dimen/margin_layout_offset" />
 
-        <include
-            android:id="@+id/frag_game_layout_action_buttons"
-            layout="@layout/layout_game_actions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ScrollView
+                android:id="@+id/game_scroll_view"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/margin_xxsmall"
+                android:layout_weight="1"
+                android:layout_height="0dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/game_break_rv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:bindBreakData="@{varMatchVm.displayFrame.frameStack}"
+                    app:stackFromEnd="true"
+                    app:reverseLayout="true"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            </ScrollView>
+
+            <include
+                android:id="@+id/frag_game_layout_action_buttons"
+                layout="@layout/layout_game_actions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

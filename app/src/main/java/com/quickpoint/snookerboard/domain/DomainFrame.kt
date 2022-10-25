@@ -4,8 +4,7 @@ import com.quickpoint.snookerboard.database.DbBall
 import com.quickpoint.snookerboard.database.DbBreak
 import com.quickpoint.snookerboard.database.DbFrame
 import com.quickpoint.snookerboard.database.DbScore
-import com.quickpoint.snookerboard.domain.DomainMatchInfo.*
-import timber.log.Timber
+import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
 import kotlin.math.abs
 
 // The DOMAIN Frame is a class containing all frame information
@@ -18,10 +17,9 @@ data class DomainFrame(
 ) {
     fun isFrameEqual() = frameScore[0].framePoints == frameScore[1].framePoints
     fun isMatchEqual() = frameScore[0].matchPoints == frameScore[1].matchPoints
-    fun isFrameInProgress() = frameStack.size > 0
+    fun isConcedeAvailable() = !(isFrameEqual() && isMatchEqual())
     fun isMatchInProgress() = ((frameScore[0].matchPoints + frameScore[1].matchPoints) > 0) || (frameStack.size > 0)
     fun getFrameScoreDiff() = abs(frameScore[0].framePoints - frameScore[1].framePoints)
-    fun getMatchScoreDiff() = abs(frameScore[0].matchPoints - frameScore[1].matchPoints)
     fun getFrameScoreRemaining() = ballStack.size.apply { // Formula to calculate remaining available points
         return if (this <= 7) (-(8 - this) * (8 - this) - (8 - this) + 56) / 2
         else 27 + ((this - 7) / 2) * 8
@@ -29,16 +27,18 @@ data class DomainFrame(
 
     fun isFrameOver() = getFrameScoreRemaining() < getFrameScoreDiff()
     fun getFrameWinner() = if (frameScore[0].framePoints > frameScore[1].framePoints) 0 else 1
-    fun isLastBall() = ballStack.size == 1
     fun isNoFrameFinished() = frameScore[0].matchPoints + frameScore[1].matchPoints == 0
     fun isFrameWinResultingInMatchTie() = frameScore[getFrameWinner()].matchPoints + 1 == frameScore[1 - getFrameWinner()].matchPoints
     fun isMatchEnding() = frameScore[getFrameWinner()].matchPoints + 1 == RULES.frames
-    fun isFrameEnded() = isLastBall() && !isFrameEqual()
-//    fun isExtraBlackBallNeeded() = isLastBall() && isFrameEqual()
+
+    // Game fragment menu checkers
+    fun isFrameInProgress() = frameStack.size > 0
+    fun isAddRedAvailable() = ballStack.isNextColorAndNotLast() && !DomainFreeBallInfo.FREEBALLINFO.isVisible
+    fun isRemoveRedAvailable() = ballStack.areRedsOnTheTable() && !DomainFreeBallInfo.FREEBALLINFO.isVisible && frameStack.lastPotType() != PotType.TYPE_FOUL
 }
 
 fun DomainFrame.getTextInfo(): String {
-    var text = ""
+    var text = "Id: $frameId "
     frameStack.forEach { breaks -> breaks.pots.forEach { pot -> text = text + pot.ball.ballType.toString() + ", " } }
     return text
 }

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.DomainBall.*
+import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.fragments.game.BallAdapter
 import com.quickpoint.snookerboard.fragments.game.BreakAdapter
 import com.quickpoint.snookerboard.fragments.postgame.PostGameAdapter
@@ -126,11 +127,13 @@ fun TextView.setDialogGameGenLabel(matchAction: MatchAction) {
     text = when (matchAction) {
         MATCH_CANCEL -> "Cancel match"
         FRAME_RERACK -> "Rerack"
-        FRAME_TO_END_DIALOG -> "Concede frame"
-        MATCH_TO_END_DIALOG -> "Concede match"
+        FRAME_TO_END -> "Concede frame"
+        MATCH_TO_END -> "Concede match"
         FRAME_ENDED -> "Frame ended"
         MATCH_ENDED -> "Match ended"
         FOUL_DIALOG -> "Foul"
+        INFO_FOUL_DIALOG -> "Info foul"
+        FRAME_RESPOT_BLACK -> "Re-spot black"
         else -> "$matchAction not implemented"
     }
 }
@@ -140,11 +143,12 @@ fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
     text = when (matchAction) {
         MATCH_CANCEL -> "Are you sure you want to cancel the current match? All match progress will be lost."
         FRAME_RERACK -> "Are you sure you want to rerack? All frame progress will be lost."
-        FRAME_TO_END_DIALOG -> "This frame is still in progress, are you sure you want to end it?"
-        MATCH_TO_END_DIALOG -> "This match is still in progress, are you sure you wan to end it?"
-        FRAME_ENDED -> "This frame will end. Would you like to proceed?"
-        MATCH_ENDED -> "This match will end. Would you like to proceed?"
+        FRAME_TO_END -> "This frame is still in progress, are you sure you want to end it?"
+        MATCH_TO_END -> "This match is still in progress, are you sure you want to end it?"
+        FRAME_ENDED -> "This frame has ended. Would you like to proceed?"
+        MATCH_ENDED -> "This match has ended. Would you like to proceed?"
         INFO_FOUL_DIALOG -> "A typical foul in snooker is worth 4 points. You may wish to decrease this value."
+        FRAME_RESPOT_BLACK -> "Looks like you and your opponent are tied at the end of the frame! The black ball will be re-spotted to decide the winner. The player who started the frame will attempt to pot the black first."
         else -> "$matchAction not implemented"
     }
 }
@@ -154,8 +158,8 @@ fun TextView.setDialogGameA(matchAction: MatchAction) {
     text = when (matchAction) {
         MATCH_CANCEL -> "No"
         FRAME_RERACK -> "No"
-        FRAME_TO_END_DIALOG -> "No"
-        MATCH_TO_END_DIALOG -> "No"
+        FRAME_TO_END -> "No"
+        MATCH_TO_END -> "No"
         FRAME_ENDED -> "No"
         MATCH_ENDED -> "No"
         else -> "$matchAction not implemented"
@@ -167,32 +171,33 @@ fun TextView.setDialogGameB(matchAction: MatchAction, frame: DomainFrame?) {
     visibility = when {
         frame == null -> View.GONE
         frame.isNoFrameFinished() -> View.GONE
-        matchAction == MATCH_ENDED_DISCARD_FRAME_DIALOG -> View.VISIBLE
+        matchAction == MATCH_ENDED_DISCARD_FRAME -> View.VISIBLE
         else -> View.GONE
     }
     text = when (matchAction) {
-        MATCH_ENDED_DISCARD_FRAME_DIALOG -> "Yes & Remove Frame"
+        MATCH_ENDED_DISCARD_FRAME -> "Yes & Remove Frame"
         else -> ""
     }
 }
 
 @BindingAdapter("dialogGameGenC", "dialogGameGenCActionB", "dialogGameGenCScore")
 fun TextView.setDialogGameC(matchAction: MatchAction, matchActionB: MatchAction, frame: DomainFrame?) {
-    isEnabled = !(matchActionB == MATCH_ENDED_DISCARD_FRAME_DIALOG && (frame?.isFrameEqual() ?: false)) // This needs adjusting.
+    isEnabled = !(matchActionB == MATCH_ENDED_DISCARD_FRAME && (frame?.isFrameEqual() ?: false)) // This needs adjusting.
     text = when (matchAction) {
         MATCH_CANCEL -> "Yes"
         FRAME_RERACK -> "Yes"
-        FRAME_TO_END_DIALOG -> "Yes"
-        MATCH_TO_END_DIALOG -> "Yes"
+        FRAME_TO_END -> "Yes"
+        MATCH_TO_END -> "Yes"
         FRAME_ENDED -> "Yes"
         MATCH_ENDED -> "Yes"
+        FRAME_RESPOT_BLACK -> "OK"
         else -> "$matchAction not implemented"
     }
 }
 
 @BindingAdapter("dialogGameNote", "dialogGameNoteScore")
 fun TextView.setDialogGameNote(matchAction: MatchAction, frame: DomainFrame?) {
-    visibility = if (matchAction == MATCH_ENDED_DISCARD_FRAME_DIALOG) View.VISIBLE else View.GONE
+    visibility = if (matchAction == MATCH_ENDED_DISCARD_FRAME) View.VISIBLE else View.GONE
     text = when {
         frame == null -> ""
         frame.isNoFrameFinished() -> ""
@@ -207,8 +212,9 @@ fun TextView.setDialogGameNote(matchAction: MatchAction, frame: DomainFrame?) {
 fun TextView.setBreakPoints(crtBreak: DomainBreak, player: Int) {
     text = when {
         crtBreak.player == player && crtBreak.breakSize != 0 -> crtBreak.breakSize.toString()
-        crtBreak.player == player && crtBreak.pots.lastOrNull()?.potType == PotType.TYPE_FOUL -> "Foul"
-        crtBreak.player != player && crtBreak.pots.lastOrNull()?.potType == PotType.TYPE_FOUL -> crtBreak.pots.lastOrNull()?.ball?.foul.toString()
+        crtBreak.player == player && crtBreak.lastPotType() == TYPE_REMOVERED -> "-Red"
+        crtBreak.player == player && crtBreak.lastPotType() == TYPE_FOUL -> "Foul"
+        crtBreak.player != player && crtBreak.lastPotType() == TYPE_FOUL -> crtBreak.lastBall()?.foul.toString()
         else -> ""
     }
 }
@@ -216,7 +222,7 @@ fun TextView.setBreakPoints(crtBreak: DomainBreak, player: Int) {
 @BindingAdapter("setBreakVisibilityBreak", "setBreakVisibilityPlayer")
 fun LinearLayout.setBreakVisibility(crtBreak: DomainBreak, player: Int) {
     visibility = when {
-        crtBreak.pots.lastOrNull()?.potType == PotType.TYPE_FOUL -> View.VISIBLE
+        crtBreak.lastPotType() == TYPE_FOUL -> View.VISIBLE
         crtBreak.player == player -> View.VISIBLE
         else -> View.INVISIBLE
     }
@@ -242,6 +248,7 @@ fun ImageView.setBallImage(item: DomainBall?) {
                 is PINK -> R.drawable.ic_ball_pink
                 is BLACK -> R.drawable.ic_ball_black
                 is FREEBALL -> R.drawable.ic_ball_grey
+                is NOBALL -> R.drawable.ic_ball_grey
                 else -> R.drawable.ic_ball_white
             }
         )
@@ -255,7 +262,7 @@ fun RecyclerView.bindBallsRv(ballList: MutableList<DomainBall>?) {
     adapter.submitList(
         when (ballList?.lastOrNull()) {
             is COLOR -> listOf(YELLOW(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
-            is WHITE -> listOf()
+            is WHITE -> listOf(NOBALL())
             else -> listOf(ballList?.lastOrNull())
         }
     )
@@ -285,7 +292,7 @@ fun RecyclerView.bindBreakRv(breaks: MutableList<DomainBreak>?) = breaks?.let {
 }
 
 @BindingAdapter("bindPots", "bindPotsPlayer")
-fun RecyclerView.bindPotsRvB(crtBreak: DomainBreak?, player: Int) {
+fun RecyclerView.bindPotsRv(crtBreak: DomainBreak?, player: Int) {
     val adapter = this.adapter as BallAdapter
     val balls = mutableListOf<DomainBall>()
     crtBreak?.pots?.forEach {

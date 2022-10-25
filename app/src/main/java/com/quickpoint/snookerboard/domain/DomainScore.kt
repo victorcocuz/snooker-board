@@ -1,9 +1,8 @@
 package com.quickpoint.snookerboard.domain
 
-import kotlin.math.max
-import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
-import timber.log.Timber
+import com.quickpoint.snookerboard.domain.PotType.*
+import kotlin.math.max
 
 // Keeps a dynamic live score for both players
 sealed class CurrentScore(
@@ -36,8 +35,15 @@ sealed class CurrentScore(
         this.highestBreak = highestBreak
     }
 
+    fun isMatchEnding(matchFrames: Int) = getWinner().matchPoints + 1 == matchFrames
+    fun isFrameEqual() = framePoints == getOther().framePoints
+    fun isMatchEqual() = matchPoints == getOther().matchPoints
+    fun isFrameInProgress() = (framePoints + getOther().framePoints > 0)
+    fun isMatchInProgress() = matchPoints + getOther().matchPoints > 0
+
     fun getFirst() = SCORE01
     fun getSecond() = SCORE02
+    fun getWinner() = if (framePoints > getOther().framePoints) this else getOther()
 
     private fun getOther() = when (this) {
         SCORE01 -> SCORE02
@@ -51,22 +57,20 @@ sealed class CurrentScore(
 
     fun getCrtPlayerFromRules(): CurrentScore = if (RULES.crtPlayer == 0) SCORE01 else SCORE02
 
-    fun resetFrameScoreAndNominatePlayer(): CurrentScore {
+    fun resetFrame() {
         this.resetFrameScoreEach()
         this.getOther().resetFrameScoreEach()
-        val score = if (RULES.first == 0) SCORE01 else SCORE02
-        Timber.i("resetFrameScoreAndNominatePlayer($score)")
-        return score
     }
 
     private fun resetFrameScoreEach() {
         framePoints = 0
         highestBreak = 0
-        missedShots = 0
         successShots = 0
+        missedShots = 0
+        fouls = 0
     }
 
-    fun resetMatchScore() {
+    fun resetMatch() {
         this.resetMatchScoreEach()
         this.getOther().resetMatchScoreEach()
     }
@@ -75,18 +79,6 @@ sealed class CurrentScore(
         matchPoints = 0
         frameId = 0
     }
-
-    fun getWinner() = if (framePoints > getOther().framePoints) this else getOther()
-
-    fun isMatchEnding(matchFrames: Int) = getWinner().matchPoints + 1 == matchFrames
-
-    fun isFrameEqual() = framePoints == getOther().framePoints
-
-    fun isMatchEqual() = matchPoints == getOther().matchPoints
-
-    fun isFrameInProgress() = (framePoints + getOther().framePoints > 0)
-
-    fun hasMatchStarted() = framePoints + matchPoints + getOther().framePoints + getOther().matchPoints > 0
 
     private fun addFramePoints(points: Int) {
         framePoints += points
@@ -101,7 +93,7 @@ sealed class CurrentScore(
     }
 
     fun addMatchPointAndAssignFrameId() {
-        matchPoints += 1
+        getWinner().matchPoints += 1
         this.frameId = RULES.frameCount // TEMP - Assign a frameId to later use to add frame info to DATABASE
         this.getOther().frameId = RULES.frameCount // TEMP - Assign a frameId to later use to add frame info to DATABASE
     }
@@ -117,7 +109,7 @@ sealed class CurrentScore(
     }
 
     // Polarity is used to reverse score on undo
-    fun calculatePoints(pot: DomainPot, pol: Int, lastBall: DomainBall, frameStack: MutableList<DomainBreak>) {
+    fun calculatePoints(pot: DomainPot, pol: Int, lastBall: DomainBall) {
         val points: Int
         when (pot.potType) {
             TYPE_HIT, TYPE_FREE, TYPE_ADDRED -> {
@@ -137,7 +129,6 @@ sealed class CurrentScore(
             else -> {
             }
         }
-        findMaxBreak(frameStack)
     }
 }
 

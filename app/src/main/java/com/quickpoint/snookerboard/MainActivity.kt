@@ -8,71 +8,87 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.databinding.DataBindingUtil
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.navigateUp
 import com.quickpoint.snookerboard.databinding.ActivityMainBinding
 import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
-import com.quickpoint.snookerboard.domain.MatchState.*
-import com.quickpoint.snookerboard.utils.GenericViewModelFactory
-import com.quickpoint.snookerboard.utils.getSharedPref
-import com.quickpoint.snookerboard.utils.hideKeyboard
-import com.quickpoint.snookerboard.utils.savePref
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.quickpoint.snookerboard.domain.MatchState.IN_PROGRESS
+import com.quickpoint.snookerboard.domain.MatchState.SAVED
+import com.quickpoint.snookerboard.utils.*
 
 
 class MainActivity : AppCompatActivity() {
-    private val activityScope = CoroutineScope(Dispatchers.Default)
     private lateinit var binding: ActivityMainBinding
     private lateinit var matchVm: MatchViewModel
-    private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         // Create activity, bind layout
         super.onCreate(savedInstanceState)
+        val splashScreen = installSplashScreen()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         hideKeyboard()
+        getSharedPref().loadPref(application)
 
         // Generate the matchVm from the get to be readily accessed from all fragments when needed, pass in application and repository
-        matchVm = ViewModelProvider(
-            this,
-            GenericViewModelFactory(application, this, null)
-        )[MatchViewModel::class.java]
+        matchVm = ViewModelProvider(this, GenericViewModelFactory(application, this, null))[MatchViewModel::class.java]
 
-        // Condition navigation entry point depending if there is a game in progress or not
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.navController
-        val navGraph = navController.navInflater.inflate(R.navigation.navigation_graph)
-        navGraph.setStartDestination(
-            when (RULES.state) {
-                IDLE -> R.id.playFragment
-                IN_PROGRESS -> R.id.gameFragment
-                POST_MATCH -> R.id.gameStatsFragment
+        // Load existing match, keep splash screen on until loading is complete
+        var keep = true
+        splashScreen.setKeepOnScreenCondition { keep }
+
+        if (RULES.matchState == SAVED) {
+            matchVm.keepSplashScreen.observe(this) { keepSplashScreen ->
+                keep = keepSplashScreen
             }
-        )
-        navController.graph = navGraph
+        } else keep = false
 
+        binding.apply {
 
-        // To be used when more fragments are needed
-        //        binding.apply {
-        //            navBottom.setupWithNavController(navController)
-        //            navController.addOnDestinationChangedListener { _, nd: NavDestination, _ ->
-        //                navBottom.visibility = View.GONE
-        //                navBottom.visibility = when (nd.id) {
-        //                    in listOf(R.id.rankingsFragment, R.id.friendsFragment, R.id.playFragment, R.id.historyFragment, R.id.statisticsFragment) -> View.VISIBLE
-        //                    else -> View.GONE
-        //                }
-        //            }
-        //        }
+            // Set Appbar
+            val navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
+            setSupportActionBar(layoutAppBarMain.layoutToolbarMain)
+            NavigationUI.setupActionBarWithNavController(this@MainActivity, navController, mainDrawerLayout)
+            appBarConfiguration = AppBarConfiguration(navController.graph, mainDrawerLayout)
+            NavigationUI.setupWithNavController(mainActivityNavView, navController)
+            supportActionBar?.setDisplayShowTitleEnabled(false)
+
+            // Prevent nav gesture if not on start destination
+            navController.addOnDestinationChangedListener { _: NavController, nd: NavDestination, _: Bundle? ->
+                when (nd.id) {
+                    R.id.playFragment -> mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+                    R.id.rulesFragment, R.id.aboutFragment -> mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+                    else -> {
+                        binding.layoutAppBarMain.layoutToolbarMain.navigationIcon = null
+                        mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onSupportNavigateUp(): Boolean { // Add back arrow button to navigation
+        val navController = this.findNavController(R.id.nav_host_fragment)
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
     // When saving instance, check if the view model is initialised and if the match is in progress (game hasn't ended). If so, save match
     override fun onSaveInstanceState(outState: Bundle) {
-        getSharedPref().savePref(application)
-        matchVm.saveMatchOnSavedInstance()
+        if (RULES.matchState == IN_PROGRESS) {
+            RULES.matchState = SAVED
+            getSharedPref().savePref(application)
+            if (::matchVm.isInitialized) matchVm.saveMatchOnSavedInstance()
+        }
         super.onSaveInstanceState(outState)
     }
 

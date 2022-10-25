@@ -1,13 +1,16 @@
 package com.quickpoint.snookerboard.domain
 
 import com.quickpoint.snookerboard.domain.MatchState.*
+import com.quickpoint.snookerboard.domain.PotAction.*
+import com.quickpoint.snookerboard.utils.MatchAction
+import com.quickpoint.snookerboard.utils.MatchAction.FRAME_RERACK
 import timber.log.Timber
 
-enum class MatchState { IDLE, IN_PROGRESS, POST_MATCH}
+enum class MatchState { IDLE, IN_PROGRESS, SAVED, POST_MATCH }
 
 // The DOMAIN rules
 sealed class DomainMatchInfo(
-    var state: MatchState,
+    var matchState: MatchState,
     var frames: Int,
     var reds: Int,
     var foul: Int,
@@ -37,31 +40,16 @@ sealed class DomainMatchInfo(
             Timber.i("assignRules(): ${getRulesText()}")
         }
 
-        fun nextState() {
-            when (this.state) {
-                IDLE -> this.state = IN_PROGRESS
-                IN_PROGRESS -> this.state = POST_MATCH
-                POST_MATCH -> this.state = IDLE
-            }
-        }
-
-        fun previousState()  {
-            when (this.state) {
-                IDLE -> this.state = POST_MATCH
-                POST_MATCH -> this.state = IN_PROGRESS
-                IN_PROGRESS -> this.state = IDLE
-            }
-        }
-
-        fun getStateFromOrdinal(ordinal: Int) = when (ordinal) {
-            0 -> this.state = IDLE
-            1 -> this.state = IN_PROGRESS
-            2 -> this.state = POST_MATCH
+        fun getMatchStateFromOrdinal(ordinal: Int) = when (ordinal) {
+            0 -> this.matchState = IDLE
+            1 -> this.matchState = IN_PROGRESS
+            2 -> this.matchState = SAVED
+            3 -> this.matchState = POST_MATCH
             else -> Timber.e("No match state has been implemented for this ordinal")
         }
 
         fun resetRules() {
-            state = IDLE
+            matchState = IDLE
             frames = 2
             reds = 15
             foul = 0
@@ -72,41 +60,43 @@ sealed class DomainMatchInfo(
         }
 
         fun getRulesText() =
-            "Frames: ${frames}, Reds: ${reds}, Foul: ${foul}, First: ${first}, CrtPlayer: ${crtPlayer}, Count: ${frameCount}, Max: ${frames}"
+            "Frames: $frames, Reds: $reds, Foul: $foul, First: $first, CrtPlayer: $crtPlayer, Count: $frameCount, Max: $frames"
 
         fun setFrames(number: Int): Int {
             frames = number
             return frames
         }
 
-        fun setReds(number: Int): Int  {
+        fun setReds(number: Int): Int {
             reds = number
             return reds
         }
 
-        fun setFoul(number: Int) : Int {
+        fun setFoul(number: Int): Int {
             foul = number
             return foul
         }
 
-        fun setFirst(position: Int) : Int {
+        fun setFirst(position: Int): Int {
             first = if (position == 2) (0..1).random() else position
             return first
         }
 
-        fun nominatePlayerAtTable(hasMatchStarted: Boolean) {
-            if (hasMatchStarted) first = 1 - first
+        fun getDisplayFrames() = "(" + (frames * 2 - 1).toString() + ")"
+
+        fun resetFrameAndGetFirstPlayer(matchAction: MatchAction) {
+            if (matchAction == MatchAction.FRAME_START_NEW) frameCount += 1
+            if (matchAction != FRAME_RERACK && frameCount > 1) first = 1 - first
+            frameMax = reds * 8 + 27
             crtPlayer = first
         }
 
-        fun switchCrtPlayer() {
-            crtPlayer = 1 - crtPlayer
-        }
-
-        fun getDisplayFrames() = "(" + (frames * 2 - 1).toString() + ")"
-
-        fun resetFrameMax() {
-            frameMax = reds * 8 + 27
+        fun setNextPlayerFromPotAction(potAction: PotAction) {
+            crtPlayer = when (potAction) {
+                SWITCH -> 1 - crtPlayer
+                FIRST -> first
+                CONTINUE -> crtPlayer
+            }
         }
     }
 }

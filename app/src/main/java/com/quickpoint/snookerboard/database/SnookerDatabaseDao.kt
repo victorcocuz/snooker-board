@@ -5,17 +5,19 @@ import androidx.room.*
 
 @Dao
 interface SnookerDatabaseDao {
-
     // Current Match Frame
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMatchFrame(vararg frame: DbFrame)
+
+    @Query("SELECT COUNT(*) FROM match_frames_table")
+    fun getMatchFrameCount(): LiveData<Int>
 
     @Transaction
     @Query("SELECT * FROM match_frames_table")
     fun getMatchFrames(): LiveData<List<DbFrameWithScoreAndBreakWithPotsAndBallStack>>
 
     @Transaction
-    @Query("SELECT * FROM match_frames_table ORDER BY frameId ASC LIMIT 1")
+    @Query("SELECT * FROM match_frames_table WHERE frameId = (SELECT MAX(frameId) FROM match_frames_table)")
     fun getCrtFrame(): LiveData<DbFrameWithScoreAndBreakWithPotsAndBallStack?>
 
     @Transaction

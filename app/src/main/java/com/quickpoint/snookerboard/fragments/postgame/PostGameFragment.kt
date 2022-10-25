@@ -4,22 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentPostGameBinding
 import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
 import com.quickpoint.snookerboard.domain.DomainPlayerScore
-import com.quickpoint.snookerboard.domain.MatchState.IDLE
-import com.quickpoint.snookerboard.utils.EventObserver
-import com.quickpoint.snookerboard.utils.GenericViewModelFactory
-import com.quickpoint.snookerboard.utils.MatchAction.NAVIGATE_HOME
-import com.quickpoint.snookerboard.utils.PlayerTagType
-import com.quickpoint.snookerboard.utils.assignScrollHeight
+import com.quickpoint.snookerboard.utils.*
+import com.quickpoint.snookerboard.utils.MatchAction.NAV_TO_PLAY
 
 class PostGameFragment : androidx.fragment.app.Fragment() {
 
@@ -54,10 +49,6 @@ class PostGameFragment : androidx.fragment.app.Fragment() {
             fragPostGameRv.adapter = PostGameAdapter()
 
             fragPostGameLayoutTop.apply {
-                (activity as AppCompatActivity).apply {
-                    setSupportActionBar(fragGameToolbar)
-                    supportActionBar?.setDisplayShowTitleEnabled(false)
-                }
                 varPlayerTagType = PlayerTagType.STATISTICS
             }
 
@@ -89,14 +80,20 @@ class PostGameFragment : androidx.fragment.app.Fragment() {
             // VM Observers
             matchVm.apply {
                 eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
-                    if (matchAction == NAVIGATE_HOME) {
-                        RULES.state = IDLE
+                    if (matchAction == NAV_TO_PLAY) {
+                        RULES.resetRules()
                         deleteMatchFromDb()
-                        findNavController().navigate(PostGameFragmentDirections.actionGameStatsFragmentToPlayFragment())
+                        navigate(PostGameFragmentDirections.playFrag())
                     }
                 })
             }
         }
+
+        // Disable back pressing
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+            }
+        })
 
         return binding.root
     }

@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.quickpoint.snookerboard.databinding.ItemBreakViewBinding
-import com.quickpoint.snookerboard.utils.BallAdapterType
 import com.quickpoint.snookerboard.domain.DomainBreak
+import com.quickpoint.snookerboard.utils.BallAdapterType
 
 class BreakAdapter(private val activity: Activity) :
     ListAdapter<DomainBreak, BreakAdapter.ViewHolder>(DiffCallBack) {
@@ -24,7 +24,7 @@ class BreakAdapter(private val activity: Activity) :
     class ViewHolder private constructor(val binding: ItemBreakViewBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: DomainBreak, activity: Activity) {
             binding.apply {
-                crtBreak = item
+                varCrtBreak = item
 
                 itemBreakABallsRv.apply {
                     adapter = BallAdapter(null, null, BallAdapterType.BREAK)

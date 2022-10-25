@@ -1,18 +1,24 @@
 package com.quickpoint.snookerboard.fragments.play
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.activity.OnBackPressedCallback
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentPlayBinding
-import com.quickpoint.snookerboard.utils.*
+import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
+import com.quickpoint.snookerboard.domain.MatchState.*
+import com.quickpoint.snookerboard.utils.EventObserver
 import com.quickpoint.snookerboard.utils.MatchAction.*
+import com.quickpoint.snookerboard.utils.hideKeyboard
+import com.quickpoint.snookerboard.utils.navigate
 import timber.log.Timber
 
 class PlayFragment : androidx.fragment.app.Fragment() {
@@ -22,12 +28,28 @@ class PlayFragment : androidx.fragment.app.Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
 
         // Bind layout, initial setup
+        val menuHost: MenuHost = requireActivity()
         val binding: FragmentPlayBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_play, container, false)
         hideKeyboard()
+
+        when (RULES.matchState) {
+            SAVED -> {
+                // In certain circumstances (e.g. reinstalling app), state remains in progress although db is empty. Extra check should be made
+                matchVm.dbMatchFrameCount.observe(viewLifecycleOwner) { value ->
+                    if (value == 0) {
+                        matchVm.onKeepSplashScreen(false)
+                        RULES.matchState = IDLE
+                    }
+                    if (value > 0) navigate(PlayFragmentDirections.gameFrag())
+                }
+            }
+            POST_MATCH -> navigate(PlayFragmentDirections.postGameFrag())
+            else -> {}
+        }
 
         // Bind layout elements
         binding.apply {
@@ -47,25 +69,34 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                 // VM Observers
                 playVm.eventPlayAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                     when (matchAction) { // Start new match
-                        MATCH_PLAY -> findNavController().navigate(PlayFragmentDirections.actionPlayFragmentToGameFragment())
+                        MATCH_PLAY -> navigate(PlayFragmentDirections.gameFrag())
                         else -> {}
                     }
                 })
                 matchVm.eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                     when (matchAction) {
-                        INFO_FOUL_DIALOG -> { // Open the foul info dialog
-                            findNavController().navigate(
-                                PlayFragmentDirections.actionPlayFragmentToGameGenericDialogFragment(
-                                    IGNORE, IGNORE,
-                                    INFO_FOUL_DIALOG
-                                )
-                            )
-                        }
+                        INFO_FOUL_DIALOG -> navigate(PlayFragmentDirections.genDialogFrag(IGNORE, IGNORE, matchAction))
                         else -> Timber.i("Implementation for observed matchAction $matchAction not supported")
                     }
                 })
             }
         }
+
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return view?.findNavController()?.let { NavigationUI.onNavDestinationSelected(menuItem, it) } ?: false
+            }
+        })
+
+        // Disable back pressing
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+            }
+        })
+
         return binding.root
     }
 }

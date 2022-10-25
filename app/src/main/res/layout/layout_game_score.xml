@@ -289,5 +289,28 @@
             app:layout_constraintTop_toTopOf="@+id/game_label_diff"
             tools:text="54" />
 
+        <LinearLayout
+            android:id="@+id/game_line_chapter_breakdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/game_label_diff"
+            android:layout_marginTop="@dimen/margin_header_below"
+            android:gravity="center">
+
+            <FrameLayout
+                style="@style/LineHorizontalChapter"
+                android:layout_marginEnd="@dimen/margin_layout_offset" />
+
+            <TextView
+                style="@style/TextChapter"
+                android:text="@string/chapter_breakdown" />
+
+            <FrameLayout
+                style="@style/LineHorizontalChapter"
+                android:layout_marginStart="@dimen/margin_layout_offset" />
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

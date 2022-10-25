@@ -89,9 +89,14 @@
         <item name="android:textSize">@dimen/text_regular</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <style name="TextBody" parent="MontserratTextViewStyle">
+        <item name="android:textSize">@dimen/text_regular</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">start</item>
     </style>
 
     <style name="TextHeaderBlack" parent="TextHeader">
@@ -144,11 +149,14 @@
 
     <!-- Toolbar -->
     <style name="Toolbar">
+        <item name="android:gravity">left|center_vertical</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/toolbar_height</item>
         <item name="android:minHeight">@dimen/toolbar_height</item>
         <item name="android:elevation">@dimen/toolbar_elevation</item>
         <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:popupBackground">@color/white</item>
+        <item name="popupMenuBackground">@color/beige</item>
     </style>
 
     <!-- Game -->

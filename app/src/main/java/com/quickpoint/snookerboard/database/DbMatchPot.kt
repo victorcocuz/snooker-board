@@ -33,6 +33,7 @@ fun List<DbPot>.asDomainPotList(): MutableList<DomainPot> {
             PotType.TYPE_ADDRED -> DomainPot.ADDRED
             PotType.TYPE_FREEAVAILABLE -> DomainPot.FREEAVAILABLE
             PotType.TYPE_FREETOGGLE -> DomainPot.FREETOGGLE
+            PotType.TYPE_RESPOT_BLACK -> DomainPot.RESPOTBLACK
         }
     }.toMutableList()
 }

@@ -17,24 +17,17 @@
         android:name="com.quickpoint.snookerboard.fragments.play.PlayFragment"
         android:label="PlayFragment" >
         <action
-            android:id="@+id/action_playFragment_to_gameFragment"
+            android:id="@+id/game_frag"
             app:destination="@id/gameFragment"
+            app:launchSingleTop="true"
             app:popUpTo="@id/playFragment"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_playFragment_to_gameGenericDialogFragment"
+            android:id="@+id/gen_dialog_frag"
             app:destination="@id/gameGenericDialogFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/playContinueFragment"
-        android:name="com.quickpoint.snookerboard.fragments.play.PlayContinueFragment"
-        android:label="PlayContinueFragment">
         <action
-            android:id="@+id/action_playContinueFragment_to_gameFragment"
-            app:destination="@id/gameFragment" />
-        <action
-            android:id="@+id/action_playContinueFragment_to_playFragment"
-            app:destination="@id/playFragment" />
+            android:id="@+id/post_game_frag"
+            app:destination="@id/postGameFragment" />
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
@@ -57,30 +50,31 @@
         android:name="com.quickpoint.snookerboard.fragments.game.GameFragment"
         android:label="GameFragment" >
         <action
-            android:id="@+id/action_gameFragment_to_gameGenericDialogFragment"
+            android:id="@+id/gen_dialog_frag"
             app:destination="@id/gameGenericDialogFragment" />
         <action
-            android:id="@+id/action_gameFragment_to_gameFoulDialogFragment"
+            android:id="@+id/foul_dialog_frag"
             app:destination="@id/gameFoulDialogFragment" />
         <action
-            android:id="@+id/action_gameFragment_to_gameStatsFragment"
-            app:destination="@id/gameStatsFragment"
-            app:popUpTo="@id/gameFragment"
+            android:id="@+id/post_game_frag"
+            app:destination="@id/postGameFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/playFragment"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_gameFragment_to_playFragment"
+            android:id="@+id/play_frag"
             app:destination="@id/playFragment"
             app:popUpTo="@id/gameFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
-        android:id="@+id/gameStatsFragment"
+        android:id="@+id/postGameFragment"
         android:name="com.quickpoint.snookerboard.fragments.postgame.PostGameFragment"
-        android:label="GameStatsFragment" >
+        android:label="PostGameFragment" >
         <action
-            android:id="@+id/action_gameStatsFragment_to_playFragment"
+            android:id="@+id/play_frag"
             app:destination="@id/playFragment"
-            app:popUpTo="@id/gameStatsFragment"
+            app:popUpTo="@id/postGameFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <dialog
@@ -101,4 +95,12 @@
         android:id="@+id/gameFoulDialogFragment"
         android:name="com.quickpoint.snookerboard.fragments.gamedialogs.FoulDialogFragment"
         android:label="GameFoulDialogFragment" />
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.quickpoint.snookerboard.fragments.play.AboutFragment"
+        android:label="@string/menu_drawer_about" />
+    <fragment
+        android:id="@+id/rulesFragment"
+        android:name="com.quickpoint.snookerboard.fragments.play.RulesFragment"
+        android:label="@string/menu_drawer_rules" />
 </navigation>

@@ -47,21 +47,19 @@ sealed class DomainFreeBallInfo(
         }
     }
 
-    fun handleUndoFreeballInfo(pot: DomainPot, frameStack: MutableList<DomainBreak>) {
-        when (pot.potType) {
+    fun handleUndoFreeballInfo(potType: PotType, lastPotType: PotType?) {
+        when (potType) {
             TYPE_FREE -> {
                 toggleVisible()
                 toggleSelected()
             }
-            TYPE_SAFE, TYPE_MISS, TYPE_FOUL -> frameStack.apply {
-                when (lastPotType()) {
-                    TYPE_FREEAVAILABLE -> toggleVisible()
-                    TYPE_FREETOGGLE -> {
-                        toggleVisible()
-                        toggleSelected()
-                    }
-                    else -> setInvisible()
+            TYPE_SAFE, TYPE_MISS, TYPE_FOUL -> when (lastPotType) {
+                TYPE_FREEAVAILABLE -> toggleVisible()
+                TYPE_FREETOGGLE -> {
+                    toggleVisible()
+                    toggleSelected()
                 }
+                else -> setInvisible()
             }
             TYPE_FREETOGGLE -> toggleSelected()
             TYPE_FREEAVAILABLE -> resetFreeball()

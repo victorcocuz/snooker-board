@@ -2,10 +2,9 @@ package com.quickpoint.snookerboard.domain
 
 import com.quickpoint.snookerboard.domain.BallType.*
 import com.quickpoint.snookerboard.domain.DomainBall.*
-import com.quickpoint.snookerboard.domain.DomainFreeBallInfo.*
-import com.quickpoint.snookerboard.domain.DomainMatchInfo.*
+import com.quickpoint.snookerboard.domain.DomainFreeBallInfo.FREEBALLINFO
+import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
 import com.quickpoint.snookerboard.domain.PotType.*
-import timber.log.Timber
 
 // The DOMAIN Ball is the simplest game data unit. It stores ball information
 enum class BallType { TYPE_NOBALL, TYPE_WHITE, TYPE_RED, TYPE_YELLOW, TYPE_GREEN, TYPE_BROWN, TYPE_BLUE, TYPE_PINK, TYPE_BLACK, TYPE_COLOR, TYPE_FREEBALL, TYPE_FREEBALLTOGGLE, TYPE_FREEBALLAVAILABLE }
@@ -74,9 +73,43 @@ fun getBallFromValues(position: Int, points: Int, foul: Int): DomainBall { // Re
     }
 }
 
-// Helpers
+// Checkers
+fun MutableList<DomainBall>.isLastBall(): Boolean = this.size == 1
 fun MutableList<DomainBall>.isInColors(): Boolean = this.size <= 7
+fun MutableList<DomainBall>.areRedsOnTheTable(): Boolean = this.size >= 9
 fun MutableList<DomainBall>.isNextColor(): Boolean = this.size in (7..37).filter { it % 2 != 0 }
+fun MutableList<DomainBall>.isNextColorAndNotLast(): Boolean = this.size in (10..37).filter { it % 2 != 1 }
+
+// Add balls
+fun MutableList<DomainBall>.addNextBalls(number: Int) = repeat(number) { addNextBall() }
+fun MutableList<DomainBall>.addNextBall() = this.add(
+    when (this.size) {
+        0 -> WHITE()
+        1 -> BLACK()
+        2 -> PINK()
+        3 -> BLUE()
+        4 -> BROWN()
+        5 -> GREEN()
+        6 -> YELLOW()
+        in (7..37).filter { it % 2 == 0 } -> RED()
+        in (7..37).filter { it % 2 != 0 } -> COLOR()
+        else -> WHITE()
+    }
+)
+
+fun MutableList<DomainBall>.addBalls(vararg balls: DomainBall) {
+    for (ball in balls) this.add(ball)
+}
+
+fun MutableList<DomainBall>.addFreeBall(): Int = if (isInColors()) {
+    addBalls(FREEBALL())
+    last().points
+} else {
+    addBalls(COLOR(), FREEBALL())
+    8
+}
+
+// Remove balls
 fun MutableList<DomainBall>.removeBalls(times: Int): Int = if (times == 1) {
     this.removeLast().points * (-1)
 } else {
@@ -84,29 +117,15 @@ fun MutableList<DomainBall>.removeBalls(times: Int): Int = if (times == 1) {
     8 * (-1)
 }
 
-fun MutableList<DomainBall>.addBalls(vararg balls: DomainBall) {
-    for (ball in balls) this.add(ball)
-}
-
-fun MutableList<DomainBall>.addFreeBall(): Int {
-    return if (isInColors()) {
-        addBalls(FREEBALL())
-        last().points
-    } else {
-        addBalls(COLOR(), FREEBALL())
-        8
-    }
-}
-
 fun MutableList<DomainBall>.removeFreeBall(): Int = if (isInColors()) removeBalls(1) else removeBalls(2)
 
-fun MutableList<DomainBall>.rerackBalls() {
+// Frame helpers
+fun MutableList<DomainBall>.resetBalls() {
     clear()
-    addBalls(WHITE(), BLACK(), PINK(), BLUE(), BROWN(), GREEN(), YELLOW())
-    repeat(RULES.reds) { addBalls(COLOR(), RED()) }
+    addNextBalls(RULES.reds * 2 + 7)
 }
 
-fun MutableList<DomainBall>.handlePotBallStack(potType: PotType, isFrameEqual: Boolean) {
+fun MutableList<DomainBall>.handlePotBallStack(potType: PotType) {
     when (potType) {
         TYPE_HIT, TYPE_FREE -> removeBalls(1)
         TYPE_FREEAVAILABLE -> {}
@@ -116,8 +135,8 @@ fun MutableList<DomainBall>.handlePotBallStack(potType: PotType, isFrameEqual: B
             if (last() is COLOR) removeBalls(1)
             if (last() is FREEBALL) RULES.frameMax += removeFreeBall()
         }
+        TYPE_RESPOT_BLACK -> addBalls(BLACK())
     }
-    if (size == 1) if (isFrameEqual) addBalls(BLACK()) // Query end frame exception; see fragment
 }
 
 fun MutableList<DomainBall>.handleUndoBallStack(pot: DomainPot, lastBallType: BallType?) {
@@ -131,8 +150,8 @@ fun MutableList<DomainBall>.handleUndoBallStack(pot: DomainPot, lastBallType: Ba
             TYPE_FREEBALLTOGGLE -> RULES.frameMax += addFreeBall()
             else -> {}
         }
-
         TYPE_FREEAVAILABLE -> {}
         TYPE_FREETOGGLE -> RULES.frameMax += if (FREEBALLINFO.isSelected) removeFreeBall() else addFreeBall()
+        TYPE_RESPOT_BLACK -> removeBalls(1)
     }
 }

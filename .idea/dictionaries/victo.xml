@@ -2,8 +2,13 @@
   <dictionary name="victo">
     <words>
       <w>addred</w>
+      <w>apoint</w>
       <w>autofill</w>
+      <w>bload</w>
+      <w>cdelete</w>
       <w>contentd</w>
+      <w>coord</w>
+      <w>foulattempt</w>
       <w>freeavailable</w>
       <w>freeball</w>
       <w>freeballavailable</w>
@@ -31,6 +36,9 @@
       <w>removered</w>
       <w>req'd</w>
       <w>rerack</w>
+      <w>respot</w>
+      <w>respotblack</w>
+      <w>snackbar</w>
       <w>snookerboard</w>
       <w>snookerscore</w>
       <w>vert</w>

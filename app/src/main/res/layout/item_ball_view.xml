@@ -32,6 +32,7 @@
                 android:id="@+id/item_button_points"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:fontFamily="@font/montserrat_bold"
                 android:gravity="center"
                 android:textSize="@dimen/text_regular" />
     </FrameLayout>

@@ -1,7 +1,9 @@
 package com.quickpoint.snookerboard.fragments.gamedialogs
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
@@ -11,14 +13,14 @@ import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentDialogGenBinding
 import com.quickpoint.snookerboard.utils.EventObserver
 import com.quickpoint.snookerboard.utils.MatchAction
-import com.quickpoint.snookerboard.utils.setLayoutSizeByFactor
 import com.quickpoint.snookerboard.utils.MatchAction.*
+import com.quickpoint.snookerboard.utils.setLayoutSizeByFactor
 
 
 
 class GenericDialogFragment : DialogFragment() {
-    private val dialogViewModel: DialogViewModel by activityViewModels()
-    private val matchViewModel: MatchViewModel by activityViewModels()
+    private val dialogVm: DialogViewModel by activityViewModels()
+    private val matchVm: MatchViewModel by activityViewModels()
     private lateinit var matchAction: MatchAction
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,20 +38,20 @@ class GenericDialogFragment : DialogFragment() {
         // Bind all required elements from the view
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
-            varGenericEventsViewModel = dialogViewModel
-            varMatchViewModel = this@GenericDialogFragment.matchViewModel
+            varDialogVm = dialogVm
+            varMatchVm = this@GenericDialogFragment.matchVm
             GenericDialogFragmentArgs.fromBundle(requireArguments()).apply {
                 varDialogMatchActionA = matchActionA
-                varDialogMatchActionB = matchActionB
+                varDialogMatchActionB = if (matchActionC == MATCH_TO_END) MATCH_ENDED_DISCARD_FRAME else CLOSE_DIALOG
                 varDialogMatchActionC = matchActionC
-                if (varDialogMatchActionC in listOf(MATCH_ENDED, FRAME_ENDED)) {
+                if (varDialogMatchActionC in listOf(MATCH_ENDED, FRAME_ENDED, FRAME_RESPOT_BLACK_DIALOG)) {
                     this@GenericDialogFragment.isCancelable = false // An action has to be taken if game or match are ended
                 }
             }
         }
 
         // Observers
-        dialogViewModel.eventDialogAction.observe(viewLifecycleOwner, EventObserver {
+        dialogVm.eventDialogAction.observe(viewLifecycleOwner, EventObserver {
             dismiss() // Close dialog once a match action as been clicked on
             matchAction = it // Save the recorded match action to be passed on in onDestroy
         })
@@ -58,7 +60,7 @@ class GenericDialogFragment : DialogFragment() {
 
     override fun onDestroy() { // Pass match action to view model
         super.onDestroy()
-        if (this::matchAction.isInitialized) matchViewModel.assignEventMatchAction(matchAction)
+        if (this::matchAction.isInitialized) matchVm.assignEventMatchAction(matchAction)
     }
 }
 

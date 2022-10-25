@@ -7,7 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.quickpoint.snookerboard.domain.DomainFrame
 import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
-import com.quickpoint.snookerboard.domain.MatchState.*
+import com.quickpoint.snookerboard.domain.MatchState.IDLE
+import com.quickpoint.snookerboard.domain.MatchState.POST_MATCH
 import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.Event
 import com.quickpoint.snookerboard.utils.MatchAction
@@ -21,8 +22,14 @@ class MatchViewModel(
 ) : AndroidViewModel(app) {
 
     // Variables
-    val isFrameLoadingToggle = snookerRepository.isFrameLoadingToggle
-    val crtFrame = snookerRepository.crtFrame
+    val dbCrtFrame = snookerRepository.crtFrame
+    val dbMatchFrameCount = snookerRepository.matchFrameCount
+
+    private val _keepSplashScreen = MutableLiveData(true)
+    val keepSplashScreen: LiveData<Boolean> = _keepSplashScreen
+    fun onKeepSplashScreen(keep: Boolean) {
+        _keepSplashScreen.value = keep
+    }
 
     // Observables
     private val _eventRules = MutableLiveData(RULES)
@@ -36,9 +43,6 @@ class MatchViewModel(
     fun updateFrameInfo(domainFrame: DomainFrame) {
         updateRules(-1)
         _displayFrame.value = domainFrame
-        _displayFrame.value?.apply {
-            if (isFrameEnded()) assignEventMatchAction(FRAME_ENDED_DIALOG)
-        }
         Timber.i(app.resources.getString(R.string.helper_update_frame_info))
     }
 
@@ -48,38 +52,38 @@ class MatchViewModel(
         _eventMatchAction.value = Event(matchAction)
     }
 
-    // Db Actions
-    fun startNewMatch() {
-        Timber.i("startNewMatch()")
-        RULES.state = IN_PROGRESS
-        assignEventMatchAction(MATCH_START_NEW)
-    }
-
-    fun loadMatchAPointToCrtFrame() = viewModelScope.launch { // Actioned from main menu to load the match
-        Timber.i("loadMatchPartAPointToCurrentFrame()")
-        snookerRepository.searchByCount(RULES.frameCount)
-        snookerRepository.loadFrameToggle(true)
-    }
-
-    fun loadMatchCDeleteCrtFrame() = viewModelScope.launch { // After loading the game, will delete the current frame from the db
-        Timber.i("loadMatchPartCDeleteCurrentFrame()")
-        snookerRepository.loadFrameToggle(false)
+    // Actions
+    fun deleteCrtFrameFromDb() = viewModelScope.launch { // After loading the game, will delete the current frame from the db
+        onKeepSplashScreen(false)
+        Timber.i("deleteCrtFrameFromDb()")
         snookerRepository.deleteCurrentFrame(RULES.frameCount)
     }
 
-    fun saveFrameToDb(matchAction: MatchAction) = viewModelScope.launch { // When decided on match end from a generic dialog
+    fun endFrameOrMatch(matchAction: MatchAction) = viewModelScope.launch { // When decided on match end from a generic dialog
         Timber.i("saveAndResetFrame(): $matchAction")
-        snookerRepository.saveCurrentFrame(displayFrame.value!!)
-        if (matchAction == GO_TO_POST_MATCH) RULES.state = POST_MATCH
-        assignEventMatchAction(matchAction)
+        when (matchAction) {
+            FRAME_TO_END, FRAME_ENDED -> {
+                snookerRepository.saveCurrentFrame(displayFrame.value!!)
+                assignEventMatchAction(FRAME_START_NEW)
+            }
+            MATCH_ENDED_DISCARD_FRAME -> {
+                RULES.matchState = POST_MATCH
+                assignEventMatchAction(NAV_TO_POST_MATCH)
+            }
+            else -> {
+                snookerRepository.saveCurrentFrame(displayFrame.value!!)
+                RULES.matchState = POST_MATCH
+                assignEventMatchAction(NAV_TO_POST_MATCH)
+            }
+        }
     }
 
     fun saveMatchOnSavedInstance() = viewModelScope.launch { // When instance state is saved, save frame only if match is in progress
-        if (RULES.state == IN_PROGRESS) snookerRepository.saveCurrentFrame(_displayFrame.value!!)
+        snookerRepository.saveCurrentFrame(_displayFrame.value!!)
     }
 
     fun deleteMatchFromDb() = viewModelScope.launch { // When starting a new match or cancelling an existing match
-        RULES.state = IDLE
+        RULES.matchState = IDLE
         snookerRepository.deleteCurrentMatch()
     }
 
@@ -88,11 +92,11 @@ class MatchViewModel(
         Timber.i("queryEndFrameOrMatch($matchAction)")
         return if (_displayFrame.value!!.isMatchEnding()) { // If the frame would push player to win, assign a MATCH ending action
             if (displayFrame.value!!.isFrameOver()) MATCH_ENDED
-            else MATCH_TO_END_DIALOG
+            else MATCH_TO_END
         } else when { // Else assign a match action for a MATCH end query or else assign a FRAME ending action
-            matchAction == MATCH_ENDED_DIALOG -> MATCH_TO_END_DIALOG
+            matchAction == MATCH_ENDING_DIALOG -> MATCH_TO_END
             displayFrame.value!!.isFrameOver() -> FRAME_ENDED
-            else -> FRAME_TO_END_DIALOG
+            else -> FRAME_TO_END
         }
     }
 }

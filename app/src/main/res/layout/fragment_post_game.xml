@@ -144,7 +144,7 @@
             android:id="@+id/frag_post_game_btn"
             style="@style/ButtonStretched"
             android:layout_width="match_parent"
-            android:onClick="@{() -> varMatchVm.assignEventMatchAction(MatchAction.NAVIGATE_HOME)}"
+            android:onClick="@{() -> varMatchVm.assignEventMatchAction(MatchAction.NAV_TO_PLAY)}"
             android:text="@string/fragment_game_stats_btn_go_to_play"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
