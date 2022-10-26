@@ -12,11 +12,11 @@ This is the app introductory screen.
 <img src="https://user-images.githubusercontent.com/21157326/198108585-f93fef5c-767b-416e-8b3f-089adeddc753.jpg" width="200">
 
 It is where the user can choose the following game rules:
--A name for each player
--Number of frames
--Number of reds each frame should contain
--Standard foul value
--Who breaks first
+- A name for each player
+- Number of frames
+- Number of reds each frame should contain
+- Standard foul value
+- Who breaks first
 After all rules are decided on the match can start.
 
 ### Match screen 
