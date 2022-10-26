@@ -22,6 +22,8 @@ After all rules are decided on the match can start.
 ### Match screen 
 This is where the game is actually being recorded. 
 
+<img src="https://user-images.githubusercontent.com/21157326/198109113-93f92b9c-de27-4cf1-9fe8-36d9bf64bd10.jpg" width="200">
+
 The player at the table will record his actions, which can be as follows:
 -Pot a ball - the app will automatically switch between reds and colors to pot
 -Safety shot
@@ -45,6 +47,8 @@ This screen has the following features:
 
 ### Post Match screen
 This is where the score breakdown will be shown at the end of the match.
+
+<img src="https://user-images.githubusercontent.com/21157326/198109135-cd62b8c7-fe5c-4500-b039-cdd8be0cdaa2.jpg" width="200">
 
 The breakdown includes a list of all frames, showing for each frame:
 -Frame score
