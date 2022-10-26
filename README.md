@@ -30,8 +30,8 @@ The player at the table will record his actions, which can be as follows:
 - Safety shot
 - Missed shot
 - Foul - a menu will open to select which ball was fouled and what action to choose from:
--- The player at the table can continue playing or force the previous player to repeat the shot
--- After the foul has been recorded, if the player chooses to continue he may have a freeball. A toggle appears on the screen to record that
+  - The player at the table can continue playing or force the previous player to repeat the shot
+  - After the foul has been recorded, if the player chooses to continue he may have a freeball. A toggle appears on the screen to record that
 - Add red ball - only available after a red has been potted - in case more than one red flukes in at the same time
 - Remove red ball - removes a red ball of the table. Should only be used before a foul.
 - Rerack - resets the frame
