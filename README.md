@@ -8,8 +8,8 @@ The app has three separate screens
 
 ### Play screen
 This is the app introductory screen. 
-<img src="https://user-images.githubusercontent.com/21157326/198108585-f93fef5c-767b-416e-8b3f-089adeddc753.jpg" width="200">
 
+<img src="https://user-images.githubusercontent.com/21157326/198108585-f93fef5c-767b-416e-8b3f-089adeddc753.jpg" width="200">
 
 It is where the user can choose the following game rules:
 -A name for each player
