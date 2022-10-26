@@ -17,6 +17,7 @@ It is where the user can choose the following game rules:
 - Number of reds each frame should contain
 - Standard foul value
 - Who breaks first
+
 After all rules are decided the match can start.
 
 ### Match screen 
