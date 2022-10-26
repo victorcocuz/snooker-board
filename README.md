@@ -8,7 +8,7 @@ The app has three separate screens
 
 ### Play screen
 This is the app introductory screen. 
-<img src="https://user-images.githubusercontent.com/21157326/198106785-eb5932ca-bffe-4765-be9d-c927aaed915f.jpg" "width=200">
+<img src="https://user-images.githubusercontent.com/21157326/198108585-f93fef5c-767b-416e-8b3f-089adeddc753.jpg" width="200">
 
 It is where the user can choose the following game rules:
 -A name for each player
@@ -20,7 +20,6 @@ After all rules are decided on the match can start.
 
 ### Match screen 
 This is where the game is actually being recorded. 
-![Screenshot_20221026-135647](https://user-images.githubusercontent.com/21157326/198106857-ed675a06-1e26-4e57-9156-b5837dc6efb5.jpg | width=200)
 
 The player at the table will record his actions, which can be as follows:
 -Pot a ball - the app will automatically switch between reds and colors to pot
@@ -45,7 +44,6 @@ This screen has the following features:
 
 ### Post Match screen
 This is where the score breakdown will be shown at the end of the match.
-![Screenshot_20221026-135844](https://user-images.githubusercontent.com/21157326/198106878-10c7a067-de97-48de-bb5d-30ef0bdff9a4.jpg | width=200)
 
 The breakdown includes a list of all frames, showing for each frame:
 -Frame score
