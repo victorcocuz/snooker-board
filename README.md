@@ -42,7 +42,7 @@ The player at the table will record his actions, which can be as follows:
 
 This screen has the following features:
 - Shows the frame and match score
-- Keeeps live track of each player's highest break, pot success and number of fouls
+- Keeps live track of each player's highest break, pot success and number of fouls
 - Highlights the player at the table
 - Shows a breakdown of all actions during the current frame, showing a visual list of all breaks.
 
@@ -56,6 +56,7 @@ The breakdown includes a list of all frames, showing for each frame:
 - Incremental match score
 - Highest break for each player
 - Percentage of success shots
+
 This also shows the total for each of the above category.
 
 ## Wish list
@@ -70,7 +71,7 @@ I am slowly going towards implementing:
 - Snooker friend finding and possibly venue finding
 
 ## Contact
-I decided to create this app out of passion for snooker. I am not a developer and all I've done is by learning android and kotlin in my spare time. My resources are limited, but you would like to get involved I'd be very happy to receive any help. 
+I decided to create this app out of passion for snooker. I am not a developer and I've only learned android and kotlin in my spare time. My resources and time are limited so I can only push this so far. If you would like to get involved I'd be very happy to receive any help. 
 
 You can contact me at:
 victor.cocuz@yahoo.com
