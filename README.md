@@ -4,7 +4,7 @@
 Snooker Board is a simple snooker score keeping app.
 
 ## App screens and features
-The app has three separate screens
+The app has three separate screens:
 
 ### Play screen
 This is the app introductory screen. 
