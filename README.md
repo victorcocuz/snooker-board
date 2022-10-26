@@ -17,7 +17,7 @@ It is where the user can choose the following game rules:
 - Number of reds each frame should contain
 - Standard foul value
 - Who breaks first
-After all rules are decided on the match can start.
+After all rules are decided the match can start.
 
 ### Match screen 
 This is where the game is actually being recorded. 
@@ -66,7 +66,7 @@ I am slowly going towards implementing:
 - A score sharing button
 - Login screen
 - History saving
--S nooker friend finding and possibly venue finding
+- Snooker friend finding and possibly venue finding
 
 ## Contact
 I decided to create this app out of passion for snooker. I am not a developer and all I've done is by learning android and kotlin in my spare time. My resources are limited, but you would like to get involved I'd be very happy to receive any help. 
