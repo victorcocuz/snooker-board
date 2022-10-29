@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/margin_xxsmall">
+
+        <TextView
+            android:id="@+id/f_nav_improve_title"
+            style="@style/TextTitle"
+            android:layout_marginTop="@dimen/margin_xxsmall"
+            android:text="@string/menu_drawer_improve"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/f_nav_improve_text"
+            style="@style/TextHeader"
+            android:layout_marginTop="@dimen/margin_xxsmall"
+            android:text="@string/f_nav_improve_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_improve_title" />
+
+        <TextView
+            android:id="@+id/f_nav_improve_survey_header"
+            style="@style/TextHeaderBold"
+            android:layout_marginTop="@dimen/margin_xsmall"
+            android:text="@string/f_nav_improve_survey_header"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_improve_text" />
+
+        <TextView
+            android:id="@+id/f_nav_improve_survey_body"
+            style="@style/TextHeader"
+            android:layout_marginTop="@dimen/margin_xxsmall"
+            android:text="@string/f_nav_improve_survey_body"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_improve_survey_header" />
+
+        <TextView
+            android:id="@+id/f_nav_improve_survey_link"
+            style="@style/ButtonStretched"
+            android:text="@string/f_nav_improve_survey_link"
+            android:textColorLink="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_improve_survey_body" />
+
+        <TextView
+            android:id="@+id/f_nav_improve_contact_header"
+            style="@style/TextHeaderBold"
+            android:layout_marginTop="@dimen/margin_xsmall"
+            android:text="@string/f_nav_improve_contact_header"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_improve_survey_link" />
+
+        <TextView
+            android:id="@+id/f_nav_improve_contact_body"
+            style="@style/TextHeader"
+            android:layout_marginTop="@dimen/margin_xxsmall"
+            android:text="@string/f_nav_improve_contact_body"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_improve_contact_header" />
+
+
+        <TextView
+            android:id="@+id/f_nav_improve_contact_email"
+            style="@style/ButtonStretched"
+            android:layout_marginTop="@dimen/margin_xsmall"
+            android:text="@string/f_nav_improve_contact_email"
+            android:textColorLink="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_improve_contact_body" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

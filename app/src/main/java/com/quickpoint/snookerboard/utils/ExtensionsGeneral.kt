@@ -7,12 +7,16 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
 import android.text.SpannableString
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
 import android.text.style.ForegroundColorSpan
+import android.text.style.URLSpan
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.ScrollView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -83,4 +87,19 @@ fun Context.getFactoredDimen(factor: Int): Int {
         resources.displayMetrics.heightPixels
     }
     return width / factor
+}
+
+// Text
+fun TextView.setAsLink() {
+    movementMethod = LinkMovementMethod.getInstance()
+    val spannable = SpannableString(text)
+    for (u in spannable.getSpans(0, spannable.length, URLSpan::class.java)) {
+        spannable.setSpan(object : URLSpan(u.url) {
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = false
+            }
+        }, spannable.getSpanStart(u), spannable.getSpanEnd(u), 0)
+    }
+    text = spannable
 }

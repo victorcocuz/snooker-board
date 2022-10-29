@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             navController.addOnDestinationChangedListener { _: NavController, nd: NavDestination, _: Bundle? ->
                 when (nd.id) {
                     R.id.playFragment -> mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-                    R.id.rulesFragment, R.id.aboutFragment -> mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+                    R.id.navRulesFragment, R.id.navImproveFragment, R.id.navAboutFragment -> mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                     else -> {
                         binding.layoutAppBarMain.layoutToolbarMain.navigationIcon = null
                         mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)

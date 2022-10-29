@@ -96,11 +96,15 @@
         android:name="com.quickpoint.snookerboard.fragments.gamedialogs.FoulDialogFragment"
         android:label="GameFoulDialogFragment" />
     <fragment
-        android:id="@+id/aboutFragment"
-        android:name="com.quickpoint.snookerboard.fragments.play.AboutFragment"
-        android:label="@string/menu_drawer_about" />
+        android:id="@+id/navImproveFragment"
+        android:name="com.quickpoint.snookerboard.fragments.navdrawer.NavImproveFragment"
+        android:label="@string/menu_drawer_improve" />
     <fragment
-        android:id="@+id/rulesFragment"
-        android:name="com.quickpoint.snookerboard.fragments.play.RulesFragment"
+        android:id="@+id/navRulesFragment"
+        android:name="com.quickpoint.snookerboard.fragments.navdrawer.NavRulesFragment"
         android:label="@string/menu_drawer_rules" />
+    <fragment
+        android:id="@+id/navAboutFragment"
+        android:name="com.quickpoint.snookerboard.fragments.navdrawer.NavAboutFragment"
+        android:label="NavAboutFragment" />
 </navigation>
