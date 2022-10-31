@@ -14,7 +14,7 @@ android {
         applicationId "com.quickpoint.snookerboard"
         minSdk 22
         targetSdkVersion 33
-        versionCode 5
+        versionCode 6
         versionName "1.0.4"
         vectorDrawables.useSupportLibrary = true
 
@@ -55,6 +55,8 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
     implementation "androidx.core:core-splashscreen:$version_splash_screen"
     implementation "com.android.support:design:$version_design"
+    implementation "com.android.billingclient:billing:$version_billing"
+    implementation "com.android.billingclient:billing-ktx:$version_billing"
 
     // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$version_navigation"
