@@ -1,7 +1,6 @@
 package com.quickpoint.snookerboard.repository
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.quickpoint.snookerboard.database.DbFrameWithScoreAndBreakWithPotsAndBallStack
 import com.quickpoint.snookerboard.database.SnookerDatabase
@@ -89,23 +88,6 @@ class SnookerRepository(database: SnookerDatabase) {
             deleteMatchBalls()
             deleteMatchFrames()
         }
-    }
-
-    // Add a live data object that stores the value of a frameId when called; used below
-    private val _frameCount = MutableLiveData<Int>()
-    fun searchByCount(frameId: Int) {
-        _frameCount.value = frameId
-    }
-
-    private val _isFrameLoading = MutableLiveData(false)
-    val isFrameLoadingToggle: LiveData<Boolean> = _isFrameLoading
-    fun loadFrameToggle(isFrameLoading: Boolean) {
-        _isFrameLoading.value = isFrameLoading
-    }
-
-    // Get current frame information by frameId, will update automatically once frameID changes
-    val currentFrame: LiveData<DbFrameWithScoreAndBreakWithPotsAndBallStack?> = Transformations.switchMap(_frameCount) { frameId ->
-        snookerDbDao.getCurrentFrame(frameId)
     }
 
     val crtFrame: LiveData<DbFrameWithScoreAndBreakWithPotsAndBallStack?> = snookerDbDao.getCrtFrame()

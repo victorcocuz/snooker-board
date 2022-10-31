@@ -14,13 +14,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.quickpoint.snookerboard.DialogViewModel
 import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.database.asDomainFrame
 import com.quickpoint.snookerboard.databinding.FragmentGameBinding
-import com.quickpoint.snookerboard.domain.DomainBall.FREEBALL
+import com.quickpoint.snookerboard.domain.DomainBall
 import com.quickpoint.snookerboard.domain.DomainFrame
 import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
 import com.quickpoint.snookerboard.domain.DomainPot.*
-import com.quickpoint.snookerboard.domain.MatchState.*
+import com.quickpoint.snookerboard.domain.MatchState.IDLE
+import com.quickpoint.snookerboard.domain.MatchState.IN_PROGRESS
 import com.quickpoint.snookerboard.domain.asDomainPlayerScore
 import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.*
@@ -31,28 +31,29 @@ class GameFragment : androidx.fragment.app.Fragment() {
     private val gameVm: GameViewModel by viewModels()
     private val dialogsVm: DialogViewModel by activityViewModels()
     private val matchVm: MatchViewModel by activityViewModels()
-    private lateinit var ballAdapter: BallAdapter
     private lateinit var binding: FragmentGameBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        val menuHost: MenuHost = requireActivity()
-        ballAdapter = BallAdapter( // Create a ball adapter for the balls recycler view
-            BallListener { ball -> // Add a listener to the adapter to handle clicking, which will check whether a ball/freeball was clicked
-                requireActivity().invalidateOptionsMenu()
-                gameVm.handlePot(if (ball is FREEBALL) FREE else HIT(ball))
-            }, matchVm.displayFrame, BallAdapterType.MATCH)
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false)
 
         // Start new match or load existing match
-        if (RULES.matchState == IDLE) {
-            RULES.matchState = IN_PROGRESS
-            gameVm.resetMatch(MATCH_START_NEW)
+        when (RULES.matchState) {
+            IDLE -> {
+                RULES.setMatchState(IN_PROGRESS)
+                gameVm.resetMatch(MATCH_START_NEW)
+                matchVm.turnOffSplashScreen()
+            }
+            IN_PROGRESS -> {
+                gameVm.loadFrame(matchVm.displayFrame.value)
+                matchVm.turnOffSplashScreen()
+            }
+            else -> {}
         }
 
-        // Bind all required elements from the view
+        // Bind view elements
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false)
         binding.apply { // Bind all layouts
             lifecycleOwner = viewLifecycleOwner
 
@@ -82,7 +83,11 @@ class GameFragment : androidx.fragment.app.Fragment() {
                 fragGameBallsRv.apply {
                     layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
                     itemAnimator = null
-                    adapter = ballAdapter
+                    adapter = BallAdapter( // Create a ball adapter for the balls recycler view
+                        BallListener { ball -> // Add a listener to the adapter to handle clicking, which will check whether a ball/freeball was clicked
+                            requireActivity().invalidateOptionsMenu()
+                            gameVm.handlePot(if (ball is DomainBall.FREEBALL) FREE else HIT(ball))
+                        }, matchVm.displayFrame, BallAdapterType.MATCH)
                 }
             }
         }
@@ -100,21 +105,12 @@ class GameFragment : androidx.fragment.app.Fragment() {
                                 frameStack,
                                 RULES.frameMax))
                     }
-                    FRAME_FREEAVAILABLE -> gameVm.handlePot(FREEAVAILABLE)
-                    FRAME_UNDO -> gameVm.handleUndo()
                     FRAME_NO_BALL -> binding.fragGameCl.snackbar(getString(R.string.toast_game_no_balls_left))
                     else -> matchVm.assignEventMatchAction(matchAction)
                 }
             })
         }
         matchVm.apply {
-            dbCrtFrame.observe(viewLifecycleOwner) { crtFrame ->
-                if (crtFrame?.frame?.frameId == RULES.frameCount && RULES.matchState == SAVED) {
-                    gameVm.loadMatchBloadFrame(crtFrame.asDomainFrame())
-                    matchVm.deleteCrtFrameFromDb()
-                    RULES.matchState = IN_PROGRESS
-                }
-            }
             eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                 Timber.i("observed eventMatchAction: $matchAction")
                 when (matchAction) {
@@ -138,6 +134,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
                     MATCH_CANCEL -> { // On a match cancel, cancel match and go back to play fragment
                         gameVm.resetMatch(matchAction)
                         matchVm.deleteMatchFromDb()
+                        RULES.setMatchState(IDLE)
                         navigate(GameFragmentDirections.playFrag())
                     }
                     FOUL_DIALOG -> { // Navigate to foul dialog when queried
@@ -151,6 +148,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
         }
 
         // Menu items - tied to lifecycle owner; The lifecycle state indicates when the menu should be visible
+        val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_game_overflow, menu)

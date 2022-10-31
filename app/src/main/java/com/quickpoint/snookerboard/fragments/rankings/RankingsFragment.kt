@@ -14,18 +14,12 @@ import com.quickpoint.snookerboard.utils.GenericViewModelFactory
 class RankingsFragment : Fragment() {
     //    private val gameFragmentViewModel: GameFragmentViewModel by activityViewModels()
     private val rankingsViewModel: RankingsFragmentViewModel by lazy {
-        ViewModelProvider(
-            this, GenericViewModelFactory(
-                requireNotNull(this.activity).application,
-                this,
-                null
-            )
-        ).get(RankingsFragmentViewModel::class.java)
+        ViewModelProvider(this, GenericViewModelFactory(this, null))[RankingsFragmentViewModel::class.java]
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         val binding: FragmentRankingsBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_rankings, container, false)

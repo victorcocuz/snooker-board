@@ -117,6 +117,7 @@
         <item name="android:background">@drawable/bg_edit_text</item>
         <item name="android:paddingLeft">@dimen/padding_medium</item>
         <item name="android:textColorHint">@color/cream_bright</item>
+        <item name="android:imeOptions">actionNext</item>
         <item name="android:inputType">textCapWords</item>
     </style>
 
@@ -166,6 +167,16 @@
         <item name="android:gravity">center</item>
         <item name="android:elevation">@dimen/toolbar_elevation</item>
         <item name="android:orientation">vertical</item>
+    </style>
+
+    <!--Donate-->
+    <style name="DonateLayout">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:background">@color/brown_dark</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:elevation">4dp</item>
     </style>
 
 </resources>

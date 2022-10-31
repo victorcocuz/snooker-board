@@ -13,8 +13,8 @@ import androidx.navigation.ui.NavigationUI
 import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentPlayBinding
-import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
-import com.quickpoint.snookerboard.domain.MatchState.*
+import com.quickpoint.snookerboard.domain.MatchState.IN_PROGRESS
+import com.quickpoint.snookerboard.domain.MatchState.POST_MATCH
 import com.quickpoint.snookerboard.utils.EventObserver
 import com.quickpoint.snookerboard.utils.MatchAction.*
 import com.quickpoint.snookerboard.utils.hideKeyboard
@@ -30,28 +30,19 @@ class PlayFragment : androidx.fragment.app.Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-
-        // Bind layout, initial setup
-        val menuHost: MenuHost = requireActivity()
-        val binding: FragmentPlayBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_play, container, false)
         hideKeyboard()
 
-        when (RULES.matchState) {
-            SAVED -> {
-                // In certain circumstances (e.g. reinstalling app), state remains in progress although db is empty. Extra check should be made
-                matchVm.dbMatchFrameCount.observe(viewLifecycleOwner) { value ->
-                    if (value == 0) {
-                        matchVm.onKeepSplashScreen(false)
-                        RULES.matchState = IDLE
-                    }
-                    if (value > 0) navigate(PlayFragmentDirections.gameFrag())
-                }
+        // Check match state and navigate to the correct fragment when applicable
+        matchVm.eventRules.observe(viewLifecycleOwner) { rules ->
+            when (rules.matchState) {
+                IN_PROGRESS -> navigate(PlayFragmentDirections.gameFrag())
+                POST_MATCH -> navigate(PlayFragmentDirections.postGameFrag())
+                else -> {}
             }
-            POST_MATCH -> navigate(PlayFragmentDirections.postGameFrag())
-            else -> {}
         }
 
-        // Bind layout elements
+        // Bind view elements
+        val binding: FragmentPlayBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_play, container, false)
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             varPlayVm = playVm
@@ -82,11 +73,12 @@ class PlayFragment : androidx.fragment.app.Fragment() {
             }
         }
 
+        // Add toolbar menu
+        val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
             }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean { // Navbar navigation listener
                 return view?.findNavController()?.let { NavigationUI.onNavDestinationSelected(menuItem, it) } ?: false
             }
         })

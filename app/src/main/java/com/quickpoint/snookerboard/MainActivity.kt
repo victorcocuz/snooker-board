@@ -19,11 +19,16 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
+import com.quickpoint.snookerboard.database.asDomainFrame
 import com.quickpoint.snookerboard.databinding.ActivityMainBinding
 import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
 import com.quickpoint.snookerboard.domain.MatchState.IN_PROGRESS
 import com.quickpoint.snookerboard.domain.MatchState.SAVED
-import com.quickpoint.snookerboard.utils.*
+import com.quickpoint.snookerboard.utils.GenericViewModelFactory
+import com.quickpoint.snookerboard.utils.getSharedPref
+import com.quickpoint.snookerboard.utils.loadPref
+import com.quickpoint.snookerboard.utils.savePref
+import timber.log.Timber
 
 
 class MainActivity : AppCompatActivity() {
@@ -32,29 +37,20 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-        // Create activity, bind layout
         super.onCreate(savedInstanceState)
-        val splashScreen = installSplashScreen()
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        hideKeyboard()
-        getSharedPref().loadPref(application)
 
-        // Generate the matchVm from the get to be readily accessed from all fragments when needed, pass in application and repository
-        matchVm = ViewModelProvider(this, GenericViewModelFactory(application, this, null))[MatchViewModel::class.java]
+        // Initiate the matchVm from the start to be readily accessed from all fragments when needed; pass in application and repository
+        matchVm = ViewModelProvider(this, GenericViewModelFactory( this, null))[MatchViewModel::class.java]
 
         // Load existing match, keep splash screen on until loading is complete
+        val splashScreen = installSplashScreen()
         var keep = true
         splashScreen.setKeepOnScreenCondition { keep }
+        matchVm.keepSplashScreen.observe(this) { keep = it }
 
-        if (RULES.matchState == SAVED) {
-            matchVm.keepSplashScreen.observe(this) { keepSplashScreen ->
-                keep = keepSplashScreen
-            }
-        } else keep = false
-
+        // Bind view elements
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.apply {
-
             // Set Appbar
             val navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
             setSupportActionBar(layoutAppBarMain.layoutToolbarMain)
@@ -77,23 +73,46 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() { // Load shared preferences
+        getSharedPref().loadPref(application)
+        matchVm.updateRules(-1)
+        super.onStart()
+    }
+
+    override fun onResume() { // When match state is saved, if db is empty reset rules, otherwise load the most recent frame
+        matchVm.dbCrtFrame.observe(this) { crtFrame ->
+            Timber.i("CrtFrame is ${crtFrame?.frame?.frameId}")
+            if (RULES.matchState == SAVED && crtFrame == null) {
+                matchVm.turnOffSplashScreen()
+                RULES.resetRules()
+            }
+            if (RULES.matchState == SAVED && crtFrame?.frame?.frameId == RULES.frameCount) {
+                matchVm.updateFrameInfo(crtFrame.asDomainFrame())
+                matchVm.deleteCrtFrameFromDb()
+                RULES.setMatchState(IN_PROGRESS)
+            }
+            matchVm.updateRules(-1)
+        }
+        super.onResume()
+    }
+
+    override fun onPause() { // Save state and shared preferences on pause rather than onSaveInstanceState so that db save can complete
+        if (RULES.matchState == IN_PROGRESS) {
+            if (::matchVm.isInitialized) {
+                matchVm.saveMatchOnSavedInstance()
+                RULES.setMatchState(SAVED)
+                getSharedPref().savePref(application)
+            } else Timber.e("matchVm is not initialised")
+        }
+        super.onPause()
+    }
+
     override fun onSupportNavigateUp(): Boolean { // Add back arrow button to navigation
         val navController = this.findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    // When saving instance, check if the view model is initialised and if the match is in progress (game hasn't ended). If so, save match
-    override fun onSaveInstanceState(outState: Bundle) {
-        if (RULES.matchState == IN_PROGRESS) {
-            RULES.matchState = SAVED
-            getSharedPref().savePref(application)
-            if (::matchVm.isInitialized) matchVm.saveMatchOnSavedInstance()
-        }
-        super.onSaveInstanceState(outState)
-    }
-
-    // Remove focus from edit text on outside click
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean { // Remove focus from edit text on outside click
         if (event.action == MotionEvent.ACTION_DOWN) {
             val v: View? = currentFocus
             if (v is EditText) {

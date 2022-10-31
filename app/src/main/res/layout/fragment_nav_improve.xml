@@ -5,7 +5,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/margin_xxsmall">
+        android:layout_margin="@dimen/margin_small">
 
         <TextView
             android:id="@+id/f_nav_improve_title"

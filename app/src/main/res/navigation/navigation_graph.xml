@@ -104,7 +104,11 @@
         android:name="com.quickpoint.snookerboard.fragments.navdrawer.NavRulesFragment"
         android:label="@string/menu_drawer_rules" />
     <fragment
+        android:id="@+id/navDonateFragment"
+        android:name="com.quickpoint.snookerboard.fragments.navdrawer.NavDonateFragment"
+        android:label="@string/menu_drawer_donate" />
+    <fragment
         android:id="@+id/navAboutFragment"
         android:name="com.quickpoint.snookerboard.fragments.navdrawer.NavAboutFragment"
-        android:label="NavAboutFragment" />
+        android:label="@string/menu_drawer_about" />
 </navigation>

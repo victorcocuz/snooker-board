@@ -53,6 +53,13 @@ fun MutableList<DomainBreak>.addToFrameStack(pot: DomainPot) {
     if (pot.potType in listOf(TYPE_HIT, TYPE_FREE, TYPE_ADDRED)) last().breakSize += pot.ball.points // Update the current break size
 }
 
+fun MutableList<DomainBreak>.removeLastPotFromFrameStack(): DomainPot {
+    val pot = last().pots.removeLast() // Get the last pot
+    if (pot.potType in listOf(TYPE_HIT, TYPE_FREE, TYPE_ADDRED)) last().breakSize -= pot.ball.points // Update current break size
+    while (size > 0 && last().pots.size == 0) removeLast() // Remove all empty breaks, except initial one
+    return pot
+}
+
 fun MutableList<DomainBreak>.findMaxBreak(): Int {
     var highestBreak = 0
     this.forEach { crtBreak ->
@@ -61,13 +68,6 @@ fun MutableList<DomainBreak>.findMaxBreak(): Int {
         }
     }
     return highestBreak
-}
-
-fun MutableList<DomainBreak>.removeLastPotFromFrameStack(): DomainPot {
-    val pot = last().pots.removeLast() // Get the last pot
-    if (pot.potType in listOf(TYPE_HIT, TYPE_FREE, TYPE_ADDRED)) last().breakSize -= pot.ball.points // Update current break size
-    while (size > 0 && last().pots.size == 0) removeLast() // Remove all empty breaks, except initial one
-    return pot
 }
 
 fun MutableList<DomainBreak>.getDisplayShots(): MutableList<DomainBreak> {

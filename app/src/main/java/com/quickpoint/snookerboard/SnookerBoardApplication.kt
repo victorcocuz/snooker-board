@@ -14,7 +14,7 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 // Override the Application class to add plugins and setup recurring work
-class SnookerApplication : Application() {
+class SnookerBoardApplication : Application() {
 
     init {
         instance = this
@@ -23,8 +23,9 @@ class SnookerApplication : Application() {
     private val applicationScope = CoroutineScope(Dispatchers.Default)
 
     companion object {
-        private var instance: SnookerApplication? = null
+        private var instance: SnookerBoardApplication? = null
         private fun applicationContext(): Context = instance!!.applicationContext
+        fun application(): Application = instance!!
         fun getSnookerRepository() = SnookerRepository(SnookerDatabase.getDatabase(applicationContext()))
     }
 

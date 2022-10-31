@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.DomainFreeBallInfo.FREEBALLINFO
 import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
+import com.quickpoint.snookerboard.domain.DomainPot.*
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.utils.Event
 import com.quickpoint.snookerboard.utils.MatchAction
@@ -41,8 +42,8 @@ class GameViewModel : ViewModel() {
     var frameStack: MutableList<DomainBreak> = mutableListOf()
 
     // Match actions
-    fun loadMatchBloadFrame(frame: DomainFrame?) = frame?.let { // Will load latest frame once observed from play fragment
-        Timber.i("loadMatchPartBLoadFrame(): ${frame.getTextInfo()}")
+    fun loadFrame(frame: DomainFrame?) = frame?.let { // Will load latest frame once observed from play fragment
+        Timber.i("loadFrame(): ${frame.getTextInfo()}")
         score = it.frameScore.asCurrentScore() ?: score
         ballStack = it.ballStack
         frameStack = it.frameStack
@@ -77,7 +78,7 @@ class GameViewModel : ViewModel() {
     fun handlePot(pot: DomainPot) {
         if (handleExceptionsBeforePot(pot)) return
         computePot(pot)
-        handleExceptionsAfterPot(pot)?.let { assignFrameEvent(it) }
+        handleExceptionsAfterPot(pot)
     }
 
     private fun computePot(pot: DomainPot) {
@@ -97,15 +98,16 @@ class GameViewModel : ViewModel() {
 
     private fun handleExceptionsBeforePot(pot: DomainPot): Boolean = when {
         ballStack.isLastBall() && (pot.potType in listOf(TYPE_HIT, TYPE_MISS, TYPE_SAFE, TYPE_FOUL)) -> assignFrameEvent(FRAME_NO_BALL)
-        pot == DomainPot.FOULATTEMPT -> assignFrameEvent(FOUL_DIALOG)
+        pot == FOULATTEMPT -> assignFrameEvent(FOUL_DIALOG)
         else -> false
     }
 
-    private fun handleExceptionsAfterPot(pot: DomainPot): MatchAction? = when {
-        pot.potType == TYPE_HIT && ballStack.isLastBall() -> if (score.isFrameEqual()) FRAME_RESPOT_BLACK_DIALOG else FRAME_ENDING_DIALOG
-        pot.isFreeballAvailable() -> FRAME_FREEAVAILABLE
-        else -> null
-    }
+    @Suppress("IMPLICIT_CAST_TO_ANY")
+    private fun handleExceptionsAfterPot(pot: DomainPot) = when {
+            pot.potType == TYPE_HIT && ballStack.isLastBall() -> assignFrameEvent(if (score.isFrameEqual()) FRAME_RESPOT_BLACK_DIALOG else FRAME_ENDING_DIALOG)
+            pot.isFreeballAvailable() -> handlePot(FREEAVAILABLE)
+            else -> {}
+        }
 
     // Handle Undo
     fun handleUndo() {
@@ -121,11 +123,11 @@ class GameViewModel : ViewModel() {
             highestBreak = frameStack.findMaxBreak()
         }
         onEventFrameUpdated()
-        handleUndoExceptions(pot)?.let { assignFrameEvent(it) }
+        handleUndoExceptions(pot)
     }
 
-    private fun handleUndoExceptions(pot: DomainPot): MatchAction? = when {
-        pot.potType == TYPE_FREEAVAILABLE -> FRAME_UNDO
-        else -> null
+    private fun handleUndoExceptions(pot: DomainPot) = when (pot.potType) {
+        TYPE_FREEAVAILABLE -> handleUndo()
+        else -> {}
     }
 }

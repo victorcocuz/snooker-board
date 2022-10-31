@@ -19,13 +19,7 @@ import com.quickpoint.snookerboard.utils.MatchAction.NAV_TO_PLAY
 class PostGameFragment : androidx.fragment.app.Fragment() {
 
     private val postGameVm: PostGameViewModel by lazy {
-        ViewModelProvider(
-            this, GenericViewModelFactory(
-                requireNotNull(this.activity).application,
-                this,
-                null
-            )
-        )[PostGameViewModel::class.java]
+        ViewModelProvider(this, GenericViewModelFactory(this, null))[PostGameViewModel::class.java]
     }
     private val matchVm: MatchViewModel by activityViewModels()
     private var scrollHeight = 0
@@ -33,14 +27,12 @@ class PostGameFragment : androidx.fragment.app.Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
-        val binding: FragmentPostGameBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_post_game, container, false)
-
         postGameVm.getTotals() // Gets the score from repository and stores it in live data within the vm
 
-        // Bind all required elements from the view
+        // Bind view elements
+        val binding: FragmentPostGameBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_post_game, container, false)
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             varPostGameVm = postGameVm

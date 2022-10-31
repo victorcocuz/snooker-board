@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.quickpoint.snookerboard.domain.DomainFrame
 import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
-import com.quickpoint.snookerboard.domain.MatchState.IDLE
 import com.quickpoint.snookerboard.domain.MatchState.POST_MATCH
 import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.Event
@@ -27,8 +26,8 @@ class MatchViewModel(
 
     private val _keepSplashScreen = MutableLiveData(true)
     val keepSplashScreen: LiveData<Boolean> = _keepSplashScreen
-    fun onKeepSplashScreen(keep: Boolean) {
-        _keepSplashScreen.value = keep
+    fun turnOffSplashScreen() {
+        _keepSplashScreen.value = false
     }
 
     // Observables
@@ -54,7 +53,6 @@ class MatchViewModel(
 
     // Actions
     fun deleteCrtFrameFromDb() = viewModelScope.launch { // After loading the game, will delete the current frame from the db
-        onKeepSplashScreen(false)
         Timber.i("deleteCrtFrameFromDb()")
         snookerRepository.deleteCurrentFrame(RULES.frameCount)
     }
@@ -67,12 +65,12 @@ class MatchViewModel(
                 assignEventMatchAction(FRAME_START_NEW)
             }
             MATCH_ENDED_DISCARD_FRAME -> {
-                RULES.matchState = POST_MATCH
+                RULES.setMatchState(POST_MATCH)
                 assignEventMatchAction(NAV_TO_POST_MATCH)
             }
             else -> {
                 snookerRepository.saveCurrentFrame(displayFrame.value!!)
-                RULES.matchState = POST_MATCH
+                RULES.setMatchState(POST_MATCH)
                 assignEventMatchAction(NAV_TO_POST_MATCH)
             }
         }
@@ -83,7 +81,6 @@ class MatchViewModel(
     }
 
     fun deleteMatchFromDb() = viewModelScope.launch { // When starting a new match or cancelling an existing match
-        RULES.matchState = IDLE
         snookerRepository.deleteCurrentMatch()
     }
 
