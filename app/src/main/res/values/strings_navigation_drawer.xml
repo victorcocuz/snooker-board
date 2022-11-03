@@ -45,6 +45,26 @@
     <!--Fragment About-->
     <string name="f_nav_about_description">Snooker Board is a simple snooker score keeping app that focuses on recording one full match at a time, with care to encompass all rules from the WPBSA (World Professional Billiards and Snooker Association) Official Rules of the Games of Snooker and Billiards</string>
     <string name="f_nav_about_version_title">Releases</string>
+
+    <string name="f_nav_about_version_1_0_x">Version 1.0.x</string>
+    <string name="f_nav_about_version_1_0_x_01">• </string>
+    <string name="f_nav_about_version_1_0_x_02">• </string>
+    <string name="f_nav_about_version_1_0_x_03">• </string>
+    <string name="f_nav_about_version_1_0_x_04">• </string>
+
+    <string name="f_nav_about_version_1_0_5">Version 1.0.5</string>
+    <string name="f_nav_about_version_1_0_5_01">• Fix UI screens overlapping</string>
+    <string name="f_nav_about_version_1_0_5_02">• Fix DB saving glitches</string>
+    <string name="f_nav_about_version_1_0_5_03">• Replace toasts with snackbars on main screen</string>
+    <string name="f_nav_about_version_1_0_5_04">• Add new ball colour for no ball</string>
+
+    <string name="f_nav_about_version_1_0_4">Version 1.0.4</string>
+    <string name="f_nav_about_version_1_0_4_01">• Added readMe file</string>
+    <string name="f_nav_about_version_1_0_4_02">• Added Improve screen and a dummy Support the app screen</string>
+    <string name="f_nav_about_version_1_0_4_03">• Changed about screen to show all previous versions</string>
+    <string name="f_nav_about_version_1_0_4_04">• Added user survey link</string>
+    <string name="f_nav_about_version_1_0_4_05">• Fixed match saving and loading glitches and minor UI glitches</string>
+
     <string name="f_nav_about_version_1_0_3">Version 1.0.3</string>
     <string name="f_nav_about_version_1_0_3_01">• Added splash screen</string>
     <string name="f_nav_about_version_1_0_3_02">• Added navigation bar</string>

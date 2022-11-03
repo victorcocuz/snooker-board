@@ -37,12 +37,93 @@
                 app:layout_constraintTop_toBottomOf="@+id/f_nav_about_description" />
 
             <TextView
+                android:id="@+id/f_nav_about_version_1_0_5"
+                style="@style/TextHeaderBold"
+                android:layout_marginTop="@dimen/margin_xxsmall"
+                android:text="@string/f_nav_about_version_1_0_5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_version_title" />
+
+            <TextView
+                android:id="@+id/f_nav_about_version_1_0_5_01"
+                style="@style/TextBody"
+                android:layout_marginTop="@dimen/margin_xxxsmall"
+                android:text="@string/f_nav_about_version_1_0_5_01"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_version_1_0_5" />
+
+            <TextView
+                android:id="@+id/f_nav_about_version_1_0_5_02"
+                style="@style/TextBody"
+                android:text="@string/f_nav_about_version_1_0_5_02"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_version_1_0_5_01" />
+
+            <TextView
+                android:id="@+id/f_nav_about_version_1_0_5_03"
+                style="@style/TextBody"
+                android:text="@string/f_nav_about_version_1_0_5_03"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_version_1_0_5_02" />
+
+            <TextView
+                android:id="@+id/f_nav_about_version_1_0_5_04"
+                style="@style/TextBody"
+                android:text="@string/f_nav_about_version_1_0_5_04"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_version_1_0_5_03" />
+
+            <TextView
+                android:id="@+id/f_nav_about_version_1_0_4"
+                style="@style/TextHeaderBold"
+                android:layout_marginTop="@dimen/margin_xxsmall"
+                android:text="@string/f_nav_about_version_1_0_3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_version_1_0_5_04" />
+
+            <TextView
+                android:id="@+id/f_nav_about_version_1_0_4_01"
+                style="@style/TextBody"
+                android:layout_marginTop="@dimen/margin_xxxsmall"
+                android:text="@string/f_nav_about_version_1_0_4_01"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_version_1_0_4" />
+
+            <TextView
+                android:id="@+id/f_nav_about_version_1_0_4_02"
+                style="@style/TextBody"
+                android:text="@string/f_nav_about_version_1_0_4_02"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_version_1_0_4_01" />
+
+            <TextView
+                android:id="@+id/f_nav_about_version_1_0_4_03"
+                style="@style/TextBody"
+                android:text="@string/f_nav_about_version_1_0_4_03"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_version_1_0_4_02" />
+
+            <TextView
+                android:id="@+id/f_nav_about_version_1_0_4_04"
+                style="@style/TextBody"
+                android:text="@string/f_nav_about_version_1_0_4_04"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_version_1_0_4_03" />
+
+            <TextView
+                android:id="@+id/f_nav_about_version_1_0_4_05"
+                style="@style/TextBody"
+                android:text="@string/f_nav_about_version_1_0_4_05"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_version_1_0_4_04" />
+
+            <TextView
                 android:id="@+id/f_nav_about_version_1_0_3"
                 style="@style/TextHeaderBold"
                 android:layout_marginTop="@dimen/margin_xxsmall"
                 android:text="@string/f_nav_about_version_1_0_3"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_version_title" />
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_version_1_0_4_05" />
 
             <TextView
                 android:id="@+id/f_nav_about_version_1_0_3_01"
