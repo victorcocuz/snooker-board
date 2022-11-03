@@ -4,11 +4,11 @@
     android:viewportWidth="@integer/vp_ball"
     android:viewportHeight="@integer/vp_ball">
     <path
-        android:fillColor="@color/ball_white_normal"
+        android:fillColor="@color/ball_noball_normal"
         android:pathData="M24,24m-24,0a24,24 0,1 1,48 0a24,24 0,1 1,-48 0" />
     <path
         android:fillAlpha="0.5"
         android:fillColor="@color/ball_shine"
-        android:pathData="M33.23,9.61m-4.8,0a4.8,4.8 0,1 1,9.6 0a4.8,4.8 0,1 1,-9.6 0"
+        android:pathData="M33.21,9.6m-4.8,0a4.8,4.8 0,1 1,9.6 0a4.8,4.8 0,1 1,-9.6 0"
         android:strokeAlpha="0.5" />
 </vector>

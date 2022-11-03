@@ -14,8 +14,8 @@ android {
         applicationId "com.quickpoint.snookerboard"
         minSdk 22
         targetSdkVersion 33
-        versionCode 6
-        versionName "1.0.4"
+        versionCode 7
+        versionName "1.0.5"
         vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

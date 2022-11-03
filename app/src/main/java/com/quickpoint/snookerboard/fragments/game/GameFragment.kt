@@ -7,6 +7,7 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -19,15 +20,14 @@ import com.quickpoint.snookerboard.domain.DomainBall
 import com.quickpoint.snookerboard.domain.DomainFrame
 import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
 import com.quickpoint.snookerboard.domain.DomainPot.*
-import com.quickpoint.snookerboard.domain.MatchState.IDLE
-import com.quickpoint.snookerboard.domain.MatchState.IN_PROGRESS
+import com.quickpoint.snookerboard.domain.MatchState.*
 import com.quickpoint.snookerboard.domain.asDomainPlayerScore
 import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.*
 import timber.log.Timber
 
 
-class GameFragment : androidx.fragment.app.Fragment() {
+class GameFragment : Fragment() {
     private val gameVm: GameViewModel by viewModels()
     private val dialogsVm: DialogViewModel by activityViewModels()
     private val matchVm: MatchViewModel by activityViewModels()
@@ -37,20 +37,18 @@ class GameFragment : androidx.fragment.app.Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        postponeEnterTransition() // Wait for data to load before displaying fragment
 
         // Start new match or load existing match
         when (RULES.matchState) {
             IDLE -> {
-                RULES.setMatchState(IN_PROGRESS)
+                matchVm.updateState(IN_PROGRESS)
                 gameVm.resetMatch(MATCH_START_NEW)
-                matchVm.turnOffSplashScreen()
             }
-            IN_PROGRESS -> {
-                gameVm.loadFrame(matchVm.displayFrame.value)
-                matchVm.turnOffSplashScreen()
-            }
-            else -> {}
+            IN_PROGRESS -> gameVm.loadFrame(matchVm.displayFrame.value)
+            else -> Timber.e("State ${RULES.matchState} cannot exist at this point")
         }
+        matchVm.transitionToFragment(this)
 
         // Bind view elements
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false)
@@ -105,7 +103,7 @@ class GameFragment : androidx.fragment.app.Fragment() {
                                 frameStack,
                                 RULES.frameMax))
                     }
-                    FRAME_NO_BALL -> binding.fragGameCl.snackbar(getString(R.string.toast_game_no_balls_left))
+                    SNACKBAR_NO_BALL -> binding.fragGameCoordLayout.snackbar(getString(R.string.toast_game_no_balls_left))
                     else -> matchVm.assignEventMatchAction(matchAction)
                 }
             })
@@ -121,21 +119,19 @@ class GameFragment : androidx.fragment.app.Fragment() {
                     FRAME_ENDING_DIALOG, MATCH_ENDING_DIALOG -> navigate(GameFragmentDirections.genDialogFrag(CLOSE_DIALOG,
                         IGNORE,
                         queryEndFrameOrMatch(matchAction)))
-                    FRAME_TO_END, FRAME_ENDED, MATCH_TO_END, MATCH_ENDED -> {
-                        gameVm.saveFrame()
-                        matchVm.endFrameOrMatch(matchAction)
+                    FRAME_TO_END, FRAME_ENDED, MATCH_TO_END, MATCH_ENDED, MATCH_ENDED_DISCARD_FRAME -> {
+                        if (matchAction != MATCH_ENDED_DISCARD_FRAME) gameVm.endFrame()
+                        matchVm.saveFrameAndOrEndMatch(matchAction)
                     }
-                    MATCH_ENDED_DISCARD_FRAME -> matchVm.endFrameOrMatch(matchAction)
                     NAV_TO_POST_MATCH -> {
-                        gameVm.resetMatch(matchAction)
+                        matchVm.updateState(POST_MATCH)
                         navigate(GameFragmentDirections.postGameFrag())
                     }
                     MATCH_CANCEL_DIALOG -> navigate(GameFragmentDirections.genDialogFrag(CLOSE_DIALOG, IGNORE, MATCH_CANCEL))
-                    MATCH_CANCEL -> { // On a match cancel, cancel match and go back to play fragment
-                        gameVm.resetMatch(matchAction)
-                        matchVm.deleteMatchFromDb()
-                        RULES.setMatchState(IDLE)
+                    MATCH_CANCEL -> {
+                        matchVm.updateState(IDLE)
                         navigate(GameFragmentDirections.playFrag())
+                        matchVm.deleteMatchFromDb()
                     }
                     FOUL_DIALOG -> { // Navigate to foul dialog when queried
                         dialogsVm.resetFoul()
@@ -159,27 +155,27 @@ class GameFragment : androidx.fragment.app.Fragment() {
                 when (menuItem.itemId) {
                     R.id.menu_item_undo -> {
                         if (frame?.isFrameInProgress() == true) gameVm.handleUndo()
-                        else binding.fragGameCl.snackbar("There are no actions to undo.")
+                        else binding.fragGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_undo))
                     } // DomainPot is irrelevant here
                     R.id.menu_item_add_red -> {
                         if (frame?.isAddRedAvailable() == true) gameVm.handlePot(ADDRED)
-                        else binding.fragGameCl.snackbar("You can only pot an extra red after potting a red and if enough reds are on the table.")
+                        else binding.fragGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_add_red))
                     }
                     R.id.menu_item_remove_red -> {
                         if (frame?.isRemoveRedAvailable() == true) gameVm.handlePot(REMOVERED)
-                        else binding.fragGameCl.snackbar("You can only remove a red ball before declaring a foul and if there are reds available on the table")
+                        else binding.fragGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_remove_red))
                     }
                     R.id.menu_item_rerack -> {
                         if (frame?.isFrameInProgress() == true) matchVm.assignEventMatchAction(FRAME_RERACK_DIALOG)
-                        else binding.fragGameCl.snackbar("The frame has already been racked")
+                        else binding.fragGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_rerack))
                     }
                     R.id.menu_item_concede_frame -> {
                         if (frame?.isFrameEqual() == false) matchVm.assignEventMatchAction(FRAME_ENDING_DIALOG)
-                        else binding.fragGameCl.snackbar("You and your opponent are tied. One must be ahead for the other one to concede frame.")
+                        else binding.fragGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_concede_frame))
                     }
                     R.id.menu_item_concede_match -> {
                         if (frame?.isConcedeAvailable() == true) matchVm.assignEventMatchAction(MATCH_ENDING_DIALOG)
-                        else binding.fragGameCl.snackbar("You and your opponent are tied. One must be ahead for the other one to concede match.")
+                        else binding.fragGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_concede_match))
                     }
                     R.id.menu_item_cancel_match -> matchVm.assignEventMatchAction(if (frame?.isMatchInProgress() == true) MATCH_CANCEL_DIALOG else MATCH_CANCEL)
                     else -> return false

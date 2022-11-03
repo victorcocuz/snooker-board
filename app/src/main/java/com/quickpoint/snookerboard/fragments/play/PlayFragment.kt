@@ -13,12 +13,10 @@ import androidx.navigation.ui.NavigationUI
 import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentPlayBinding
-import com.quickpoint.snookerboard.domain.MatchState.IN_PROGRESS
-import com.quickpoint.snookerboard.domain.MatchState.POST_MATCH
-import com.quickpoint.snookerboard.utils.EventObserver
+import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
+import com.quickpoint.snookerboard.domain.MatchState.*
+import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.*
-import com.quickpoint.snookerboard.utils.hideKeyboard
-import com.quickpoint.snookerboard.utils.navigate
 import timber.log.Timber
 
 class PlayFragment : androidx.fragment.app.Fragment() {
@@ -30,11 +28,17 @@ class PlayFragment : androidx.fragment.app.Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        postponeEnterTransition() // Wait for data to load before displaying fragment
         hideKeyboard()
 
         // Check match state and navigate to the correct fragment when applicable
-        matchVm.eventRules.observe(viewLifecycleOwner) { rules ->
+        matchVm.eventRules.observeOnce(viewLifecycleOwner) { rules ->
+            Timber.e("play state is ${RULES.matchState}")
             when (rules.matchState) {
+                IDLE -> {
+                    RULES.resetRules()
+                    matchVm.transitionToFragment(this)
+                }
                 IN_PROGRESS -> navigate(PlayFragmentDirections.gameFrag())
                 POST_MATCH -> navigate(PlayFragmentDirections.postGameFrag())
                 else -> {}
@@ -60,6 +64,8 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                 // VM Observers
                 playVm.eventPlayAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                     when (matchAction) { // Start new match
+                        SNACKBAR_NO_PLAYER -> fragPlayCoordLayout.snackbar(getString(R.string.snackbar_f_play_no_name))
+                        SNACKBAR_NO_FIRST -> fragPlayCoordLayout.snackbar(getString(R.string.snackbar_f_play_select_who_breaks))
                         MATCH_PLAY -> navigate(PlayFragmentDirections.gameFrag())
                         else -> {}
                     }
@@ -78,6 +84,7 @@ class PlayFragment : androidx.fragment.app.Fragment() {
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
             }
+
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean { // Navbar navigation listener
                 return view?.findNavController()?.let { NavigationUI.onNavDestinationSelected(menuItem, it) } ?: false
             }

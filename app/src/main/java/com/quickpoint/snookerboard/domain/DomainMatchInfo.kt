@@ -49,7 +49,6 @@ sealed class DomainMatchInfo(
         }
 
         fun resetRules() {
-            setMatchState(IDLE)
             frames = 2
             reds = 15
             foul = 0
@@ -59,13 +58,14 @@ sealed class DomainMatchInfo(
             frameMax = 0
         }
 
+
         fun getRulesText() =
             "Frames: $frames, Reds: $reds, Foul: $foul, First: $first, CrtPlayer: $crtPlayer, Count: $frameCount, Max: $frames"
 
-        fun setMatchState(state: MatchState): MatchState {
+        fun setMatchState(state: MatchState): Int {
             matchState = state
             Timber.i("Match state updated: $matchState")
-            return matchState
+            return -1
         }
 
         fun setFrames(number: Int): Int {

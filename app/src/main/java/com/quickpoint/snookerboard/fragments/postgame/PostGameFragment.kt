@@ -11,8 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentPostGameBinding
-import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
 import com.quickpoint.snookerboard.domain.DomainPlayerScore
+import com.quickpoint.snookerboard.domain.MatchState
 import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.NAV_TO_PLAY
 
@@ -29,7 +29,9 @@ class PostGameFragment : androidx.fragment.app.Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        postGameVm.getTotals() // Gets the score from repository and stores it in live data within the vm
+        postponeEnterTransition()
+        matchVm.transitionToFragment(this)
+        matchVm.updateRules(-1)
 
         // Bind view elements
         val binding: FragmentPostGameBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_post_game, container, false)
@@ -73,9 +75,9 @@ class PostGameFragment : androidx.fragment.app.Fragment() {
             matchVm.apply {
                 eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                     if (matchAction == NAV_TO_PLAY) {
-                        RULES.resetRules()
-                        deleteMatchFromDb()
+                        matchVm.updateState(MatchState.IDLE)
                         navigate(PostGameFragmentDirections.playFrag())
+                        deleteMatchFromDb()
                     }
                 })
             }

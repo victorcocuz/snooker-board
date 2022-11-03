@@ -5,6 +5,10 @@ import androidx.room.*
 
 @Dao
 interface SnookerDatabaseDao {
+    // General
+    @Query("SELECT (SELECT COUNT(*) FROM match_frames_table) == 0")
+    fun isEmpty(): Boolean
+
     // Current Match Frame
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMatchFrame(vararg frame: DbFrame)
@@ -18,7 +22,7 @@ interface SnookerDatabaseDao {
 
     @Transaction
     @Query("SELECT * FROM match_frames_table WHERE frameId = (SELECT MAX(frameId) FROM match_frames_table)")
-    fun getCrtFrame(): LiveData<DbFrameWithScoreAndBreakWithPotsAndBallStack?>
+    fun getCrtFrame(): DbFrameWithScoreAndBreakWithPotsAndBallStack?
 
     @Transaction
     @Query("SELECT * FROM match_frames_table WHERE frameId = :frameId")
@@ -82,20 +86,20 @@ interface SnookerDatabaseDao {
 
     // Totals
     @Query("SELECT SUM(framePoints) FROM match_score_table WHERE playerId = :id")
-    fun getSumOfFramePoints(id: Int) : Int
+    fun getSumOfFramePoints(id: Int): Int
 
     @Query("SELECT MAX(matchPoints) FROM match_score_table WHERE playerId = :id")
-    fun getMaxMatchPoints(id: Int) : Int
+    fun getMaxMatchPoints(id: Int): Int
 
     @Query("SELECT SUM(successShots) FROM match_score_table WHERE playerId = :id")
-    fun getSumOfSuccessShots(id: Int) : Int
+    fun getSumOfSuccessShots(id: Int): Int
 
     @Query("SELECT SUM(missedShots) FROM match_score_table WHERE playerId = :id")
-    fun getSumOfMissedShots(id: Int) : Int
+    fun getSumOfMissedShots(id: Int): Int
 
     @Query("SELECT SUM(fouls) FROM match_score_table WHERE playerId = :id")
-    fun getSumOfFouls(id: Int) : Int
+    fun getSumOfFouls(id: Int): Int
 
     @Query("SELECT MAX(highestBreak) FROM match_score_table WHERE playerId = :id")
-    fun getMaxBreak(id: Int) : Int
+    fun getMaxBreak(id: Int): Int
 }

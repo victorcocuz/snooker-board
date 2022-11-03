@@ -10,7 +10,7 @@
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/frag_game_cl"
+        android:id="@+id/frag_game_coord_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

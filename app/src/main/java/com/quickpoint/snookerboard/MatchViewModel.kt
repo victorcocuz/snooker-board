@@ -1,17 +1,21 @@
 package com.quickpoint.snookerboard
 
 import android.app.Application
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.quickpoint.snookerboard.domain.DomainFrame
 import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
-import com.quickpoint.snookerboard.domain.MatchState.POST_MATCH
+import com.quickpoint.snookerboard.domain.MatchState
 import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.Event
 import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.MatchAction.*
+import com.quickpoint.snookerboard.utils.getSharedPref
+import com.quickpoint.snookerboard.utils.updateState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -21,17 +25,24 @@ class MatchViewModel(
 ) : AndroidViewModel(app) {
 
     // Variables
-    val dbCrtFrame = snookerRepository.crtFrame
-    val dbMatchFrameCount = snookerRepository.matchFrameCount
+    suspend fun getCrtFrame() = snookerRepository.getCrtFrame()
 
-    private val _keepSplashScreen = MutableLiveData(true)
+    private val _keepSplashScreen = MutableLiveData<Boolean>()
     val keepSplashScreen: LiveData<Boolean> = _keepSplashScreen
-    fun turnOffSplashScreen() {
+    fun transitionToFragment(fragment: Fragment) = viewModelScope.launch {
+        delay(200)
         _keepSplashScreen.value = false
+        fragment.startPostponedEnterTransition()
+    }
+
+    fun updateState(matchState: MatchState) {
+        RULES.setMatchState(matchState)
+        app.getSharedPref().updateState()
+        updateRules(-1)
     }
 
     // Observables
-    private val _eventRules = MutableLiveData(RULES)
+    private val _eventRules = MutableLiveData<RULES>()
     val eventRules: LiveData<RULES> = _eventRules
     fun updateRules(_unused: Int) {
         _eventRules.value = RULES
@@ -40,7 +51,6 @@ class MatchViewModel(
     private val _displayFrame = MutableLiveData<DomainFrame>()
     val displayFrame: LiveData<DomainFrame> = _displayFrame
     fun updateFrameInfo(domainFrame: DomainFrame) {
-        updateRules(-1)
         _displayFrame.value = domainFrame
         Timber.i(app.resources.getString(R.string.helper_update_frame_info))
     }
@@ -57,7 +67,7 @@ class MatchViewModel(
         snookerRepository.deleteCurrentFrame(RULES.frameCount)
     }
 
-    fun endFrameOrMatch(matchAction: MatchAction) = viewModelScope.launch { // When decided on match end from a generic dialog
+    fun saveFrameAndOrEndMatch(matchAction: MatchAction) = viewModelScope.launch { // When decided on match end from a generic dialog
         Timber.i("saveAndResetFrame(): $matchAction")
         when (matchAction) {
             FRAME_TO_END, FRAME_ENDED -> {
@@ -65,12 +75,10 @@ class MatchViewModel(
                 assignEventMatchAction(FRAME_START_NEW)
             }
             MATCH_ENDED_DISCARD_FRAME -> {
-                RULES.setMatchState(POST_MATCH)
                 assignEventMatchAction(NAV_TO_POST_MATCH)
             }
             else -> {
                 snookerRepository.saveCurrentFrame(displayFrame.value!!)
-                RULES.setMatchState(POST_MATCH)
                 assignEventMatchAction(NAV_TO_POST_MATCH)
             }
         }

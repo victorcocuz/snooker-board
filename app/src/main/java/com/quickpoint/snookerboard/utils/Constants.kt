@@ -21,7 +21,6 @@ enum class MatchAction {
     FRAME_ENDED, // Frame end has been confirmed and will be processed. On clicking the concede frame button when the point difference is big enough, or automatically triggered when only one ball left
     FRAME_RESPOT_BLACK_DIALOG, // When both players are tied at the end of the frame
     FRAME_RESPOT_BLACK, // After the RESPOT_BLACK_DIALOG is closed, respot black
-    FRAME_NO_BALL, // When there are no balls on the table assign action to show snackbar instead of handling pot
     FRAME_UPDATED, // When frame updates are completed assign frame action that triggers the matchVm ot update DisplayScore
 
     // Match Actions
@@ -41,5 +40,10 @@ enum class MatchAction {
 
     // Redundant Actions
     CLOSE_DIALOG, // Used when the action is to continue current state
-    IGNORE // Used when action should not be shown
+    IGNORE, // Used when action should not be shown
+
+    // Snackbars
+    SNACKBAR_NO_BALL, // Assign snackbar when there are no balls on the table instead handling pot
+    SNACKBAR_NO_PLAYER, // Assign snackbar when player names are not fully completed
+    SNACKBAR_NO_FIRST, // Assign snackbar when no first player is selected
 }

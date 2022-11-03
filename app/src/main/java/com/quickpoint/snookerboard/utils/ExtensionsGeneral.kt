@@ -73,13 +73,6 @@ fun ScrollView.assignScrollHeight(scrollHeight: Int, ghostHeight: Int) {
     }
 }
 
-fun ScrollView.scrollToBottom() {
-    val lastChild = getChildAt(childCount - 1)
-    val bottom = lastChild.bottom + paddingBottom
-    val delta = bottom - (scrollY + height)
-    smoothScrollBy(0, delta)
-}
-
 fun Context.getFactoredDimen(factor: Int): Int {
     val width = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
         resources.displayMetrics.widthPixels
@@ -103,3 +96,4 @@ fun TextView.setAsLink() {
     }
     text = spannable
 }
+

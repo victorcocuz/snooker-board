@@ -15,7 +15,6 @@ class NavDonateFragment : androidx.fragment.app.Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         val binding: FragmentNavDonateBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_nav_donate, container, false)
-
         return binding.root
     }
 }

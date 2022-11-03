@@ -112,7 +112,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/game_btn_act_safe"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:setVisible="@{varGameVm.freeballControls.visible}"
+            app:setFreeballVisible="@{varGameVm.freeballControls.visible}"
             app:setSelected="@{varGameVm.freeballControls.selected}" />
 
         <LinearLayout

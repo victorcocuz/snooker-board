@@ -15,7 +15,6 @@ class NavAboutFragment : androidx.fragment.app.Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         val binding: FragmentNavAboutBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_nav_about, container, false)
-
         return binding.root
     }
 }

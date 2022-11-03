@@ -46,7 +46,6 @@
             <TextView
                 style="@style/TextBody"
                 android:text="@string/f_nav_donate_coffee_price" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -91,8 +90,6 @@
             <TextView
                 style="@style/TextBody"
                 android:text="@string/f_nav_donate_lunch_price" />
-
         </LinearLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

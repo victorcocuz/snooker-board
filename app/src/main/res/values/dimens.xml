@@ -40,6 +40,7 @@
     <dimen name="icon_launcher">108dp</dimen>
     <dimen name="icon_logo">40dp</dimen>
     <dimen name="icon_info">20dp</dimen>
+    <dimen name="icon_ball">48dp</dimen>
 
     <!-- Other -->
     <dimen name="text_width_icon_bar">36dp</dimen>

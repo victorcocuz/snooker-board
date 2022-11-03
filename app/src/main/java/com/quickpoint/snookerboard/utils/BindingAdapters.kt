@@ -1,5 +1,7 @@
 package com.quickpoint.snookerboard.utils
 
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -21,14 +23,9 @@ import java.text.DecimalFormat
 @BindingAdapter("setSelected")
 fun TextView.setViewSelected(selected: Boolean) {
     isSelected = selected
-    setTextColor(
-        ContextCompat.getColor(
-            context,
-            if (isSelected) R.color.white
-            else if (!isEnabled) R.color.white
-            else R.color.black
-        )
-    )
+    setTextColor(ContextCompat.getColor(context, if (isSelected) R.color.white
+    else if (!isEnabled) R.color.white
+    else R.color.black))
 }
 
 @BindingAdapter("setActive")
@@ -45,15 +42,21 @@ fun TextView.setVisible(isVisible: Boolean) {
     }
 }
 
+@BindingAdapter("setFreeballVisible")
+fun TextView.setFreeballVisible(isVisible: Boolean) {
+    when (isVisible) {
+        true -> Handler(Looper.getMainLooper()).postDelayed({
+            visibility = View.VISIBLE
+        }, 50)
+        false -> visibility = View.GONE
+    }
+}
+
 // Game Display
 @BindingAdapter("setActivePlayer", "setActivePlayerTag")
 fun LinearLayout.setActivePlayer(activePlayer: Boolean, activePlayerTag: PlayerTagType) {
-    setBackgroundColor(
-        ContextCompat.getColor(
-            context,
-            if (activePlayer || activePlayerTag == PlayerTagType.STATISTICS) R.color.transparent else R.color.brown
-        )
-    )
+    setBackgroundColor(ContextCompat.getColor(context,
+        if (activePlayer || activePlayerTag == PlayerTagType.STATISTICS) R.color.transparent else R.color.brown))
     for (i in 0 until childCount) {
         getChildAt(i).alpha = if (activePlayer || activePlayerTag == PlayerTagType.STATISTICS) 1F else 0.5F
     }
@@ -98,27 +101,19 @@ fun TextView.setGameStatsValue(type: StatisticsType, value: Int) {
 
 @BindingAdapter("setStatsTableBackground")
 fun LinearLayout.setStatsTableBackground(type: Int) {
-    setBackgroundColor(
-        ContextCompat.getColor(
-            context, when (type) {
-                0 -> R.color.green
-                1 -> R.color.transparent
-                else -> R.color.beige
-            }
-        )
-    )
+    setBackgroundColor(ContextCompat.getColor(context, when (type) {
+        0 -> R.color.green
+        1 -> R.color.transparent
+        else -> R.color.beige
+    }))
 }
 
 @BindingAdapter("setStatsTableStyle")
 fun TextView.setStatsTableStyle(type: Int) {
-    setTextColor(
-        ContextCompat.getColor(
-            context, when (type) {
-                0 -> R.color.white
-                else -> R.color.black
-            }
-        )
-    )
+    setTextColor(ContextCompat.getColor(context, when (type) {
+        0 -> R.color.white
+        else -> R.color.black
+    }))
 }
 
 // Gen Dialog Adapters
@@ -238,20 +233,18 @@ fun TextView.setPointsValue(item: DomainBall?, stackSize: Int?) = stackSize?.let
 @BindingAdapter("ballImage")
 fun ImageView.setBallImage(item: DomainBall?) {
     item?.let {
-        setBackgroundResource(
-            when (item) {
-                is RED -> R.drawable.ic_ball_red
-                is YELLOW -> R.drawable.ic_ball_yellow
-                is GREEN -> R.drawable.ic_ball_green
-                is BROWN -> R.drawable.ic_ball_brown
-                is BLUE -> R.drawable.ic_ball_blue
-                is PINK -> R.drawable.ic_ball_pink
-                is BLACK -> R.drawable.ic_ball_black
-                is FREEBALL -> R.drawable.ic_ball_grey
-                is NOBALL -> R.drawable.ic_ball_grey
-                else -> R.drawable.ic_ball_white
-            }
-        )
+        setBackgroundResource(when (item) {
+            is RED -> R.drawable.ic_ball_red
+            is YELLOW -> R.drawable.ic_ball_yellow
+            is GREEN -> R.drawable.ic_ball_green
+            is BROWN -> R.drawable.ic_ball_brown
+            is BLUE -> R.drawable.ic_ball_blue
+            is PINK -> R.drawable.ic_ball_pink
+            is BLACK -> R.drawable.ic_ball_black
+            is FREEBALL -> R.drawable.ic_ball_free
+            is NOBALL -> R.drawable.ic_ball_noball
+            else -> R.drawable.ic_ball_white
+        })
     }
 }
 
@@ -259,24 +252,20 @@ fun ImageView.setBallImage(item: DomainBall?) {
 @BindingAdapter("bindMatchBallsRv")
 fun RecyclerView.bindBallsRv(ballList: MutableList<DomainBall>?) {
     val adapter = this.adapter as BallAdapter
-    adapter.submitList(
-        when (ballList?.lastOrNull()) {
-            is COLOR -> listOf(YELLOW(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
-            is WHITE -> listOf(NOBALL())
-            else -> listOf(ballList?.lastOrNull())
-        }
-    )
+    adapter.submitList(when (ballList?.lastOrNull()) {
+        is COLOR -> listOf(YELLOW(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
+        is WHITE -> listOf(NOBALL())
+        else -> listOf(ballList?.lastOrNull())
+    })
 }
 
 @BindingAdapter("bindFoulBalls")
 fun RecyclerView.bindFoulBalls(ballStack: MutableList<DomainBall>) {
     val adapter = this.adapter as BallAdapter
-    adapter.submitList(
-        when (ballStack.size) {
-            in (2..7) -> ballStack.reversed()
-            else -> listOf(WHITE(), RED(), YELLOW(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
-        }
-    )
+    adapter.submitList(when (ballStack.size) {
+        in (2..7) -> ballStack.reversed()
+        else -> listOf(WHITE(), RED(), YELLOW(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
+    })
 }
 
 @BindingAdapter("bindGameStatsData")

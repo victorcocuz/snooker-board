@@ -4,13 +4,13 @@ import com.quickpoint.snookerboard.domain.PotType.*
 
 sealed class DomainFreeBallInfo(
     var isVisible: Boolean,
-    var isSelected: Boolean
+    var isSelected: Boolean,
 ) {
     object FREEBALLINFO : DomainFreeBallInfo(false, false)
 
     fun assignFreeballInfo(
         isVisible: Boolean,
-        isSelected: Boolean
+        isSelected: Boolean,
     ) {
         this.isVisible = isVisible
         this.isSelected = isSelected

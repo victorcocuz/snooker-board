@@ -4,7 +4,9 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.fragment.app.Fragment
 import com.quickpoint.snookerboard.R
+import com.quickpoint.snookerboard.SnookerBoardApplication
 import com.quickpoint.snookerboard.domain.DomainFreeBallInfo.FREEBALLINFO
 import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
 import com.quickpoint.snookerboard.domain.DomainPlayer.PLAYER01
@@ -12,15 +14,16 @@ import com.quickpoint.snookerboard.domain.DomainPlayer.PLAYER02
 import timber.log.Timber
 
 // Shared preferences
+fun Fragment.getSharedPref(): SharedPreferences = requireActivity().getSharedPref()
 fun Activity.getSharedPref(): SharedPreferences = application.getSharedPref()
-fun Application.getSharedPref(): SharedPreferences = getSharedPreferences(
-    getString(R.string.sp_file_key),
-    Context.MODE_PRIVATE
-)
+fun Application.getSharedPref(): SharedPreferences = getSharedPreferences(getString(R.string.sp_file_key), Context.MODE_PRIVATE)
 
-fun SharedPreferences.savePref(application: Application) {
+fun SharedPreferences.updateState() =
+    edit().putInt(SnookerBoardApplication.application().getString(R.string.sp_match_state), RULES.matchState.ordinal).apply()
+
+fun SharedPreferences.savePref() {
     edit().apply {
-        application.apply {
+        SnookerBoardApplication.application().apply {
             putInt(getString(R.string.sp_match_state), RULES.matchState.ordinal)
             putString(getString(R.string.sp_match_name_first_a), PLAYER01.firstName)
             putString(getString(R.string.sp_match_name_last_a), PLAYER01.lastName)
@@ -43,26 +46,22 @@ fun SharedPreferences.savePref(application: Application) {
     }
 }
 
-fun SharedPreferences.loadPref(application: Application) {
-    application.resources.apply {
+fun SharedPreferences.loadPref() {
+    SnookerBoardApplication.application().resources.apply {
         RULES.getMatchStateFromOrdinal(getInt(getString(R.string.sp_match_state), 0))
         PLAYER01.firstName = getString(getString(R.string.sp_match_name_first_a), "")
         PLAYER01.lastName = getString(getString(R.string.sp_match_name_last_a), "")
         PLAYER02.firstName = getString(getString(R.string.sp_match_name_first_b), "")
         PLAYER02.lastName = getString(getString(R.string.sp_match_name_last_b), "")
-        RULES.assignRules(
-            getInt(getString(R.string.sp_match_frames), 3),
+        RULES.assignRules(getInt(getString(R.string.sp_match_frames), 3),
             getInt(getString(R.string.sp_match_reds), 15),
             getInt(getString(R.string.sp_match_foul), 0),
             getInt(getString(R.string.sp_match_first), 0),
             getInt(getString(R.string.sp_match_crt_player), 0),
             getInt(getString(R.string.sp_match_frame_count), 1),
-            getInt(getString(R.string.sp_match_frame_max), 0)
-        )
-        FREEBALLINFO.assignFreeballInfo(
-            getBoolean(getString(R.string.sp_match_freeball_visibility), false),
-            getBoolean(getString(R.string.sp_match_freeball_selection), false)
-        )
+            getInt(getString(R.string.sp_match_frame_max), 0))
+        FREEBALLINFO.assignFreeballInfo(getBoolean(getString(R.string.sp_match_freeball_visibility), false),
+            getBoolean(getString(R.string.sp_match_freeball_selection), false))
     }
     Timber.i("Get from sharedPref ${RULES.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}")
     Timber.i("Get from sharedPref ${RULES.getRulesText()}")

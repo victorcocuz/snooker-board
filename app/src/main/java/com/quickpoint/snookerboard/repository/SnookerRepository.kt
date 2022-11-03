@@ -33,6 +33,11 @@ class SnookerRepository(database: SnookerDatabase) {
     //    }
 
     // Check if database is empty
+    suspend fun isEmpty(): Boolean {
+        return withContext(Dispatchers.IO) {
+            return@withContext snookerDbDao.isEmpty()
+        }
+    }
 
     // Return total score for end of game statistics
     suspend fun getTotals(playerId: Int): DomainPlayerScore {
@@ -90,11 +95,15 @@ class SnookerRepository(database: SnookerDatabase) {
         }
     }
 
-    val crtFrame: LiveData<DbFrameWithScoreAndBreakWithPotsAndBallStack?> = snookerDbDao.getCrtFrame()
+    // Get crt frame from database
+    suspend fun getCrtFrame(): DbFrameWithScoreAndBreakWithPotsAndBallStack? {
+        return withContext(Dispatchers.IO) {
+            return@withContext snookerDbDao.getCrtFrame()
+        }
+    }
 
     // Get the current score from the database
     val score: LiveData<ArrayList<Pair<DomainPlayerScore, DomainPlayerScore>>> = Transformations.map(snookerDbDao.getMatchScore()) {
         it.asDomainFrameScoreList()
     }
-    val matchFrameCount: LiveData<Int> = snookerDbDao.getMatchFrameCount()
 }

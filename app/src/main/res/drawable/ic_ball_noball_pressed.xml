@@ -4,7 +4,7 @@
     android:viewportWidth="@integer/vp_ball"
     android:viewportHeight="@integer/vp_ball">
     <path
-        android:fillColor="@color/ball_white_normal"
+        android:fillColor="@color/ball_noball_pressed"
         android:pathData="M24,24m-24,0a24,24 0,1 1,48 0a24,24 0,1 1,-48 0" />
     <path
         android:fillAlpha="0.5"
