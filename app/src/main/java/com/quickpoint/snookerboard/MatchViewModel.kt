@@ -52,6 +52,7 @@ class MatchViewModel(
     val displayFrame: LiveData<DomainFrame> = _displayFrame
     fun updateFrameInfo(domainFrame: DomainFrame) {
         _displayFrame.value = domainFrame
+        updateRules(-1)
         Timber.i(app.resources.getString(R.string.helper_update_frame_info))
     }
 

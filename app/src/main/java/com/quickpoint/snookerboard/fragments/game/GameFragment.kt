@@ -56,23 +56,23 @@ class GameFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
 
             // Bind top and score layouts
-            fragGameLayoutTop.apply {
+            fGameLayoutTop.apply {
                 varPlayerTagType = PlayerTagType.MATCH
                 varMatchVm = this@GameFragment.matchVm
             }
-            fragGameLayoutScore.apply {
+            fGameLayoutScore.apply {
                 varMatchVm = this@GameFragment.matchVm
             }
 
             // Bind break layout
             varMatchVm = this@GameFragment.matchVm
-            gameBreakRv.apply {
+            fGameBreakRv.apply {
                 adapter = BreakAdapter(requireActivity())
                 itemAnimator = null
             }
 
             // Bind buttons
-            fragGameLayoutActionButtons.apply {
+            fGameLayoutActionButtons.apply {
                 varGameVm = this@GameFragment.gameVm
                 varMatchVm = this@GameFragment.matchVm
                 fragGameBallsLl.layoutParams.height =
@@ -103,7 +103,7 @@ class GameFragment : Fragment() {
                                 frameStack,
                                 RULES.frameMax))
                     }
-                    SNACKBAR_NO_BALL -> binding.fragGameCoordLayout.snackbar(getString(R.string.toast_game_no_balls_left))
+                    SNACKBAR_NO_BALL -> binding.fGameCoordLayout.snackbar(getString(R.string.toast_game_no_balls_left))
                     else -> matchVm.assignEventMatchAction(matchAction)
                 }
             })
@@ -155,27 +155,27 @@ class GameFragment : Fragment() {
                 when (menuItem.itemId) {
                     R.id.menu_item_undo -> {
                         if (frame?.isFrameInProgress() == true) gameVm.handleUndo()
-                        else binding.fragGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_undo))
+                        else binding.fGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_undo))
                     } // DomainPot is irrelevant here
                     R.id.menu_item_add_red -> {
                         if (frame?.isAddRedAvailable() == true) gameVm.handlePot(ADDRED)
-                        else binding.fragGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_add_red))
+                        else binding.fGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_add_red))
                     }
                     R.id.menu_item_remove_red -> {
                         if (frame?.isRemoveRedAvailable() == true) gameVm.handlePot(REMOVERED)
-                        else binding.fragGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_remove_red))
+                        else binding.fGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_remove_red))
                     }
                     R.id.menu_item_rerack -> {
                         if (frame?.isFrameInProgress() == true) matchVm.assignEventMatchAction(FRAME_RERACK_DIALOG)
-                        else binding.fragGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_rerack))
+                        else binding.fGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_rerack))
                     }
                     R.id.menu_item_concede_frame -> {
                         if (frame?.isFrameEqual() == false) matchVm.assignEventMatchAction(FRAME_ENDING_DIALOG)
-                        else binding.fragGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_concede_frame))
+                        else binding.fGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_concede_frame))
                     }
                     R.id.menu_item_concede_match -> {
                         if (frame?.isConcedeAvailable() == true) matchVm.assignEventMatchAction(MATCH_ENDING_DIALOG)
-                        else binding.fragGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_concede_match))
+                        else binding.fGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_concede_match))
                     }
                     R.id.menu_item_cancel_match -> matchVm.assignEventMatchAction(if (frame?.isMatchInProgress() == true) MATCH_CANCEL_DIALOG else MATCH_CANCEL)
                     else -> return false

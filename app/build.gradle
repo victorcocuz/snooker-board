@@ -14,8 +14,8 @@ android {
         applicationId "com.quickpoint.snookerboard"
         minSdk 22
         targetSdkVersion 33
-        versionCode 7
-        versionName "1.0.5"
+        versionCode 8
+        versionName "1.0.6"
         vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -78,6 +78,7 @@ dependencies {
     // Room
     implementation "androidx.room:room-runtime:$version_room"
     implementation "androidx.room:room-ktx:$version_room"
+    implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.8.1'
     kapt "androidx.room:room-compiler:$version_room"
     annotationProcessor "androidx.room:room-compiler:$version_room"
 

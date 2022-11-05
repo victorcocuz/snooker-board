@@ -31,7 +31,7 @@ class GameViewModel : ViewModel() {
         return true
     }
 
-    fun onEventFrameUpdated() {
+    private fun onEventFrameUpdated() {
         _freeballControls.value = FREEBALLINFO
         _isUpdateInProgress.value = false
         assignFrameEvent(FRAME_UPDATED)

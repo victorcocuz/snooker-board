@@ -1,6 +1,9 @@
 package com.quickpoint.snookerboard.utils
 
 const val BALL_HEIGHT_FACTOR_MATCH_ACTION = 7
+const val PRODUCT_COFFEE = "snookerboard_support_coffee"
+const val PRODUCT_BEER = "snookerboard_support_beer"
+const val PRODUCT_LUNCH = "snookerboard_support_lunch"
 
 enum class BallAdapterType { MATCH, FOUL, BREAK }
 enum class StatisticsType { FRAME_ID, HIGHEST_BREAK, FRAME_POINTS }

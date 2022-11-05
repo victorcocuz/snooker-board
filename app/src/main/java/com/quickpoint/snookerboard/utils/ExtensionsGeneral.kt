@@ -3,6 +3,7 @@ package com.quickpoint.snookerboard.utils
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
@@ -20,6 +21,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
@@ -27,6 +29,7 @@ import com.google.android.material.snackbar.Snackbar
 // General
 fun Fragment.navigate(directions: NavDirections) = findNavController().navigate(directions)
 fun Fragment.toast(message: CharSequence) = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+fun Activity.toast(message: CharSequence) = Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
 fun Application.toast(message: CharSequence) = Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
 fun View.snackbar(message: CharSequence) = Snackbar.make(this, message, Snackbar.LENGTH_SHORT).show()
 
@@ -97,3 +100,21 @@ fun TextView.setAsLink() {
     text = spannable
 }
 
+// Other
+fun Context.lifecycleOwner(): LifecycleOwner? {
+    var curContext = this
+    var maxDepth = 20
+    while (maxDepth-- > 0 && curContext !is LifecycleOwner) {
+        curContext = (curContext as ContextWrapper).baseContext
+    }
+    return if (curContext is LifecycleOwner) {
+        curContext as LifecycleOwner
+    } else {
+        null
+    }
+}
+
+tailrec fun Context.activity(): Activity? = when (this) {
+    is Activity -> this
+    else -> (this as? ContextWrapper)?.baseContext?.activity()
+}

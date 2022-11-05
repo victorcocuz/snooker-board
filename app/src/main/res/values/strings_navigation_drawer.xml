@@ -41,6 +41,7 @@
     <string name="f_nav_donate_beer_price">£5.00</string>
     <string name="f_nav_donate_lunch_title">Lunch</string>
     <string name="f_nav_donate_lunch_price">£10.00</string>
+    <string name="snackbar_donation">Thank you, that is most kind of you :)</string>
 
     <!--Fragment About-->
     <string name="f_nav_about_description">Snooker Board is a simple snooker score keeping app that focuses on recording one full match at a time, with care to encompass all rules from the WPBSA (World Professional Billiards and Snooker Association) Official Rules of the Games of Snooker and Billiards</string>
@@ -51,6 +52,10 @@
     <string name="f_nav_about_version_1_0_x_02">• </string>
     <string name="f_nav_about_version_1_0_x_03">• </string>
     <string name="f_nav_about_version_1_0_x_04">• </string>
+
+    <string name="f_nav_about_version_1_0_6">Version 1.0.6</string>
+    <string name="f_nav_about_version_1_0_6_01">• Implement billing for in app purchases to enable financial support</string>
+    <string name="f_nav_about_version_1_0_6_02">• Fix player switching glitch</string>
 
     <string name="f_nav_about_version_1_0_5">Version 1.0.5</string>
     <string name="f_nav_about_version_1_0_5_01">• Fix UI screens overlapping</string>

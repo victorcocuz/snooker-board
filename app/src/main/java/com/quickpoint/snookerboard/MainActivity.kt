@@ -20,6 +20,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
+import com.android.billingclient.api.BillingClient
+import com.quickpoint.snookerboard.billing.Billing
 import com.quickpoint.snookerboard.database.asDomainFrame
 import com.quickpoint.snookerboard.databinding.ActivityMainBinding
 import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
@@ -33,6 +35,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var matchVm: MatchViewModel
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var billing: Billing
+
+    // Billing client
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,15 +64,30 @@ class MainActivity : AppCompatActivity() {
 
             // Prevent nav gesture if not on start destination
             navController.addOnDestinationChangedListener { _: NavController, nd: NavDestination, _: Bundle? ->
-                    when (nd.id) {
-                        R.id.playFragment -> mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-                        R.id.navRulesFragment, R.id.navImproveFragment, R.id.navAboutFragment, R.id.navDonateFragment -> mainDrawerLayout.setDrawerLockMode(
-                            DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-                        else -> {
-                            binding.layoutAppBarMain.layoutToolbarMain.navigationIcon = null
-                            mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-                        }
+                when (nd.id) {
+                    R.id.playFragment -> mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+                    R.id.navRulesFragment, R.id.navImproveFragment, R.id.navAboutFragment, R.id.navDonateFragment -> mainDrawerLayout.setDrawerLockMode(
+                        DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+                    else -> {
+                        binding.layoutAppBarMain.layoutToolbarMain.navigationIcon = null
+                        mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                     }
+                }
+            }
+        }
+
+        // Billing
+        Billing.initBilling { billingResult, purchases ->
+            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
+                for (purchase in purchases) {
+                    lifecycleScope.launch {
+                        Billing.handlePurchase(purchase, this@MainActivity)
+                    }
+                }
+            } else if (billingResult.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
+                Timber.e("Billing cancelled by user")
+            } else {
+                Timber.e("Billing code ${billingResult.responseCode} could not be processed")
             }
         }
     }
@@ -81,14 +101,21 @@ class MainActivity : AppCompatActivity() {
                 matchVm.deleteMatchFromDb()
             } else if (RULES.matchState == SAVED) {
                 if (crtFrame.frame.frameId == RULES.frameCount) {
-                    matchVm.updateFrameInfo(crtFrame.asDomainFrame())
                     matchVm.updateState(IN_PROGRESS)
+                    matchVm.updateFrameInfo(crtFrame.asDomainFrame())
                     matchVm.deleteCrtFrameFromDb()
                 }
             } else matchVm.updateRules(-1)
             Timber.i("CrtFrame is: ${crtFrame?.frame?.frameId}, frameCount is: ${RULES.frameCount}, matchState is: ${RULES.matchState}")
         }
         super.onStart()
+    }
+
+    override fun onResume() {
+        lifecycleScope.launch {
+            Billing.queryPurchasesAsync(this@MainActivity)
+        }
+        super.onResume()
     }
 
     override fun onStop() { // Save state and shared preferences on pause rather than onSaveInstanceState so that db save can complete

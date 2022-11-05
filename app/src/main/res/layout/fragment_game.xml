@@ -10,7 +10,7 @@
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/frag_game_coord_layout"
+        android:id="@+id/f_game_coord_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -21,13 +21,13 @@
             android:orientation="vertical">
 
             <include
-                android:id="@+id/frag_game_layout_top"
+                android:id="@+id/f_game_layout_top"
                 layout="@layout/layout_game_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <include
-                android:id="@+id/frag_game_layout_score"
+                android:id="@+id/f_game_layout_score"
                 layout="@layout/layout_game_score"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -35,14 +35,14 @@
                 android:layout_marginEnd="@dimen/margin_layout_offset" />
 
             <ScrollView
-                android:id="@+id/game_scroll_view"
+                android:id="@+id/f_game_scroll_view"
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/margin_xxsmall"
                 android:layout_weight="1"
                 android:layout_height="0dp">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/game_break_rv"
+                    android:id="@+id/f_game_break_rv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:bindBreakData="@{varMatchVm.displayFrame.frameStack}"
@@ -52,7 +52,7 @@
             </ScrollView>
 
             <include
-                android:id="@+id/frag_game_layout_action_buttons"
+                android:id="@+id/f_game_layout_action_buttons"
                 layout="@layout/layout_game_actions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
