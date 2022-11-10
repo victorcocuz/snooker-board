@@ -2,6 +2,8 @@ package com.quickpoint.snookerboard.billing
 
 import android.app.Activity
 import android.content.Context
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.android.billingclient.api.*
 import com.android.billingclient.api.Purchase.PurchaseState
 import com.quickpoint.snookerboard.R
@@ -30,7 +32,7 @@ object Billing {
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     // The BillingClient is ready. You can query purchases here.
-                    Timber.e("Connected to Google Play")
+                    Timber.i("Connected to Google Play")
                 }
             }
 
@@ -70,19 +72,18 @@ object Billing {
     private fun processDetailsResult(activity: Activity, binding: FragmentNavDonateBinding, productDetailsList: List<ProductDetails>) {
         Timber.e("processDetailResult()")
         for (productDetails in productDetailsList) {
-            Timber.i("productDetails: ${productDetails.productId}")
-            when (productDetails.productId) {
-                PRODUCT_COFFEE -> binding.fNavDonateCoffee.setOnClickListener {
-                    launchPurchaseFlow(activity, productDetails)
-                }
-                PRODUCT_BEER -> binding.fNavDonateBeer.setOnClickListener {
-                    launchPurchaseFlow(activity, productDetails)
-                }
-                PRODUCT_LUNCH -> binding.fNavDonateLunch.setOnClickListener {
-                    launchPurchaseFlow(activity, productDetails)
-                }
-            }
+            Timber.i("productDetails id: ${productDetails.productId}, price: ${productDetails.oneTimePurchaseOfferDetails?.formattedPrice}")
+            displayPaymentInfo(activity, productDetails, when (productDetails.productId) {
+                PRODUCT_COFFEE -> binding.fNavDonateCoffee
+                PRODUCT_BEER -> binding.fNavDonateBeer
+                else -> binding.fNavDonateLunch
+            })
         }
+    }
+
+    private fun displayPaymentInfo(activity: Activity, productDetails: ProductDetails, linearLayout: LinearLayout) {
+        linearLayout.setOnClickListener { launchPurchaseFlow(activity, productDetails) }
+        (linearLayout.getChildAt(2) as TextView).text = productDetails.oneTimePurchaseOfferDetails?.formattedPrice
     }
 
     private fun launchPurchaseFlow(activity: Activity, productDetails: ProductDetails) {
@@ -110,7 +111,7 @@ object Billing {
         // Verify the purchase.
         // Ensure entitlement was not already granted for this purchaseToken.
         // Grant entitlement to the user.
-        Timber.e("handlePurchase() with token: ${purchase.purchaseToken}")
+        Timber.i("handlePurchase() with token: ${purchase.purchaseToken}")
         val consumeParams = ConsumeParams.newBuilder()
             .setPurchaseToken(purchase.purchaseToken)
             .build()

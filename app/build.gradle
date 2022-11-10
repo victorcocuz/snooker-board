@@ -14,8 +14,8 @@ android {
         applicationId "com.quickpoint.snookerboard"
         minSdk 22
         targetSdkVersion 33
-        versionCode 8
-        versionName "1.0.6"
+        versionCode 9
+        versionName "1.0.7"
         vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -57,6 +57,7 @@ dependencies {
     implementation "com.android.support:design:$version_design"
     implementation "com.android.billingclient:billing:$version_billing"
     implementation "com.android.billingclient:billing-ktx:$version_billing"
+    implementation "com.google.android.gms:play-services-ads:$version_ad_mob"
 
     // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$version_navigation"
@@ -78,18 +79,17 @@ dependencies {
     // Room
     implementation "androidx.room:room-runtime:$version_room"
     implementation "androidx.room:room-ktx:$version_room"
-    implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.8.1'
     kapt "androidx.room:room-compiler:$version_room"
     annotationProcessor "androidx.room:room-compiler:$version_room"
-
 
     // Work
     implementation "androidx.work:work-runtime-ktx:$version_work"
 
     // Others
     implementation "com.jakewharton.timber:timber:$version_timber" // Timber
-    implementation 'io.github.ShawnLin013:number-picker:2.4.13' // Number Picker
-    implementation 'com.google.code.gson:gson:2.9.1' // Gson
+    implementation "com.google.code.gson:gson:$version_gson" // Gson
+    implementation "com.google.firebase:firebase-crashlytics-buildtools:$version_firebase_crashlytics" // For immutable lists?
+    implementation "io.github.ShawnLin013:number-picker:$version_number_picker" // Number Picker
 
     // Test Implementations
     testImplementation "junit:junit:$version_junit"

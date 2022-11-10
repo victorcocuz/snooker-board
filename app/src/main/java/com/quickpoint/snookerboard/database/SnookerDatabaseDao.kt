@@ -97,6 +97,15 @@ interface SnookerDatabaseDao {
     @Query("SELECT SUM(missedShots) FROM match_score_table WHERE playerId = :id")
     fun getSumOfMissedShots(id: Int): Int
 
+    @Query("SELECT SUM(safetySuccessShots) FROM match_score_table WHERE playerId = :id")
+    fun getSumOfSafetySuccessShots(id: Int): Int
+
+    @Query("SELECT SUM(safetyMissedShots) FROM match_score_table WHERE playerId = :id")
+    fun getSumOfSafetyMissedShots(id: Int): Int
+
+    @Query("SELECT SUM(snookers) FROM match_score_table WHERE playerId = :id")
+    fun getSumOfSnookers(id: Int): Int
+
     @Query("SELECT SUM(fouls) FROM match_score_table WHERE playerId = :id")
     fun getSumOfFouls(id: Int): Int
 

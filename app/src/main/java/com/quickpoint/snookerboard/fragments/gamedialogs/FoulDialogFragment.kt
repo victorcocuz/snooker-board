@@ -32,13 +32,6 @@ class FoulDialogFragment : DialogFragment() {
         val binding: FragmentDialogFoulBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_dialog_foul, container, false)
 
-        // Bind RV, VM, adapter
-        val ballAdapter = BallAdapter(
-            BallListener { ball -> dialogViewModel.onBallClicked(ball) },
-            MutableLiveData(),
-            BallAdapterType.FOUL
-        )
-
         // Bind all required elements from the view
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
@@ -46,7 +39,11 @@ class FoulDialogFragment : DialogFragment() {
             varDialogViewModel = this@FoulDialogFragment.dialogViewModel
             foulBallsListRv.apply {
                 layoutManager = GridLayoutManager(activity, 4)
-                adapter = ballAdapter
+                adapter = BallAdapter(
+                    BallListener { ball -> dialogViewModel.onBallClicked(ball) },
+                    MutableLiveData(),
+                    BallAdapterType.FOUL
+                )
             }
         }
 
@@ -54,18 +51,15 @@ class FoulDialogFragment : DialogFragment() {
         dialogViewModel.apply {
             eventDialogAction.observe(viewLifecycleOwner, EventObserver {
                 when (it) {
-                    MatchAction.FOUL_QUERY -> {
-                        if (foulIsValid()) {
-                            matchAction = MatchAction.FOUL_CONFIRM
-                            dismiss()
-                        } else toast(getString(R.string.toast_foul_invalid))
-                    }
+                    MatchAction.FOUL_QUERY ->
+                        if (foulIsValid()) matchAction = MatchAction.FOUL_CONFIRM
+                        else toast(getString(R.string.toast_foul_invalid))
                     else -> {
                         dialogViewModel.resetFoul()
                         matchAction = it
-                        dismiss()
                     }
                 }
+                dismiss()
             })
         }
         return binding.root

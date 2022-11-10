@@ -1,7 +1,6 @@
 package com.quickpoint.snookerboard.domain
 
 import com.quickpoint.snookerboard.database.DbPot
-import com.quickpoint.snookerboard.domain.DomainBall.NOBALL
 import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
 import com.quickpoint.snookerboard.domain.PotType.*
 
@@ -10,7 +9,7 @@ data class DomainBreak(
     val player: Int,
     val frameId: Int,
     val pots: MutableList<DomainPot>,
-    var breakSize: Int
+    var breakSize: Int,
 )
 
 // CONVERTER method from DOMAIN Break to a list of DATABASE Pots
@@ -37,6 +36,7 @@ fun MutableList<DomainBreak>.handlePot(pot: DomainPot) { // Add to frameStack al
     if (pot.potType == TYPE_FREETOGGLE && lastPotType() == TYPE_FREETOGGLE) removeLastPotFromFrameStack()
     else addToFrameStack(pot)
 }
+
 fun MutableList<DomainBreak>.addToFrameStack(pot: DomainPot) {
     if (pot.potType !in listOf(TYPE_HIT, TYPE_FREE, TYPE_ADDRED) // If the current pot is not generating points
         || size == 0 // or if there are no breaks
@@ -72,10 +72,6 @@ fun MutableList<DomainBreak>.findMaxBreak(): Int {
 
 fun MutableList<DomainBreak>.getDisplayShots(): MutableList<DomainBreak> {
     val list = mutableListOf<DomainBreak>() // Create a list of pots show within the break rv (SAFE, MISS, REMOVERED are not shown)
-    forEach {
-        if (it.pots.last().potType in listOf(TYPE_HIT, TYPE_FREE, TYPE_FOUL, TYPE_ADDRED, TYPE_REMOVERED)
-            && it.pots.last().ball != NOBALL()
-        ) list.add(it.copy())
-    }
+    forEach { if (it.pots.last().potType !in listOfHelperPotTypes) list.add(it.copy()) }
     return list
 }

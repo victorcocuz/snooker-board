@@ -8,11 +8,14 @@ import com.quickpoint.snookerboard.domain.PotType.*
 
 // The DOMAIN Ball is the simplest game data unit. It stores ball information
 enum class BallType { TYPE_NOBALL, TYPE_WHITE, TYPE_RED, TYPE_YELLOW, TYPE_GREEN, TYPE_BROWN, TYPE_BLUE, TYPE_PINK, TYPE_BLACK, TYPE_COLOR, TYPE_FREEBALL, TYPE_FREEBALLTOGGLE, TYPE_FREEBALLAVAILABLE }
+val listOfBallTypeColors = listOf(TYPE_YELLOW, TYPE_GREEN, TYPE_BROWN, TYPE_BLUE, TYPE_PINK, TYPE_BLACK)
+
 sealed class DomainBall(
     var ballType: BallType,
     var points: Int,
     var foul: Int,
 ) {
+
     class NOBALL(points: Int = 0, foul: Int = 0) : DomainBall(TYPE_NOBALL, points, foul)
     class WHITE(points: Int = 0, foul: Int = 4) : DomainBall(TYPE_WHITE, points, foul)
     class RED(points: Int = 1, foul: Int = 4) : DomainBall(TYPE_RED, points, foul)
@@ -93,7 +96,7 @@ fun MutableList<DomainBall>.addNextBall() = this.add(
         6 -> YELLOW()
         in (7..37).filter { it % 2 == 0 } -> RED()
         in (7..37).filter { it % 2 != 0 } -> COLOR()
-        else -> WHITE()
+        else -> WHITE() // Random; never reached
     }
 )
 
@@ -131,7 +134,7 @@ fun MutableList<DomainBall>.handlePotBallStack(potType: PotType) {
         TYPE_FREEAVAILABLE -> {}
         TYPE_FREETOGGLE -> RULES.frameMax += if (FREEBALLINFO.isSelected) addFreeBall() else removeFreeBall()
         TYPE_REMOVERED, TYPE_ADDRED -> removeBalls(2)
-        TYPE_SAFE, TYPE_MISS, TYPE_FOUL -> {
+        TYPE_SAFE, TYPE_MISS, TYPE_SAFE_MISS, TYPE_SNOOKER, TYPE_FOUL -> {
             if (last() is COLOR) removeBalls(1)
             if (last() is FREEBALL) RULES.frameMax += removeFreeBall()
         }
@@ -145,7 +148,7 @@ fun MutableList<DomainBall>.handleUndoBallStack(pot: DomainPot, lastBallType: Ba
         TYPE_ADDRED -> addBalls(RED(), COLOR())
         TYPE_FREE -> addBalls(FREEBALL())
         TYPE_REMOVERED -> if (isNextColor()) addBalls(COLOR(), RED()) else addBalls(RED(), COLOR())
-        TYPE_SAFE, TYPE_MISS, TYPE_FOUL -> when (lastBallType) {
+        TYPE_SAFE, TYPE_MISS, TYPE_SAFE_MISS, TYPE_SNOOKER, TYPE_FOUL -> when (lastBallType) {
             TYPE_RED, TYPE_FREEBALL -> if (isNextColor()) addBalls(COLOR())
             TYPE_FREEBALLTOGGLE -> RULES.frameMax += addFreeBall()
             else -> {}
@@ -155,3 +158,5 @@ fun MutableList<DomainBall>.handleUndoBallStack(pot: DomainPot, lastBallType: Ba
         TYPE_RESPOT_BLACK -> removeBalls(1)
     }
 }
+
+val listOfPlayableBallTypes = listOf(TYPE_WHITE, TYPE_RED, TYPE_YELLOW, TYPE_GREEN, TYPE_BROWN, TYPE_BLUE, TYPE_PINK, TYPE_BLACK)

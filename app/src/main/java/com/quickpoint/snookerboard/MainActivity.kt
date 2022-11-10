@@ -21,12 +21,16 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
 import com.android.billingclient.api.BillingClient
+import com.google.android.gms.ads.MobileAds
 import com.quickpoint.snookerboard.billing.Billing
 import com.quickpoint.snookerboard.database.asDomainFrame
 import com.quickpoint.snookerboard.databinding.ActivityMainBinding
 import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
 import com.quickpoint.snookerboard.domain.MatchState.*
-import com.quickpoint.snookerboard.utils.*
+import com.quickpoint.snookerboard.utils.GenericViewModelFactory
+import com.quickpoint.snookerboard.utils.getSharedPref
+import com.quickpoint.snookerboard.utils.loadPref
+import com.quickpoint.snookerboard.utils.savePref
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -35,21 +39,19 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var matchVm: MatchViewModel
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var billing: Billing
-
-    // Billing client
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        // Load existing match, keep splash screen on until loading is complete
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition { matchVm.keepSplashScreen.value }
+
+        super.onCreate(savedInstanceState) // create view after installing splash screen
+
+        // AdMob
+        MobileAds.initialize(this)
 
         // Initiate the matchVm from the start to be readily accessed from all fragments when needed; pass in application and repository
         matchVm = ViewModelProvider(this, GenericViewModelFactory(this, null))[MatchViewModel::class.java]
-
-        // Load existing match, keep splash screen on until loading is complete
-        val splashScreen = installSplashScreen()
-        var keep = true
-        splashScreen.setKeepOnScreenCondition { keep }
-        matchVm.keepSplashScreen.observeOnce(this) { keep = it }
 
         // Bind view elements
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)

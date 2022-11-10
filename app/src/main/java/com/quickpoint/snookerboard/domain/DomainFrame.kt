@@ -73,6 +73,9 @@ fun DomainFrame.asDbCrtScore(): List<DbScore> {
             matchPoints = playerScore.matchPoints,
             successShots = playerScore.successShots,
             missedShots = playerScore.missedShots,
+            safetySuccessShots = playerScore.safetySuccessShots,
+            safetyMissedShots = playerScore.safetyMissedShots,
+            snookers = playerScore.snookers,
             fouls = playerScore.fouls,
             highestBreak = playerScore.highestBreak
         )

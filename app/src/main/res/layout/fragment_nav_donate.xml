@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -45,7 +46,7 @@
 
             <TextView
                 style="@style/TextBody"
-                android:text="@string/f_nav_donate_coffee_price" />
+                tools:text="@string/f_nav_donate_coffee_price" />
         </LinearLayout>
 
         <LinearLayout
@@ -67,7 +68,7 @@
 
             <TextView
                 style="@style/TextBody"
-                android:text="@string/f_nav_donate_beer_price" />
+                tools:text="@string/f_nav_donate_beer_price" />
         </LinearLayout>
 
         <LinearLayout
@@ -89,7 +90,7 @@
 
             <TextView
                 style="@style/TextBody"
-                android:text="@string/f_nav_donate_lunch_price" />
+                tools:text="@string/f_nav_donate_lunch_price" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

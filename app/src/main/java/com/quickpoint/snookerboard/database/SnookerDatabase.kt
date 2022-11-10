@@ -12,7 +12,7 @@ import androidx.room.RoomDatabase
         DbPot::class,
         DbBall::class,
         DbFrame::class],
-    version = 15,
+    version = 17,
     exportSchema = false
 )
 

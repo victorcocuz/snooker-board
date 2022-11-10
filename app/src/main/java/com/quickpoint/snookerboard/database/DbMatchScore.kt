@@ -15,6 +15,9 @@ data class DbScore(
     val matchPoints: Int,
     val successShots: Int,
     val missedShots: Int,
+    val safetySuccessShots: Int,
+    val safetyMissedShots: Int,
+    val snookers: Int,
     val fouls: Int,
     val highestBreak: Int
 )
@@ -30,6 +33,9 @@ fun List<DbScore>.asDomainFrameScoreList(): ArrayList<Pair<DomainPlayerScore, Do
             matchPoints = this[i].matchPoints,
             successShots = this[i].successShots,
             missedShots = this[i].missedShots,
+            safetySuccessShots = this[i].safetySuccessShots,
+            safetyMissedShots = this[i].safetyMissedShots,
+            snookers = this[i].snookers,
             fouls = this[i].fouls,
             highestBreak = this[i].highestBreak,
         )
@@ -40,6 +46,9 @@ fun List<DbScore>.asDomainFrameScoreList(): ArrayList<Pair<DomainPlayerScore, Do
             matchPoints = this[i + 1].matchPoints,
             successShots = this[i + 1].successShots,
             missedShots = this[i + 1].missedShots,
+            safetySuccessShots = this[i].safetySuccessShots,
+            safetyMissedShots = this[i].safetyMissedShots,
+            snookers = this[i].snookers,
             fouls = this[i + 1].fouls,
             highestBreak = this[i + 1].highestBreak,
         )
@@ -58,6 +67,9 @@ fun List<DbScore>.asDomainPlayerScoreList(): MutableList<DomainPlayerScore> {
             matchPoints = it.matchPoints,
             successShots = it.successShots,
             missedShots = it.missedShots,
+            safetySuccessShots = it.safetySuccessShots,
+            safetyMissedShots = it.safetyMissedShots,
+            snookers = it.snookers,
             fouls = it.fouls,
             highestBreak = it.highestBreak,
         )

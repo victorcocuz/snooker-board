@@ -11,11 +11,14 @@ sealed class CurrentScore(
     var matchPoints: Int,
     var successShots: Int,
     var missedShots: Int,
+    var safetySuccessShots: Int,
+    var safetyMissedShots: Int,
+    var snookers: Int,
     var fouls: Int,
-    var highestBreak: Int
+    var highestBreak: Int,
 ) {
-    object SCORE01 : CurrentScore(0, 0, 0, 0, 0, 0, 0)
-    object SCORE02 : CurrentScore(0, 0, 0, 0, 0, 0, 0)
+    object SCORE01 : CurrentScore(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+    object SCORE02 : CurrentScore(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
     fun initPlayer(
         frameId: Int,
@@ -23,14 +26,20 @@ sealed class CurrentScore(
         matchPoints: Int,
         successShots: Int,
         missedShots: Int,
+        safetySuccessShots: Int,
+        safetyMissedShots: Int,
+        snookers: Int,
         fouls: Int,
-        highestBreak: Int
+        highestBreak: Int,
     ) {
         this.frameId = frameId
         this.framePoints = framePoints
         this.matchPoints = matchPoints
         this.successShots = successShots
         this.missedShots = missedShots
+        this.safetySuccessShots = safetySuccessShots
+        this.safetyMissedShots = safetyMissedShots
+        this.snookers = snookers
         this.fouls = fouls
         this.highestBreak = highestBreak
     }
@@ -67,6 +76,8 @@ sealed class CurrentScore(
         highestBreak = 0
         successShots = 0
         missedShots = 0
+        safetySuccessShots = 0
+        safetyMissedShots = 0
         fouls = 0
     }
 
@@ -88,6 +99,18 @@ sealed class CurrentScore(
         missedShots += pol
     }
 
+    private fun addSafetySuccessShots(pol: Int) {
+        safetySuccessShots += pol
+    }
+
+    private fun addSafetyMissedShots(pol: Int) {
+        safetyMissedShots += pol
+    }
+
+    private fun addSnookers(pol: Int) {
+        snookers += pol
+    }
+
     private fun addFouls(pol: Int) {
         fouls += pol
     }
@@ -96,16 +119,6 @@ sealed class CurrentScore(
         getWinner().matchPoints += 1
         this.frameId = RULES.frameCount // TEMP - Assign a frameId to later use to add frame info to DATABASE
         this.getOther().frameId = RULES.frameCount // TEMP - Assign a frameId to later use to add frame info to DATABASE
-    }
-
-    private fun findMaxBreak(frameStack: MutableList<DomainBreak>) {
-        var highestBreak = 0
-        frameStack.forEach { crtBreak ->
-            if (getPlayerAsInt() == crtBreak.player && crtBreak.breakSize > highestBreak) {
-                highestBreak = crtBreak.breakSize
-            }
-        }
-        this.highestBreak = highestBreak
     }
 
     // Polarity is used to reverse score on undo
@@ -126,6 +139,9 @@ sealed class CurrentScore(
                 addFouls(pol)
             }
             TYPE_MISS -> addMissedShots(pol)
+            TYPE_SAFE -> addSafetySuccessShots(pol)
+            TYPE_SAFE_MISS -> addSafetyMissedShots(pol)
+            TYPE_SNOOKER -> addSnookers(pol)
             else -> {
             }
         }
@@ -144,8 +160,11 @@ data class DomainPlayerScore(
     val matchPoints: Int,
     val successShots: Int,
     val missedShots: Int,
+    val safetySuccessShots: Int,
+    val safetyMissedShots: Int,
+    val snookers: Int,
     val fouls: Int,
-    val highestBreak: Int
+    val highestBreak: Int,
 )
 
 fun CurrentScore.asDomainPlayerScore(): DomainPlayerScore { // Converts the current score into a domain score
@@ -156,6 +175,9 @@ fun CurrentScore.asDomainPlayerScore(): DomainPlayerScore { // Converts the curr
         matchPoints = this.matchPoints,
         successShots = this.successShots,
         missedShots = this.missedShots,
+        safetySuccessShots = this.safetySuccessShots,
+        safetyMissedShots = this.safetyMissedShots,
+        snookers = this.snookers,
         fouls = this.fouls,
         highestBreak = this.highestBreak
     )
@@ -172,6 +194,9 @@ fun MutableList<DomainPlayerScore>.asCurrentScore(): CurrentScore? { // Converts
             dbPlayerA.matchPoints,
             dbPlayerA.successShots,
             dbPlayerA.missedShots,
+            dbPlayerA.safetySuccessShots,
+            dbPlayerA.safetyMissedShots,
+            dbPlayerA.snookers,
             dbPlayerA.fouls,
             dbPlayerA.highestBreak
         )
@@ -181,6 +206,9 @@ fun MutableList<DomainPlayerScore>.asCurrentScore(): CurrentScore? { // Converts
             dbPlayerB.matchPoints,
             dbPlayerB.successShots,
             dbPlayerB.missedShots,
+            dbPlayerB.safetySuccessShots,
+            dbPlayerB.safetyMissedShots,
+            dbPlayerB.snookers,
             dbPlayerB.fouls,
             dbPlayerB.highestBreak
         )

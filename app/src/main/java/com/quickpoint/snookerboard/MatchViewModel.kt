@@ -16,6 +16,8 @@ import com.quickpoint.snookerboard.utils.MatchAction.*
 import com.quickpoint.snookerboard.utils.getSharedPref
 import com.quickpoint.snookerboard.utils.updateState
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -27,12 +29,12 @@ class MatchViewModel(
     // Variables
     suspend fun getCrtFrame() = snookerRepository.getCrtFrame()
 
-    private val _keepSplashScreen = MutableLiveData<Boolean>()
-    val keepSplashScreen: LiveData<Boolean> = _keepSplashScreen
+    private val _keepSplashScreen = MutableStateFlow(true)
+    val keepSplashScreen = _keepSplashScreen.asStateFlow()
     fun transitionToFragment(fragment: Fragment) = viewModelScope.launch {
         delay(200)
-        _keepSplashScreen.value = false
         fragment.startPostponedEnterTransition()
+        _keepSplashScreen.value = false
     }
 
     fun updateState(matchState: MatchState) {

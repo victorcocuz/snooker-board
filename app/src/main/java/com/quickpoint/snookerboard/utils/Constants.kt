@@ -1,6 +1,6 @@
 package com.quickpoint.snookerboard.utils
 
-const val BALL_HEIGHT_FACTOR_MATCH_ACTION = 7
+const val FACTOR_BALL_MATCH = 8
 const val PRODUCT_COFFEE = "snookerboard_support_coffee"
 const val PRODUCT_BEER = "snookerboard_support_beer"
 const val PRODUCT_LUNCH = "snookerboard_support_lunch"

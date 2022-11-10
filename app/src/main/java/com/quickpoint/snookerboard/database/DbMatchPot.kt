@@ -27,6 +27,8 @@ fun List<DbPot>.asDomainPotList(): MutableList<DomainPot> {
             PotType.TYPE_HIT -> DomainPot.HIT(getBallFromValues(pot.ball, pot.ballPoints, pot.ballFoul))
             PotType.TYPE_FREE -> DomainPot.FREETOGGLE
             PotType.TYPE_SAFE -> DomainPot.SAFE
+            PotType.TYPE_SAFE_MISS -> DomainPot.SAFEMISS
+            PotType.TYPE_SNOOKER -> DomainPot.SNOOKER
             PotType.TYPE_MISS -> DomainPot.MISS
             PotType.TYPE_FOUL -> DomainPot.FOUL(getBallFromValues(pot.ball, pot.ballPoints, pot.ballFoul), PotAction.values()[pot.potAction])
             PotType.TYPE_REMOVERED -> DomainPot.REMOVERED

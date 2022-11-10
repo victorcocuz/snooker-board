@@ -6,6 +6,8 @@
 
     <!-- Actions -->
     <string name="action_safe">SAFE</string>
+    <string name="action_safe_miss">SAFE MISS</string>
+    <string name="action_snooker">SNOOKER</string>
     <string name="action_miss">MISS</string>
     <string name="action_foul">FOUL</string>
     <string name="action_add_red">++RED</string>
@@ -65,8 +67,10 @@
     <string name="f_game_label_player_b">Player B</string>
     <string name="f_game_label_remaining">Remaining</string>
     <string name="f_game_label_difference">Difference</string>
+    <string name="f_game_label_snookers">Number of Snookers</string>
     <string name="f_game_label_fouls">Number of Fouls</string>
     <string name="f_game_label_percentage">Pot Success</string>
+    <string name="f_game_label_safety_percentage">Safety Success</string>
     <string name="f_game_label_break">Highest Break</string>
     <string name="chapter_score">Frame Score</string>
     <string name="chapter_statistics">Frame Statistics</string>

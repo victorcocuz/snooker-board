@@ -3,5 +3,4 @@
     <integer name="vp_nav_icon">24</integer>
     <integer name="vp_ball">48</integer>
     <integer name="vp_launcher">108</integer>
-
 </resources>

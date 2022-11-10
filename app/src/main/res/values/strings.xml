@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Snooker Board</string>
+    <string name="ad_mob_id">ca-app-pub-8063036382786622~9725880072</string>
+    <string name="ad_mob_id_interstitial_end_of_game">ca-app-pub-8063036382786622/4940511157</string>
+    <string name="ad_mob_id_interstitial_end_of_game_test">ca-app-pub-3940256099942544/1033173712</string>
+
 
     <!-- Menu Bottom -->
     <string name="menu_bottom_rankings">Rankings</string>

@@ -169,6 +169,64 @@
             tools:text="58%" />
 
         <TextView
+            android:id="@+id/game_text_score_safety_percentage_a"
+            style="@style/TextHeaderBold"
+            app:layout_constraintBottom_toBottomOf="@+id/game_label_safety_percentage"
+            app:layout_constraintEnd_toEndOf="@+id/game_text_score_break_a"
+            app:layout_constraintStart_toStartOf="@+id/game_text_score_break_a"
+            app:layout_constraintTop_toTopOf="@+id/game_label_safety_percentage"
+            app:setFrameSafetyPercentage="@{varMatchVm.displayFrame.frameScore[0]}"
+            tools:text="55%" />
+
+        <TextView
+            android:id="@+id/game_label_safety_percentage"
+            style="@style/TextHeader"
+            android:layout_marginTop="@dimen/margin_xxxsmall"
+            android:text="@string/f_game_label_safety_percentage"
+            app:layout_constraintEnd_toStartOf="@+id/game_guide_vert_mid"
+            app:layout_constraintStart_toStartOf="@+id/game_guide_vert_mid"
+            app:layout_constraintTop_toBottomOf="@+id/game_label_percentage" />
+
+        <TextView
+            android:id="@+id/game_text_score_safety_percentage_b"
+            style="@style/TextHeaderBold"
+            app:layout_constraintBottom_toBottomOf="@+id/game_label_safety_percentage"
+            app:layout_constraintEnd_toEndOf="@+id/game_text_score_break_b"
+            app:layout_constraintStart_toStartOf="@+id/game_text_score_break_b"
+            app:layout_constraintTop_toTopOf="@+id/game_label_safety_percentage"
+            app:setFrameSafetyPercentage="@{varMatchVm.displayFrame.frameScore[1]}"
+            tools:text="58%" />
+
+        <TextView
+            android:id="@+id/game_text_score_snookers_a"
+            style="@style/TextHeaderBold"
+            android:text="@{String.valueOf(varMatchVm.displayFrame.frameScore[0].snookers)}"
+            app:layout_constraintBottom_toBottomOf="@+id/game_label_snookers"
+            app:layout_constraintEnd_toEndOf="@+id/game_text_score_percentage_a"
+            app:layout_constraintStart_toStartOf="@+id/game_text_score_percentage_a"
+            app:layout_constraintTop_toTopOf="@+id/game_label_snookers"
+            tools:text="1" />
+
+        <TextView
+            android:id="@+id/game_label_snookers"
+            style="@style/TextHeader"
+            android:layout_marginTop="@dimen/margin_xxxsmall"
+            android:text="@string/f_game_label_snookers"
+            app:layout_constraintEnd_toStartOf="@+id/game_guide_vert_mid"
+            app:layout_constraintStart_toStartOf="@+id/game_guide_vert_mid"
+            app:layout_constraintTop_toBottomOf="@+id/game_label_safety_percentage" />
+
+        <TextView
+            android:id="@+id/game_text_score_snookers_b"
+            style="@style/TextHeaderBold"
+            android:text="@{String.valueOf(varMatchVm.displayFrame.frameScore[1].snookers)}"
+            app:layout_constraintBottom_toBottomOf="@+id/game_label_snookers"
+            app:layout_constraintEnd_toEndOf="@+id/game_text_score_percentage_b"
+            app:layout_constraintStart_toStartOf="@+id/game_text_score_percentage_b"
+            app:layout_constraintTop_toTopOf="@+id/game_label_snookers"
+            tools:text="5" />
+
+        <TextView
             android:id="@+id/game_text_score_foul_a"
             style="@style/TextHeaderBold"
             android:text="@{String.valueOf(varMatchVm.displayFrame.frameScore[0].fouls)}"
@@ -185,7 +243,7 @@
             android:text="@string/f_game_label_fouls"
             app:layout_constraintEnd_toStartOf="@+id/game_guide_vert_mid"
             app:layout_constraintStart_toStartOf="@+id/game_guide_vert_mid"
-            app:layout_constraintTop_toBottomOf="@+id/game_label_percentage" />
+            app:layout_constraintTop_toBottomOf="@+id/game_label_snookers" />
 
         <TextView
             android:id="@+id/game_text_score_foul_b"

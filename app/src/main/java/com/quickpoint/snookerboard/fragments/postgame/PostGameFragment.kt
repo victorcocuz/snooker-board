@@ -59,8 +59,8 @@ class PostGameFragment : androidx.fragment.app.Fragment() {
             fragPostGameHeader.apply {
                 varBgType = 2
                 varTextType = 1
-                frameScoreA = DomainPlayerScore(-1, -1, -1, -1, -1, 0, -1, -1)
-                frameScoreB = DomainPlayerScore(-1, -1, -1, -1, -1, 0, -1, -1)
+                frameScoreA = DomainPlayerScore(-1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1)
+                frameScoreB = DomainPlayerScore(-1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1)
             }
 
             // Footer format

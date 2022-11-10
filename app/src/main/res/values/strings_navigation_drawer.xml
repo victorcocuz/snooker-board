@@ -53,6 +53,14 @@
     <string name="f_nav_about_version_1_0_x_03">• </string>
     <string name="f_nav_about_version_1_0_x_04">• </string>
 
+    <string name="f_nav_about_version_1_0_7">Version 1.0.7</string>
+    <string name="f_nav_about_version_1_0_7_01">• Add interstitial ads</string>
+    <string name="f_nav_about_version_1_0_7_02">• Fix app support price issues</string>
+    <string name="f_nav_about_version_1_0_7_03">• Add buttons for two new match tracking features: safe miss and snooker</string>
+    <string name="f_nav_about_version_1_0_7_04">• Add new button for missed shots in line with the rest of the balls</string>
+    <string name="f_nav_about_version_1_0_7_05">• Fix UI glitches, add selection color change for fouls</string>
+    <string name="f_nav_about_version_1_0_7_06">• Have all actions show in the frame breakdown</string>
+
     <string name="f_nav_about_version_1_0_6">Version 1.0.6</string>
     <string name="f_nav_about_version_1_0_6_01">• Implement billing for in app purchases to enable financial support</string>
     <string name="f_nav_about_version_1_0_6_02">• Fix player switching glitch</string>

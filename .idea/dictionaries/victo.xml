@@ -6,6 +6,7 @@
       <w>autofill</w>
       <w>bload</w>
       <w>cdelete</w>
+      <w>clicklistener</w>
       <w>contentd</w>
       <w>coord</w>
       <w>foulattempt</w>
@@ -39,6 +40,7 @@
       <w>rerack</w>
       <w>respot</w>
       <w>respotblack</w>
+      <w>safemiss</w>
       <w>snackbar</w>
       <w>snackbars</w>
       <w>snookerboard</w>

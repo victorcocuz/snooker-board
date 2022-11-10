@@ -30,6 +30,7 @@
     <dimen name="padding_xsmall">4dp</dimen>
     <dimen name="padding_button_small">4dp</dimen>
     <dimen name="padding_shape">8dp</dimen>
+    <dimen name="padding_ball">8dp</dimen>
     <dimen name="padding_button">16dp</dimen>
     <dimen name="padding_medium">16dp</dimen>
 

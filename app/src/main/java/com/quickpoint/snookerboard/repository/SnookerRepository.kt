@@ -49,6 +49,9 @@ class SnookerRepository(database: SnookerDatabase) {
                 snookerDbDao.getMaxMatchPoints(playerId),
                 snookerDbDao.getSumOfSuccessShots(playerId),
                 snookerDbDao.getSumOfMissedShots(playerId),
+                snookerDbDao.getSumOfSafetySuccessShots(playerId),
+                snookerDbDao.getSumOfSafetyMissedShots(playerId),
+                snookerDbDao.getSumOfSnookers(playerId),
                 snookerDbDao.getSumOfFouls(playerId),
                 snookerDbDao.getMaxBreak(playerId)
             )

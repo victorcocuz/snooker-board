@@ -3,8 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="com.quickpoint.snookerboard.domain.DomainPot" />
+        <import type="com.quickpoint.snookerboard.domain.DomainBall"/>
+
         <import type="com.quickpoint.snookerboard.utils.MatchAction" />
+
         <import type="com.quickpoint.snookerboard.domain.PotAction" />
 
         <variable
@@ -14,6 +18,7 @@
         <variable
             name="varGameVm"
             type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
+
         <variable
             name="varDialogViewModel"
             type="com.quickpoint.snookerboard.DialogViewModel" />
@@ -25,114 +30,156 @@
         android:background="?attr/colorPrimaryVariant">
 
         <FrameLayout
-            android:id="@+id/game_btn_line_hor_one"
+            android:id="@+id/f_game_btn_line_hor_two"
             style="@style/LineHorizontalAccent"
             android:layout_width="0dp"
+            app:layout_constraintBottom_toTopOf="@id/f_game_btn_act_foul"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/game_btn_act_safe"
-            style="@style/ButtonStretched"
-            android:layout_width="0dp"
-            android:onClick="@{() -> varGameVm.handlePot(DomainPot.SAFE.INSTANCE)}"
-            android:text="@string/action_safe"
-            app:layout_constraintEnd_toStartOf="@+id/game_btn_line_vert_one"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/game_btn_line_hor_one"
-            app:setEnabled="@{!varGameVm.isUpdateInProgress}" />
-
-        <FrameLayout
-            android:id="@+id/game_btn_line_vert_one"
-            style="@style/LineVerticalAccent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
-            app:layout_constraintEnd_toStartOf="@+id/game_btn_act_miss"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_btn_act_safe"
-            app:layout_constraintTop_toTopOf="@+id/game_btn_act_safe" />
-
-        <TextView
-            android:id="@+id/game_btn_act_miss"
-            style="@style/ButtonStretched"
-            android:layout_width="0dp"
-            android:onClick="@{() -> varGameVm.handlePot(DomainPot.MISS.INSTANCE)}"
-            android:text="@string/action_miss"
-            app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
-            app:layout_constraintEnd_toStartOf="@+id/game_btn_line_vert_two"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_btn_line_vert_one"
-            app:layout_constraintTop_toTopOf="@+id/game_btn_act_safe"
-            app:setEnabled="@{!varGameVm.isUpdateInProgress}" />
-
-        <FrameLayout
-            android:id="@+id/game_btn_line_vert_two"
-            style="@style/LineVerticalAccent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
-            app:layout_constraintEnd_toStartOf="@+id/game_btn_act_foul"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_btn_act_miss"
-            app:layout_constraintTop_toTopOf="@+id/game_btn_act_safe" />
-
-
-        <TextView
-            android:id="@+id/game_btn_act_foul"
+            android:id="@+id/f_game_btn_act_foul"
             style="@style/ButtonStretched"
             android:layout_width="0dp"
             android:onClick="@{() -> varGameVm.handlePot(DomainPot.FOULATTEMPT.INSTANCE)}"
             android:text="@string/action_foul"
-            app:layout_constraintBottom_toBottomOf="@+id/game_btn_act_safe"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/game_btn_line_vert_two"
-            app:layout_constraintTop_toTopOf="@+id/game_btn_act_safe"
+            app:layout_constraintBottom_toTopOf="@id/f_game_btn_line_hor_one"
+            app:layout_constraintEnd_toStartOf="@id/f_game_btn_line_vert_one"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_percent="0.2"
             app:setEnabled="@{!varGameVm.isUpdateInProgress}" />
 
         <FrameLayout
-            android:id="@+id/game_btn_line_hor_two"
-            style="@style/LineHorizontalAccent"
-            android:layout_width="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/game_btn_act_safe" />
+            android:id="@+id/f_game_btn_line_vert_one"
+            style="@style/LineVerticalAccent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/f_game_btn_act_foul"
+            app:layout_constraintEnd_toStartOf="@id/f_game_btn_act_safe"
+            app:layout_constraintStart_toEndOf="@id/f_game_btn_act_foul"
+            app:layout_constraintTop_toTopOf="@+id/f_game_btn_act_foul" />
 
         <TextView
-            android:id="@+id/foul_action_free_ball"
+            android:id="@+id/f_game_btn_act_safe"
+            style="@style/ButtonStretched"
+            android:layout_width="0dp"
+            android:onClick="@{() -> varGameVm.handlePot(DomainPot.SAFE.INSTANCE)}"
+            android:text="@string/action_safe"
+            app:layout_constraintBottom_toBottomOf="@+id/f_game_btn_act_foul"
+            app:layout_constraintEnd_toStartOf="@id/f_game_btn_line_vert_two"
+            app:layout_constraintStart_toEndOf="@id/f_game_btn_line_vert_one"
+            app:layout_constraintTop_toTopOf="@+id/f_game_btn_act_foul"
+            app:layout_constraintWidth_percent="0.2"
+            app:setEnabled="@{!varGameVm.isUpdateInProgress}" />
+
+        <FrameLayout
+            android:id="@+id/f_game_btn_line_vert_two"
+            style="@style/LineVerticalAccent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/f_game_btn_act_foul"
+            app:layout_constraintEnd_toStartOf="@id/f_game_btn_act_safe_miss"
+            app:layout_constraintStart_toEndOf="@id/f_game_btn_act_safe"
+            app:layout_constraintTop_toTopOf="@+id/f_game_btn_act_foul" />
+
+        <TextView
+            android:id="@+id/f_game_btn_act_safe_miss"
+            style="@style/ButtonStretched"
+            android:layout_width="0dp"
+            android:onClick="@{() -> varGameVm.handlePot(DomainPot.SAFEMISS.INSTANCE)}"
+            android:text="@string/action_safe_miss"
+            app:layout_constraintBottom_toBottomOf="@+id/f_game_btn_act_foul"
+            app:layout_constraintEnd_toStartOf="@id/f_game_btn_line_vert_three"
+            app:layout_constraintStart_toEndOf="@id/f_game_btn_line_vert_two"
+            app:layout_constraintTop_toTopOf="@+id/f_game_btn_act_foul"
+            app:setEnabled="@{!varGameVm.isUpdateInProgress}" />
+
+        <FrameLayout
+            android:id="@+id/f_game_btn_line_vert_three"
+            style="@style/LineVerticalAccent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/f_game_btn_act_foul"
+            app:layout_constraintEnd_toStartOf="@id/f_game_btn_act_snooker"
+            app:layout_constraintStart_toEndOf="@id/f_game_btn_act_safe_miss"
+            app:layout_constraintTop_toTopOf="@+id/f_game_btn_act_foul" />
+
+        <TextView
+            android:id="@+id/f_game_btn_act_snooker"
+            style="@style/ButtonStretched"
+            android:layout_width="0dp"
+            android:onClick="@{() -> varGameVm.handlePot(DomainPot.SNOOKER.INSTANCE)}"
+            android:text="@string/action_snooker"
+            app:layout_constraintBottom_toBottomOf="@+id/f_game_btn_act_foul"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/f_game_btn_line_vert_three"
+            app:layout_constraintTop_toTopOf="@+id/f_game_btn_act_foul"
+            app:setEnabled="@{!varGameVm.isUpdateInProgress}" />
+
+        <FrameLayout
+            android:id="@+id/f_game_btn_line_hor_one"
+            style="@style/LineHorizontalAccent"
+            android:layout_width="0dp"
+            app:layout_constraintBottom_toTopOf="@id/f_game_balls_ll"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/f_game_foul_action_free_ball"
             style="@style/ButtonNarrow"
             android:layout_width="0dp"
             android:layout_marginStart="@dimen/margin_layout_offset"
-            android:layout_marginTop="@dimen/margin_header_below"
             android:layout_marginEnd="@dimen/margin_layout_offset_mid"
             android:onClick="@{() -> varGameVm.handlePot(DomainPot.FREETOGGLE.INSTANCE)}"
             android:text="@string/f_foul_action_free_ball"
+            app:layout_constraintBottom_toBottomOf="@id/f_game_balls_ll"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/game_btn_act_safe"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="@id/f_game_balls_ll"
             app:setFreeballVisible="@{varGameVm.freeballControls.visible}"
             app:setSelected="@{varGameVm.freeballControls.selected}" />
 
         <LinearLayout
-            android:id="@+id/frag_game_balls_ll"
-            android:layout_width="match_parent"
+            android:id="@+id/f_game_balls_ll"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/btn_balls_height"
             android:gravity="center"
-            android:orientation="vertical"
-            android:layout_margin="@dimen/margin_xxxsmall"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/game_btn_act_safe">
+            app:layout_constraintEnd_toStartOf="@id/f_game_balls_line_vert"
+            app:layout_constraintStart_toStartOf="parent">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/frag_game_balls_rv"
+                android:id="@+id/f_game_balls_rv"
                 android:layout_width="wrap_content"
-                android:layout_gravity="center"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 app:bindMatchBallsRv="@{varMatchVm.displayFrame.ballStack}" />
         </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/f_game_balls_line_vert"
+            style="@style/LineVerticalAccent"
+            android:layout_height="0dp"
+            android:layout_marginEnd="@dimen/padding_ball"
+            app:layout_constraintBottom_toBottomOf="@id/f_game_balls_ll"
+            app:layout_constraintEnd_toStartOf="@id/f_game_ball_miss"
+            app:layout_constraintTop_toTopOf="@+id/f_game_balls_ll" />
+
+        <FrameLayout
+            android:id="@+id/f_game_ball_miss"
+            android:layout_width="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/f_game_balls_ll"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/f_game_balls_ll"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/f_game_ball_miss_ball"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/ic_ball_miss"
+                android:contentDescription="@string/action_miss"
+                android:onClick="@{() -> varGameVm.handlePot(DomainPot.MISS.INSTANCE)}"
+                app:setEnabled="@{!varGameVm.isUpdateInProgress}" />
+        </FrameLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

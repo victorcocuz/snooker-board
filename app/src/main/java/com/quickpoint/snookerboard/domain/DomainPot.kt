@@ -4,8 +4,13 @@ import com.quickpoint.snookerboard.domain.DomainBall.*
 import com.quickpoint.snookerboard.domain.PotAction.*
 import com.quickpoint.snookerboard.domain.PotType.*
 
-// Classes that define all pot types and pot actions
-enum class PotType { TYPE_HIT, TYPE_FREE, TYPE_FREEAVAILABLE, TYPE_FREETOGGLE, TYPE_SAFE, TYPE_MISS, TYPE_FOUL, TYPE_REMOVERED, TYPE_ADDRED, TYPE_RESPOT_BLACK }
+// Classes and variables that define all pot types and pot actions
+enum class PotType { TYPE_HIT, TYPE_FOUL, TYPE_SNOOKER, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_MISS, TYPE_FREE, TYPE_FREEAVAILABLE, TYPE_FREETOGGLE, TYPE_REMOVERED, TYPE_ADDRED, TYPE_RESPOT_BLACK }
+val listOfExtraActions = listOf(TYPE_FOUL, TYPE_SNOOKER, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_MISS, TYPE_REMOVERED)
+val listOfPointGeneratingPotTypes = listOf(TYPE_HIT, TYPE_FOUL, TYPE_FREE, TYPE_ADDRED)
+val listOfBreakPotTypes = listOf(TYPE_HIT, TYPE_FOUL, TYPE_FREE, TYPE_ADDRED, TYPE_REMOVERED, TYPE_FOUL, TYPE_SNOOKER, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_MISS)
+val listOfHelperPotTypes = listOf(TYPE_FREEAVAILABLE, TYPE_FREETOGGLE, TYPE_RESPOT_BLACK)
+
 enum class PotAction { FIRST, CONTINUE, SWITCH }
 
 // All game logic is based on DOMAIN Pots. Every shot that happens is defined within the constraints below
@@ -16,8 +21,10 @@ sealed class DomainPot(
 ) {
     class HIT(ball: DomainBall) : DomainPot(ball, TYPE_HIT, CONTINUE) // Ball can vary
     class FOUL(ball: DomainBall, action: PotAction) : DomainPot(ball, TYPE_FOUL, action) // Ball and action can vary
-    object FOULATTEMPT : DomainPot(NOBALL(), TYPE_FOUL, CONTINUE)
-    object SAFE : DomainPot(NOBALL(), TYPE_SAFE, SWITCH) // Static action for a safe shot
+    object FOULATTEMPT : DomainPot(NOBALL(), TYPE_FOUL, CONTINUE) // Static action for a foul attempt - foul will only be validated if there are balls left on the table
+    object SNOOKER : DomainPot(NOBALL(), TYPE_SNOOKER, SWITCH) // Static action for a successful snooker shot
+    object SAFE : DomainPot(NOBALL(), TYPE_SAFE, SWITCH) // Static action for a safety shot
+    object SAFEMISS : DomainPot(NOBALL(), TYPE_SAFE_MISS, SWITCH) // Static action for a missed safety shot
     object MISS : DomainPot(NOBALL(), TYPE_MISS, SWITCH) // Static action for a missed shot
     object FREE : DomainPot(FREEBALL(), TYPE_FREE, CONTINUE) // Static action for potting a free ball
     object FREEAVAILABLE : DomainPot(FREEBALLAVAILABLE(), TYPE_FREEAVAILABLE, CONTINUE)

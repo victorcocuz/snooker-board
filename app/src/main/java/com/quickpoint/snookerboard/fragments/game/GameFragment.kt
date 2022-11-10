@@ -6,6 +6,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.children
+import androidx.core.view.setPadding
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.quickpoint.snookerboard.DialogViewModel
 import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
+import com.quickpoint.snookerboard.admob.AdMob
 import com.quickpoint.snookerboard.databinding.FragmentGameBinding
 import com.quickpoint.snookerboard.domain.DomainBall
 import com.quickpoint.snookerboard.domain.DomainFrame
@@ -38,6 +40,11 @@ class GameFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         postponeEnterTransition() // Wait for data to load before displaying fragment
+
+        // AdMob
+        val adMob = AdMob(this.requireContext())
+        adMob.loadInterstitialAd()
+        adMob.interstitialAdSetContentCallbacks()
 
         // Start new match or load existing match
         when (RULES.matchState) {
@@ -75,10 +82,10 @@ class GameFragment : Fragment() {
             fGameLayoutActionButtons.apply {
                 varGameVm = this@GameFragment.gameVm
                 varMatchVm = this@GameFragment.matchVm
-                fragGameBallsLl.layoutParams.height =
-                    requireContext().getFactoredDimen(BALL_HEIGHT_FACTOR_MATCH_ACTION) + resources.getDimension(R.dimen.margin_layout_offset)
+                fGameBallsLl.layoutParams.height =
+                    requireContext().getFactoredDimen(FACTOR_BALL_MATCH) + resources.getDimension(R.dimen.margin_layout_offset)
                         .toInt() * 2
-                fragGameBallsRv.apply {
+                fGameBallsRv.apply {
                     layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
                     itemAnimator = null
                     adapter = BallAdapter( // Create a ball adapter for the balls recycler view
@@ -86,6 +93,11 @@ class GameFragment : Fragment() {
                             requireActivity().invalidateOptionsMenu()
                             gameVm.handlePot(if (ball is DomainBall.FREEBALL) FREE else HIT(ball))
                         }, matchVm.displayFrame, BallAdapterType.MATCH)
+                }
+                fGameBallMiss.apply {
+                    layoutParams.width = context.getFactoredDimen(FACTOR_BALL_MATCH)
+                    layoutParams.height = context.getFactoredDimen(FACTOR_BALL_MATCH)
+                    setPadding(FACTOR_BALL_MATCH)
                 }
             }
         }
@@ -125,11 +137,13 @@ class GameFragment : Fragment() {
                     }
                     NAV_TO_POST_MATCH -> {
                         matchVm.updateState(POST_MATCH)
+                        adMob.showInterstitialAd()
                         navigate(GameFragmentDirections.postGameFrag())
                     }
                     MATCH_CANCEL_DIALOG -> navigate(GameFragmentDirections.genDialogFrag(CLOSE_DIALOG, IGNORE, MATCH_CANCEL))
                     MATCH_CANCEL -> {
                         matchVm.updateState(IDLE)
+                        adMob.showInterstitialAd()
                         navigate(GameFragmentDirections.playFrag())
                         matchVm.deleteMatchFromDb()
                     }
