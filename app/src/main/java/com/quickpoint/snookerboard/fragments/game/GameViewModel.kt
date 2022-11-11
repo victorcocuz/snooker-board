@@ -20,8 +20,8 @@ class GameViewModel : ViewModel() {
     private val _isUpdateInProgress = MutableLiveData(false)
     val isUpdateInProgress: LiveData<Boolean> = _isUpdateInProgress // Deactivate all buttons & options menu if frame is updating
 
-    private val _freeballControls = MutableLiveData(FREEBALLINFO)
-    val freeballControls: LiveData<FREEBALLINFO> = _freeballControls
+    private val _freeballInfo = MutableLiveData(FREEBALLINFO)
+    val freeballInfo: LiveData<FREEBALLINFO> = _freeballInfo
 
     private val _eventFrameAction = MutableLiveData<Event<MatchAction>>()
     val eventFrameAction: LiveData<Event<MatchAction>> = _eventFrameAction
@@ -32,7 +32,7 @@ class GameViewModel : ViewModel() {
     }
 
     private fun onEventFrameUpdated() {
-        _freeballControls.value = FREEBALLINFO
+        _freeballInfo.value = FREEBALLINFO
         _isUpdateInProgress.value = false
         assignFrameEvent(FRAME_UPDATED)
     }

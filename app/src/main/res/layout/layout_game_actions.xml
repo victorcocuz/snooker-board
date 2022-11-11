@@ -133,8 +133,8 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/f_game_balls_ll"
-            app:setFreeballVisible="@{varGameVm.freeballControls.visible}"
-            app:setSelected="@{varGameVm.freeballControls.selected}" />
+            app:setFreeballVisible="@{varGameVm.freeballInfo.visible}"
+            app:setSelected="@{varGameVm.freeballInfo.selected}" />
 
         <LinearLayout
             android:id="@+id/f_game_balls_ll"

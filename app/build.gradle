@@ -93,6 +93,7 @@ dependencies {
 
     // Test Implementations
     testImplementation "junit:junit:$version_junit"
+    testImplementation "com.google.truth:truth:$version_test_truth"
 
     // Android Test Implementations
     androidTestImplementation "androidx.test.ext:junit:$version_test_junit"
