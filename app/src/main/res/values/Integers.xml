@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="testing_mode">1</integer>
+    <integer name="testing_mode">0</integer>
     <integer name="vp_nav_icon">24</integer>
     <integer name="vp_ball">48</integer>
     <integer name="vp_launcher">108</integer>
