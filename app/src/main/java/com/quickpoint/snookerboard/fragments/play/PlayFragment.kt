@@ -13,10 +13,10 @@ import androidx.navigation.ui.NavigationUI
 import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentPlayBinding
-import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
-import com.quickpoint.snookerboard.domain.MatchState.*
 import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.*
+import com.quickpoint.snookerboard.utils.MatchRules.RULES
+import com.quickpoint.snookerboard.utils.MatchState.*
 import timber.log.Timber
 
 class PlayFragment : androidx.fragment.app.Fragment() {
@@ -28,20 +28,23 @@ class PlayFragment : androidx.fragment.app.Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        postponeEnterTransition() // Wait for data to load before displaying fragment
         hideKeyboard()
 
         // Check match state and navigate to the correct fragment when applicable
+        postponeEnterTransition() // Wait for data to load before displaying fragment
         matchVm.eventRules.observeOnce(viewLifecycleOwner) { rules ->
-            Timber.e("play state is ${RULES.matchState}")
+            Timber.i("ObservedOnce matchState: ${rules.matchState}")
             when (rules.matchState) {
                 IDLE -> {
                     RULES.resetRules()
-                    matchVm.transitionToFragment(this)
+                    matchVm.transitionToFragment(this, 0)
                 }
-                IN_PROGRESS -> navigate(PlayFragmentDirections.gameFrag())
-                POST_MATCH -> navigate(PlayFragmentDirections.postGameFrag())
-                else -> {}
+                IN_PROGRESS, POST_MATCH -> {
+                    startPostponedEnterTransition()
+                    view?.visibility = View.GONE
+                    navigate(if (rules.matchState == IN_PROGRESS) PlayFragmentDirections.gameFrag() else PlayFragmentDirections.postGameFrag())
+                }
+                else -> Timber.e("matchState should not be ${rules.matchState} at this point")
             }
         }
 

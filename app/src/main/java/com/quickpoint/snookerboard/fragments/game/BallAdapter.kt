@@ -76,6 +76,7 @@ class BallAdapter(
                     if (adapterType != BallAdapterType.BREAK) this.clickListener!!.onClick(ball!!)
                     if (adapterType == BallAdapterType.FOUL) adapter.setSingleSelection(adapterPosition)
                 }
+                this.ballAdapterType = adapterType
                 this.ballStackSize = frame?.value?.ballStack?.size ?: 0
                 this.clickListener = clickListener // binds the click listener to the view holder
                 executePendingBindings()

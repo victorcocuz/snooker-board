@@ -2,14 +2,14 @@ package com.quickpoint.snookerboard.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.quickpoint.snookerboard.domain.DomainPlayerScore
+import com.quickpoint.snookerboard.domain.DomainScore
 
 // Used to store score info in the Database
 @Entity(tableName = "match_score_table")
 data class DbScore(
-    @PrimaryKey(autoGenerate = true)
-    val scoreId: Int = 0,
-    val frameId: Int,
+    @PrimaryKey(autoGenerate = false)
+    val scoreId: Long,
+    val frameId: Long,
     val playerId: Int,
     val framePoints: Int,
     val matchPoints: Int,
@@ -22,45 +22,11 @@ data class DbScore(
     val highestBreak: Int
 )
 
-// CONVERTER method from list of DATABASE Score to a list of pairs of DOMAIN Player Scores
-fun List<DbScore>.asDomainFrameScoreList(): ArrayList<Pair<DomainPlayerScore, DomainPlayerScore>> {
-    val frameScoreList = ArrayList<Pair<DomainPlayerScore, DomainPlayerScore>>()
-    for (i in this.indices step 2) {
-        val frameScoreA = DomainPlayerScore(
-            frameId = this[i].frameId,
-            playerId = this[i].playerId,
-            framePoints = this[i].framePoints,
-            matchPoints = this[i].matchPoints,
-            successShots = this[i].successShots,
-            missedShots = this[i].missedShots,
-            safetySuccessShots = this[i].safetySuccessShots,
-            safetyMissedShots = this[i].safetyMissedShots,
-            snookers = this[i].snookers,
-            fouls = this[i].fouls,
-            highestBreak = this[i].highestBreak,
-        )
-        val frameScoreB = DomainPlayerScore(
-            frameId = this[i + 1].frameId,
-            playerId = this[i + 1].playerId,
-            framePoints = this[i + 1].framePoints,
-            matchPoints = this[i + 1].matchPoints,
-            successShots = this[i + 1].successShots,
-            missedShots = this[i + 1].missedShots,
-            safetySuccessShots = this[i].safetySuccessShots,
-            safetyMissedShots = this[i].safetyMissedShots,
-            snookers = this[i].snookers,
-            fouls = this[i + 1].fouls,
-            highestBreak = this[i + 1].highestBreak,
-        )
-        frameScoreList.add(Pair(frameScoreA, frameScoreB))
-    }
-    return frameScoreList
-}
-
 // CONVERTER method from list of DATABASE Break to list of DOMAIN Player Score
-fun List<DbScore>.asDomainPlayerScoreList(): MutableList<DomainPlayerScore> {
+fun List<DbScore>.asDomainScoreList(): MutableList<DomainScore> {
     return map {
-        DomainPlayerScore(
+        DomainScore(
+            scoreId = it.scoreId,
             frameId = it.frameId,
             playerId = it.playerId,
             framePoints = it.framePoints,
@@ -74,4 +40,14 @@ fun List<DbScore>.asDomainPlayerScoreList(): MutableList<DomainPlayerScore> {
             highestBreak = it.highestBreak,
         )
     }.toMutableList()
+}
+
+// CONVERTER method from list of DATABASE Score to a list of pairs of DOMAIN Player Scores
+fun List<DbScore>.asDomainFrameScoreList(): ArrayList<Pair<DomainScore, DomainScore>> {
+    val domainScoreList = this.asDomainScoreList()
+    val frameScoreList = ArrayList<Pair<DomainScore, DomainScore>>()
+    for (i in domainScoreList.indices step 2) {
+        frameScoreList.add(Pair(domainScoreList[i], domainScoreList[i + 1]))
+    }
+    return frameScoreList
 }

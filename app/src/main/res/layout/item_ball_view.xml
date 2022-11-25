@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="ballStackSize"
             type="int" />
@@ -11,6 +10,10 @@
         <variable
             name="ball"
             type="com.quickpoint.snookerboard.domain.DomainBall" />
+
+        <variable
+            name="ballAdapterType"
+            type="com.quickpoint.snookerboard.utils.BallAdapterType" />
 
         <variable
             name="clickListener"
@@ -28,7 +31,8 @@
             android:layout_height="match_parent"
             android:contentDescription="@string/item_ball_view_ball"
             android:elevation="@dimen/toolbar_elevation"
-            app:ballImage="@{ball}" />
+            ballAdapterType="@{ballAdapterType}"
+            app:setBallImage="@{ball}" />
 
         <TextView
             android:id="@+id/item_button_points"

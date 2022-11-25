@@ -3,14 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
-        <import type="com.quickpoint.snookerboard.domain.DomainPot" />
-        <import type="com.quickpoint.snookerboard.domain.DomainBall"/>
-
-        <import type="com.quickpoint.snookerboard.utils.MatchAction" />
-
-        <import type="com.quickpoint.snookerboard.domain.PotAction" />
-
+        <import type="com.quickpoint.snookerboard.domain.PotType" />
         <variable
             name="varMatchVm"
             type="com.quickpoint.snookerboard.MatchViewModel" />
@@ -18,10 +11,6 @@
         <variable
             name="varGameVm"
             type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
-
-        <variable
-            name="varDialogViewModel"
-            type="com.quickpoint.snookerboard.DialogViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -41,13 +30,12 @@
             android:id="@+id/f_game_btn_act_foul"
             style="@style/ButtonStretched"
             android:layout_width="0dp"
-            android:onClick="@{() -> varGameVm.handlePot(DomainPot.FOULATTEMPT.INSTANCE)}"
+            android:onClick="@{() -> varGameVm.assignPot(PotType.TYPE_FOUL_ATTEMPT)}"
             android:text="@string/action_foul"
             app:layout_constraintBottom_toTopOf="@id/f_game_btn_line_hor_one"
             app:layout_constraintEnd_toStartOf="@id/f_game_btn_line_vert_one"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintWidth_percent="0.2"
-            app:setEnabled="@{!varGameVm.isUpdateInProgress}" />
+            app:layout_constraintWidth_percent="0.2" />
 
         <FrameLayout
             android:id="@+id/f_game_btn_line_vert_one"
@@ -62,14 +50,13 @@
             android:id="@+id/f_game_btn_act_safe"
             style="@style/ButtonStretched"
             android:layout_width="0dp"
-            android:onClick="@{() -> varGameVm.handlePot(DomainPot.SAFE.INSTANCE)}"
+            android:onClick="@{() -> varGameVm.assignPot(PotType.TYPE_SAFE)}"
             android:text="@string/action_safe"
             app:layout_constraintBottom_toBottomOf="@+id/f_game_btn_act_foul"
             app:layout_constraintEnd_toStartOf="@id/f_game_btn_line_vert_two"
             app:layout_constraintStart_toEndOf="@id/f_game_btn_line_vert_one"
             app:layout_constraintTop_toTopOf="@+id/f_game_btn_act_foul"
-            app:layout_constraintWidth_percent="0.2"
-            app:setEnabled="@{!varGameVm.isUpdateInProgress}" />
+            app:layout_constraintWidth_percent="0.2" />
 
         <FrameLayout
             android:id="@+id/f_game_btn_line_vert_two"
@@ -84,13 +71,12 @@
             android:id="@+id/f_game_btn_act_safe_miss"
             style="@style/ButtonStretched"
             android:layout_width="0dp"
-            android:onClick="@{() -> varGameVm.handlePot(DomainPot.SAFEMISS.INSTANCE)}"
+            android:onClick="@{() -> varGameVm.assignPot(PotType.TYPE_SAFE_MISS)}"
             android:text="@string/action_safe_miss"
             app:layout_constraintBottom_toBottomOf="@+id/f_game_btn_act_foul"
             app:layout_constraintEnd_toStartOf="@id/f_game_btn_line_vert_three"
             app:layout_constraintStart_toEndOf="@id/f_game_btn_line_vert_two"
-            app:layout_constraintTop_toTopOf="@+id/f_game_btn_act_foul"
-            app:setEnabled="@{!varGameVm.isUpdateInProgress}" />
+            app:layout_constraintTop_toTopOf="@+id/f_game_btn_act_foul"/>
 
         <FrameLayout
             android:id="@+id/f_game_btn_line_vert_three"
@@ -105,13 +91,12 @@
             android:id="@+id/f_game_btn_act_snooker"
             style="@style/ButtonStretched"
             android:layout_width="0dp"
-            android:onClick="@{() -> varGameVm.handlePot(DomainPot.SNOOKER.INSTANCE)}"
+            android:onClick="@{() -> varGameVm.assignPot(PotType.TYPE_SNOOKER)}"
             android:text="@string/action_snooker"
             app:layout_constraintBottom_toBottomOf="@+id/f_game_btn_act_foul"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/f_game_btn_line_vert_three"
-            app:layout_constraintTop_toTopOf="@+id/f_game_btn_act_foul"
-            app:setEnabled="@{!varGameVm.isUpdateInProgress}" />
+            app:layout_constraintTop_toTopOf="@+id/f_game_btn_act_foul" />
 
         <FrameLayout
             android:id="@+id/f_game_btn_line_hor_one"
@@ -127,7 +112,7 @@
             android:layout_width="0dp"
             android:layout_marginStart="@dimen/margin_layout_offset"
             android:layout_marginEnd="@dimen/margin_layout_offset_mid"
-            android:onClick="@{() -> varGameVm.handlePot(DomainPot.FREETOGGLE.INSTANCE)}"
+            android:onClick="@{() -> varGameVm.assignPot(PotType.TYPE_FREE_TOGGLE)}"
             android:text="@string/f_foul_action_free_ball"
             app:layout_constraintBottom_toBottomOf="@id/f_game_balls_ll"
             app:layout_constraintHorizontal_bias="0.5"
@@ -177,8 +162,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/ic_ball_miss"
                 android:contentDescription="@string/action_miss"
-                android:onClick="@{() -> varGameVm.handlePot(DomainPot.MISS.INSTANCE)}"
-                app:setEnabled="@{!varGameVm.isUpdateInProgress}" />
+                android:onClick="@{() -> varGameVm.assignPot(PotType.TYPE_MISS)}" />
         </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

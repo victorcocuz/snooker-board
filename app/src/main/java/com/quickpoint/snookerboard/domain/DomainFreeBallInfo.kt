@@ -40,10 +40,10 @@ sealed class DomainFreeBallInfo(
 
     fun handlePotFreeballInfo(pot: DomainPot) { // Control freeball visibility and selection
         when (pot.potType) {
-            TYPE_FREEAVAILABLE -> toggleVisible()
-            TYPE_FREETOGGLE -> toggleSelected()
-            TYPE_HIT, TYPE_FREE, TYPE_MISS, TYPE_SAFE, TYPE_FOUL -> resetFreeball()
-            else -> {}
+            TYPE_FREE_AVAILABLE -> toggleVisible()
+            TYPE_FREE_TOGGLE -> toggleSelected()
+            TYPE_HIT, TYPE_FREE, TYPE_MISS, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_SNOOKER, TYPE_FOUL -> resetFreeball()
+            TYPE_ADDRED, TYPE_REMOVE_RED, TYPE_REMOVE_COLOR, TYPE_RESPOT_BLACK, TYPE_FOUL_ATTEMPT -> {}
         }
     }
 
@@ -53,17 +53,17 @@ sealed class DomainFreeBallInfo(
                 toggleVisible()
                 toggleSelected()
             }
-            TYPE_SAFE, TYPE_MISS, TYPE_FOUL -> when (lastPotType) {
-                TYPE_FREEAVAILABLE -> toggleVisible()
-                TYPE_FREETOGGLE -> {
+            TYPE_SAFE, TYPE_MISS, TYPE_SAFE_MISS, TYPE_SNOOKER, TYPE_FOUL -> when (lastPotType) {
+                TYPE_FREE_AVAILABLE -> toggleVisible()
+                TYPE_FREE_TOGGLE -> {
                     toggleVisible()
                     toggleSelected()
                 }
                 else -> setInvisible()
             }
-            TYPE_FREETOGGLE -> toggleSelected()
-            TYPE_FREEAVAILABLE -> resetFreeball()
-            else -> {}
+            TYPE_FREE_TOGGLE -> toggleSelected()
+            TYPE_FREE_AVAILABLE -> resetFreeball()
+            TYPE_HIT, TYPE_ADDRED, TYPE_REMOVE_RED, TYPE_REMOVE_COLOR, TYPE_RESPOT_BLACK, TYPE_FOUL_ATTEMPT -> {}
         }
     }
 }

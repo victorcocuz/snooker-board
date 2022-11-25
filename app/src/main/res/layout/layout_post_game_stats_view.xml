@@ -7,10 +7,10 @@
         <import type="com.quickpoint.snookerboard.utils.StatisticsType" />
         <variable
             name="frameScoreA"
-            type="com.quickpoint.snookerboard.domain.DomainPlayerScore" />
+            type="com.quickpoint.snookerboard.domain.DomainScore" />
         <variable
             name="frameScoreB"
-            type="com.quickpoint.snookerboard.domain.DomainPlayerScore" />
+            type="com.quickpoint.snookerboard.domain.DomainScore" />
         <variable
             name="varBgType"
             type="int"/>

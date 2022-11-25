@@ -19,15 +19,27 @@
         <action
             android:id="@+id/game_frag"
             app:destination="@id/gameFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@id/playFragment"
-            app:popUpToInclusive="true" />
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:launchSingleTop="false"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
+            app:popUpTo="@id/playFragment" />
         <action
             android:id="@+id/gen_dialog_frag"
-            app:destination="@id/gameGenericDialogFragment" />
+            app:destination="@id/gameGenericDialogFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/post_game_frag"
-            app:destination="@id/postGameFragment" />
+            app:destination="@id/postGameFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
@@ -51,19 +63,35 @@
         android:label="GameFragment" >
         <action
             android:id="@+id/gen_dialog_frag"
-            app:destination="@id/gameGenericDialogFragment" />
+            app:destination="@id/gameGenericDialogFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
         <action
             android:id="@+id/foul_dialog_frag"
-            app:destination="@id/gameFoulDialogFragment" />
+            app:destination="@id/gameFoulDialogFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
         <action
             android:id="@+id/post_game_frag"
             app:destination="@id/postGameFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
             app:launchSingleTop="true"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
             app:popUpTo="@id/playFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/play_frag"
             app:destination="@id/playFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
             app:popUpTo="@id/gameFragment"
             app:popUpToInclusive="true" />
     </fragment>
@@ -74,6 +102,10 @@
         <action
             android:id="@+id/play_frag"
             app:destination="@id/playFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
             app:popUpTo="@id/postGameFragment"
             app:popUpToInclusive="true" />
     </fragment>
@@ -90,6 +122,9 @@
         <argument
             android:name="matchActionC"
             app:argType="com.quickpoint.snookerboard.utils.MatchAction" />
+        <action
+            android:id="@+id/action_gameGenericDialogFragment_to_gameFragment"
+            app:destination="@id/gameFragment" />
     </dialog>
     <dialog
         android:id="@+id/gameFoulDialogFragment"

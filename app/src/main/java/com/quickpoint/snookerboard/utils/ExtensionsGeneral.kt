@@ -7,15 +7,19 @@ import android.content.ContextWrapper
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
+import android.graphics.Rect
+import android.os.Environment
 import android.text.SpannableString
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ForegroundColorSpan
 import android.text.style.URLSpan
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
@@ -25,16 +29,24 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.quickpoint.snookerboard.R
+import timber.log.Timber
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+
 
 // General
 fun Fragment.navigate(directions: NavDirections) = findNavController().navigate(directions)
 fun Fragment.toast(message: CharSequence) = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
 fun Activity.toast(message: CharSequence) = Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
 fun Application.toast(message: CharSequence) = Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
-fun View.snackbar(message: CharSequence) = Snackbar.make(this, message, Snackbar.LENGTH_SHORT).show()
+fun View.snackbar(message: CharSequence) = Snackbar.make(this, message, Snackbar.LENGTH_LONG).show()
+
+fun Fragment.isTestingMode() = resources.getInteger(R.integer.testing_mode) == 1
+fun Context.isTestingMode() = resources.getInteger(R.integer.testing_mode) == 1
 
 fun MenuItem.setItemActive(isEnabled: Boolean) {
-//    this.isEnabled = isEnabled
     icon?.alpha = if (isEnabled) 255 else 120
     val s = SpannableString(title)
     s.setSpan(
@@ -100,21 +112,32 @@ fun TextView.setAsLink() {
     text = spannable
 }
 
-// Other
+// Context
 fun Context.lifecycleOwner(): LifecycleOwner? {
     var curContext = this
     var maxDepth = 20
     while (maxDepth-- > 0 && curContext !is LifecycleOwner) {
         curContext = (curContext as ContextWrapper).baseContext
     }
-    return if (curContext is LifecycleOwner) {
-        curContext as LifecycleOwner
-    } else {
-        null
-    }
+    return if (curContext is LifecycleOwner) curContext
+    else null
 }
 
 tailrec fun Context.activity(): Activity? = when (this) {
     is Activity -> this
     else -> (this as? ContextWrapper)?.baseContext?.activity()
+}
+
+fun View.removeFocusAndHideKeyboard(context: Context, event: MotionEvent) {
+    if (event.action == MotionEvent.ACTION_DOWN) {
+        if (this is EditText) {
+            val outRect = Rect()
+            getGlobalVisibleRect(outRect)
+            if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                clearFocus()
+                val imm: InputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(getWindowToken(), 0)
+            }
+        }
+    }
 }

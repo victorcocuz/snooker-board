@@ -53,6 +53,16 @@
     <string name="f_nav_about_version_1_0_x_03">• </string>
     <string name="f_nav_about_version_1_0_x_04">• </string>
 
+    <string name="f_nav_about_version_1_0_8">Version 1.0.8</string>
+    <string name="f_nav_about_version_1_0_8_01">• Added new features: Remove color, Safe miss and Snooker</string>
+    <string name="f_nav_about_version_1_0_8_02">• Implemented tests to check game logic</string>
+    <string name="f_nav_about_version_1_0_8_03">• Fixed UI and logic glitches: score bar, dialogs, ball view and others</string>
+    <string name="f_nav_about_version_1_0_8_04">• Added a log button to submit issues by e-mail</string>
+    <string name="f_nav_about_version_1_0_8_05">• Refactored database to save each shot in real time</string>
+    <string name="f_nav_about_version_1_0_8_06">• Refactored game classes and util classes</string>
+    <string name="f_nav_about_version_1_0_8_07">• Added fragment animation to fade in and out on transition</string>
+    <string name="f_nav_about_version_1_0_8_08">• Removed legacy unused fragments</string>
+
     <string name="f_nav_about_version_1_0_7">Version 1.0.7</string>
     <string name="f_nav_about_version_1_0_7_01">• Add interstitial ads</string>
     <string name="f_nav_about_version_1_0_7_02">• Fix app support price issues</string>

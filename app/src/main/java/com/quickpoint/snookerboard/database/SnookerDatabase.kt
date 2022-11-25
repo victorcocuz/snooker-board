@@ -11,8 +11,9 @@ import androidx.room.RoomDatabase
         DbBreak::class,
         DbPot::class,
         DbBall::class,
+        DbActionLog::class,
         DbFrame::class],
-    version = 17,
+    version = 22,
     exportSchema = false
 )
 

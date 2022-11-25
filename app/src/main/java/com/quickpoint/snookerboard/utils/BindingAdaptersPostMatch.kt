@@ -5,22 +5,24 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.domain.DomainPlayerScore
+import com.quickpoint.snookerboard.domain.DomainScore
+import com.quickpoint.snookerboard.utils.StatisticsType.*
+import timber.log.Timber
 import java.text.DecimalFormat
 
 // Statistics Adapters
 @BindingAdapter("setFrameScorePercentage")
-fun TextView.setFrameScorePercentage(frameScore: DomainPlayerScore?) = frameScore?.apply {
+fun TextView.setFrameScorePercentage(frameScore: DomainScore?) = frameScore?.apply {
     val df = DecimalFormat("##%")
     text = when ((successShots + missedShots)) {
         in (1..10000) -> df.format((successShots.toDouble() / (successShots.toDouble() + missedShots.toDouble())))
-        -1 -> context.getString(R.string.f_statistics_header_percentage)
+        -2 -> context.getString(R.string.f_statistics_header_percentage)
         else -> "N/A"
     }
 }
 
 @BindingAdapter("setFrameSafetyPercentage")
-fun TextView.setFrameScoreSafetyPercentage(frameScore: DomainPlayerScore?) = frameScore?.apply {
+fun TextView.setFrameSafetyPercentage(frameScore: DomainScore?) = frameScore?.apply {
     val df = DecimalFormat("##%")
     text = when ((safetySuccessShots + safetyMissedShots)) {
         in (1..10000) -> df.format((safetySuccessShots.toDouble() / (safetySuccessShots.toDouble() + safetyMissedShots.toDouble())))
@@ -41,9 +43,9 @@ fun TextView.setMatchPoints(matchPointsPlayerA: Int, matchPointsPlayerB: Int) {
 fun TextView.setGameStatsValue(type: StatisticsType, value: Int) {
     text = when (value) {
         -1 -> when (type) {
-            StatisticsType.FRAME_ID -> context.getString(R.string.f_statistics_header_frame_id)
-            StatisticsType.HIGHEST_BREAK -> context.getString(R.string.f_statistics_header_break)
-            StatisticsType.FRAME_POINTS -> context.getString(R.string.f_statistics_header_points)
+            HIGHEST_BREAK -> context.getString(R.string.f_statistics_header_break)
+            FRAME_ID -> context.getString(R.string.f_statistics_header_frame_id)
+            FRAME_POINTS -> context.getString(R.string.f_statistics_header_points)
         }
         -2 -> context.getString(R.string.f_statistics_footer_total)
         else -> value.toString()

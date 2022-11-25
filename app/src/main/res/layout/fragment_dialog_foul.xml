@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <import type="com.quickpoint.snookerboard.domain.DomainScoreKt"/>
+        <import type="com.quickpoint.snookerboard.domain.DomainBallKt" />
         <import type="com.quickpoint.snookerboard.utils.MatchAction" />
-
         <import type="com.quickpoint.snookerboard.domain.PotAction" />
-
         <variable
             name="varDialogViewModel"
             type="com.quickpoint.snookerboard.DialogViewModel" />
@@ -117,7 +116,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/foul_action_continue"
-            app:setEnabled="@{varMatchViewModel.displayFrame.getFrameScoreRemaining() > varMatchViewModel.displayFrame.getFrameScoreDiff()}"
+            app:setEnabled="@{varMatchViewModel.displayFrame.isFoulAndAMiss()}"
             app:setSelected="@{varDialogViewModel.actionClicked == PotAction.CONTINUE}" />
 
         <FrameLayout

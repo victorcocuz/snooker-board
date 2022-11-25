@@ -1,0 +1,24 @@
+[
+  {
+    "ballPoints": 1,
+    "ballStackLast": "TYPE_COLOR",
+    "ballType": "TYPE_RED",
+    "breakCount": 1,
+    "description": "handlePot()",
+    "frameCount": 1,
+    "player": 1,
+    "potAction": "CONTINUE",
+    "potType": "TYPE_HIT"
+  },
+  {
+    "ballPoints": 5,
+    "ballStackLast": "TYPE_RED",
+    "ballType": "TYPE_BLUE",
+    "breakCount": 1,
+    "description": "handlePot()",
+    "frameCount": 1,
+    "player": 1,
+    "potAction": "CONTINUE",
+    "potType": "TYPE_HIT"
+  }
+]

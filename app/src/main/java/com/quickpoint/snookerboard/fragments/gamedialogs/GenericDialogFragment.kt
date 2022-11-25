@@ -14,8 +14,8 @@ import com.quickpoint.snookerboard.databinding.FragmentDialogGenBinding
 import com.quickpoint.snookerboard.utils.EventObserver
 import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.MatchAction.*
+import com.quickpoint.snookerboard.utils.listOfMatchActionsUncancelable
 import com.quickpoint.snookerboard.utils.setLayoutSizeByFactor
-
 
 
 class GenericDialogFragment : DialogFragment() {
@@ -30,7 +30,7 @@ class GenericDialogFragment : DialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         val binding: FragmentDialogGenBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_dialog_gen, container, false)
@@ -44,7 +44,7 @@ class GenericDialogFragment : DialogFragment() {
                 varDialogMatchActionA = matchActionA
                 varDialogMatchActionB = if (matchActionC == MATCH_TO_END) MATCH_ENDED_DISCARD_FRAME else CLOSE_DIALOG
                 varDialogMatchActionC = matchActionC
-                if (varDialogMatchActionC in listOf(MATCH_ENDED, FRAME_ENDED, FRAME_RESPOT_BLACK_DIALOG)) {
+                if (varDialogMatchActionC in listOfMatchActionsUncancelable) {
                     this@GenericDialogFragment.isCancelable = false // An action has to be taken if game or match are ended
                 }
             }
@@ -52,6 +52,7 @@ class GenericDialogFragment : DialogFragment() {
 
         // Observers
         dialogVm.eventDialogAction.observe(viewLifecycleOwner, EventObserver {
+//            setNavigationResult("matchAction", it)
             dismiss() // Close dialog once a match action as been clicked on
             matchAction = it // Save the recorded match action to be passed on in onDestroy
         })
@@ -60,7 +61,7 @@ class GenericDialogFragment : DialogFragment() {
 
     override fun onDestroy() { // Pass match action to view model
         super.onDestroy()
-        if (this::matchAction.isInitialized) matchVm.assignEventMatchAction(matchAction)
+        if (this::matchAction.isInitialized) matchVm.onEventMatchAction(matchAction)
     }
 }
 

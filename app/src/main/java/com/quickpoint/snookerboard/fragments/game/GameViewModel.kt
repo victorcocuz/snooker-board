@@ -4,130 +4,143 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.quickpoint.snookerboard.domain.*
+import com.quickpoint.snookerboard.domain.DomainBall.FREEBALL
+import com.quickpoint.snookerboard.domain.DomainBall.NOBALL
 import com.quickpoint.snookerboard.domain.DomainFreeBallInfo.FREEBALLINFO
-import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
-import com.quickpoint.snookerboard.domain.DomainPot.*
-import com.quickpoint.snookerboard.domain.MatchState.*
+import com.quickpoint.snookerboard.domain.DomainPot.FOULATTEMPT
+import com.quickpoint.snookerboard.domain.DomainPot.FREE
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.utils.Event
 import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.MatchAction.*
+import com.quickpoint.snookerboard.utils.MatchRules.RULES
+import com.quickpoint.snookerboard.utils.ValueKeeperLiveData
 import timber.log.Timber
 
 class GameViewModel : ViewModel() {
 
-    // Observables
-    private val _isUpdateInProgress = MutableLiveData(false)
-    val isUpdateInProgress: LiveData<Boolean> = _isUpdateInProgress // Deactivate all buttons & options menu if frame is updating
+    // Variables
+    var score: MutableList<DomainScore> = mutableListOf()
+    var ballStack: MutableList<DomainBall> = mutableListOf()
+    var frameStack: MutableList<DomainBreak> = mutableListOf()
+    var actionLogs: MutableList<DomainActionLog> = mutableListOf()
 
+    init {
+        Timber.e("start game view model")
+    }
+
+    // Observables
     private val _freeballInfo = MutableLiveData(FREEBALLINFO)
     val freeballInfo: LiveData<FREEBALLINFO> = _freeballInfo
 
-    private val _eventFrameAction = MutableLiveData<Event<MatchAction>>()
-    val eventFrameAction: LiveData<Event<MatchAction>> = _eventFrameAction
-
-    private fun assignFrameEvent(matchAction: MatchAction): Boolean {
-        _eventFrameAction.value = Event(matchAction)
-        return true
+    private val _eventFrameAction = ValueKeeperLiveData<Event<MatchAction?>>()
+    val eventFrameAction: ValueKeeperLiveData<Event<MatchAction?>> = _eventFrameAction
+    fun onEventFrameAction(matchAction: MatchAction?): Boolean {
+        _eventFrameAction.postValue(Event(matchAction))
+        return matchAction != null
     }
 
-    private fun onEventFrameUpdated() {
+    private val _isUpdateInProgress = MutableLiveData(false)
+    val isUpdateInProgress: LiveData<Boolean> = _isUpdateInProgress // Deactivate all buttons & options menu if frame is updating
+    private fun onEventFrameUpdated(actionLog: DomainActionLog) {
         _freeballInfo.value = FREEBALLINFO
-        _isUpdateInProgress.value = false
-        assignFrameEvent(FRAME_UPDATED)
+        actionLogs.add(actionLog)
+        onEventFrameAction(FRAME_UPDATED)
     }
-
-    // Variables
-    var score: CurrentScore = CurrentScore.SCORE01
-    var ballStack: MutableList<DomainBall> = mutableListOf()
-    var frameStack: MutableList<DomainBreak> = mutableListOf()
 
     // Match actions
-    fun loadFrame(frame: DomainFrame?) = frame?.let { // Will load latest frame once observed from play fragment
-        Timber.i("loadFrame(): ${frame.getTextInfo()}")
-        score = it.frameScore.asCurrentScore() ?: score
+    fun loadMatch(frame: DomainFrame?) = frame?.let { // Will load latest frame once observed from play fragment
+        score = it.score
         ballStack = it.ballStack
         frameStack = it.frameStack
-        onEventFrameUpdated()
+        Timber.i("loadMatch(): ${it.getTextInfo()}")
+        onEventFrameAction(TRANSITION_TO_FRAGMENT)
     }
 
-    fun resetMatch(matchAction: MatchAction) { // When starting new match, cancelling or ending an existing match
-        Timber.i("resetMatch()")
-        FREEBALLINFO.resetFreeball()
+    fun resetMatch() { // When starting new match, cancelling or ending an existing match
         score.resetMatch()
-        resetFrame(matchAction)
+        resetFrame(MATCH_START_NEW)
+        Timber.i("resetMatch()")
+        onEventFrameAction(TRANSITION_TO_FRAGMENT)
     }
 
-    fun resetFrame(matchAction: MatchAction) { // Reset all frame values on match end if chosen to discard current frame, when resetting match , when starting a new frame or on rerack action from the options menu
+    fun resetFrame(matchAction: MatchAction) { // Reset all frame values on match reset, frame rerack and frame start new
+        FREEBALLINFO.resetFreeball()
         RULES.resetFrameAndGetFirstPlayer(matchAction)
-        score = score.getCrtPlayerFromRules()
-        score.resetFrame()
+        score.resetFrame(matchAction)
         ballStack.resetBalls()
         frameStack.clear()
-        Timber.i("resetFrame() frameId: ${RULES.frameCount}")
-        onEventFrameUpdated()
+        onEventFrameUpdated(DomainActionLog("resetFrame()"))
     }
 
-    fun endFrame() { // Update frame data in match view model
-        Timber.i("endFrame()")
+    fun endFrame(matchAction: MatchAction) { // Update frame data in match view model
         score.addMatchPointAndAssignFrameId()
-        onEventFrameUpdated()
+        onEventFrameUpdated(DomainActionLog("endFrame()"))
+        if (matchAction in listOf(FRAME_TO_END, FRAME_ENDED)) onEventFrameAction(FRAME_START_NEW)
+        if (matchAction in listOf(MATCH_TO_END, MATCH_ENDED)) onEventFrameAction(NAV_TO_POST_MATCH)
     }
 
     // Handle Pot
-    fun handlePot(pot: DomainPot) {
-        if (handleExceptionsBeforePot(pot)) return
-        computePot(pot)
-        handleExceptionsAfterPot(pot)
+    @JvmOverloads
+    fun assignPot(potType: PotType?, ball: DomainBall = NOBALL(), action: PotAction = PotAction.CONTINUE) {
+        if (isUpdateInProgress.value == false ) {
+            _isUpdateInProgress.value = true
+            if (potType == null) handleUndo()
+            else {
+                val pot = potType.getPotFromType(ball, action)
+                if (handlePotExceptionsBefore(pot)) {
+                    _isUpdateInProgress.value = false
+                    return
+                }
+                handlePot(if (pot.ball is FREEBALL) FREE(ball = FREEBALL(points = pot.ball.points)) else pot)
+                handlePotExceptionsPost(pot)
+            }
+            _isUpdateInProgress.value = false
+        }
     }
 
-    private fun computePot(pot: DomainPot) {
-        _isUpdateInProgress.value = true
+    private fun handlePot(pot: DomainPot) {
+        pot.potId = RULES.assignUniqueId()
         FREEBALLINFO.handlePotFreeballInfo(pot)
         ballStack.handlePotBallStack(pot.potType)
-        frameStack.handlePot(pot)
-        score.apply {
-            calculatePoints(pot, 1, ballStack.last())
-            highestBreak = frameStack.findMaxBreak()
-        }
-        Timber.i("handlePot: ${pot.potType}, ball: ${pot.ball.ballType}, player: ${score.getPlayerAsInt()}, breakCount: ${frameStack.size}, ballStackLast: ${ballStack.lastOrNull()?.ballType}")
+        frameStack.assignPot(pot)
+        score.calculatePoints(pot, 1, ballStack.foulValue(), frameStack)
+        val actionLog = pot.getActionLog("handlePot()", ballStack.lastOrNull()?.ballType, frameStack.size)
         RULES.setNextPlayerFromPotAction(pot.potAction)
-        score = score.getCrtPlayerFromRules()
-        onEventFrameUpdated()
+        onEventFrameUpdated(actionLog)
     }
 
-    private fun handleExceptionsBeforePot(pot: DomainPot): Boolean = when {
-        ballStack.isLastBall() && (pot.potType in listOf(TYPE_HIT, TYPE_MISS, TYPE_SAFE, TYPE_FOUL)) -> assignFrameEvent(SNACKBAR_NO_BALL)
-        pot == FOULATTEMPT -> assignFrameEvent(FOUL_DIALOG)
-        else -> false
-    }
+    private fun handlePotExceptionsBefore(pot: DomainPot): Boolean = onEventFrameAction(when {
+        ballStack.isLastBall() && (pot.potType in listOfPotTypesForNoBallSnackbar) -> SNACKBAR_NO_BALL
+        pot is FOULATTEMPT -> FOUL_DIALOG
+        else -> null
+    })
 
-    @Suppress("IMPLICIT_CAST_TO_ANY")
-    private fun handleExceptionsAfterPot(pot: DomainPot) = when {
-        pot.potType == TYPE_HIT && ballStack.isLastBall() -> assignFrameEvent(if (score.isFrameEqual()) FRAME_RESPOT_BLACK_DIALOG else FRAME_ENDING_DIALOG)
-        pot.isFreeballAvailable() -> handlePot(FREEAVAILABLE)
-        else -> {}
-    }
+    private fun handlePotExceptionsPost(pot: DomainPot) = onEventFrameAction(when {
+        pot.potType == TYPE_HIT && ballStack.isLastBall() -> if (score.isFrameEqual()) FRAME_RESPOT_BLACK_DIALOG else FRAME_ENDING_DIALOG
+        pot.isFreeballAvailable() -> FRAME_FREE_AVAILABLE
+        else -> null
+    })
 
     // Handle Undo
-    fun handleUndo() {
-        _isUpdateInProgress.value = true
+    private fun handleUndo() {
         RULES.crtPlayer = frameStack.last().player
-        score = score.getCrtPlayerFromRules()
         val pot = frameStack.removeLastPotFromFrameStack()
-        Timber.i("handleUndo: ${pot.potType}, ball: ${pot.ball.ballType}, player: ${score.getPlayerAsInt()}, breakCount ${frameStack.size}")
-        ballStack.handleUndoBallStack(pot, frameStack.lastBallType())
+        val actionLog = pot.getActionLog("HandleUndo()", ballStack.lastOrNull()?.ballType, frameStack.size)
+        ballStack.handleUndoBallStack(pot.potType, frameStack.lastBall())
         FREEBALLINFO.handleUndoFreeballInfo(pot.potType, frameStack.lastPotType())
-        score.apply {
-            calculatePoints(pot, -1, ballStack.last())
-            highestBreak = frameStack.findMaxBreak()
-        }
-        onEventFrameUpdated()
-        handleUndoExceptions(pot)
+        score.calculatePoints(pot, -1, ballStack.foulValue(), frameStack)
+        onEventFrameUpdated(actionLog)
+        handleUndoExceptionsPost(pot)
     }
 
-    private fun handleUndoExceptions(pot: DomainPot) = when (pot.potType) {
-        TYPE_FREEAVAILABLE -> handleUndo()
-        else -> {}
-    }
+    private fun handleUndoExceptionsPost(pot: DomainPot) = onEventFrameAction(when (pot.potType) {
+        TYPE_FREE_AVAILABLE -> FRAME_UNDO
+        else -> null
+    })
+
+    // Checker methods
+    fun isFrameMathematicallyOver() = ballStack.availablePoints() < score.frameScoreDiff()
+    fun isRemoveColorAvailable() = ballStack.isInColors() && frameStack.lastPotType() == TYPE_FREE
+    fun isRemoveRedAvailable() = ballStack.areRedsOnTheTable() && !FREEBALLINFO.isVisible && frameStack.lastPotType() != TYPE_FOUL
 }

@@ -70,7 +70,7 @@ object Billing {
     }
 
     private fun processDetailsResult(activity: Activity, binding: FragmentNavDonateBinding, productDetailsList: List<ProductDetails>) {
-        Timber.e("processDetailResult()")
+        Timber.i("processDetailResult()")
         for (productDetails in productDetailsList) {
             Timber.i("productDetails id: ${productDetails.productId}, price: ${productDetails.oneTimePurchaseOfferDetails?.formattedPrice}")
             displayPaymentInfo(activity, productDetails, when (productDetails.productId) {

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.fragments.game.BallAdapter
+import com.quickpoint.snookerboard.fragments.game.BreakAdapter
 
 @BindingAdapter("setBreakVisibilityBreak", "setBreakVisibilityPlayer")
 fun LinearLayout.setBreakVisibility(crtBreak: DomainBreak, player: Int) {
@@ -22,10 +23,11 @@ fun LinearLayout.setBreakVisibility(crtBreak: DomainBreak, player: Int) {
 fun TextView.setBreakInfo(crtBreak: DomainBreak, player: Int) {
     text = if (crtBreak.player == player) when (crtBreak.lastPotType()) {
         TYPE_MISS -> "Miss"
-        TYPE_SAFE -> "Success safe"
+        TYPE_SAFE -> "Safe"
         TYPE_SAFE_MISS -> "Safe miss"
         TYPE_SNOOKER -> "Snooker"
-        TYPE_REMOVERED -> "Remove red"
+        TYPE_REMOVE_RED -> "Remove red"
+        TYPE_REMOVE_COLOR -> "Remove color"
         TYPE_FOUL -> "Foul"
         else -> ""
     } else ""
@@ -46,7 +48,13 @@ fun TextView.setBreakPoints(crtBreak: DomainBreak, player: Int) {
 fun RecyclerView.bindPotsRv(crtBreak: DomainBreak?, player: Int) {
     val adapter = this.adapter as BallAdapter
     val balls = mutableListOf<DomainBall>()
-    crtBreak?.pots?.forEach { if (it.potType in listOfPointGeneratingPotTypes) balls.add(it.ball) }
+    crtBreak?.pots?.forEach { if (it.potType in listOfPotTypesPointGenerating) balls.add(it.ball) }
     adapter.submitList(if (crtBreak?.player == player) balls else mutableListOf())
     visibility = if (adapter.itemCount > 0 || crtBreak?.pots?.lastOrNull()?.potType == TYPE_FOUL) View.VISIBLE else View.GONE
+}
+
+@BindingAdapter("bindBreakData")
+fun RecyclerView.bindBreakRv(breaks: MutableList<DomainBreak>?) = breaks?.let {
+    val adapter = this.adapter as BreakAdapter
+    adapter.submitList(breaks.getDisplayShots())
 }

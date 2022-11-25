@@ -10,7 +10,7 @@ import com.quickpoint.snookerboard.domain.DomainFrame
 @Entity(tableName = "match_frames_table")
 data class DbFrame(
     @PrimaryKey(autoGenerate = false)
-    val frameId: Int,
+    val frameId: Long,
     var frameMax: Int
 )
 
@@ -32,16 +32,22 @@ data class DbFrameWithScoreAndBreakWithPotsAndBallStack(
         parentColumn = "frameId",
         entityColumn = "frameId"
     )
-    val ballStack: List<DbBall>
+    val ballStack: List<DbBall>,
+    @Relation(
+        parentColumn = "frameId",
+        entityColumn = "frameId"
+    )
+    val debugFrameActions: List<DbActionLog>
 )
 
 // CONVERTER method from a DATABASE Frame to DOMAIN Frame
 fun DbFrameWithScoreAndBreakWithPotsAndBallStack.asDomainFrame(): DomainFrame {
     return DomainFrame(
         frameId = this.frame.frameId,
-        frameScore = this.frameScore.asDomainPlayerScoreList(),
+        score = this.frameScore.asDomainScoreList(),
         frameStack = this.frameStack.asDomainBreakList(),
         ballStack = this.ballStack.asDomainBallStack(),
+        actionLogs = this.debugFrameActions.asDomainActionLogs(),
         frameMax = this.frame.frameMax
     )
 }

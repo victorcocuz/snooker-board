@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.quickpoint.snookerboard.databinding.LayoutPostGameStatsViewBinding
-import com.quickpoint.snookerboard.domain.DomainPlayerScore
+import com.quickpoint.snookerboard.domain.DomainScore
 
 class PostGameAdapter:
-    ListAdapter<Pair<DomainPlayerScore, DomainPlayerScore>, PostGameAdapter.ViewHolder>(DiffCallback) {
+    ListAdapter<Pair<DomainScore, DomainScore>, PostGameAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -21,7 +21,7 @@ class PostGameAdapter:
     }
 
     class ViewHolder private constructor(private val binding: LayoutPostGameStatsViewBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(frameScores: Pair<DomainPlayerScore, DomainPlayerScore>, position: Int) {
+        fun bind(frameScores: Pair<DomainScore, DomainScore>, position: Int) {
             binding.apply {
                 varBgType = position % 2
                 frameScoreA = frameScores.first
@@ -38,12 +38,12 @@ class PostGameAdapter:
         }
     }
 
-    companion object DiffCallback : DiffUtil.ItemCallback<Pair<DomainPlayerScore, DomainPlayerScore>>() {
-        override fun areItemsTheSame(oldItem: Pair<DomainPlayerScore, DomainPlayerScore>, newItem: Pair<DomainPlayerScore, DomainPlayerScore>): Boolean {
+    companion object DiffCallback : DiffUtil.ItemCallback<Pair<DomainScore, DomainScore>>() {
+        override fun areItemsTheSame(oldItem: Pair<DomainScore, DomainScore>, newItem: Pair<DomainScore, DomainScore>): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: Pair<DomainPlayerScore, DomainPlayerScore>, newItem: Pair<DomainPlayerScore, DomainPlayerScore>): Boolean {
+        override fun areContentsTheSame(oldItem: Pair<DomainScore, DomainScore>, newItem: Pair<DomainScore, DomainScore>): Boolean {
             return oldItem.first.frameId == newItem.first.frameId
         }
     }

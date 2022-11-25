@@ -10,7 +10,6 @@ import com.quickpoint.snookerboard.SnookerBoardApplication
 import com.quickpoint.snookerboard.fragments.game.GameViewModel
 import com.quickpoint.snookerboard.fragments.play.PlayViewModel
 import com.quickpoint.snookerboard.fragments.postgame.PostGameViewModel
-import com.quickpoint.snookerboard.fragments.rankings.RankingsFragmentViewModel
 
 class GenericViewModelFactory(
     owner: SavedStateRegistryOwner,
@@ -18,9 +17,6 @@ class GenericViewModelFactory(
 ) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
-        if (modelClass.isAssignableFrom(RankingsFragmentViewModel::class.java)) {
-            return RankingsFragmentViewModel(SnookerBoardApplication.application()) as T
-        }
         if (modelClass.isAssignableFrom(PlayViewModel::class.java)) {
             return PlayViewModel(SnookerBoardApplication.application()) as T
         }

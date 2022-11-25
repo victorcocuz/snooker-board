@@ -4,6 +4,7 @@
       <w>addred</w>
       <w>apoint</w>
       <w>autofill</w>
+      <w>ballstack</w>
       <w>bload</w>
       <w>cdelete</w>
       <w>clicklistener</w>
@@ -35,6 +36,7 @@
       <w>playerb</w>
       <w>postgame</w>
       <w>quickpoint</w>
+      <w>removecolor</w>
       <w>removered</w>
       <w>req'd</w>
       <w>rerack</w>
@@ -45,6 +47,7 @@
       <w>snackbars</w>
       <w>snookerboard</w>
       <w>snookerscore</w>
+      <w>uncancelable</w>
       <w>vert</w>
       <w>wpbsa</w>
       <w>xsmall</w>

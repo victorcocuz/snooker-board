@@ -9,10 +9,10 @@ import com.quickpoint.snookerboard.domain.DomainBreak
 // Used to store the match breaks in the DATABASE
 @Entity(tableName = "match_breaks_table")
 data class DbBreak(
-    @PrimaryKey(autoGenerate = true)
-    val breakId: Long = 0,
+    @PrimaryKey(autoGenerate = false)
+    val breakId: Long,
     val player: Int,
-    val frameId: Int,
+    val frameId: Long,
     val breakSize: Int
 )
 
@@ -30,6 +30,7 @@ data class DbBreakWithPots(
 fun List<DbBreakWithPots>.asDomainBreakList(): MutableList<DomainBreak> {
     return map {
         DomainBreak(
+            breakId = it.matchBreak.breakId,
             player = it.matchBreak.player,
             frameId = it.matchBreak.frameId,
             pots = it.matchPots.asDomainPotList(),

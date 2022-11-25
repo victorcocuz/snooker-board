@@ -52,14 +52,17 @@ class FoulDialogFragment : DialogFragment() {
             eventDialogAction.observe(viewLifecycleOwner, EventObserver {
                 when (it) {
                     MatchAction.FOUL_QUERY ->
-                        if (foulIsValid()) matchAction = MatchAction.FOUL_CONFIRM
+                        if (foulIsValid()) {
+                            matchAction = MatchAction.FOUL_CONFIRM
+                            dismiss()
+                        }
                         else toast(getString(R.string.toast_foul_invalid))
                     else -> {
                         dialogViewModel.resetFoul()
                         matchAction = it
+                        dismiss()
                     }
                 }
-                dismiss()
             })
         }
         return binding.root
@@ -72,7 +75,7 @@ class FoulDialogFragment : DialogFragment() {
 
     override fun onDestroy() { // Pass match action to view model
         super.onDestroy()
-        if (this::matchAction.isInitialized) matchViewModel.assignEventMatchAction(matchAction)
+        if (this::matchAction.isInitialized) matchViewModel.onEventMatchAction(matchAction)
     }
 
 

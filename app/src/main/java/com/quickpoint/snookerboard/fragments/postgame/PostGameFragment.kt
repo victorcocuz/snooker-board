@@ -11,10 +11,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentPostGameBinding
-import com.quickpoint.snookerboard.domain.DomainPlayerScore
-import com.quickpoint.snookerboard.domain.MatchState
+import com.quickpoint.snookerboard.domain.DomainScore
 import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.NAV_TO_PLAY
+import com.quickpoint.snookerboard.utils.MatchState.*
 
 class PostGameFragment : androidx.fragment.app.Fragment() {
 
@@ -30,7 +30,7 @@ class PostGameFragment : androidx.fragment.app.Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         postponeEnterTransition()
-        matchVm.transitionToFragment(this)
+        matchVm.transitionToFragment(this, 200)
         matchVm.updateRules(-1)
 
         // Bind view elements
@@ -40,7 +40,10 @@ class PostGameFragment : androidx.fragment.app.Fragment() {
             varPostGameVm = postGameVm
             varMatchVm = this@PostGameFragment.matchVm
 
-            fragPostGameRv.adapter = PostGameAdapter()
+            fragPostGameRv.apply {
+                adapter = PostGameAdapter()
+                itemAnimator = null
+            }
 
             fragPostGameLayoutTop.apply {
                 varPlayerTagType = PlayerTagType.STATISTICS
@@ -59,8 +62,8 @@ class PostGameFragment : androidx.fragment.app.Fragment() {
             fragPostGameHeader.apply {
                 varBgType = 2
                 varTextType = 1
-                frameScoreA = DomainPlayerScore(-1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1)
-                frameScoreB = DomainPlayerScore(-1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1)
+                frameScoreA = DomainScore(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,-1)
+                frameScoreB = DomainScore(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
             }
 
             // Footer format
@@ -75,9 +78,8 @@ class PostGameFragment : androidx.fragment.app.Fragment() {
             matchVm.apply {
                 eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                     if (matchAction == NAV_TO_PLAY) {
-                        matchVm.updateState(MatchState.IDLE)
-                        navigate(PostGameFragmentDirections.playFrag())
                         deleteMatchFromDb()
+                        navigate(PostGameFragmentDirections.playFrag())
                     }
                 })
             }
@@ -85,8 +87,7 @@ class PostGameFragment : androidx.fragment.app.Fragment() {
 
         // Disable back pressing
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-            }
+            override fun handleOnBackPressed() {}
         })
 
         return binding.root

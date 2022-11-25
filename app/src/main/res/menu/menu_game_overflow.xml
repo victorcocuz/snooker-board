@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <item
         android:id="@+id/menu_item_undo"
         android:icon="@drawable/ic_temp_action_undo"
@@ -21,6 +20,10 @@
                 android:icon="@drawable/ic_temp_action_remove_red"
                 android:title="@string/menu_item_remove_red" />
             <item
+                android:id="@+id/menu_item_remove_color"
+                android:icon="@drawable/ic_temp_action_remove_color"
+                android:title="@string/menu_item_remove_color" />
+            <item
                 android:id="@+id/menu_item_rerack"
                 android:icon="@drawable/ic_temp_action_rerack"
                 android:title="@string/menu_item_rerack" />
@@ -36,6 +39,10 @@
                 android:id="@+id/menu_item_cancel_match"
                 android:icon="@drawable/ic_temp_action_cancel_match"
                 android:title="@string/menu_item_cancel_match" />
+            <item
+                android:id="@+id/menu_item_log"
+                android:icon="@drawable/ic_temp_action_log"
+                android:title="@string/menu_item_log" />
         </menu>
     </item>
 </menu>

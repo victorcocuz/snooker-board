@@ -4,12 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.quickpoint.snookerboard.domain.DomainMatchInfo.RULES
 import com.quickpoint.snookerboard.domain.DomainPlayer.PLAYER01
 import com.quickpoint.snookerboard.domain.DomainPlayer.PLAYER02
 import com.quickpoint.snookerboard.utils.Event
 import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.MatchAction.*
+import com.quickpoint.snookerboard.utils.MatchRules
 
 class PlayViewModel(
     app: Application,
@@ -22,7 +22,7 @@ class PlayViewModel(
 
     fun startMatchQuery() = assignEventPlayAction(when {
         PLAYER01.hasNoName() || PLAYER02.hasNoName() -> SNACKBAR_NO_PLAYER
-        (RULES.first < 0) -> SNACKBAR_NO_FIRST
+        (MatchRules.RULES.firstPlayer < 0) -> SNACKBAR_NO_FIRST
         else -> MATCH_PLAY
     })
 }

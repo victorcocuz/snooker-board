@@ -15,10 +15,12 @@
 
     <!-- Menu Items -->
     <string name="menu_item_more">Main Menu</string>
+    <string name="menu_item_log">Submit Issues Log</string>
     <string name="menu_item_undo">Undo</string>
     <string name="menu_item_rerack">Rerack</string>
     <string name="menu_item_add_red">Pot Extra Red</string>
     <string name="menu_item_remove_red">Remove Red</string>
+    <string name="menu_item_remove_color">Remove Color</string>
     <string name="menu_item_concede_frame">Concede Frame</string>
     <string name="menu_item_concede_match">Concede Match</string>
     <string name="menu_item_cancel_match">Cancel Match</string>
@@ -28,6 +30,7 @@
 
     <!-- Shared Preferences -->
     <string name="sp_file_key">PREFERENCE_FILE_KEY</string>
+    <string name="sp_match_unique_id">matchUniqueId</string>
     <string name="sp_match_frames">matchFrames</string>
     <string name="sp_match_reds">matchReds</string>
     <string name="sp_match_foul">matchFoul</string>

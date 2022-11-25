@@ -56,7 +56,7 @@
     <string name="f_play_btn_foul_three">3</string>
     <string name="f_play_btn_foul_four">4</string>
     <string name="f_play_label_breaks_first">Player to Break</string>
-    <string name="f_play_btn_break_random">Random</string>
+    <string name="f_play_btn_break_random">Coin toss</string>
     <string name="f_play_btn_play">START</string>
 
     <string name="snackbar_f_play_no_name">Please add player names to start a new match</string>
@@ -82,12 +82,13 @@
 
     <string name="toast_game_no_balls_left">There is no ball left on the table</string>
 
-    <string name="snackbar_f_game_undo">There are no actions to undo.</string>
-    <string name="snackbar_f_game_add_red">You can only pot an extra red after potting a red and if enough reds are on the table.</string>
+    <string name="snackbar_f_game_undo">There are no actions to undo</string>
+    <string name="snackbar_f_game_add_red">You can only pot an extra red after potting a red and if enough reds are on the table</string>
     <string name="snackbar_f_game_remove_red">You can only remove a red ball before declaring a foul and if there are reds available on the table</string>
+    <string name="snackbar_f_game_remove_color">You can only remove a color ball after playing a freeball, if there are no red balls on the table</string>
     <string name="snackbar_f_game_rerack">The frame has already been racked</string>
-    <string name="snackbar_f_game_concede_frame">You and your opponent are tied. One must be ahead for the other one to concede frame.</string>
-    <string name="snackbar_f_game_concede_match">You and your opponent are tied. One must be ahead for the other one to concede match.</string>
+    <string name="snackbar_f_game_concede_frame">You and your opponent are tied. One must be ahead for the other one to concede frame</string>
+    <string name="snackbar_f_game_concede_match">You and your opponent are tied. One must be ahead for the other one to concede match</string>
 
 
     <!-- Fragment Foul -->
@@ -95,7 +96,7 @@
     <string name="f_foul_label_choose_ball">Which ball was fouled?</string>
     <string name="f_foul_label_choose_action">Do you wish to continue?</string>
     <string name="f_game_foul_action_continue">OK, I will play</string>
-    <string name="f_foul_action_force_continue">Force continue</string>
+    <string name="f_foul_action_force_continue">Force continue or retake</string>
     <string name="f_foul_label_other_actions">Any other actions?</string>
     <string name="f_foul_action_free_ball">Free Ball</string>
     <string name="f_foul_action_remove_red">Remove Red</string>
