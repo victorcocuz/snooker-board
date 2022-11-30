@@ -7,7 +7,6 @@ import androidx.databinding.BindingAdapter
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.domain.DomainScore
 import com.quickpoint.snookerboard.utils.StatisticsType.*
-import timber.log.Timber
 import java.text.DecimalFormat
 
 // Statistics Adapters
@@ -16,7 +15,7 @@ fun TextView.setFrameScorePercentage(frameScore: DomainScore?) = frameScore?.app
     val df = DecimalFormat("##%")
     text = when ((successShots + missedShots)) {
         in (1..10000) -> df.format((successShots.toDouble() / (successShots.toDouble() + missedShots.toDouble())))
-        -2 -> context.getString(R.string.f_statistics_header_percentage)
+        -2 -> context.getString(R.string.l_post_game_tv_header_percentage)
         else -> "N/A"
     }
 }
@@ -26,7 +25,7 @@ fun TextView.setFrameSafetyPercentage(frameScore: DomainScore?) = frameScore?.ap
     val df = DecimalFormat("##%")
     text = when ((safetySuccessShots + safetyMissedShots)) {
         in (1..10000) -> df.format((safetySuccessShots.toDouble() / (safetySuccessShots.toDouble() + safetyMissedShots.toDouble())))
-        -1 -> context.getString(R.string.f_statistics_header_percentage)
+        -1 -> context.getString(R.string.l_post_game_tv_header_percentage)
         else -> "N/A"
     }
 }
@@ -34,7 +33,7 @@ fun TextView.setFrameSafetyPercentage(frameScore: DomainScore?) = frameScore?.ap
 @BindingAdapter("matchPointsPlayerA", "matchPointsPlayerB")
 fun TextView.setMatchPoints(matchPointsPlayerA: Int, matchPointsPlayerB: Int) {
     text = when (matchPointsPlayerA) {
-        -1 -> context.getString(R.string.f_statistics_header_score)
+        -1 -> context.getString(R.string.l_post_game_tv_header_score)
         else -> context.getString(R.string.game_match_score, matchPointsPlayerA, matchPointsPlayerB)
     }
 }
@@ -43,11 +42,11 @@ fun TextView.setMatchPoints(matchPointsPlayerA: Int, matchPointsPlayerB: Int) {
 fun TextView.setGameStatsValue(type: StatisticsType, value: Int) {
     text = when (value) {
         -1 -> when (type) {
-            HIGHEST_BREAK -> context.getString(R.string.f_statistics_header_break)
-            FRAME_ID -> context.getString(R.string.f_statistics_header_frame_id)
-            FRAME_POINTS -> context.getString(R.string.f_statistics_header_points)
+            HIGHEST_BREAK -> context.getString(R.string.l_post_game_tv_header_break)
+            FRAME_ID -> context.getString(R.string.l_post_game_tv_header_frame_id)
+            FRAME_POINTS -> context.getString(R.string.l_post_game_tv_header_points)
         }
-        -2 -> context.getString(R.string.f_statistics_footer_total)
+        -2 -> context.getString(R.string.l_post_game_tv_footer_total)
         else -> value.toString()
     }
 }

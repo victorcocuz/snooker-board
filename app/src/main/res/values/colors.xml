@@ -2,19 +2,14 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFF6E5</color>
-    <color name="grey">#BBB</color>
     <color name="white_disabled">#979797</color>
-
-    <color name="primary_old">#AAAA44</color>
 
     <color name="brown_dark">#4A2F18</color>
     <color name="brown">#7C5422</color>
-<!--    <color name="brown">#88652E</color>-->
-<!--    <color name="brown">#945F33</color>-->
+
     <color name="beige">#EBC881</color>
     <color name="cream_bright">#F5F4E2</color>
     <color name="green_dark">#293128</color>
-    <color name="green_accent">#456F47</color>
     <color name="green">#2A652D</color>
     <color name="green_brighter">#5A9A5F</color>
     <color name="green_bright">#368139</color>
@@ -35,8 +30,6 @@
     <color name="ball_free_pressed">#474748</color>
     <color name="ball_green_normal">#50ad48</color>
     <color name="ball_green_pressed">#30602f</color>
-    <color name="ball_noball_normal">#404040</color>
-    <color name="ball_noball_pressed">#262626</color>
     <color name="ball_pink_normal">#ee98c0</color>
     <color name="ball_pink_pressed">#b27493</color>
     <color name="ball_red_normal">#ef3b35</color>

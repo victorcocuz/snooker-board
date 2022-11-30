@@ -18,8 +18,8 @@ class NavImproveFragment : androidx.fragment.app.Fragment() {
         val binding: FragmentNavImproveBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_nav_improve, container, false)
 
         binding.apply {
-            fNavImproveContactEmail.setAsLink()
-            fNavImproveSurveyLink.setAsLink()
+            fNavImproveTvContactEmail.setAsLink()
+            fNavImproveTvSurveyLink.setAsLink()
         }
 
         return binding.root

@@ -15,7 +15,6 @@ import com.quickpoint.snookerboard.fragments.game.BallAdapter.ViewHolder.Compani
 import com.quickpoint.snookerboard.utils.BallAdapterType
 import com.quickpoint.snookerboard.utils.FACTOR_BALL_MATCH
 import com.quickpoint.snookerboard.utils.getFactoredDimen
-import timber.log.Timber
 
 class BallAdapter(
     private val clickListener: BallListener?, // provide the listener method through the adapter
@@ -69,7 +68,7 @@ class BallAdapter(
                     BallAdapterType.FOUL -> 16
                     BallAdapterType.BREAK -> 4
                 }
-                itemBallViewFrameLayout.apply { // Adjust ball size and padding depending on the adaptor type
+                iBallViewFlBall.apply { // Adjust ball size and padding depending on the adaptor type
                     layoutParams.width = context.getFactoredDimen(factor)
                     layoutParams.height = context.getFactoredDimen(factor)
                     setPadding(padding)
@@ -77,9 +76,9 @@ class BallAdapter(
 
                 // Set clickListener here rather than xml to apply ball selection actions
                 if (adapterType == BallAdapterType.FOUL) {
-                    itemButtonBall.isSelected = singleItemSelectionPosition == adapterPosition
+                    iBallViewBtnBall.isSelected = singleItemSelectionPosition == adapterPosition
                 }
-                itemButtonBall.setOnClickListener {
+                iBallViewBtnBall.setOnClickListener {
                     if (adapterType != BallAdapterType.BREAK) this.clickListener!!.onClick(ball!!)
                     if (adapterType == BallAdapterType.FOUL) adapter.setSingleSelection(adapterPosition)
                 }

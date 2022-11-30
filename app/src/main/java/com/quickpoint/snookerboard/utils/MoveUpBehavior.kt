@@ -19,7 +19,7 @@ import kotlin.math.roundToInt
 @Keep
 class MoveUpwardBehavior(context: Context?, attrs: AttributeSet?) : CoordinatorLayout.Behavior<View>(context, attrs), Parcelable {
 
-    var originalPadding = -1
+    private var originalPadding = -1
 
     constructor(parcel: Parcel) : this(
         TODO("context"),

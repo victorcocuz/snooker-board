@@ -5,10 +5,6 @@ import androidx.room.*
 
 @Dao
 interface SnookerDatabaseDao {
-    // General
-    @Query("SELECT (SELECT COUNT(*) FROM match_frames_table) == 0")
-    fun isEmpty(): Boolean
-
     // Current Match Frame
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertMatchFrame(frame: DbFrame): Long
@@ -26,9 +22,6 @@ interface SnookerDatabaseDao {
             id
         }
     }
-
-    @Query("SELECT COUNT(*) FROM match_frames_table")
-    fun getMatchFrameCount(): Int
 
     @Transaction
     @Query("SELECT * FROM match_frames_table WHERE frameId = (SELECT MAX(frameId) FROM match_frames_table)")
@@ -61,9 +54,6 @@ interface SnookerDatabaseDao {
     @Query("SELECT * FROM match_score_table ORDER BY frameId ASC")
     fun getMatchScore(): LiveData<List<DbScore>>
 
-    @Query("SELECT * FROM match_score_table WHERE scoreId = :scoreId")
-    fun getCrtScore(scoreId: Long): DbScore?
-
     @Query("DELETE FROM match_score_table WHERE frameId = :frameId")
     fun deleteCurrentFrameScore(frameId: Long)
 
@@ -91,10 +81,6 @@ interface SnookerDatabaseDao {
     @Query("SELECT * FROM match_breaks_table WHERE frameId = :frameId ORDER by breakId ASC")
     fun getCurrentFrameBreaks(frameId: Long): List<DbBreak>
 
-    @Transaction
-    @Query("SELECT breakId FROM match_breaks_table WHERE frameId = (SELECT MAX(frameId) FROM match_breaks_table) AND breakId = (SELECT MAX(breakId) FROM match_breaks_table)")
-    fun getCrtBreakId(): Long
-
     @Query("DELETE FROM match_breaks_table WHERE breakId = :breakId")
     fun deleteMatchBreak(breakId: Long)
 
@@ -121,8 +107,6 @@ interface SnookerDatabaseDao {
             id
         }
     }
-    @Query("SELECT COUNT(*) FROM match_pots_table WHERE breakId = :breakId")
-    fun getCurrentBreakPotsCount(breakId: Long): Int
 
     @Query("SELECT * FROM match_pots_table WHERE breakId = :breakId ORDER by potId ASC")
     fun getCurrentBreakPots(breakId: Long): List<DbPot>
@@ -153,9 +137,6 @@ interface SnookerDatabaseDao {
             id
         }
     }
-
-    @Query("SELECT COUNT(*) FROM match_ball_stack_table")
-    fun getMatchBallsCount(): Int
 
     @Query("SELECT * FROM match_ball_stack_table ORDER by ballId ASC")
     fun getMatchBalls(): List<DbBall>

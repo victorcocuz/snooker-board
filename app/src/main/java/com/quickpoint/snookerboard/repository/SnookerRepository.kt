@@ -42,18 +42,6 @@ class SnookerRepository(database: SnookerDatabase) {
     // Get crt frame from database
     suspend fun getCrtFrame(): DbFrameWithScoreAndBreakWithPotsAndBallStack? {
         return withContext(Dispatchers.IO) {
-//            val frameCount = snookerDbDao.getMatchFrameCount()
-//            Timber.e("GET: frame count: $frameCount")
-//            Timber.e("GET: score: ${snookerDbDao.getCrtScore(0)?.framePoints}-${snookerDbDao.getCrtScore(1)?.framePoints}")
-//            val frameBreaks = snookerDbDao.getCurrentFrameBreaks(frameCount.toLong())
-//            Timber.e("GET: breaks: $frameBreaks")
-//            frameBreaks.lastOrNull()?.breakId?.let {
-//                Timber.e("GET: last break id: $it")
-//                Timber.e("GET: pots count: ${snookerDbDao.getCurrentBreakPotsCount(it)}")
-//            }
-//            Timber.e("GET: pots: ${frameBreaks.lastOrNull()?.breakId?.let { snookerDbDao.getCurrentBreakPots(it) }}")
-//            Timber.e("GET: ball count is: ${snookerDbDao.getMatchBallsCount()}")
-//            Timber.e("GET: debug actions: ${snookerDbDao.getDebugFrameActions()}")
             val crtFrame = snookerDbDao.getCrtFrame()
             Timber.i("getCrtFrame(): State is: ${MatchRules.RULES.matchState}, CrtFrame is: ${crtFrame?.frame?.frameId}, frameCount is: ${MatchRules.RULES.frameCount}")
             return@withContext crtFrame
@@ -66,37 +54,22 @@ class SnookerRepository(database: SnookerDatabase) {
             insertOrUpdateMatchFrame(frame.asDbFrame())
 
             // Score
-            for (dbScore in frame.asDbCrtScore()) {
-//                Timber.e("update score $dbScore")
-                insertOrUpdateMatchScore(dbScore)
-            }
+            for (dbScore in frame.asDbCrtScore()) insertOrUpdateMatchScore(dbScore)
 
             // Breaks - Only check breaks from current frame
             val dbBreaks = frame.asDbBreaks()
-            dbBreaks.lastOrNull()?.let { dbLastBreak ->
-//                Timber.e("update break $dbLastBreak")
-                insertOrUpdateMatchBreak(dbLastBreak)
-            }
+            dbBreaks.lastOrNull()?.let { insertOrUpdateMatchBreak(it) }
 
-            for (dbBreak in getCurrentFrameBreaks(frame.frameId)) { // If break exists in frameStack, but not in Db, remove from Db
-                if (!dbBreaks.map { it.breakId }.contains(dbBreak.breakId)) {
-//                    Timber.e("delete break $dbBreak")
-                    deleteMatchBreak(dbBreak.breakId)
-                }
+            for (dbBreakId in getCurrentFrameBreaks(frame.frameId).map { it.breakId }) { // If break exists in frameStack, but not in Db, remove from Db
+                if (!dbBreaks.map { it.breakId }.contains(dbBreakId)) deleteMatchBreak(dbBreakId)
             }
 
             // Pots - only check pots from current break
             frame.frameStack.lastOrNull()?.apply {
                 val dbBreakPots = this.asDbPots(this.breakId)
-                dbBreakPots.lastOrNull()?.let { dbBreakPot ->
-//                    Timber.e("update pot $dbBreakPot")
-                    insertOrUpdateBreakPot(dbBreakPot)
-                }
-                for (dbPot in getCurrentBreakPots(this.breakId)) { // If pot exists in break, but not in Db, remove from Db
-                    if (!dbBreakPots.map { it.potId }.contains(dbPot.potId)) {
-//                        Timber.e("delete pot $dbPot")
-                        deleteBreakPot(dbPot.potId)
-                    }
+                dbBreakPots.lastOrNull()?.let { insertOrUpdateBreakPot(it) }
+                for (dbPotId in getCurrentBreakPots(this.breakId).map { it.potId }) { // If pot exists in break, but not in Db, remove from Db
+                    if (!dbBreakPots.map { it.potId }.contains(dbPotId)) deleteBreakPot(dbPotId)
                 }
             }
 
@@ -108,10 +81,7 @@ class SnookerRepository(database: SnookerDatabase) {
             }
 
             // Debug Actions - Only check actions for current frame
-            frame.asDbDebugFrameActions().lastOrNull()?.let{
-//                Timber.e("action $it")
-                insertOrUpdateDebugFrameActions(it)
-            }
+            frame.asDbDebugFrameActions().lastOrNull()?.let { insertOrUpdateDebugFrameActions(it) }
         }
         Timber.i("saveCurrentFrame(): id: ${frame.frameId} score: ${frame.score[0].framePoints} vs ${frame.score[1].framePoints} ")
     }

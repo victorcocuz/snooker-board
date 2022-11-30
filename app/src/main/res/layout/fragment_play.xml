@@ -13,12 +13,12 @@
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/frag_play_drawer_layout"
+        android:id="@+id/f_play_dl"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/frag_play_coord_layout"
+            android:id="@+id/f_play_cdl"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".MainActivity">
@@ -37,7 +37,7 @@
                     android:orientation="vertical">
 
                     <include
-                        android:id="@+id/frag_play_rules"
+                        android:id="@+id/f_play_l_rules"
                         layout="@layout/layout_play_rules"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -46,16 +46,16 @@
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <FrameLayout
-                    android:id="@+id/frag_play_line_hor"
+                    android:id="@+id/f_play_fl_line_hor"
                     style="@style/LineHorizontalAccent"
                     android:layout_width="match_parent" />
 
                 <TextView
-                    android:id="@+id/frag_play_btn_play"
+                    android:id="@+id/f_play_btn_game_f"
                     style="@style/ButtonStretched"
                     android:layout_width="match_parent"
                     android:onClick="@{() -> varPlayVm.startMatchQuery()}"
-                    android:text="@string/f_play_btn_play" />
+                    android:text="@string/f_play_btn_game_f" />
             </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </androidx.drawerlayout.widget.DrawerLayout>

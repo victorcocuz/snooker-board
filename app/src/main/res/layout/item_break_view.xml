@@ -16,7 +16,7 @@
         android:layout_marginBottom="@dimen/margin_layout_offset_mid">
 
         <LinearLayout
-            android:id="@+id/break_view_ll_a"
+            android:id="@+id/i_break_view_ll_a"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_layout_offset"
@@ -26,7 +26,7 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:padding="@dimen/padding_button_small"
-            app:layout_constraintEnd_toStartOf="@+id/break_view_ll_b"
+            app:layout_constraintEnd_toStartOf="@+id/i_break_view_ll_b"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -34,7 +34,7 @@
             app:setBreakVisibilityPlayer="@{0}">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/item_break_a_balls_rv"
+                android:id="@+id/i_break_view_rv_balls_a"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -43,7 +43,7 @@
                 app:bindPotsPlayer="@{0}" />
 
             <TextView
-                android:id="@+id/item_break_a_info"
+                android:id="@+id/i_break_view_tv_info_a"
                 style="@style/TextHeaderBold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
                 tools:text="Free" />
 
             <TextView
-                android:id="@+id/item_break_a_points"
+                android:id="@+id/i_break_view_tv_points_a"
                 style="@style/TextHeaderBold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/break_view_ll_b"
+            android:id="@+id/i_break_view_ll_b"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_layout_offset_mid"
@@ -78,13 +78,13 @@
             android:padding="@dimen/padding_button_small"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/break_view_ll_a"
+            app:layout_constraintStart_toEndOf="@+id/i_break_view_ll_a"
             app:layout_constraintTop_toTopOf="parent"
             app:setBreakVisibilityBreak="@{varCrtBreak}"
             app:setBreakVisibilityPlayer="@{1}">
 
             <TextView
-                android:id="@+id/item_break_b_points"
+                android:id="@+id/i_break_view_tv_points_b"
                 style="@style/TextHeaderBold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
                 tools:text="9" />
 
             <TextView
-                android:id="@+id/item_break_b_info"
+                android:id="@+id/i_break_view_tv_info_b"
                 style="@style/TextHeaderBold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
                 tools:text="Miss" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/item_break_b_balls_rv"
+                android:id="@+id/i_break_view_rv_balls_b"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

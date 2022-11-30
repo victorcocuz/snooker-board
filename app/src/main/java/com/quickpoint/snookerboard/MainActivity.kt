@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
             // Set Appbar
             navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
-            setSupportActionBar(layoutAppBarMain.layoutToolbarMain)
+            setSupportActionBar(layoutAppBarMain.lToolbarMain)
             NavigationUI.setupActionBarWithNavController(this@MainActivity, navController, mainDrawerLayout)
             appBarConfiguration = AppBarConfiguration(navController.graph, mainDrawerLayout)
             NavigationUI.setupWithNavController(mainActivityNavView, navController)
@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
                             DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                     }
                     else -> {
-                        binding.layoutAppBarMain.layoutToolbarMain.navigationIcon = null
+                        binding.layoutAppBarMain.lToolbarMain.navigationIcon = null
                         mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                     }
                 }

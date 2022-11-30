@@ -17,7 +17,7 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/game_guide_vert_mid"
+            android:id="@+id/l_game_top_gd_vert_mid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -26,43 +26,43 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <LinearLayout
-            android:id="@+id/game_label_player_a"
+            android:id="@+id/l_game_top_ll_player_a"
             style="@style/NameTag"
-            app:layout_constraintEnd_toStartOf="@+id/game_guide_vert_mid"
+            app:layout_constraintEnd_toStartOf="@+id/l_game_top_gd_vert_mid"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:setActivePlayerTag="@{varPlayerTagType}"
             app:setActivePlayer="@{varGameVm.crtPlayer == 0}">
 
             <TextView
-                android:id="@+id/game_label_name_first_a"
+                android:id="@+id/l_game_top_tv_player_a_name_first"
                 style="@style/TextCaption"
                 android:layout_marginBottom="@dimen/subtitle_offset"
                 android:text="@={DomainPlayer.PLAYER01.INSTANCE.firstName}"/>
 
             <TextView
-                android:id="@+id/game_label_name_last_a"
+                android:id="@+id/l_game_top_tv_player_a_name_last"
                 style="@style/TextSubtitle"
                 android:text="@={DomainPlayer.PLAYER01.INSTANCE.lastName}"/>
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/game_label_player_b"
+            android:id="@+id/l_game_top_ll_player_b"
             style="@style/NameTag"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/game_guide_vert_mid"
+            app:layout_constraintStart_toEndOf="@+id/l_game_top_gd_vert_mid"
             app:layout_constraintTop_toTopOf="parent"
             app:setActivePlayerTag="@{varPlayerTagType}"
             app:setActivePlayer="@{varGameVm.crtPlayer == 1}">
 
             <TextView
-                android:id="@+id/game_label_name_first_b"
+                android:id="@+id/l_game_top_tv_player_b_name_first"
                 style="@style/TextCaption"
                 android:layout_marginBottom="@dimen/subtitle_offset"
                 android:text="@={DomainPlayer.PLAYER02.INSTANCE.firstName}"/>
 
             <TextView
-                android:id="@+id/game_label_name_last_b"
+                android:id="@+id/l_game_top_tv_player_b_name_last"
                 style="@style/TextSubtitle"
                 android:text="@={DomainPlayer.PLAYER02.INSTANCE.lastName}"/>
         </LinearLayout>

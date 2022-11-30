@@ -10,9 +10,7 @@ import com.quickpoint.snookerboard.utils.MatchRules.RULES
 // The DOMAIN Ball is the simplest game data unit. It stores ball information
 enum class BallType { TYPE_NOBALL, TYPE_WHITE, TYPE_RED, TYPE_YELLOW, TYPE_GREEN, TYPE_BROWN, TYPE_BLUE, TYPE_PINK, TYPE_BLACK, TYPE_COLOR, TYPE_FREEBALL, TYPE_FREEBALLTOGGLE, TYPE_FREEBALLAVAILABLE }
 val listOfBallsColors = listOf(YELLOW(), GREEN(), BROWN(), BLUE(), PINK(), BLACK())
-val listOfBallTypesColors = listOfBallsColors.map { it.ballType }
 val listOfBallsPlayable = listOf(RED(), YELLOW(), GREEN(), BROWN(), BLUE(), PINK(), BLACK(), WHITE())
-val listOfBallTypesPlayable = listOfBallsPlayable.map { it.ballType }
 
 sealed class DomainBall(
     var ballId: Long,

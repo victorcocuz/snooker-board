@@ -9,22 +9,10 @@ import com.quickpoint.snookerboard.utils.MatchRules.RULES
 // Classes and variables that define all pot types and pot actions
 enum class PotType { TYPE_HIT, TYPE_FOUL, TYPE_FREE, TYPE_FOUL_ATTEMPT, TYPE_SNOOKER, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_MISS, TYPE_FREE_AVAILABLE, TYPE_FREE_TOGGLE, TYPE_REMOVE_RED, TYPE_REMOVE_COLOR, TYPE_ADDRED, TYPE_RESPOT_BLACK }
 
-val listOfPotTypesBreak = listOf(TYPE_HIT,
-    TYPE_FOUL,
-    TYPE_FREE,
-    TYPE_ADDRED,
-    TYPE_REMOVE_RED,
-    TYPE_REMOVE_COLOR,
-    TYPE_FOUL,
-    TYPE_SNOOKER,
-    TYPE_SAFE,
-    TYPE_SAFE_MISS,
-    TYPE_MISS)
 val listOfPotTypesHelpers = listOf(TYPE_FREE_AVAILABLE, TYPE_FREE_TOGGLE, TYPE_RESPOT_BLACK)
 val listOfPotTypesPointsAdding = listOf(TYPE_HIT, TYPE_FREE, TYPE_ADDRED)
 val listOfPotTypesPointGenerating = listOfPotTypesPointsAdding.plus(TYPE_FOUL)
 val listOfPotTypesForNoBallSnackbar = listOf(TYPE_HIT, TYPE_MISS, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_SNOOKER, TYPE_FOUL, TYPE_FOUL_ATTEMPT)
-val listOfPotTypesExtra = listOf(TYPE_FOUL, TYPE_SNOOKER, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_MISS, TYPE_REMOVE_RED, TYPE_REMOVE_COLOR)
 
 enum class PotAction { FIRST, CONTINUE, SWITCH }
 
@@ -61,14 +49,6 @@ sealed class DomainPot(
 
     fun isFreeballAvailable() = potType == TYPE_FOUL && potAction == SWITCH
 
-    // Timber helpers
-    private fun getBallAsText() = when (potType) {
-        TYPE_HIT -> "ballType: ${ball.ballType}, ballPoints: ${ball.points}, "
-        TYPE_FREE -> "ballType: ${ball.ballType}, ballPoints: ${ball.points}, "
-        TYPE_FOUL -> "ballType: ${ball.ballType}, ballPoints: ${ball.points}, potAction: $potAction, "
-        else -> ""
-    }
-
     fun getActionLog(description: String, lastBall: BallType?, size: Int): DomainActionLog {
         return DomainActionLog(
             description = description,
@@ -84,8 +64,6 @@ sealed class DomainPot(
     }
 
 
-    fun handleActionAsText(ballStack: MutableList<DomainBall>, frameStack: MutableList<DomainBreak>) =
-        "potType: $potType, ${getBallAsText()}player: ${RULES.crtPlayer}, breakCount: ${frameStack.size}, ballStackLast: ${ballStack.lastOrNull()?.ballType};"
 }
 
 fun PotType.getPotFromType(ball: DomainBall = NOBALL(), action: PotAction = CONTINUE) = when (this) {

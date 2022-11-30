@@ -2,7 +2,6 @@
 <resources>
     <!-- Buttons -->>
     <dimen name="toolbar_height">56dp</dimen>
-    <dimen name="bottom_height">120dp</dimen>
     <dimen name="btn_width_large">120dp</dimen>
     <dimen name="btn_width">66dp</dimen>
     <dimen name="btn_height">40dp</dimen>
@@ -16,9 +15,6 @@
     <dimen name="margin_xxsmall">8dp</dimen>
     <dimen name="margin_xsmall">12dp</dimen>
     <dimen name="margin_small">16dp</dimen>
-    <dimen name="margin_medium">24dp</dimen>
-    <dimen name="margin_large">32dp</dimen>
-    <dimen name="margin_xlarge">64dp</dimen>
 
     <dimen name="margin_header_below">6dp</dimen>
     <dimen name="margin_header_above">8dp</dimen>
@@ -27,7 +23,6 @@
     <dimen name="margin_btn">4dp</dimen>
 
     <!-- Padding -->
-    <dimen name="padding_xsmall">4dp</dimen>
     <dimen name="padding_button_small">4dp</dimen>
     <dimen name="padding_shape">8dp</dimen>
     <dimen name="padding_ball">8dp</dimen>
@@ -35,10 +30,8 @@
     <dimen name="padding_medium">16dp</dimen>
 
     <!-- Icons -->
-    <dimen name="icon_ball_size">48dp</dimen>
     <dimen name="icon_bar">8dp</dimen>
     <dimen name="icon_btn_nav_size">24dp</dimen>
-    <dimen name="icon_launcher">108dp</dimen>
     <dimen name="icon_logo">40dp</dimen>
     <dimen name="icon_info">20dp</dimen>
     <dimen name="icon_ball">48dp</dimen>

@@ -23,7 +23,7 @@
         tools:context=".fragments.postgame.PostGameFragment">
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/frag_post_game_guide_vert_mid"
+            android:id="@+id/f_post_game_gd_vert_mid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -32,7 +32,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <include
-            android:id="@+id/frag_post_game_layout_top"
+            android:id="@+id/f_post_game_l_top"
             layout="@layout/layout_game_top"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -41,107 +41,107 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/frag_post_game_text_score_frames_a"
+            android:id="@+id/f_post_game_tv_score_frames_a"
             style="@style/TextTitle"
             android:layout_marginStart="@dimen/margin_layout_offset"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             android:text="@{String.valueOf(varPostGameVm.totalsA.matchPoints)}"
-            app:layout_constraintEnd_toStartOf="@+id/frag_post_game_text_score_total"
+            app:layout_constraintEnd_toStartOf="@+id/f_post_game_tv_score_total"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frag_post_game_layout_top"
+            app:layout_constraintTop_toBottomOf="@+id/f_post_game_l_top"
             tools:text="13" />
 
         <TextView
-            android:id="@+id/frag_post_game_text_score_total"
+            android:id="@+id/f_post_game_tv_score_total"
             style="@style/TextSubtitle"
-            app:layout_constraintBottom_toBottomOf="@+id/frag_post_game_text_score_frames_a"
-            app:layout_constraintEnd_toEndOf="@+id/frag_post_game_guide_vert_mid"
-            app:layout_constraintStart_toStartOf="@+id/frag_post_game_guide_vert_mid"
-            app:layout_constraintTop_toTopOf="@+id/frag_post_game_text_score_frames_a"
+            app:layout_constraintBottom_toBottomOf="@+id/f_post_game_tv_score_frames_a"
+            app:layout_constraintEnd_toEndOf="@+id/f_post_game_gd_vert_mid"
+            app:layout_constraintStart_toStartOf="@+id/f_post_game_gd_vert_mid"
+            app:layout_constraintTop_toTopOf="@+id/f_post_game_tv_score_frames_a"
             android:text="@{String.valueOf(RULES.INSTANCE.getDisplayFrames())}" />
 
         <TextView
-            android:id="@+id/frag_post_game_text_score_frames_b"
+            android:id="@+id/f_post_game_tv_score_frames_b"
             style="@style/TextTitle"
             android:layout_marginStart="@dimen/margin_layout_offset"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             android:text="@{String.valueOf(varPostGameVm.totalsB.matchPoints)}"
-            app:layout_constraintBottom_toBottomOf="@+id/frag_post_game_text_score_frames_a"
+            app:layout_constraintBottom_toBottomOf="@+id/f_post_game_tv_score_frames_a"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/frag_post_game_text_score_total"
+            app:layout_constraintStart_toEndOf="@+id/f_post_game_tv_score_total"
             tools:text="15" />
 
         <include
-            android:id="@+id/frag_post_game_header"
-            layout="@layout/layout_post_game_stats_view"
+            android:id="@+id/f_post_game_l_stats_header"
+            layout="@layout/layout_post_game_stats"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_height"
             android:layout_marginTop="@dimen/margin_header_above"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frag_post_game_text_score_frames_a" />
+            app:layout_constraintTop_toBottomOf="@+id/f_post_game_tv_score_frames_a" />
 
         <FrameLayout
-            android:id="@+id/frag_post_game_ghost_frame_for_height"
+            android:id="@+id/f_post_game_fl_ghost_frame_for_height"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/frag_post_game_ghost_frame"
+            app:layout_constraintBottom_toTopOf="@id/f_post_game_fl_ghost_frame_for_height_2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frag_post_game_header" />
+            app:layout_constraintTop_toBottomOf="@+id/f_post_game_l_stats_header" />
 
 
         <ScrollView
-            android:id="@+id/frag_post_game_scroll_view"
+            android:id="@+id/f_post_game_sv_score"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frag_post_game_header"
+            app:layout_constraintTop_toBottomOf="@+id/f_post_game_l_stats_header"
             app:layout_constraintVertical_bias="0.0">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/frag_post_game_rv"
+                android:id="@+id/f_post_game_rv_score"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:bindGameStatsData="@{varPostGameVm.score}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="16"
                 tools:layout_editor_absoluteX="0dp"
-                tools:listitem="@layout/layout_post_game_stats_view" />
+                tools:listitem="@layout/layout_post_game_stats" />
         </ScrollView>
 
         <include
-            android:id="@+id/frag_post_game_footer"
-            layout="@layout/layout_post_game_stats_view"
+            android:id="@+id/f_post_game_l_stats_footer"
+            layout="@layout/layout_post_game_stats"
             android:layout_width="match_parent"
             android:layout_height="@dimen/btn_stretched_height"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frag_post_game_scroll_view" />
+            app:layout_constraintTop_toBottomOf="@+id/f_post_game_sv_score" />
 
         <FrameLayout
-            android:id="@+id/frag_post_game_ghost_frame"
+            android:id="@+id/f_post_game_fl_ghost_frame_for_height_2"
             android:layout_width="0dp"
             android:layout_height="@dimen/toolbar_height"
-            app:layout_constraintBottom_toTopOf="@+id/frag_post_game_line_hor"
+            app:layout_constraintBottom_toTopOf="@+id/f_post_game_fl_line_hor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <FrameLayout
-            android:id="@+id/frag_post_game_line_hor"
+            android:id="@+id/f_post_game_fl_line_hor"
             style="@style/LineHorizontalAccent"
             android:layout_width="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/frag_post_game_btn"
+            app:layout_constraintBottom_toTopOf="@+id/f_post_game_btn_home"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/frag_post_game_btn"
+            android:id="@+id/f_post_game_btn_home"
             style="@style/ButtonStretched"
             android:layout_width="match_parent"
             android:onClick="@{() -> varPostGameVm.onEventPostGameAction(MatchAction.NAV_TO_PLAY)}"
-            android:text="@string/fragment_game_stats_btn_go_to_play"
+            android:text="@string/f_post_game_btn_home"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

@@ -1,6 +1,5 @@
 package com.quickpoint.snookerboard.utils
 
-import android.view.View
 import android.view.View.*
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
@@ -18,7 +17,6 @@ import com.quickpoint.snookerboard.fragments.game.BallAdapter
 import com.quickpoint.snookerboard.fragments.postgame.PostGameAdapter
 import com.quickpoint.snookerboard.utils.BallAdapterType.*
 import com.quickpoint.snookerboard.utils.MatchAction.*
-import timber.log.Timber
 
 // General
 @BindingAdapter("setSelected")

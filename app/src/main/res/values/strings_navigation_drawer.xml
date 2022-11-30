@@ -6,107 +6,100 @@
     <string name="menu_drawer_about">About</string>
 
     <!-- Fragment Rules -->
-    <string name="f_nav_rules_title">Simplified Snooker Rules</string>
-    <string name="f_nav_rules_heading_01_ball_terminology">Ball Terminology</string>
-    <string name="f_nav_rules_body_01_ball_terminology">* Cue ball - the white ball, the only ball that you may hit with the cue\n* Red - red in color, there are 15 at the start of the game\n* Colour - one of the six balls that are neither red nor white</string>
-    <string name="f_nav_rules_heading_02_ball_values">Ball values</string>
-    <string name="f_nav_rules_body_02_ball_values">Red - 1\nYellow - 2\nGreen - 3\nBrown - 4\nBlue - 5\nPink - 6\nBlack - 7</string>
-    <string name="f_nav_rules_heading_03_snooker_terminology">Snooker terminology</string>
-    <string name="f_nav_rules_body_03_snooker_terminology">Pot - to put a ball into a pocket (and have it stay there)\nFoul - to do something against the rules\nSnookered - to be unable to roll the cue ball in a straight line and hit the ball chosen.\nBall ON - the ball you intend to hit with the cue ball</string>
-    <string name="f_nav_rules_heading_04_fundamentals">Fundamentals</string>
-    <string name="f_nav_rules_body_04_fundamentals">1 - You hit the cue ball so that it, in turn, hits another ball and hopefully pots it.\n2 - You must not pot the cue ball\nWhen there are still red balls on the table:\n3 - Your first shot on every turn must be to hit a red with the cue ball\n4 - If you pot that red (red is the ball ON), then you score 1 point and your next shot may be on any of the colours (be sure to say which one you have chosen). The red stays in the pocket.\n5 - If you pot that colour (which is now the ball ON), then you score the value of the colour and your next shot must be a red. The colour goes back on its own spot. If it does not fit on its spot, then it goes on the highest valued spot available.\n6 - If you fail to pot, or if you foul, then your turn is ended and your opponent gets to try\n7 - continue with red-colour-red-colour until all reds are in the pockets\nWhen all red balls are gone:\n8. Balls are pocketed in this order - yellow(2), green(3), brown(4), blue(5), pink(6), black(7). They stay in the pocket.</string>
-    <string name="f_nav_rules_heading_05_foul_rules">Foul Rules</string>
-    <string name="f_nav_rules_body_05_foul_rules">1 - Once struck, cue ball must make contact with ball ON first otherwise, foul is committed\n2 - If your cue ball does not hit anything on the table, your opponent may choose to take the shot or turn the table back to you\n3 - If you commit a foul and your opponent is snookered on all balls ON, he may be allowed to select a freeball(any ball on the table). The freeball, for this shot only, becomes another ball ON and has the same value and is re-spotted if potted.\n4 - If your cue ball first hits a ball other than the ball ON, then the penalty is the value of the ball struck or 4 points, whichever is greater.\n5 - If you pot a ball other than the ball ON, then you do NOT score the value of the ball ON but your opponent scores the value of the ball pocketed.\n6 - If you touch any ball on the table at any time,then the penalty is the value of the ball touched or 4 points, whichever is greater.</string>
-    <string name="f_nav_rules_heading_06_game_end">The game ends when</string>
-    <string name="f_nav_rules_body_06_game_end">1. A player resigns because there are not enough balls on the table to make up for the opponent\\\'s score OR he does not have enough options to execute a good snooker to force the opponent into a foul.\n2. All reds and ball colors are pocketed.</string>
-    <string name="f_nav_rules_heading_07_winner">Winner</string>
-    <string name="f_nav_rules_body_07_winner">The player with the most points at the end of the game wins!</string>
-    <string name="f_nav_rules_heading_08_more_info">More Info</string>
-    <string name="f_nav_rules_body_08_more_info">For more information visit: \nhttp://www.rulesofsnooker.com/snooker-for-beginners.html</string>
+    <string name="f_nav_rules_tv_heading_01_ball_terminology">Ball Terminology</string>
+    <string name="f_nav_rules_tv_body_01_ball_terminology">* Cue ball - the white ball, the only ball that you may hit with the cue\n* Red - red in color, there are 15 at the start of the game\n* Colour - one of the six balls that are neither red nor white</string>
+    <string name="f_nav_rules_tv_heading_02_ball_values">Ball values</string>
+    <string name="f_nav_rules_tv_body_02_ball_values">Red - 1\nYellow - 2\nGreen - 3\nBrown - 4\nBlue - 5\nPink - 6\nBlack - 7</string>
+    <string name="f_nav_rules_tv_heading_03_snooker_terminology">Snooker terminology</string>
+    <string name="f_nav_rules_tv_body_03_snooker_terminology">Pot - to put a ball into a pocket (and have it stay there)\nFoul - to do something against the rules\nSnookered - to be unable to roll the cue ball in a straight line and hit the ball chosen.\nBall ON - the ball you intend to hit with the cue ball</string>
+    <string name="f_nav_rules_tv_heading_04_fundamentals">Fundamentals</string>
+    <string name="f_nav_rules_tv_body_04_fundamentals">1 - You hit the cue ball so that it, in turn, hits another ball and hopefully pots it.\n2 - You must not pot the cue ball\nWhen there are still red balls on the table:\n3 - Your first shot on every turn must be to hit a red with the cue ball\n4 - If you pot that red (red is the ball ON), then you score 1 point and your next shot may be on any of the colours (be sure to say which one you have chosen). The red stays in the pocket.\n5 - If you pot that colour (which is now the ball ON), then you score the value of the colour and your next shot must be a red. The colour goes back on its own spot. If it does not fit on its spot, then it goes on the highest valued spot available.\n6 - If you fail to pot, or if you foul, then your turn is ended and your opponent gets to try\n7 - continue with red-colour-red-colour until all reds are in the pockets\nWhen all red balls are gone:\n8. Balls are pocketed in this order - yellow(2), green(3), brown(4), blue(5), pink(6), black(7). They stay in the pocket.</string>
+    <string name="f_nav_rules_tv_heading_05_foul_rules">Foul Rules</string>
+    <string name="f_nav_rules_tv_body_05_foul_rules">1 - Once struck, cue ball must make contact with ball ON first otherwise, foul is committed\n2 - If your cue ball does not hit anything on the table, your opponent may choose to take the shot or turn the table back to you\n3 - If you commit a foul and your opponent is snookered on all balls ON, he may be allowed to select a freeball(any ball on the table). The freeball, for this shot only, becomes another ball ON and has the same value and is re-spotted if potted.\n4 - If your cue ball first hits a ball other than the ball ON, then the penalty is the value of the ball struck or 4 points, whichever is greater.\n5 - If you pot a ball other than the ball ON, then you do NOT score the value of the ball ON but your opponent scores the value of the ball pocketed.\n6 - If you touch any ball on the table at any time,then the penalty is the value of the ball touched or 4 points, whichever is greater.</string>
+    <string name="f_nav_rules_tv_heading_06_game_end">The game ends when</string>
+    <string name="f_nav_rules_tv_body_06_game_end">1. A player resigns because there are not enough balls on the table to make up for the opponent\\\'s score OR he does not have enough options to execute a good snooker to force the opponent into a foul.\n2. All reds and ball colors are pocketed.</string>
+    <string name="f_nav_rules_tv_heading_07_winner">Winner</string>
+    <string name="f_nav_rules_tv_body_07_winner">The player with the most points at the end of the game wins!</string>
+    <string name="f_nav_rules_tv_heading_08_more_info">More Info</string>
+    <string name="f_nav_rules_tv_body_08_more_info">For more information visit: \nhttp://www.rulesofsnooker.com/snooker-for-beginners.html</string>
 
     <!--Fragment Help Improve-->
-    <string name="f_nav_improve_text">Hi, \n\nThanks for trying out my app! I am an amateur app developer with a life long passion for snooker. I wanted to do something for this sport so I set out to create this app in my spare time. My dream is to improve this app constantly and make it useful to the snooker community, by implementing a login to save all previous matches, showing career statistics and adding many new features.\n\nUnfortunately my time and coding skills are not at par with my wishes, so if you feel inspired to help I\'d be glad to share in my efforts.</string>
-    <string name="f_nav_improve_survey_header">Survey</string>
-    <string name="f_nav_improve_survey_body">I would be very grateful if you were able to take a few minutes to complete the survey below.</string>
-    <string name="f_nav_improve_survey_link"><a href="https://forms.gle/VgsbELD5HxDxkHmZ7">Snooker Board User Survey</a></string>
-    <string name="f_nav_improve_contact_header">Contact me</string>
-    <string name="f_nav_improve_contact_body">If you wish to get in touch please feel free to send me an e-mail:</string>
-    <string name="f_nav_improve_contact_email"><a href="mailto:victor.cocuz@yahoo.com">E-mail me</a></string>
+    <string name="f_nav_improve_tv_description">Hi, \n\nThanks for trying out my app! I am an amateur app developer with a life long passion for snooker. I wanted to do something for this sport so I set out to create this app in my spare time. My dream is to improve this app constantly and make it useful to the snooker community, by implementing a login to save all previous matches, showing career statistics and adding many new features.\n\nUnfortunately my time and coding skills are not at par with my wishes, so if you feel inspired to help I\'d be glad to share in my efforts.</string>
+    <string name="f_nav_improve_tv_survey_header">Survey</string>
+    <string name="f_nav_improve_tv_survey_body">I would be very grateful if you were able to take a few minutes to complete the survey below.</string>
+    <string name="f_nav_improve_tv_survey_link"><a href="https://forms.gle/VgsbELD5HxDxkHmZ7">Snooker Board User Survey</a></string>
+    <string name="f_nav_improve_tv_contact_header">Contact me</string>
+    <string name="f_nav_improve_tv_contact_body">If you wish to get in touch or report an issue please feel free to send me an e-mail:</string>
+    <string name="f_nav_improve_tv_contact_email"><a href="mailto:victor.cocuz@yahoo.com">E-mail me</a></string>
 
     <!--Fragment Donate-->
-    <string name="f_nav_donate_description">Hey there, I hope you enjoy my app :). If you would like to see new features and feel like helping out, you can buy me a coffee, beer or lunch to keep me working. Cheers :D</string>
-    <string name="f_nav_donate_coffee_title">Coffee</string>
+    <string name="f_nav_donate_tv_description">Hey there, I hope you enjoy my app :). If you would like to see new features and feel like helping out, you can buy me a coffee, beer or lunch to keep me working. Cheers :D</string>
+    <string name="f_nav_donate_tv_coffee_title">Coffee</string>
     <string name="f_nav_donate_coffee_price">£2.50</string>
-    <string name="f_nav_donate_beer_title">Beer</string>
+    <string name="f_nav_donate_tv_beer_title">Beer</string>
     <string name="f_nav_donate_beer_price">£5.00</string>
-    <string name="f_nav_donate_lunch_title">Lunch</string>
+    <string name="f_nav_donate_tv_lunch_title">Lunch</string>
     <string name="f_nav_donate_lunch_price">£10.00</string>
     <string name="snackbar_donation">Thank you, that is most kind of you :)</string>
 
     <!--Fragment About-->
-    <string name="f_nav_about_description">Snooker Board is a simple snooker score keeping app that focuses on recording one full match at a time, with care to encompass all rules from the WPBSA (World Professional Billiards and Snooker Association) Official Rules of the Games of Snooker and Billiards</string>
-    <string name="f_nav_about_version_title">Releases</string>
+    <string name="f_nav_about_tv_description">Snooker Board is a simple snooker score keeping app that focuses on recording one full match at a time, with care to encompass all rules from the WPBSA (World Professional Billiards and Snooker Association) Official Rules of the Games of Snooker and Billiards</string>
+    <string name="f_nav_about_tv_version_title">Releases</string>
 
-    <string name="f_nav_about_version_1_0_x">Version 1.0.x</string>
-    <string name="f_nav_about_version_1_0_x_01">• </string>
-    <string name="f_nav_about_version_1_0_x_02">• </string>
-    <string name="f_nav_about_version_1_0_x_03">• </string>
-    <string name="f_nav_about_version_1_0_x_04">• </string>
+    <string name="f_nav_about_tv_version_1_0_8">Version 1.0.8</string>
+    <string name="f_nav_about_tv_version_1_0_8_01">• Added new features: Remove color, Safe miss and Snooker</string>
+    <string name="f_nav_about_tv_version_1_0_8_02">• Implemented tests to check game logic</string>
+    <string name="f_nav_about_tv_version_1_0_8_03">• Fixed UI and logic glitches: score bar, dialogs, ball view and others</string>
+    <string name="f_nav_about_tv_version_1_0_8_04">• Added a log button to submit issues by e-mail</string>
+    <string name="f_nav_about_tv_version_1_0_8_05">• Refactored database to save each shot in real time</string>
+    <string name="f_nav_about_tv_version_1_0_8_06">• Refactored game classes and util classes</string>
+    <string name="f_nav_about_tv_version_1_0_8_07">• Added fragment animation to fade in and out on transition</string>
+    <string name="f_nav_about_tv_version_1_0_8_08">• Removed legacy unused fragments</string>
 
-    <string name="f_nav_about_version_1_0_8">Version 1.0.8</string>
-    <string name="f_nav_about_version_1_0_8_01">• Added new features: Remove color, Safe miss and Snooker</string>
-    <string name="f_nav_about_version_1_0_8_02">• Implemented tests to check game logic</string>
-    <string name="f_nav_about_version_1_0_8_03">• Fixed UI and logic glitches: score bar, dialogs, ball view and others</string>
-    <string name="f_nav_about_version_1_0_8_04">• Added a log button to submit issues by e-mail</string>
-    <string name="f_nav_about_version_1_0_8_05">• Refactored database to save each shot in real time</string>
-    <string name="f_nav_about_version_1_0_8_06">• Refactored game classes and util classes</string>
-    <string name="f_nav_about_version_1_0_8_07">• Added fragment animation to fade in and out on transition</string>
-    <string name="f_nav_about_version_1_0_8_08">• Removed legacy unused fragments</string>
+    <string name="f_nav_about_tv_version_1_0_7">Version 1.0.7</string>
+    <string name="f_nav_about_tv_version_1_0_7_01">• Add interstitial ads</string>
+    <string name="f_nav_about_tv_version_1_0_7_02">• Fix app support price issues</string>
+    <string name="f_nav_about_tv_version_1_0_7_03">• Add buttons for two new match tracking features: safe miss and snooker</string>
+    <string name="f_nav_about_tv_version_1_0_7_04">• Add new button for missed shots in line with the rest of the balls</string>
+    <string name="f_nav_about_tv_version_1_0_7_05">• Fix UI glitches, add selection color change for fouls</string>
+    <string name="f_nav_about_tv_version_1_0_7_06">• Have all actions show in the frame breakdown</string>
 
-    <string name="f_nav_about_version_1_0_7">Version 1.0.7</string>
-    <string name="f_nav_about_version_1_0_7_01">• Add interstitial ads</string>
-    <string name="f_nav_about_version_1_0_7_02">• Fix app support price issues</string>
-    <string name="f_nav_about_version_1_0_7_03">• Add buttons for two new match tracking features: safe miss and snooker</string>
-    <string name="f_nav_about_version_1_0_7_04">• Add new button for missed shots in line with the rest of the balls</string>
-    <string name="f_nav_about_version_1_0_7_05">• Fix UI glitches, add selection color change for fouls</string>
-    <string name="f_nav_about_version_1_0_7_06">• Have all actions show in the frame breakdown</string>
+    <string name="f_nav_about_tv_version_1_0_6">Version 1.0.6</string>
+    <string name="f_nav_about_tv_version_1_0_6_01">• Implement billing for in app purchases to enable financial support</string>
+    <string name="f_nav_about_tv_version_1_0_6_02">• Fix player switching glitch</string>
 
-    <string name="f_nav_about_version_1_0_6">Version 1.0.6</string>
-    <string name="f_nav_about_version_1_0_6_01">• Implement billing for in app purchases to enable financial support</string>
-    <string name="f_nav_about_version_1_0_6_02">• Fix player switching glitch</string>
+    <string name="f_nav_about_tv_version_1_0_5">Version 1.0.5</string>
+    <string name="f_nav_about_tv_version_1_0_5_01">• Fix UI screens overlapping</string>
+    <string name="f_nav_about_tv_version_1_0_5_02">• Fix DB saving glitches</string>
+    <string name="f_nav_about_tv_version_1_0_5_03">• Replace toasts with snackbars on main screen</string>
+    <string name="f_nav_about_tv_version_1_0_5_04">• Add new ball colour for no ball</string>
 
-    <string name="f_nav_about_version_1_0_5">Version 1.0.5</string>
-    <string name="f_nav_about_version_1_0_5_01">• Fix UI screens overlapping</string>
-    <string name="f_nav_about_version_1_0_5_02">• Fix DB saving glitches</string>
-    <string name="f_nav_about_version_1_0_5_03">• Replace toasts with snackbars on main screen</string>
-    <string name="f_nav_about_version_1_0_5_04">• Add new ball colour for no ball</string>
+    <string name="f_nav_about_tv_version_1_0_4">Version 1.0.4</string>
+    <string name="f_nav_about_tv_version_1_0_4_01">• Added readMe file</string>
+    <string name="f_nav_about_tv_version_1_0_4_02">• Added Improve screen and a dummy Support the app screen</string>
+    <string name="f_nav_about_tv_version_1_0_4_03">• Changed about screen to show all previous versions</string>
+    <string name="f_nav_about_tv_version_1_0_4_04">• Added user survey link</string>
+    <string name="f_nav_about_tv_version_1_0_4_05">• Fixed match saving and loading glitches and minor UI glitches</string>
 
-    <string name="f_nav_about_version_1_0_4">Version 1.0.4</string>
-    <string name="f_nav_about_version_1_0_4_01">• Added readMe file</string>
-    <string name="f_nav_about_version_1_0_4_02">• Added Improve screen and a dummy Support the app screen</string>
-    <string name="f_nav_about_version_1_0_4_03">• Changed about screen to show all previous versions</string>
-    <string name="f_nav_about_version_1_0_4_04">• Added user survey link</string>
-    <string name="f_nav_about_version_1_0_4_05">• Fixed match saving and loading glitches and minor UI glitches</string>
+    <string name="f_nav_about_tv_version_1_0_3">Version 1.0.3</string>
+    <string name="f_nav_about_tv_version_1_0_3_01">• Added splash screen</string>
+    <string name="f_nav_about_tv_version_1_0_3_02">• Added navigation bar</string>
+    <string name="f_nav_about_tv_version_1_0_3_03">• Added about and rules screens</string>
+    <string name="f_nav_about_tv_version_1_0_3_04">• Added conditions for action and menu buttons to show snack bar explaining when not selected</string>
+    <string name="f_nav_about_tv_version_1_0_3_05">• Removed continue and cancel match screen</string>
+    <string name="f_nav_about_tv_version_1_0_3_06">• Fixed match saving and loading glitches</string>
+    <string name="f_nav_about_tv_version_1_0_3_07">• Fixed UI glitches such as scroll view</string>
 
-    <string name="f_nav_about_version_1_0_3">Version 1.0.3</string>
-    <string name="f_nav_about_version_1_0_3_01">• Added splash screen</string>
-    <string name="f_nav_about_version_1_0_3_02">• Added navigation bar</string>
-    <string name="f_nav_about_version_1_0_3_03">• Added about and rules screens</string>
-    <string name="f_nav_about_version_1_0_3_04">• Added conditions for action and menu buttons to show snack bar explaining when not selected</string>
-    <string name="f_nav_about_version_1_0_3_05">• Removed continue and cancel match screen</string>
-    <string name="f_nav_about_version_1_0_3_06">• Fixed match saving and loading glitches</string>
-    <string name="f_nav_about_version_1_0_3_07">• Fixed UI glitches such as scroll view</string>
+    <string name="f_nav_about_tv_version_1_0_2">Version 1.0.2</string>
+    <string name="f_nav_about_tv_version_1_0_2_01">• Open app straight onto match statistics when needed</string>
+    <string name="f_nav_about_tv_version_1_0_2_02">• Fixed undo glitches, match saving glitches and UI glitches</string>
 
-    <string name="f_nav_about_version_1_0_2">Version 1.0.2</string>
-    <string name="f_nav_about_version_1_0_2_01">• Open app straight onto match statistics when needed</string>
-    <string name="f_nav_about_version_1_0_2_02">• Fixed undo glitches, match saving glitches and UI glitches</string>
+    <string name="f_nav_about_tv_version_1_0_1">Version 1.0.1</string>
+    <string name="f_nav_about_tv_version_1_0_1_01">• Added freeball toggle and remove it from foul dialog</string>
+    <string name="f_nav_about_tv_version_1_0_1_02">• Check for game in progress and load a continuing match directly rather than always starting with the match settings screen</string>
+    <string name="f_nav_about_tv_version_1_0_1_03">• Fixed undo glitches</string>
+    <string name="f_nav_about_tv_version_1_0_1_04">• Fixed match action glitches and add new dialogs for major actions</string>
 
-    <string name="f_nav_about_version_1_0_1">Version 1.0.1</string>
-    <string name="f_nav_about_version_1_0_1_01">• Added freeball toggle and remove it from foul dialog</string>
-    <string name="f_nav_about_version_1_0_1_02">• Check for game in progress and load a continuing match directly rather than always starting with the match settings screen</string>
-    <string name="f_nav_about_version_1_0_1_03">• Fixed undo glitches</string>
-    <string name="f_nav_about_version_1_0_1_04">• Fixed match action glitches and add new dialogs for major actions</string>
-
-    <string name="f_nav_about_version_1_0_0">Version 1</string>
-    <string name="f_nav_about_version_1_0_0_01">• Initial Release</string>
+    <string name="f_nav_about_tv_version_1_0_0">Version 1</string>
+    <string name="f_nav_about_tv_version_1_0_0_01">• Initial Release</string>
 </resources>

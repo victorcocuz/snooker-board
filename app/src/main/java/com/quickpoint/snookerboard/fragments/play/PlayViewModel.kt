@@ -9,9 +9,7 @@ import com.quickpoint.snookerboard.domain.DomainPlayer.PLAYER02
 import com.quickpoint.snookerboard.utils.Event
 import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.MatchAction.*
-import com.quickpoint.snookerboard.utils.MatchRules
-import com.quickpoint.snookerboard.utils.MatchRules.*
-import timber.log.Timber
+import com.quickpoint.snookerboard.utils.MatchRules.RULES
 
 class PlayViewModel(
     app: Application,

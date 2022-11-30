@@ -35,70 +35,69 @@
         tools:context=".GameDialogFragment">
 
         <TextView
-            android:id="@+id/game_dialog_title"
+            android:id="@+id/f_dialog_gen_tv_title"
             style="@style/TextHeaderBold"
-            android:paddingStart="@dimen/margin_layout_offset"
-            android:paddingEnd="@dimen/margin_layout_offset"
             android:layout_width="0dp"
             android:layout_height="@dimen/dialog_title_height"
             android:background="?attr/colorPrimaryVariant"
             android:gravity="center_vertical"
+            android:paddingStart="@dimen/margin_layout_offset"
+            android:paddingEnd="@dimen/margin_layout_offset"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:setDialogGameGenLabel="@{varDialogMatchActionC}" />
 
         <TextView
-            android:id="@+id/game_dialog_gen_q"
+            android:id="@+id/f_dialog_gen_tv_question"
             style="@style/TextHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/margin_layout_offset"
             android:paddingTop="@dimen/margin_layout_offset"
             android:paddingEnd="@dimen/margin_layout_offset"
-            android:text="@string/hello_blank_fragment"
             app:dialogGameGenQuestion="@{varDialogMatchActionC}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/game_dialog_title" />
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_gen_tv_title" />
 
         <TextView
-            android:id="@+id/game_dialog_note"
-            android:layout_width="wrap_content"
+            android:id="@+id/f_dialog_gen_tv_note"
             style="@style/TextNote"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:dialogGameNote="@{varDialogMatchActionB}"
+            android:layout_marginStart="@dimen/margin_layout_offset"
             android:layout_marginTop="@dimen/margin_header_below"
+            app:dialogGameNote="@{varDialogMatchActionB}"
             app:dialogGameNoteScore="@{varGameVm.displayFrame}"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="@dimen/margin_layout_offset"
-            app:layout_constraintTop_toBottomOf="@+id/game_dialog_gen_q" />
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_gen_tv_question" />
 
         <TextView
-            android:id="@+id/game_dialog_gen_a"
+            android:id="@+id/f_dialog_gen_btn_answer_a"
             style="@style/ButtonNarrow"
             android:layout_width="wrap_content"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             android:onClick="@{() -> varDialogVm.assignEventDialogAction(varDialogMatchActionA)}"
             app:dialogGameGenA="@{varDialogMatchActionC}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_dialog_gen_c"
-            app:layout_constraintEnd_toStartOf="@+id/game_dialog_gen_b"
+            app:layout_constraintBottom_toBottomOf="@+id/f_dialog_gen_btn_answer_c"
+            app:layout_constraintEnd_toStartOf="@+id/f_dialog_gen_btn_answer_b"
             app:setVisible="@{varDialogMatchActionA != MatchAction.IGNORE}" />
 
         <TextView
-            android:id="@+id/game_dialog_gen_b"
+            android:id="@+id/f_dialog_gen_btn_answer_b"
             style="@style/ButtonNarrow"
             android:layout_width="wrap_content"
+            android:layout_marginEnd="@dimen/margin_layout_offset"
             android:onClick="@{() -> varDialogVm.assignEventDialogAction(varDialogMatchActionB)}"
             app:dialogGameGenB="@{varDialogMatchActionB}"
-            android:layout_marginEnd="@dimen/margin_layout_offset"
             app:dialogGameGenBScore="@{varGameVm.displayFrame}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_dialog_gen_c"
-            app:layout_constraintEnd_toStartOf="@+id/game_dialog_gen_c"
+            app:layout_constraintBottom_toBottomOf="@+id/f_dialog_gen_btn_answer_c"
+            app:layout_constraintEnd_toStartOf="@+id/f_dialog_gen_btn_answer_c"
             app:setVisible="@{varDialogMatchActionB != MatchAction.IGNORE}" />
 
         <TextView
-            android:id="@+id/game_dialog_gen_c"
+            android:id="@+id/f_dialog_gen_btn_answer_c"
             style="@style/ButtonNarrow"
             android:layout_width="wrap_content"
             android:layout_marginTop="@dimen/margin_header_above"
@@ -110,7 +109,7 @@
             app:dialogGameGenCScore="@{varGameVm.displayFrame}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/game_dialog_note"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_gen_tv_note"
             app:setVisible="@{(varDialogMatchActionC != MatchAction.IGNORE)}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

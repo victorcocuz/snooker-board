@@ -1,86 +1,51 @@
 <resources>
 
-    <!-- Dialogs -->
-    <string name="dialog_gen_no">NO</string>
-    <string name="dialog_gen_yes">YES</string>
-
     <!-- Actions -->
-    <string name="action_safe">SAFE</string>
-    <string name="action_safe_miss">SAFE MISS</string>
-    <string name="action_snooker">SNOOKER</string>
-    <string name="action_miss">MISS</string>
-    <string name="action_foul">FOUL</string>
-    <string name="action_add_red">++RED</string>
-    <string name="action_rerack">RERACK</string>
-    <string name="action_end">END</string>
-    <string name="action_finish">FINISH</string>
-    <string name="action_undo">UNDO</string>
-    <string name="action_cancel">Cancel</string>
-
-    <!-- Fragment Login -->
-    <string name="fragment_login_title">FRAGMENT LOGIN</string>
-
-    <!-- Fragment Rankings -->
-    <string name="fragment_rankings_label_position">POSITION</string>
-    <string name="fragment_rankings_label_name">NAME</string>
-    <string name="fragment_rankings_label_points">POINTS</string>
-    <string name="fragment_statistics_title">FRAGMENT STATISTICS</string>
-
-    <!-- Fragment Game Stats -->
-    <string name="fragment_game_stats_btn_go_to_play">GO TO MAIN MENU</string>
-
-    <!-- Fragment History -->
-    <string name="fragment_history_title">HISTORY FRAGMENT</string>
-
-    <!-- Fragment Friends -->
-    <string name="fragment_friends_title">FRIENDS FRAGMENT</string>
+    <string name="l_game_actions_btn_safe">SAFE</string>
+    <string name="l_game_actions_btn_safe_miss">SAFE MISS</string>
+    <string name="l_game_actions_btn_snooker">SNOOKER</string>
+    <string name="l_game_actions_btn_ball_miss">MISS</string>
+    <string name="l_game_actions_btn_foul">FOUL</string>
 
     <!-- Fragment Play -->
-    <string name="you">You</string>
-    <string name="guest">Guest</string>
-    <string name="hint_first_name">First Name</string>
-    <string name="hint_last_name">Last Name</string>
+    <string name="l_play_rules_hint_name_first">First Name</string>
+    <string name="l_play_rules_hint_name_last">Last Name</string>
+    <string name="l_play_rules_autofill_name_first">personGivenName</string>
+    <string name="l_play_rules_autofill_name_last">personFamilyName</string>
 
-    <string name="f_play_label_player_a">Player 1</string>
-    <string name="f_play_label_player_b">Player 2</string>
-    <string name="f_play_label_vs">VS</string>
-    <string name="f_play_contentd_desc_ball_first">Ball to click to choose who goes first</string>
-    <string name="f_play_label_frames">Number of Frames</string>
-    <string name="f_play_label_reds">Number of Reds</string>
-    <string name="f_play_btn_reds_six">6</string>
-    <string name="f_play_btn_reds_ten">10</string>
-    <string name="f_play_btn_reds_fifteen">15</string>
-    <string name="f_play_label_foul_modifier">Standard Foul Value</string>
-    <string name="f_play_btn_foul_one">1</string>
-    <string name="f_play_btn_foul_two">2</string>
-    <string name="f_play_btn_foul_three">3</string>
-    <string name="f_play_btn_foul_four">4</string>
-    <string name="f_play_label_breaks_first">Player to Break</string>
-    <string name="f_play_btn_break_random">Coin toss</string>
-    <string name="f_play_btn_play">START</string>
+    <string name="l_play_rules_tv_player_a_label">Player 1</string>
+    <string name="l_play_rules_tv_player_b_label">Player 2</string>
+    <string name="l_play_rules_tv_frames_label">Number of Frames</string>
+    <string name="l_play_rules_tv_reds_label">Number of Reds</string>
+    <string name="l_play_rules_btn_reds_six">6</string>
+    <string name="l_play_rules_btn_reds_ten">10</string>
+    <string name="l_play_rules_btn_reds_fifteen">15</string>
+    <string name="l_play_rules_tv_foul_modifier_label">Standard Foul Value</string>
+    <string name="l_play_rules_btn_foul_one">1</string>
+    <string name="l_play_rules_btn_foul_two">2</string>
+    <string name="l_play_rules_btn_foul_three">3</string>
+    <string name="l_play_rules_btn_foul_four">4</string>
+    <string name="l_play_rules_tv_breaks_first_label">Player to Break</string>
+    <string name="l_play_rules_btn_breaks_random">Coin toss</string>
+    <string name="f_play_btn_game_f">START</string>
 
     <string name="snackbar_f_play_no_name">Please add player names to start a new match</string>
     <string name="snackbar_f_play_select_who_breaks">Please select who is breaking first</string>
 
     <!-- Fragment Game -->
-    <string name="f_game_label_player_a">Player A</string>
-    <string name="f_game_label_player_b">Player B</string>
-    <string name="f_game_label_remaining">Remaining</string>
-    <string name="f_game_label_difference">Difference</string>
-    <string name="f_game_label_snookers">Number of Snookers</string>
-    <string name="f_game_label_fouls">Number of Fouls</string>
-    <string name="f_game_label_percentage">Pot Success</string>
-    <string name="f_game_label_safety_percentage">Safety Success</string>
-    <string name="f_game_label_break">Highest Break</string>
-    <string name="chapter_score">Frame Score</string>
-    <string name="chapter_statistics">Frame Statistics</string>
-    <string name="chapter_breakdown">Frame Breakdown</string>
+    <string name="l_game_score_tv_remaining_label">Remaining</string>
+    <string name="l_game_score_tv_diff_label">Difference</string>
+    <string name="l_game_score_tv_snookers_label">Number of Snookers</string>
+    <string name="l_game_score_tv_fouls_label">Number of Fouls</string>
+    <string name="l_game_score_tv_percentage_label">Pot Success</string>
+    <string name="l_game_score_tv_safety_percentage_label">Safety Success</string>
+    <string name="l_game_score_tv_break_label">Highest Break</string>
+    <string name="l_game_score_ll_line_chapter_score">Frame Score</string>
+    <string name="l_game_score_ll_line_chapter_statistics">Frame Statistics</string>
+    <string name="l_game_score_ll_line_chapter_breakdown">Frame Breakdown</string>
+    <string name="l_game_actions_btn_free_ball">Free Ball</string>
 
-    <string name="f_play_continue_game_description">There is a match in progress, what would you like to do?</string>
-    <string name="f_play_continue_game_continue">Continue current match</string>
-    <string name="f_play_continue_game_cancel">Cancel current match</string>
-
-    <string name="toast_game_no_balls_left">There is no ball left on the table</string>
+    <string name="toast_f_game_no_balls_left">There is no ball left on the table</string>
 
     <string name="snackbar_f_game_undo">There are no actions to undo</string>
     <string name="snackbar_f_game_add_red">You can only pot an extra red after potting a red and if enough reds are on the table</string>
@@ -92,23 +57,21 @@
 
 
     <!-- Fragment Foul -->
-    <string name="f_foul_label_title">Foul</string>
-    <string name="f_foul_label_choose_ball">Which ball was fouled?</string>
-    <string name="f_foul_label_choose_action">Do you wish to continue?</string>
-    <string name="f_game_foul_action_continue">OK, I will play</string>
-    <string name="f_foul_action_force_continue">Force continue or retake</string>
-    <string name="f_foul_label_other_actions">Any other actions?</string>
-    <string name="f_foul_action_free_ball">Free Ball</string>
-    <string name="f_foul_action_remove_red">Remove Red</string>
-    <string name="f_foul_cancel">Cancel</string>
-    <string name="f_foul_ok">OK</string>
-    <string name="toast_foul_invalid">Select a ball and an action to continue</string>
+    <string name="f_dialog_foul_tv_balls_label">Which ball was fouled?</string>
+    <string name="f_dialog_foul_tv_choose_action_label">Do you wish to continue?</string>
+    <string name="f_dialog_foul_btn_continue">OK, I will play</string>
+    <string name="f_dialog_foul_btn_force_continue">Force continue or retake</string>
+    <string name="f_dialog_foul_btn_cancel">Cancel</string>
+    <string name="f_dialog_foul_btn_submit">Proceed</string>
 
-    <!-- Fragment Game Statistics -->
-    <string name="f_statistics_header_break">Break</string>
-    <string name="f_statistics_header_points">Points</string>
-    <string name="f_statistics_header_score">Score</string>
-    <string name="f_statistics_footer_total">Total</string>
-    <string name="f_statistics_header_frame_id">#</string>
-    <string name="f_statistics_header_percentage">%</string>
+    <string name="toast_f_dialog_foul_invalid">Select a ball and an action to continue</string>
+
+    <!-- Fragment Post Game -->
+    <string name="l_post_game_tv_header_break">Break</string>
+    <string name="l_post_game_tv_header_points">Points</string>
+    <string name="l_post_game_tv_header_score">Score</string>
+    <string name="l_post_game_tv_footer_total">Total</string>
+    <string name="l_post_game_tv_header_frame_id">#</string>
+    <string name="l_post_game_tv_header_percentage">%</string>
+    <string name="f_post_game_btn_home">GO TO MAIN MENU</string>
 </resources>

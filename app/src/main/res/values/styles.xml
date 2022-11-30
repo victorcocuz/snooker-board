@@ -10,12 +10,6 @@
         <item name="android:background">@color/beige</item>
     </style>
 
-    <style name="LineHorizontalAccentOffset" parent="LineHorizontalAccent">
-        <item name="android:layout_marginStart">@dimen/margin_layout_offset</item>
-        <item name="android:layout_marginEnd">@dimen/margin_layout_offset</item>
-        <item name="android:background">@color/beige</item>
-    </style>
-
     <style name="LineVertical">
         <item name="android:layout_width">@dimen/stroke_single</item>
         <item name="android:layout_height">match_parent</item>
@@ -29,10 +23,6 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:background">@color/beige</item>
-    </style>
-
-    <style name="LineHorizontalTransparent" parent="LineHorizontal">
-        <item name="android:background">@color/transparent</item>
     </style>
 
     <!-- Text Bold -->
@@ -85,22 +75,10 @@
         <item name="android:textSize">@dimen/text_regular</item>
     </style>
 
-    <style name="TextStatisticsBody" parent="MontserratTextViewStyle">
-        <item name="android:textSize">@dimen/text_regular</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:gravity">center</item>
-    </style>
-
     <style name="TextBody" parent="MontserratTextViewStyle">
         <item name="android:textSize">@dimen/text_regular</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:gravity">start</item>
-    </style>
-
-    <style name="TextHeaderBlack" parent="TextHeader">
-        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="TextCaption" parent="MontserratTextViewStyle">

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,7 +19,6 @@ import com.quickpoint.snookerboard.fragments.game.BallListener
 import com.quickpoint.snookerboard.fragments.game.GameViewModel
 import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.*
-import timber.log.Timber
 
 class FoulDialogFragment : DialogFragment() {
     private val dialogVm: DialogViewModel by activityViewModels()
@@ -41,7 +39,7 @@ class FoulDialogFragment : DialogFragment() {
             lifecycleOwner = viewLifecycleOwner
             varGameVm = this@FoulDialogFragment.gameVm
             varDialogVm = this@FoulDialogFragment.dialogVm
-            foulBallsListRv.apply {
+            fDialogFoulRvBalls.apply {
                 layoutManager = GridLayoutManager(activity, 4)
                 adapter = BallAdapter(
                     BallListener { ball -> dialogVm.onBallClicked(ball) },
@@ -60,7 +58,7 @@ class FoulDialogFragment : DialogFragment() {
                             gameVm.onEventGameAction(FOUL_CONFIRM)
                             dismiss()
                         }
-                        else toast(getString(R.string.toast_foul_invalid))
+                        else toast(getString(R.string.toast_f_dialog_foul_invalid))
                     else -> {
                         dialogVm.resetFoul()
                         dismiss()

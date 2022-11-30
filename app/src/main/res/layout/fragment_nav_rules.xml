@@ -14,7 +14,7 @@
         tools:context=".fragments.navdrawer.NavRulesFragment">
 
         <TextView
-            android:id="@+id/f_nav_rules_title"
+            android:id="@+id/f_nav_rules_tv_title"
             android:layout_marginTop="@dimen/margin_xxsmall"
             style="@style/TextTitle"
             android:text="@string/menu_drawer_rules"
@@ -23,126 +23,126 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/f_nav_rules_heading_01_ball_terminology"
+            android:id="@+id/f_nav_rules_tv_heading_01_ball_terminology"
             style="@style/TextHeaderBold"
             android:layout_marginTop="@dimen/margin_xxsmall"
-            android:text="@string/f_nav_rules_heading_01_ball_terminology"
+            android:text="@string/f_nav_rules_tv_heading_01_ball_terminology"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_title" />
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_tv_title" />
 
         <TextView
-            android:id="@+id/f_nav_rules_body_01_ball_terminology"
+            android:id="@+id/f_nav_rules_tv_body_01_ball_terminology"
             style="@style/TextBody"
-            android:text="@string/f_nav_rules_body_01_ball_terminology"
+            android:text="@string/f_nav_rules_tv_body_01_ball_terminology"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_heading_01_ball_terminology" />
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_tv_heading_01_ball_terminology" />
 
         <TextView
-            android:id="@+id/f_nav_rules_heading_02_ball_values"
+            android:id="@+id/f_nav_rules_tv_heading_02_ball_values"
             android:layout_marginTop="@dimen/margin_xxsmall"
             style="@style/TextHeaderBold"
-            android:text="@string/f_nav_rules_heading_02_ball_values"
+            android:text="@string/f_nav_rules_tv_heading_02_ball_values"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_body_01_ball_terminology" />
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_tv_body_01_ball_terminology" />
 
         <TextView
-            android:id="@+id/f_nav_rules_body_02_ball_values"
+            android:id="@+id/f_nav_rules_tv_body_02_ball_values"
             style="@style/TextBody"
-            android:text="@string/f_nav_rules_body_02_ball_values"
+            android:text="@string/f_nav_rules_tv_body_02_ball_values"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_heading_02_ball_values" />
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_tv_heading_02_ball_values" />
 
         <TextView
-            android:id="@+id/f_nav_rules_heading_03_snooker_terminology"
+            android:id="@+id/f_nav_rules_tv_heading_03_snooker_terminology"
             android:layout_marginTop="@dimen/margin_xxsmall"
             style="@style/TextHeaderBold"
-            android:text="@string/f_nav_rules_heading_03_snooker_terminology"
+            android:text="@string/f_nav_rules_tv_heading_03_snooker_terminology"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_body_02_ball_values" />
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_tv_body_02_ball_values" />
 
         <TextView
-            android:id="@+id/f_nav_rules_body_03_snooker_terminology"
+            android:id="@+id/f_nav_rules_tv_body_03_snooker_terminology"
             style="@style/TextBody"
-            android:text="@string/f_nav_rules_body_03_snooker_terminology"
+            android:text="@string/f_nav_rules_tv_body_03_snooker_terminology"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_heading_03_snooker_terminology" />
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_tv_heading_03_snooker_terminology" />
 
         <TextView
-            android:id="@+id/f_nav_rules_heading_04_fundamentals"
+            android:id="@+id/f_nav_rules_tv_heading_04_fundamentals"
             android:layout_marginTop="@dimen/margin_xxsmall"
             style="@style/TextHeaderBold"
-            android:text="@string/f_nav_rules_heading_04_fundamentals"
+            android:text="@string/f_nav_rules_tv_heading_04_fundamentals"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_body_03_snooker_terminology" />
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_tv_body_03_snooker_terminology" />
 
         <TextView
-            android:id="@+id/f_nav_rules_body_04_fundamentals"
+            android:id="@+id/f_nav_rules_tv_body_04_fundamentals"
             style="@style/TextBody"
-            android:text="@string/f_nav_rules_body_04_fundamentals"
+            android:text="@string/f_nav_rules_tv_body_04_fundamentals"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_heading_04_fundamentals" />
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_tv_heading_04_fundamentals" />
 
         <TextView
-            android:id="@+id/f_nav_rules_heading_05_foul_rules"
+            android:id="@+id/f_nav_rules_tv_heading_05_foul_rules"
             android:layout_marginTop="@dimen/margin_xxsmall"
             style="@style/TextHeaderBold"
-            android:text="@string/f_nav_rules_heading_05_foul_rules"
+            android:text="@string/f_nav_rules_tv_heading_05_foul_rules"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_body_04_fundamentals" />
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_tv_body_04_fundamentals" />
 
         <TextView
-            android:id="@+id/f_nav_rules_body_05_foul_rules"
+            android:id="@+id/f_nav_rules_tv_body_05_foul_rules"
             style="@style/TextBody"
-            android:text="@string/f_nav_rules_body_05_foul_rules"
+            android:text="@string/f_nav_rules_tv_body_05_foul_rules"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_heading_05_foul_rules" />
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_tv_heading_05_foul_rules" />
 
         <TextView
-            android:id="@+id/f_nav_rules_heading_06_game_end"
+            android:id="@+id/f_nav_rules_tv_heading_06_game_end"
             android:layout_marginTop="@dimen/margin_xxsmall"
             style="@style/TextHeaderBold"
-            android:text="@string/f_nav_rules_heading_06_game_end"
+            android:text="@string/f_nav_rules_tv_heading_06_game_end"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_body_05_foul_rules" />
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_tv_body_05_foul_rules" />
 
         <TextView
-            android:id="@+id/f_nav_rules_body_06_game_end"
+            android:id="@+id/f_nav_rules_tv_body_06_game_end"
             style="@style/TextBody"
-            android:text="@string/f_nav_rules_body_06_game_end"
+            android:text="@string/f_nav_rules_tv_body_06_game_end"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_heading_06_game_end" />
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_tv_heading_06_game_end" />
 
         <TextView
-            android:id="@+id/f_nav_rules_heading_07_winner"
+            android:id="@+id/f_nav_rules_tv_heading_07_winner"
             android:layout_marginTop="@dimen/margin_xxsmall"
             style="@style/TextHeaderBold"
-            android:text="@string/f_nav_rules_heading_07_winner"
+            android:text="@string/f_nav_rules_tv_heading_07_winner"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_body_06_game_end" />
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_tv_body_06_game_end" />
 
         <TextView
-            android:id="@+id/f_nav_rules_body_07_winner"
+            android:id="@+id/f_nav_rules_tv_body_07_winner"
             style="@style/TextBody"
-            android:text="@string/f_nav_rules_body_07_winner"
+            android:text="@string/f_nav_rules_tv_body_07_winner"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_heading_07_winner" />
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_tv_heading_07_winner" />
 
         <TextView
-            android:id="@+id/f_nav_rules_heading_08_more_info"
+            android:id="@+id/f_nav_rules_tv_heading_08_more_info"
             android:layout_marginTop="@dimen/margin_xxsmall"
             style="@style/TextHeaderBold"
-            android:text="@string/f_nav_rules_heading_08_more_info"
+            android:text="@string/f_nav_rules_tv_heading_08_more_info"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_body_07_winner" />
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_tv_body_07_winner" />
 
         <TextView
-            android:id="@+id/f_nav_rules_body_08_more_info"
+            android:id="@+id/f_nav_rules_tv_body_08_more_info"
             style="@style/TextBody"
             android:autoLink="web"
             android:textColorLink="@color/white"
-            android:text="@string/f_nav_rules_body_08_more_info"
+            android:text="@string/f_nav_rules_tv_body_08_more_info"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_heading_08_more_info" />
+            app:layout_constraintTop_toBottomOf="@+id/f_nav_rules_tv_heading_08_more_info" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>

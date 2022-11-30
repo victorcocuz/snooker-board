@@ -62,27 +62,27 @@ class GameFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
 
             // Bind top and score layouts
-            fGameLayoutTop.apply {
+            fGameLTop.apply {
                 varPlayerTagType = PlayerTagType.MATCH
                 varGameVm = this@GameFragment.gameVm
             }
-            fGameLayoutScore.apply {
+            fGameLScore.apply {
                 varGameVm = this@GameFragment.gameVm
             }
 
             // Bind break layout
             varGameVm = this@GameFragment.gameVm
-            fGameBreakRv.apply {
+            fGameRvBreak.apply {
                 adapter = BreakAdapter(requireActivity())
                 itemAnimator = null
             }
 
             // Bind buttons
-            fGameLayoutActionButtons.apply {
+            fGameLActions.apply {
                 varGameVm = this@GameFragment.gameVm
-                fGameBallsLl.layoutParams.height =
+                lGameActionsLlBalls.layoutParams.height =
                     requireContext().getFactoredDimen(FACTOR_BALL_MATCH) + resources.getDimension(R.dimen.margin_layout_offset).toInt() * 2
-                fGameBallsRv.apply {
+                lGameActionsRvBalls.apply {
                     layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
                     itemAnimator = null
                     adapter = BallAdapter( // Create a ball adapter for the balls recycler view
@@ -91,7 +91,7 @@ class GameFragment : Fragment() {
                             gameVm.assignPot(TYPE_HIT, ball)
                         }, gameVm.displayFrame, BallAdapterType.MATCH)
                 }
-                fGameBallMiss.apply {
+                lGameActionsFlBallMiss.apply {
                     layoutParams.width = context.getFactoredDimen(FACTOR_BALL_MATCH)
                     layoutParams.height = context.getFactoredDimen(FACTOR_BALL_MATCH)
                     setPadding(FACTOR_BALL_MATCH)
@@ -110,7 +110,7 @@ class GameFragment : Fragment() {
                         requireActivity().invalidateOptionsMenu() // Reset the menu every time the frame has been updated
                         Timber.i(getString(R.string.helper_update_frame_info))
                     }
-                    SNACKBAR_NO_BALL -> binding.fGameCoordLayout.snackbar(getString(R.string.toast_game_no_balls_left))
+                    SNACKBAR_NO_BALL -> binding.snackbar(getString(R.string.toast_f_game_no_balls_left))
 
                     // Dialogs relating
                     FOUL_DIALOG -> navigate(GameFragmentDirections.foulDialogFrag())
@@ -159,31 +159,31 @@ class GameFragment : Fragment() {
                         R.id.menu_item_log -> onEventGameAction(FRAME_LOG_ACTIONS_DIALOG)
                         R.id.menu_item_undo -> {
                             if (frameStack.isFrameInProgress()) assignPot(null)
-                            else binding.fGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_undo))
+                            else binding.snackbar(getString(R.string.snackbar_f_game_undo))
                         }
                         R.id.menu_item_add_red -> {
                             if (ballStack.isAddRedAvailable()) assignPot(TYPE_ADDRED)
-                            else binding.fGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_add_red))
+                            else binding.snackbar(getString(R.string.snackbar_f_game_add_red))
                         }
                         R.id.menu_item_remove_red -> {
                             if (isRemoveRedAvailable()) assignPot(TYPE_REMOVE_RED)
-                            else binding.fGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_remove_red))
+                            else binding.snackbar(getString(R.string.snackbar_f_game_remove_red))
                         }
                         R.id.menu_item_remove_color -> {
                             if (isRemoveColorAvailable()) assignPot(TYPE_REMOVE_COLOR)
-                            else binding.fGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_remove_color))
+                            else binding.snackbar(getString(R.string.snackbar_f_game_remove_color))
                         }
                         R.id.menu_item_rerack -> {
                             if (frameStack.isFrameInProgress()) onEventGameAction(FRAME_RERACK_DIALOG)
-                            else binding.fGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_rerack))
+                            else binding.snackbar(getString(R.string.snackbar_f_game_rerack))
                         }
                         R.id.menu_item_concede_frame -> {
                             if (!score.isFrameEqual()) onEventGameAction(FRAME_ENDING_DIALOG)
-                            else binding.fGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_concede_frame))
+                            else binding.snackbar(getString(R.string.snackbar_f_game_concede_frame))
                         }
                         R.id.menu_item_concede_match -> {
                             if (!score.isFrameAndMatchEqual()) onEventGameAction(MATCH_ENDING_DIALOG)
-                            else binding.fGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_concede_match))
+                            else binding.snackbar(getString(R.string.snackbar_f_game_concede_match))
                         }
                         R.id.menu_item_cancel_match -> {
                             onEventGameAction(if (score.isMatchInProgress()) MATCH_CANCEL_DIALOG else MATCH_CANCEL)

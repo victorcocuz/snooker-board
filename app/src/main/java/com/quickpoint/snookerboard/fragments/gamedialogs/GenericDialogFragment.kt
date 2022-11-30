@@ -7,21 +7,22 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.quickpoint.snookerboard.DialogViewModel
-import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentDialogGenBinding
 import com.quickpoint.snookerboard.fragments.game.GameViewModel
-import com.quickpoint.snookerboard.utils.*
+import com.quickpoint.snookerboard.utils.EventObserver
+import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.MatchAction.*
-import timber.log.Timber
+import com.quickpoint.snookerboard.utils.listOfMatchActionsUncancelable
+import com.quickpoint.snookerboard.utils.setLayoutSizeByFactor
 
 
 class GenericDialogFragment : DialogFragment() {
     private val dialogVm: DialogViewModel by activityViewModels()
     private lateinit var gameVm: GameViewModel
+    private lateinit var matchAction: MatchAction
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,13 +54,20 @@ class GenericDialogFragment : DialogFragment() {
 
         // Observers
         dialogVm.eventDialogAction.observe(viewLifecycleOwner, EventObserver { action ->
-            gameVm.onEventGameAction(action, when(action) {
-                MATCH_CANCEL, FRAME_RERACK, FRAME_START_NEW ->  true
-                else -> false
-            })
+            matchAction = action
             dismiss() // Close dialog once a match action as been clicked on
         })
+
+
         return binding.root
+    }
+
+    override fun onDestroy() { // Pass action back here to avoid crash during navigation
+        super.onDestroy()
+        gameVm.onEventGameAction(matchAction, when(matchAction) {
+            MATCH_CANCEL, FRAME_RERACK, FRAME_START_NEW ->  true
+            else -> false
+        })
     }
 }
 

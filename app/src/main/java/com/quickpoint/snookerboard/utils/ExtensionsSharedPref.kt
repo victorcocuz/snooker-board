@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.quickpoint.snookerboard.utils
 
 import android.app.Activity

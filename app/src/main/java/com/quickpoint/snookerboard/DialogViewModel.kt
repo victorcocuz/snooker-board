@@ -7,7 +7,6 @@ import com.quickpoint.snookerboard.domain.DomainBall
 import com.quickpoint.snookerboard.domain.PotAction
 import com.quickpoint.snookerboard.utils.Event
 import com.quickpoint.snookerboard.utils.MatchAction
-import timber.log.Timber
 
 class DialogViewModel : ViewModel() {
     // Dialog events must be observed separately to allow to close dialog window before taking action

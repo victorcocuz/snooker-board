@@ -2,16 +2,6 @@
     <string name="app_name">Snooker Board</string>
     <string name="ad_mob_id">ca-app-pub-8063036382786622~9725880072</string>
     <string name="ad_mob_id_interstitial_end_of_game">ca-app-pub-8063036382786622/4940511157</string>
-    <string name="ad_mob_id_interstitial_end_of_game_test">ca-app-pub-3940256099942544/1033173712</string>
-
-
-    <!-- Menu Bottom -->
-    <string name="menu_bottom_rankings">Rankings</string>
-    <string name="menu_bottom_friends">Friends</string>
-    <string name="menu_bottom_play">Play</string>
-    <string name="menu_bottom_statistics">Statistics</string>
-    <string name="menu_bottom_history">History</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- Menu Items -->
     <string name="menu_item_more">Main Menu</string>
@@ -26,7 +16,7 @@
     <string name="menu_item_cancel_match">Cancel Match</string>
 
     <!-- Items -->
-    <string name="item_ball_view_ball">Ball to be clicked</string>
+    <string name="i_ball_view_btn_ball">Ball to be clicked</string>
 
     <!-- Shared Preferences -->
     <string name="sp_file_key">PREFERENCE_FILE_KEY</string>
@@ -37,7 +27,6 @@
     <string name="sp_match_first">matchFirst</string>
     <string name="sp_match_frame_count">matchCrtFrame</string>
     <string name="sp_match_frame_max">matchFrameMax</string>
-    <string name="sp_match_broke_last">matchBrokeLast</string>
     <string name="sp_match_crt_player">matchCrtPlayer</string>
     <string name="sp_match_state">matchState</string>
     <string name="sp_match_name_first_a">matchNameFirstA</string>
@@ -48,20 +37,9 @@
     <string name="sp_match_freeball_selection">matchFreeballSelection</string>
     <string name="cd_foul_modifier_info">Foul Modifier Info</string>
     <string name="cd_logo">Logo</string>
-    <string name="autofill_name_given">personGivenName</string>
-    <string name="autofill_name_family">personFamilyName</string>
-    <string name="shared_pref_frame_max">frameMax</string>
-    <string name="vs">VS</string>
 
     <!-- Binding -->
-    <string name="game_total_score">(%1$d)</string>
     <string name="game_match_score">(%1$d - %2$d)</string>
-
-    <!-- Notifications -->
-    <string name="game_notification_channel_id" translatable="false">game_channel</string>
-    <string name="game_notification_channel_name" translatable="false">Snooker</string>
-    <string name="notification_title">Snooker Score</string>
-    <string name="notification_text">Congratulations! You finished the game!</string>
 
     <!-- Helper   -->
     <string name="helper_first_line">"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"</string>

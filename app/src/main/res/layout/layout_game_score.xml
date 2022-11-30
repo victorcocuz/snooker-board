@@ -18,7 +18,7 @@
         android:background="@color/transparent">
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/game_guide_vert_mid"
+            android:id="@+id/l_game_score_gd_vert_mid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -27,7 +27,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <LinearLayout
-            android:id="@+id/game_line_chapter_score"
+            android:id="@+id/l_game_score_ll_line_chapter_score"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -41,241 +41,241 @@
 
             <TextView
                 style="@style/TextChapter"
-                android:text="@string/chapter_score" />
+                android:text="@string/l_game_score_ll_line_chapter_score" />
 
             <FrameLayout style="@style/LineHorizontalChapter"
                 android:layout_marginStart="@dimen/margin_layout_offset"/>
         </LinearLayout>
 
         <TextView
-            android:id="@+id/game_text_score_a"
+            android:id="@+id/l_game_score_tv_frame_a"
             style="@style/TextTitle"
             android:text="@{String.valueOf(varGameVm.displayFrame.score[0].framePoints)}"
-            app:layout_constraintEnd_toStartOf="@+id/game_text_score_frames_a"
+            app:layout_constraintEnd_toStartOf="@+id/l_game_score_tv_match_a"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/game_line_chapter_score"
+            app:layout_constraintTop_toBottomOf="@+id/l_game_score_ll_line_chapter_score"
             tools:text="123" />
 
         <TextView
-            android:id="@+id/game_text_score_b"
+            android:id="@+id/l_game_score_tv_frame_b"
             style="@style/TextTitle"
             android:text="@{String.valueOf(varGameVm.displayFrame.score[1].framePoints)}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_text_score_a"
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_frame_a"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/game_text_score_frames_b"
+            app:layout_constraintStart_toEndOf="@+id/l_game_score_tv_match_b"
             tools:text="147" />
 
         <TextView
-            android:id="@+id/game_text_score_frames_a"
+            android:id="@+id/l_game_score_tv_match_a"
             style="@style/TextSubtitle"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             android:text="@{String.valueOf(varGameVm.displayFrame.score[0].matchPoints)}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_text_score_total"
-            app:layout_constraintEnd_toStartOf="@+id/game_text_score_total"
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_total"
+            app:layout_constraintEnd_toStartOf="@+id/l_game_score_tv_total"
             tools:text="13" />
 
         <TextView
-            android:id="@+id/game_text_score_frames_b"
+            android:id="@+id/l_game_score_tv_match_b"
             style="@style/TextSubtitle"
             android:layout_marginStart="@dimen/margin_layout_offset"
             android:text="@{String.valueOf(varGameVm.displayFrame.score[1].matchPoints)}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_text_score_total"
-            app:layout_constraintStart_toEndOf="@+id/game_text_score_total"
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_total"
+            app:layout_constraintStart_toEndOf="@+id/l_game_score_tv_total"
             tools:text="15" />
 
         <TextView
-            android:id="@+id/game_text_score_total"
+            android:id="@+id/l_game_score_tv_total"
             style="@style/TextSubtitle"
-            app:layout_constraintTop_toTopOf="@+id/game_text_score_a"
-            app:layout_constraintBottom_toBottomOf="@+id/game_text_score_a"
-            app:layout_constraintEnd_toStartOf="@+id/game_guide_vert_mid"
-            app:layout_constraintStart_toStartOf="@+id/game_guide_vert_mid"
+            app:layout_constraintTop_toTopOf="@+id/l_game_score_tv_frame_a"
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_frame_a"
+            app:layout_constraintEnd_toStartOf="@+id/l_game_score_gd_vert_mid"
+            app:layout_constraintStart_toStartOf="@+id/l_game_score_gd_vert_mid"
             android:text="@{String.valueOf(RULES.INSTANCE.getDisplayFrames())}" />
 
         <LinearLayout
-            android:id="@+id/game_line_chapter_statistics"
+            android:id="@+id/l_game_score_ll_line_chapter_statistics"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/game_text_score_a">
+            app:layout_constraintTop_toBottomOf="@+id/l_game_score_tv_frame_a">
 
             <FrameLayout style="@style/LineHorizontalChapter"
                 android:layout_marginEnd="@dimen/margin_layout_offset"/>
 
             <TextView
                 style="@style/TextChapter"
-                android:text="@string/chapter_statistics" />
+                android:text="@string/l_game_score_ll_line_chapter_statistics" />
 
             <FrameLayout style="@style/LineHorizontalChapter"
                 android:layout_marginStart="@dimen/margin_layout_offset"/>
         </LinearLayout>
 
         <TextView
-            android:id="@+id/game_text_score_break_a"
+            android:id="@+id/l_game_score_tv_break_a"
             style="@style/TextHeaderBold"
             android:text="@{String.valueOf(varGameVm.displayFrame.score[0].highestBreak)}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_label_break"
-            app:layout_constraintEnd_toStartOf="@+id/game_label_break"
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_break_label"
+            app:layout_constraintEnd_toStartOf="@+id/l_game_score_tv_break_label"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/game_label_break"
+            app:layout_constraintTop_toTopOf="@+id/l_game_score_tv_break_label"
             tools:text="50" />
 
         <TextView
-            android:id="@+id/game_label_break"
+            android:id="@+id/l_game_score_tv_break_label"
             style="@style/TextHeader"
             android:layout_marginTop="@dimen/margin_header_below"
-            android:text="@string/f_game_label_break"
-            app:layout_constraintEnd_toStartOf="@+id/game_guide_vert_mid"
-            app:layout_constraintStart_toStartOf="@+id/game_guide_vert_mid"
-            app:layout_constraintTop_toBottomOf="@+id/game_line_chapter_statistics" />
+            android:text="@string/l_game_score_tv_break_label"
+            app:layout_constraintEnd_toStartOf="@+id/l_game_score_gd_vert_mid"
+            app:layout_constraintStart_toStartOf="@+id/l_game_score_gd_vert_mid"
+            app:layout_constraintTop_toBottomOf="@+id/l_game_score_ll_line_chapter_statistics" />
 
         <TextView
-            android:id="@+id/game_text_score_break_b"
+            android:id="@+id/l_game_score_tv_break_b"
             style="@style/TextHeaderBold"
             android:text="@{String.valueOf(varGameVm.displayFrame.score[1].highestBreak)}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_label_break"
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_break_label"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/game_label_break"
-            app:layout_constraintTop_toTopOf="@+id/game_label_break"
+            app:layout_constraintStart_toEndOf="@+id/l_game_score_tv_break_label"
+            app:layout_constraintTop_toTopOf="@+id/l_game_score_tv_break_label"
             tools:text="40" />
 
         <TextView
-            android:id="@+id/game_text_score_percentage_a"
+            android:id="@+id/l_game_score_tv_percentage_a"
             style="@style/TextHeaderBold"
-            app:layout_constraintBottom_toBottomOf="@+id/game_label_percentage"
-            app:layout_constraintEnd_toEndOf="@+id/game_text_score_break_a"
-            app:layout_constraintStart_toStartOf="@+id/game_text_score_break_a"
-            app:layout_constraintTop_toTopOf="@+id/game_label_percentage"
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_percentage_label"
+            app:layout_constraintEnd_toEndOf="@+id/l_game_score_tv_break_a"
+            app:layout_constraintStart_toStartOf="@+id/l_game_score_tv_break_a"
+            app:layout_constraintTop_toTopOf="@+id/l_game_score_tv_percentage_label"
             app:setFrameScorePercentage="@{varGameVm.displayFrame.score[0]}"
             tools:text="55%" />
 
         <TextView
-            android:id="@+id/game_label_percentage"
+            android:id="@+id/l_game_score_tv_percentage_label"
             style="@style/TextHeader"
             android:layout_marginTop="@dimen/margin_xxxsmall"
-            android:text="@string/f_game_label_percentage"
-            app:layout_constraintEnd_toStartOf="@+id/game_guide_vert_mid"
-            app:layout_constraintStart_toStartOf="@+id/game_guide_vert_mid"
-            app:layout_constraintTop_toBottomOf="@+id/game_label_break" />
+            android:text="@string/l_game_score_tv_percentage_label"
+            app:layout_constraintEnd_toStartOf="@+id/l_game_score_gd_vert_mid"
+            app:layout_constraintStart_toStartOf="@+id/l_game_score_gd_vert_mid"
+            app:layout_constraintTop_toBottomOf="@+id/l_game_score_tv_break_label" />
 
         <TextView
-            android:id="@+id/game_text_score_percentage_b"
+            android:id="@+id/l_game_score_tv_percentage_b"
             style="@style/TextHeaderBold"
-            app:layout_constraintBottom_toBottomOf="@+id/game_label_percentage"
-            app:layout_constraintEnd_toEndOf="@+id/game_text_score_break_b"
-            app:layout_constraintStart_toStartOf="@+id/game_text_score_break_b"
-            app:layout_constraintTop_toTopOf="@+id/game_label_percentage"
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_percentage_label"
+            app:layout_constraintEnd_toEndOf="@+id/l_game_score_tv_break_b"
+            app:layout_constraintStart_toStartOf="@+id/l_game_score_tv_break_b"
+            app:layout_constraintTop_toTopOf="@+id/l_game_score_tv_percentage_label"
             app:setFrameScorePercentage="@{varGameVm.displayFrame.score[1]}"
             tools:text="58%" />
 
         <TextView
-            android:id="@+id/game_text_score_safety_percentage_a"
+            android:id="@+id/l_game_score_tv_safety_percentage_a"
             style="@style/TextHeaderBold"
-            app:layout_constraintBottom_toBottomOf="@+id/game_label_safety_percentage"
-            app:layout_constraintEnd_toEndOf="@+id/game_text_score_break_a"
-            app:layout_constraintStart_toStartOf="@+id/game_text_score_break_a"
-            app:layout_constraintTop_toTopOf="@+id/game_label_safety_percentage"
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_safety_percentage_label"
+            app:layout_constraintEnd_toEndOf="@+id/l_game_score_tv_break_a"
+            app:layout_constraintStart_toStartOf="@+id/l_game_score_tv_break_a"
+            app:layout_constraintTop_toTopOf="@+id/l_game_score_tv_safety_percentage_label"
             app:setFrameSafetyPercentage="@{varGameVm.displayFrame.score[0]}"
             tools:text="55%" />
 
         <TextView
-            android:id="@+id/game_label_safety_percentage"
+            android:id="@+id/l_game_score_tv_safety_percentage_label"
             style="@style/TextHeader"
             android:layout_marginTop="@dimen/margin_xxxsmall"
-            android:text="@string/f_game_label_safety_percentage"
-            app:layout_constraintEnd_toStartOf="@+id/game_guide_vert_mid"
-            app:layout_constraintStart_toStartOf="@+id/game_guide_vert_mid"
-            app:layout_constraintTop_toBottomOf="@+id/game_label_percentage" />
+            android:text="@string/l_game_score_tv_safety_percentage_label"
+            app:layout_constraintEnd_toStartOf="@+id/l_game_score_gd_vert_mid"
+            app:layout_constraintStart_toStartOf="@+id/l_game_score_gd_vert_mid"
+            app:layout_constraintTop_toBottomOf="@+id/l_game_score_tv_percentage_label" />
 
         <TextView
-            android:id="@+id/game_text_score_safety_percentage_b"
+            android:id="@+id/game_score_tv_safety_percentage_b"
             style="@style/TextHeaderBold"
-            app:layout_constraintBottom_toBottomOf="@+id/game_label_safety_percentage"
-            app:layout_constraintEnd_toEndOf="@+id/game_text_score_break_b"
-            app:layout_constraintStart_toStartOf="@+id/game_text_score_break_b"
-            app:layout_constraintTop_toTopOf="@+id/game_label_safety_percentage"
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_safety_percentage_label"
+            app:layout_constraintEnd_toEndOf="@+id/l_game_score_tv_break_b"
+            app:layout_constraintStart_toStartOf="@+id/l_game_score_tv_break_b"
+            app:layout_constraintTop_toTopOf="@+id/l_game_score_tv_safety_percentage_label"
             app:setFrameSafetyPercentage="@{varGameVm.displayFrame.score[1]}"
             tools:text="58%" />
 
         <TextView
-            android:id="@+id/game_text_score_snookers_a"
+            android:id="@+id/l_game_score_tv_snookers_a"
             style="@style/TextHeaderBold"
             android:text="@{String.valueOf(varGameVm.displayFrame.score[0].snookers)}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_label_snookers"
-            app:layout_constraintEnd_toEndOf="@+id/game_text_score_percentage_a"
-            app:layout_constraintStart_toStartOf="@+id/game_text_score_percentage_a"
-            app:layout_constraintTop_toTopOf="@+id/game_label_snookers"
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_snookers_label"
+            app:layout_constraintEnd_toEndOf="@+id/l_game_score_tv_percentage_a"
+            app:layout_constraintStart_toStartOf="@+id/l_game_score_tv_percentage_a"
+            app:layout_constraintTop_toTopOf="@+id/l_game_score_tv_snookers_label"
             tools:text="1" />
 
         <TextView
-            android:id="@+id/game_label_snookers"
+            android:id="@+id/l_game_score_tv_snookers_label"
             style="@style/TextHeader"
             android:layout_marginTop="@dimen/margin_xxxsmall"
-            android:text="@string/f_game_label_snookers"
-            app:layout_constraintEnd_toStartOf="@+id/game_guide_vert_mid"
-            app:layout_constraintStart_toStartOf="@+id/game_guide_vert_mid"
-            app:layout_constraintTop_toBottomOf="@+id/game_label_safety_percentage" />
+            android:text="@string/l_game_score_tv_snookers_label"
+            app:layout_constraintEnd_toStartOf="@+id/l_game_score_gd_vert_mid"
+            app:layout_constraintStart_toStartOf="@+id/l_game_score_gd_vert_mid"
+            app:layout_constraintTop_toBottomOf="@+id/l_game_score_tv_safety_percentage_label" />
 
         <TextView
-            android:id="@+id/game_text_score_snookers_b"
+            android:id="@+id/l_game_score_tv_snookers_b"
             style="@style/TextHeaderBold"
             android:text="@{String.valueOf(varGameVm.displayFrame.score[1].snookers)}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_label_snookers"
-            app:layout_constraintEnd_toEndOf="@+id/game_text_score_percentage_b"
-            app:layout_constraintStart_toStartOf="@+id/game_text_score_percentage_b"
-            app:layout_constraintTop_toTopOf="@+id/game_label_snookers"
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_snookers_label"
+            app:layout_constraintEnd_toEndOf="@+id/l_game_score_tv_percentage_b"
+            app:layout_constraintStart_toStartOf="@+id/l_game_score_tv_percentage_b"
+            app:layout_constraintTop_toTopOf="@+id/l_game_score_tv_snookers_label"
             tools:text="5" />
 
         <TextView
-            android:id="@+id/game_text_score_foul_a"
+            android:id="@+id/l_game_score_tv_fouls_a"
             style="@style/TextHeaderBold"
             android:text="@{String.valueOf(varGameVm.displayFrame.score[0].fouls)}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_label_fouls"
-            app:layout_constraintEnd_toEndOf="@+id/game_text_score_percentage_a"
-            app:layout_constraintStart_toStartOf="@+id/game_text_score_percentage_a"
-            app:layout_constraintTop_toTopOf="@+id/game_label_fouls"
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_fouls_label"
+            app:layout_constraintEnd_toEndOf="@+id/l_game_score_tv_percentage_a"
+            app:layout_constraintStart_toStartOf="@+id/l_game_score_tv_percentage_a"
+            app:layout_constraintTop_toTopOf="@+id/l_game_score_tv_fouls_label"
             tools:text="1" />
 
         <TextView
-            android:id="@+id/game_label_fouls"
+            android:id="@+id/l_game_score_tv_fouls_label"
             style="@style/TextHeader"
             android:layout_marginTop="@dimen/margin_xxxsmall"
-            android:text="@string/f_game_label_fouls"
-            app:layout_constraintEnd_toStartOf="@+id/game_guide_vert_mid"
-            app:layout_constraintStart_toStartOf="@+id/game_guide_vert_mid"
-            app:layout_constraintTop_toBottomOf="@+id/game_label_snookers" />
+            android:text="@string/l_game_score_tv_fouls_label"
+            app:layout_constraintEnd_toStartOf="@+id/l_game_score_gd_vert_mid"
+            app:layout_constraintStart_toStartOf="@+id/l_game_score_gd_vert_mid"
+            app:layout_constraintTop_toBottomOf="@+id/l_game_score_tv_snookers_label" />
 
         <TextView
-            android:id="@+id/game_text_score_foul_b"
+            android:id="@+id/l_game_score_tv_fouls_b"
             style="@style/TextHeaderBold"
             android:text="@{String.valueOf(varGameVm.displayFrame.score[1].fouls)}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_label_fouls"
-            app:layout_constraintEnd_toEndOf="@+id/game_text_score_percentage_b"
-            app:layout_constraintStart_toStartOf="@+id/game_text_score_percentage_b"
-            app:layout_constraintTop_toTopOf="@+id/game_label_fouls"
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_fouls_label"
+            app:layout_constraintEnd_toEndOf="@+id/l_game_score_tv_percentage_b"
+            app:layout_constraintStart_toStartOf="@+id/l_game_score_tv_percentage_b"
+            app:layout_constraintTop_toTopOf="@+id/l_game_score_tv_fouls_label"
             tools:text="5" />
 
         <TextView
-            android:id="@+id/game_label_remaining"
+            android:id="@+id/l_game_score_tv_remaining_label"
             style="@style/TextHeader"
             android:layout_marginTop="@dimen/margin_header_below"
-            android:text="@string/f_game_label_remaining"
+            android:text="@string/l_game_score_tv_remaining_label"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/game_label_fouls" />
+            app:layout_constraintTop_toBottomOf="@+id/l_game_score_tv_fouls_label" />
 
         <LinearLayout
-            android:id="@+id/game_bar_remaining"
+            android:id="@+id/l_game_score_ll_remaining_bar"
             android:layout_width="0dp"
             android:layout_height="@dimen/icon_bar"
             android:layout_marginStart="@dimen/margin_small"
             android:layout_marginEnd="@dimen/margin_small"
             android:gravity="start"
-            app:layout_constraintBottom_toBottomOf="@+id/game_label_remaining"
-            app:layout_constraintStart_toEndOf="@+id/game_label_remaining"
-            app:layout_constraintEnd_toStartOf="@+id/game_text_score_remaining"
-            app:layout_constraintTop_toTopOf="@+id/game_label_remaining">
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_remaining_label"
+            app:layout_constraintStart_toEndOf="@+id/l_game_score_tv_remaining_label"
+            app:layout_constraintEnd_toStartOf="@+id/l_game_score_tv_remaining"
+            app:layout_constraintTop_toTopOf="@+id/l_game_score_tv_remaining_label">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -295,33 +295,33 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/game_text_score_remaining"
+            android:id="@+id/l_game_score_tv_remaining"
             style="@style/TextHeaderBold"
             android:layout_width="@dimen/text_width_icon_bar"
             android:gravity="end"
             android:text="@{String.valueOf(DomainBallKt.availablePoints(varGameVm.displayFrame.ballStack))}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_label_remaining"
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_remaining_label"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/game_label_remaining"
+            app:layout_constraintTop_toTopOf="@+id/l_game_score_tv_remaining_label"
             tools:text="147" />
 
         <TextView
-            android:id="@+id/game_label_diff"
+            android:id="@+id/l_game_score_tv_diff_label"
             style="@style/TextHeader"
             android:layout_marginTop="@dimen/margin_xxsmall"
-            android:text="@string/f_game_label_difference"
+            android:text="@string/l_game_score_tv_diff_label"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/game_label_remaining" />
+            app:layout_constraintTop_toBottomOf="@+id/l_game_score_tv_remaining_label" />
 
         <LinearLayout
-            android:id="@+id/game_bar_diff"
+            android:id="@+id/l_game_score_ll_diff_bar"
             android:layout_width="0dp"
             android:layout_height="@dimen/icon_bar"
             android:gravity="start"
-            app:layout_constraintBottom_toBottomOf="@+id/game_label_diff"
-            app:layout_constraintEnd_toEndOf="@+id/game_bar_remaining"
-            app:layout_constraintStart_toStartOf="@+id/game_bar_remaining"
-            app:layout_constraintTop_toTopOf="@+id/game_label_diff">
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_diff_label"
+            app:layout_constraintEnd_toEndOf="@+id/l_game_score_ll_remaining_bar"
+            app:layout_constraintStart_toStartOf="@+id/l_game_score_ll_remaining_bar"
+            app:layout_constraintTop_toTopOf="@+id/l_game_score_tv_diff_label">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -341,21 +341,21 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/game_text_score_diff"
+            android:id="@+id/l_game_score_tv_diff"
             style="@style/TextHeaderBold"
             android:text="@{String.valueOf(DomainScoreKt.frameScoreDiff(varGameVm.displayFrame.score))}"
-            app:layout_constraintBottom_toBottomOf="@+id/game_label_diff"
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_diff_label"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/game_label_diff"
+            app:layout_constraintTop_toTopOf="@+id/l_game_score_tv_diff_label"
             tools:text="54" />
 
         <LinearLayout
-            android:id="@+id/game_line_chapter_breakdown"
+            android:id="@+id/l_game_score_ll_line_chapter_breakdown"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/game_label_diff"
+            app:layout_constraintTop_toBottomOf="@id/l_game_score_tv_diff_label"
             android:layout_marginTop="@dimen/margin_header_below"
             android:gravity="center">
 
@@ -365,7 +365,7 @@
 
             <TextView
                 style="@style/TextChapter"
-                android:text="@string/chapter_breakdown" />
+                android:text="@string/l_game_score_ll_line_chapter_breakdown" />
 
             <FrameLayout
                 style="@style/LineHorizontalChapter"

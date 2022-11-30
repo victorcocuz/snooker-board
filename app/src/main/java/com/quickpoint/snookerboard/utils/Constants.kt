@@ -1,6 +1,7 @@
+@file:Suppress("unused", "unused")
+
 package com.quickpoint.snookerboard.utils
 
-const val TESTING_MODE = true
 const val FACTOR_BALL_MATCH = 8
 const val PRODUCT_COFFEE = "snookerboard_support_coffee"
 const val PRODUCT_BEER = "snookerboard_support_beer"

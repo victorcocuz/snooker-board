@@ -23,7 +23,7 @@
         tools:context=".fragments.gamedialogs.FoulDialogFragment">
 
         <TextView
-            android:id="@+id/foul_title"
+            android:id="@+id/f_dialog_foul_tv_title"
             style="@style/TextSubtitle"
             android:layout_width="0dp"
             android:layout_height="@dimen/dialog_title_height"
@@ -37,18 +37,18 @@
             app:setDialogGameGenLabel="@{MatchAction.FOUL_DIALOG}" />
 
         <TextView
-            android:id="@+id/foul_label_balls"
+            android:id="@+id/f_dialog_foul_tv_balls_label"
             style="@style/TextDialog"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/margin_header_above"
             android:paddingStart="@dimen/margin_layout_offset"
             android:paddingEnd="@dimen/margin_layout_offset"
-            android:text="@string/f_foul_label_choose_ball"
+            android:text="@string/f_dialog_foul_tv_balls_label"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/foul_title" />
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_tv_title" />
 
         <LinearLayout
-            android:id="@+id/foul_ll"
+            android:id="@+id/f_dialog_foul_ll_balls"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_layout_offset"
@@ -58,98 +58,98 @@
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/foul_label_balls">
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_tv_balls_label">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/foul_balls_list_rv"
+                android:id="@+id/f_dialog_foul_rv_balls"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:bindFoulBalls="@{varGameVm.displayFrame.ballStack}" />
         </LinearLayout>
 
         <FrameLayout
-            android:id="@+id/foul_line_hor_one"
+            android:id="@+id/f_dialog_foul_fl_line_hor_one"
             style="@style/LineHorizontalChapter"
             android:layout_marginStart="@dimen/margin_layout_offset"
             android:layout_marginTop="@dimen/margin_header_below"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/foul_ll" />
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_ll_balls" />
 
         <TextView
-            android:id="@+id/foul_label_choose_action"
+            android:id="@+id/f_dialog_foul_tv_choose_action_label"
             style="@style/TextDialog"
             android:layout_marginTop="@dimen/margin_header_above"
             android:paddingStart="@dimen/margin_layout_offset"
             android:paddingEnd="@dimen/margin_layout_offset"
-            android:text="@string/f_foul_label_choose_action"
-            app:layout_constraintStart_toStartOf="@+id/foul_label_balls"
-            app:layout_constraintTop_toBottomOf="@+id/foul_line_hor_one" />
+            android:text="@string/f_dialog_foul_tv_choose_action_label"
+            app:layout_constraintStart_toStartOf="@+id/f_dialog_foul_tv_balls_label"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_fl_line_hor_one" />
 
         <TextView
-            android:id="@+id/foul_action_continue"
+            android:id="@+id/f_dialog_foul_btn_continue"
             style="@style/ButtonNarrow"
             android:layout_width="0dp"
             android:layout_marginStart="@dimen/margin_layout_offset"
             android:layout_marginTop="@dimen/margin_header_below"
             android:layout_marginEnd="@dimen/margin_layout_offset_mid"
             android:onClick="@{() -> varDialogVm.onActionClicked(PotAction.SWITCH)}"
-            android:text="@string/f_game_foul_action_continue"
-            app:layout_constraintEnd_toStartOf="@+id/foul_action_force_continue"
+            android:text="@string/f_dialog_foul_btn_continue"
+            app:layout_constraintEnd_toStartOf="@+id/f_dialog_foul_btn_force_continue"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/foul_label_choose_action"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_tv_choose_action_label"
             app:setSelected="@{varDialogVm.actionClicked == PotAction.SWITCH}" />
 
         <TextView
-            android:id="@+id/foul_action_force_continue"
+            android:id="@+id/f_dialog_foul_btn_force_continue"
             style="@style/ButtonNarrow"
             android:layout_width="0dp"
             android:layout_marginStart="@dimen/margin_layout_offset_mid"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             android:onClick="@{() -> varDialogVm.onActionClicked(PotAction.CONTINUE)}"
-            android:text="@string/f_foul_action_force_continue"
-            app:layout_constraintBottom_toBottomOf="@+id/foul_action_continue"
+            android:text="@string/f_dialog_foul_btn_force_continue"
+            app:layout_constraintBottom_toBottomOf="@+id/f_dialog_foul_btn_continue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/foul_action_continue"
+            app:layout_constraintStart_toEndOf="@+id/f_dialog_foul_btn_continue"
             app:setEnabled="@{varGameVm.displayFrame.isFoulAndAMiss()}"
             app:setSelected="@{varDialogVm.actionClicked == PotAction.CONTINUE}" />
 
         <FrameLayout
-            android:id="@+id/foul_line_hor_two"
+            android:id="@+id/f_dialog_foul_fl_line_hor_two"
             style="@style/LineHorizontalChapter"
             android:layout_marginStart="@dimen/margin_layout_offset"
             android:layout_marginTop="@dimen/margin_header_above"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/foul_action_force_continue" />
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_btn_force_continue" />
 
         <TextView
-            android:id="@+id/foul_cancel"
+            android:id="@+id/f_dialog_foul_btn_cancel"
             style="@style/ButtonNarrow"
             android:layout_width="wrap_content"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             android:onClick="@{() -> varDialogVm.assignEventDialogAction(MatchAction.CLOSE_DIALOG)}"
-            android:text="@string/f_foul_cancel"
-            app:layout_constraintBottom_toBottomOf="@+id/foul_ok"
-            app:layout_constraintEnd_toStartOf="@+id/foul_ok" />
+            android:text="@string/f_dialog_foul_btn_cancel"
+            app:layout_constraintBottom_toBottomOf="@+id/f_dialog_foul_btn_submit"
+            app:layout_constraintEnd_toStartOf="@+id/f_dialog_foul_btn_submit" />
 
         <TextView
-            android:id="@+id/foul_ok"
+            android:id="@+id/f_dialog_foul_btn_submit"
             style="@style/ButtonNarrow"
             android:layout_width="wrap_content"
             android:layout_marginTop="@dimen/margin_header_above"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             android:layout_marginBottom="@dimen/margin_layout_offset"
             android:onClick="@{() -> varDialogVm.assignEventDialogAction(MatchAction.FOUL_ATTEMPT)}"
-            android:text="@string/f_foul_ok"
+            android:text="@string/f_dialog_foul_btn_submit"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/foul_line_hor_two"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_fl_line_hor_two"
             app:layout_goneMarginBottom="@dimen/margin_layout_offset" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

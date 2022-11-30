@@ -1,14 +1,12 @@
 package com.quickpoint.snookerboard.utils
 
 import android.app.Activity
-import android.app.Application
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Rect
-import android.os.Environment
 import android.text.SpannableString
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
@@ -29,12 +27,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.admob.AdMob
-import timber.log.Timber
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
+import com.quickpoint.snookerboard.databinding.FragmentGameBinding
 
 
 // General
@@ -44,8 +38,8 @@ fun Fragment.navigate(directions: NavDirections, adMob: AdMob? = null) {
 }
 fun Fragment.toast(message: CharSequence) = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
 fun Activity.toast(message: CharSequence) = Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
-fun Application.toast(message: CharSequence) = Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
 fun View.snackbar(message: CharSequence) = Snackbar.make(this, message, Snackbar.LENGTH_LONG).show()
+fun FragmentGameBinding.snackbar(message: CharSequence) = this.fGameCdl.snackbar(message)
 fun Any?.asText() = if (this != null) ", ${this.javaClass.simpleName}: $this" else ""
 
 fun MenuItem.setItemActive(isEnabled: Boolean) {
@@ -65,10 +59,6 @@ fun Fragment.hideKeyboard() {
     view?.let {
         activity?.hideKeyboard(it)
     }
-}
-
-fun Activity.hideKeyboard() {
-    hideKeyboard(currentFocus ?: View(this))
 }
 
 fun Context.hideKeyboard(view: View) {

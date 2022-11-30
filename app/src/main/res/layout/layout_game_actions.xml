@@ -15,120 +15,120 @@
         android:background="?attr/colorPrimaryVariant">
 
         <FrameLayout
-            android:id="@+id/f_game_btn_line_hor_two"
+            android:id="@+id/l_game_actions_fl_line_hor_two"
             style="@style/LineHorizontalAccent"
             android:layout_width="0dp"
-            app:layout_constraintBottom_toTopOf="@id/f_game_btn_act_foul"
+            app:layout_constraintBottom_toTopOf="@id/l_game_actions_btn_foul"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/f_game_btn_act_foul"
+            android:id="@+id/l_game_actions_btn_foul"
             style="@style/ButtonStretched"
             android:layout_width="0dp"
             android:onClick="@{() -> varGameVm.assignPot(PotType.TYPE_FOUL_ATTEMPT)}"
-            android:text="@string/action_foul"
-            app:layout_constraintBottom_toTopOf="@id/f_game_btn_line_hor_one"
-            app:layout_constraintEnd_toStartOf="@id/f_game_btn_line_vert_one"
+            android:text="@string/l_game_actions_btn_foul"
+            app:layout_constraintBottom_toTopOf="@id/l_game_actions_fl_line_hor_one"
+            app:layout_constraintEnd_toStartOf="@id/l_game_actions_fl_line_vert_one"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintWidth_percent="0.2" />
 
         <FrameLayout
-            android:id="@+id/f_game_btn_line_vert_one"
+            android:id="@+id/l_game_actions_fl_line_vert_one"
             style="@style/LineVerticalAccent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/f_game_btn_act_foul"
-            app:layout_constraintEnd_toStartOf="@id/f_game_btn_act_safe"
-            app:layout_constraintStart_toEndOf="@id/f_game_btn_act_foul"
-            app:layout_constraintTop_toTopOf="@+id/f_game_btn_act_foul" />
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_actions_btn_foul"
+            app:layout_constraintEnd_toStartOf="@id/l_game_actions_btn_safe"
+            app:layout_constraintStart_toEndOf="@id/l_game_actions_btn_foul"
+            app:layout_constraintTop_toTopOf="@+id/l_game_actions_btn_foul" />
 
         <TextView
-            android:id="@+id/f_game_btn_act_safe"
+            android:id="@+id/l_game_actions_btn_safe"
             style="@style/ButtonStretched"
             android:layout_width="0dp"
             android:onClick="@{() -> varGameVm.assignPot(PotType.TYPE_SAFE)}"
-            android:text="@string/action_safe"
-            app:layout_constraintBottom_toBottomOf="@+id/f_game_btn_act_foul"
-            app:layout_constraintEnd_toStartOf="@id/f_game_btn_line_vert_two"
-            app:layout_constraintStart_toEndOf="@id/f_game_btn_line_vert_one"
-            app:layout_constraintTop_toTopOf="@+id/f_game_btn_act_foul"
+            android:text="@string/l_game_actions_btn_safe"
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_actions_btn_foul"
+            app:layout_constraintEnd_toStartOf="@id/l_game_actions_fl_line_vert_two"
+            app:layout_constraintStart_toEndOf="@id/l_game_actions_fl_line_vert_one"
+            app:layout_constraintTop_toTopOf="@+id/l_game_actions_btn_foul"
             app:layout_constraintWidth_percent="0.2" />
 
         <FrameLayout
-            android:id="@+id/f_game_btn_line_vert_two"
+            android:id="@+id/l_game_actions_fl_line_vert_two"
             style="@style/LineVerticalAccent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/f_game_btn_act_foul"
-            app:layout_constraintEnd_toStartOf="@id/f_game_btn_act_safe_miss"
-            app:layout_constraintStart_toEndOf="@id/f_game_btn_act_safe"
-            app:layout_constraintTop_toTopOf="@+id/f_game_btn_act_foul" />
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_actions_btn_foul"
+            app:layout_constraintEnd_toStartOf="@id/l_game_actions_btn_safe_miss"
+            app:layout_constraintStart_toEndOf="@id/l_game_actions_btn_safe"
+            app:layout_constraintTop_toTopOf="@+id/l_game_actions_btn_foul" />
 
         <TextView
-            android:id="@+id/f_game_btn_act_safe_miss"
+            android:id="@+id/l_game_actions_btn_safe_miss"
             style="@style/ButtonStretched"
             android:layout_width="0dp"
             android:onClick="@{() -> varGameVm.assignPot(PotType.TYPE_SAFE_MISS)}"
-            android:text="@string/action_safe_miss"
-            app:layout_constraintBottom_toBottomOf="@+id/f_game_btn_act_foul"
-            app:layout_constraintEnd_toStartOf="@id/f_game_btn_line_vert_three"
-            app:layout_constraintStart_toEndOf="@id/f_game_btn_line_vert_two"
-            app:layout_constraintTop_toTopOf="@+id/f_game_btn_act_foul"/>
+            android:text="@string/l_game_actions_btn_safe_miss"
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_actions_btn_foul"
+            app:layout_constraintEnd_toStartOf="@id/l_game_actions_fl_line_vert_three"
+            app:layout_constraintStart_toEndOf="@id/l_game_actions_fl_line_vert_two"
+            app:layout_constraintTop_toTopOf="@+id/l_game_actions_btn_foul"/>
 
         <FrameLayout
-            android:id="@+id/f_game_btn_line_vert_three"
+            android:id="@+id/l_game_actions_fl_line_vert_three"
             style="@style/LineVerticalAccent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/f_game_btn_act_foul"
-            app:layout_constraintEnd_toStartOf="@id/f_game_btn_act_snooker"
-            app:layout_constraintStart_toEndOf="@id/f_game_btn_act_safe_miss"
-            app:layout_constraintTop_toTopOf="@+id/f_game_btn_act_foul" />
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_actions_btn_foul"
+            app:layout_constraintEnd_toStartOf="@id/l_game_actions_btn_snooker"
+            app:layout_constraintStart_toEndOf="@id/l_game_actions_btn_safe_miss"
+            app:layout_constraintTop_toTopOf="@+id/l_game_actions_btn_foul" />
 
         <TextView
-            android:id="@+id/f_game_btn_act_snooker"
+            android:id="@+id/l_game_actions_btn_snooker"
             style="@style/ButtonStretched"
             android:layout_width="0dp"
             android:onClick="@{() -> varGameVm.assignPot(PotType.TYPE_SNOOKER)}"
-            android:text="@string/action_snooker"
-            app:layout_constraintBottom_toBottomOf="@+id/f_game_btn_act_foul"
+            android:text="@string/l_game_actions_btn_snooker"
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_actions_btn_foul"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/f_game_btn_line_vert_three"
-            app:layout_constraintTop_toTopOf="@+id/f_game_btn_act_foul" />
+            app:layout_constraintStart_toEndOf="@id/l_game_actions_fl_line_vert_three"
+            app:layout_constraintTop_toTopOf="@+id/l_game_actions_btn_foul" />
 
         <FrameLayout
-            android:id="@+id/f_game_btn_line_hor_one"
+            android:id="@+id/l_game_actions_fl_line_hor_one"
             style="@style/LineHorizontalAccent"
             android:layout_width="0dp"
-            app:layout_constraintBottom_toTopOf="@id/f_game_balls_ll"
+            app:layout_constraintBottom_toTopOf="@id/l_game_actions_ll_balls"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/f_game_foul_action_free_ball"
+            android:id="@+id/l_game_actions_btn_free_ball"
             style="@style/ButtonNarrow"
             android:layout_width="0dp"
             android:layout_marginStart="@dimen/margin_layout_offset"
             android:layout_marginEnd="@dimen/margin_layout_offset_mid"
             android:onClick="@{() -> varGameVm.assignPot(PotType.TYPE_FREE_TOGGLE)}"
-            android:text="@string/f_foul_action_free_ball"
-            app:layout_constraintBottom_toBottomOf="@id/f_game_balls_ll"
+            android:text="@string/l_game_actions_btn_free_ball"
+            app:layout_constraintBottom_toBottomOf="@id/l_game_actions_ll_balls"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/f_game_balls_ll"
+            app:layout_constraintTop_toTopOf="@id/l_game_actions_ll_balls"
             app:setFreeballVisible="@{varGameVm.freeballInfo.visible}"
             app:setSelected="@{varGameVm.freeballInfo.selected}" />
 
         <LinearLayout
-            android:id="@+id/f_game_balls_ll"
+            android:id="@+id/l_game_actions_ll_balls"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/btn_balls_height"
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/f_game_balls_line_vert"
+            app:layout_constraintEnd_toStartOf="@id/l_game_actions_fl_line_vert_balls"
             app:layout_constraintStart_toStartOf="parent">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/f_game_balls_rv"
+                android:id="@+id/l_game_actions_rv_balls"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -136,28 +136,28 @@
         </LinearLayout>
 
         <FrameLayout
-            android:id="@+id/f_game_balls_line_vert"
+            android:id="@+id/l_game_actions_fl_line_vert_balls"
             style="@style/LineVerticalAccent"
             android:layout_height="0dp"
             android:layout_marginEnd="@dimen/padding_ball"
-            app:layout_constraintBottom_toBottomOf="@id/f_game_balls_ll"
-            app:layout_constraintEnd_toStartOf="@id/f_game_ball_miss"
-            app:layout_constraintTop_toTopOf="@+id/f_game_balls_ll" />
+            app:layout_constraintBottom_toBottomOf="@id/l_game_actions_ll_balls"
+            app:layout_constraintEnd_toStartOf="@id/l_game_actions_fl_ball_miss"
+            app:layout_constraintTop_toTopOf="@+id/l_game_actions_ll_balls" />
 
         <FrameLayout
-            android:id="@+id/f_game_ball_miss"
+            android:id="@+id/l_game_actions_fl_ball_miss"
             android:layout_width="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/f_game_balls_ll"
+            app:layout_constraintBottom_toBottomOf="@id/l_game_actions_ll_balls"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/f_game_balls_ll"
+            app:layout_constraintTop_toTopOf="@+id/l_game_actions_ll_balls"
             android:layout_height="wrap_content">
 
             <ImageButton
-                android:id="@+id/f_game_ball_miss_ball"
+                android:id="@+id/l_game_actions_btn_ball_miss"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/ic_ball_miss"
-                android:contentDescription="@string/action_miss"
+                android:contentDescription="@string/l_game_actions_btn_ball_miss"
                 android:onClick="@{() -> varGameVm.assignPot(PotType.TYPE_MISS)}" />
         </FrameLayout>
 

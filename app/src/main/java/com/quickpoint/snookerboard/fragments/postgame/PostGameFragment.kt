@@ -10,13 +10,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.admob.AdMob
 import com.quickpoint.snookerboard.databinding.FragmentPostGameBinding
 import com.quickpoint.snookerboard.domain.DomainScore
 import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.NAV_TO_PLAY
-import com.quickpoint.snookerboard.utils.MatchState.*
-import timber.log.Timber
 
 class PostGameFragment : androidx.fragment.app.Fragment() {
 
@@ -40,26 +37,26 @@ class PostGameFragment : androidx.fragment.app.Fragment() {
             lifecycleOwner = viewLifecycleOwner
             varPostGameVm = postGameVm
 
-            fragPostGameRv.apply {
+            fPostGameRvScore.apply {
                 adapter = PostGameAdapter()
                 itemAnimator = null
             }
 
-            fragPostGameLayoutTop.apply {
+            fPostGameLTop.apply {
                 varPlayerTagType = PlayerTagType.STATISTICS
             }
 
-            fragPostGameScrollView.viewTreeObserver.addOnGlobalLayoutListener { // Assign ghost & scroll view height that lines up with the top of the action button
-                scrollHeight = fragPostGameScrollView.measuredHeight
-                fragPostGameScrollView.assignScrollHeight(scrollHeight, ghostHeight)
+            fPostGameSvScore.viewTreeObserver.addOnGlobalLayoutListener { // Assign ghost & scroll view height that lines up with the top of the action button
+                scrollHeight = fPostGameSvScore.measuredHeight
+                fPostGameSvScore.assignScrollHeight(scrollHeight, ghostHeight)
             }
-            fragPostGameGhostFrameForHeight.viewTreeObserver.addOnGlobalLayoutListener { // Assign ghost & scroll view height that lines up with the top of the action button
-                ghostHeight = fragPostGameGhostFrameForHeight.measuredHeight
-                fragPostGameScrollView.assignScrollHeight(scrollHeight, ghostHeight)
+            fPostGameFlGhostFrameForHeight.viewTreeObserver.addOnGlobalLayoutListener { // Assign ghost & scroll view height that lines up with the top of the action button
+                ghostHeight = fPostGameFlGhostFrameForHeight.measuredHeight
+                fPostGameSvScore.assignScrollHeight(scrollHeight, ghostHeight)
             }
 
             // Header format
-            fragPostGameHeader.apply {
+            fPostGameLStatsHeader.apply {
                 varBgType = 2
                 varTextType = 1
                 frameScoreA = DomainScore(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,-1)
@@ -67,7 +64,7 @@ class PostGameFragment : androidx.fragment.app.Fragment() {
             }
 
             // Footer format
-            fragPostGameFooter.apply {
+            fPostGameLStatsFooter.apply {
                 varBgType = 2
                 varTextType = 1
                 postGameVm.totalsA.observe(viewLifecycleOwner) { frameScoreA = it }

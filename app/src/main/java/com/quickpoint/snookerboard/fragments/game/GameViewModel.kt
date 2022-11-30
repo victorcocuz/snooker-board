@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.DomainBall.FREEBALL
 import com.quickpoint.snookerboard.domain.DomainBall.NOBALL
@@ -22,7 +21,7 @@ import com.quickpoint.snookerboard.utils.ValueKeeperLiveData
 import timber.log.Timber
 
 class GameViewModel(
-    private val app: Application,
+    app: Application,
     private val snookerRepository: SnookerRepository,
 ) : AndroidViewModel(app) {
 

@@ -3,13 +3,18 @@
     <words>
       <w>addred</w>
       <w>apoint</w>
+      <w>appname</w>
       <w>autofill</w>
       <w>ballstack</w>
       <w>bload</w>
       <w>cdelete</w>
       <w>clicklistener</w>
+      <w>cocuz</w>
       <w>contentd</w>
       <w>coord</w>
+      <w>dorg</w>
+      <w>endlocal</w>
+      <w>errorlevel</w>
       <w>foulattempt</w>
       <w>freeavailable</w>
       <w>freeball</w>
@@ -44,6 +49,7 @@
       <w>respotblack</w>
       <w>roboelectric</w>
       <w>safemiss</w>
+      <w>setlocal</w>
       <w>snackbar</w>
       <w>snackbars</w>
       <w>snookerboard</w>

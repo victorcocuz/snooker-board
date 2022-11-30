@@ -57,10 +57,10 @@ class PlayFragment : androidx.fragment.app.Fragment() {
             varPlayVm = playVm
 
             // Bind fragment rules elements
-            fragPlayRules.apply {
+            fPlayLRules.apply {
                 varMatchVm = matchVm
                 varPlayVm = playVm
-                numberPicker.apply { // For displayedValues get an array of odd numbers for the number of frames
+                lPlayRulesNpFrameCount.apply { // For displayedValues get an array of odd numbers for the number of frames
                     minValue = 1
                     maxValue = 19
                     value = 2
@@ -70,8 +70,8 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                 // VM Observers
                 playVm.eventPlayAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                     when (matchAction) { // Start new match
-                        SNACKBAR_NO_PLAYER -> fragPlayCoordLayout.snackbar(getString(R.string.snackbar_f_play_no_name))
-                        SNACKBAR_NO_FIRST -> fragPlayCoordLayout.snackbar(getString(R.string.snackbar_f_play_select_who_breaks))
+                        SNACKBAR_NO_PLAYER -> fPlayCdl.snackbar(getString(R.string.snackbar_f_play_no_name))
+                        SNACKBAR_NO_FIRST -> fPlayCdl.snackbar(getString(R.string.snackbar_f_play_select_who_breaks))
                         MATCH_PLAY -> navigate(PlayFragmentDirections.gameFrag())
                         INFO_FOUL_DIALOG -> navigate(PlayFragmentDirections.genDialogFrag(IGNORE, IGNORE, matchAction))
                         else -> Timber.i("Implementation for observed matchAction $matchAction not supported")                    }

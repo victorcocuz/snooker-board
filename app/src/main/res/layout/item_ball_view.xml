@@ -21,21 +21,21 @@
     </data>
 
     <FrameLayout
-        android:id="@+id/item_ball_view_frame_layout"
+        android:id="@+id/i_ball_view_fl_ball"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <ImageButton
-            android:id="@+id/item_button_ball"
+            android:id="@+id/i_ball_view_btn_ball"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/item_ball_view_ball"
+            android:contentDescription="@string/i_ball_view_btn_ball"
             android:elevation="@dimen/toolbar_elevation"
             ballAdapterType="@{ballAdapterType}"
             app:setBallImage="@{ball}" />
 
         <TextView
-            android:id="@+id/item_button_points"
+            android:id="@+id/i_ball_view_tv_points"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="@font/montserrat_bold"

@@ -26,12 +26,12 @@ class BreakAdapter(private val activity: Activity) :
             binding.apply {
                 varCrtBreak = item
 
-                itemBreakABallsRv.apply {
+                iBreakViewRvBallsA.apply {
                     adapter = BallAdapter(null, null, BallAdapterType.BREAK)
                     layoutManager = GridLayoutManager(activity, 6)
                 }
 
-                itemBreakBBallsRv.apply {
+                iBreakViewRvBallsB.apply {
                     adapter = BallAdapter(null, null, BallAdapterType.BREAK)
                     layoutManager = GridLayoutManager(activity, 6)
                 }

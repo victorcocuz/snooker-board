@@ -74,9 +74,9 @@ object Billing {
         for (productDetails in productDetailsList) {
             Timber.i("productDetails id: ${productDetails.productId}, price: ${productDetails.oneTimePurchaseOfferDetails?.formattedPrice}")
             displayPaymentInfo(activity, productDetails, when (productDetails.productId) {
-                PRODUCT_COFFEE -> binding.fNavDonateCoffee
-                PRODUCT_BEER -> binding.fNavDonateBeer
-                else -> binding.fNavDonateLunch
+                PRODUCT_COFFEE -> binding.fNavDonateLlCoffee
+                PRODUCT_BEER -> binding.fNavDonateLlBeer
+                else -> binding.fNavDonateLlLunch
             })
         }
     }

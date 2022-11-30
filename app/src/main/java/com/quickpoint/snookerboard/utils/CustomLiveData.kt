@@ -1,21 +1,18 @@
 @file:Suppress("MemberVisibilityCanBePrivate", "MemberVisibilityCanBePrivate", "MemberVisibilityCanBePrivate",
-    "MemberVisibilityCanBePrivate"
+    "MemberVisibilityCanBePrivate", "unused", "unused", "unused"
 )
 
 package com.quickpoint.snookerboard.utils
 
-import androidx.annotation.IdRes
 import androidx.annotation.MainThread
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
-import timber.log.Timber
 import java.util.*
 
 /**
  * Used as a wrapper for data that is exposed via a LiveData that represents an event.
  */
+@Suppress("unused", "unused", "unused")
 open class Event<out T>(private val content: T) {
 
     var hasBeenHandled = false
@@ -94,26 +91,3 @@ class ValueKeeperLiveData<T> : MutableLiveData<T>() {
     }
 }
 
-fun <T> Fragment.setNavigationResult(key: String, value: T) {
-    findNavController().previousBackStackEntry?.savedStateHandle?.set(key, value)
-}
-
-fun <T>Fragment.getNavigationResult(@IdRes id: Int?, key: String, onResult: (result: T) -> Unit) {
-    val navBackStackEntry = findNavController().currentBackStackEntry
-    val observer = LifecycleEventObserver { _, event ->
-        if (event == Lifecycle.Event.ON_RESUME) {
-            if (navBackStackEntry?.savedStateHandle?.contains(key) == true) {
-                val result = navBackStackEntry.savedStateHandle.get<T>(key)
-                result?.let(onResult)
-                navBackStackEntry.savedStateHandle.remove<T>(key)
-            }
-        }
-    }
-    navBackStackEntry?.lifecycle?.addObserver(observer)
-
-    viewLifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
-        if (event == Lifecycle.Event.ON_DESTROY) {
-            navBackStackEntry?.lifecycle?.removeObserver(observer)
-        }
-    })
-}
