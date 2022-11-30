@@ -9,12 +9,11 @@
         <import type="com.quickpoint.snookerboard.utils.MatchAction" />
         <import type="com.quickpoint.snookerboard.domain.PotAction" />
         <variable
-            name="varDialogViewModel"
+            name="varDialogVm"
             type="com.quickpoint.snookerboard.DialogViewModel" />
-
         <variable
-            name="varMatchViewModel"
-            type="com.quickpoint.snookerboard.MatchViewModel" />
+            name="varGameVm"
+            type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -65,7 +64,7 @@
                 android:id="@+id/foul_balls_list_rv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:bindFoulBalls="@{varMatchViewModel.displayFrame.ballStack}" />
+                app:bindFoulBalls="@{varGameVm.displayFrame.ballStack}" />
         </LinearLayout>
 
         <FrameLayout
@@ -95,14 +94,14 @@
             android:layout_marginStart="@dimen/margin_layout_offset"
             android:layout_marginTop="@dimen/margin_header_below"
             android:layout_marginEnd="@dimen/margin_layout_offset_mid"
-            android:onClick="@{() -> varDialogViewModel.onActionClicked(PotAction.SWITCH)}"
+            android:onClick="@{() -> varDialogVm.onActionClicked(PotAction.SWITCH)}"
             android:text="@string/f_game_foul_action_continue"
             app:layout_constraintEnd_toStartOf="@+id/foul_action_force_continue"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/foul_label_choose_action"
-            app:setSelected="@{varDialogViewModel.actionClicked == PotAction.SWITCH}" />
+            app:setSelected="@{varDialogVm.actionClicked == PotAction.SWITCH}" />
 
         <TextView
             android:id="@+id/foul_action_force_continue"
@@ -110,14 +109,14 @@
             android:layout_width="0dp"
             android:layout_marginStart="@dimen/margin_layout_offset_mid"
             android:layout_marginEnd="@dimen/margin_layout_offset"
-            android:onClick="@{() -> varDialogViewModel.onActionClicked(PotAction.CONTINUE)}"
+            android:onClick="@{() -> varDialogVm.onActionClicked(PotAction.CONTINUE)}"
             android:text="@string/f_foul_action_force_continue"
             app:layout_constraintBottom_toBottomOf="@+id/foul_action_continue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/foul_action_continue"
-            app:setEnabled="@{varMatchViewModel.displayFrame.isFoulAndAMiss()}"
-            app:setSelected="@{varDialogViewModel.actionClicked == PotAction.CONTINUE}" />
+            app:setEnabled="@{varGameVm.displayFrame.isFoulAndAMiss()}"
+            app:setSelected="@{varDialogVm.actionClicked == PotAction.CONTINUE}" />
 
         <FrameLayout
             android:id="@+id/foul_line_hor_two"
@@ -134,7 +133,7 @@
             style="@style/ButtonNarrow"
             android:layout_width="wrap_content"
             android:layout_marginEnd="@dimen/margin_layout_offset"
-            android:onClick="@{() -> varDialogViewModel.assignEventDialogAction(MatchAction.CLOSE_DIALOG)}"
+            android:onClick="@{() -> varDialogVm.assignEventDialogAction(MatchAction.CLOSE_DIALOG)}"
             android:text="@string/f_foul_cancel"
             app:layout_constraintBottom_toBottomOf="@+id/foul_ok"
             app:layout_constraintEnd_toStartOf="@+id/foul_ok" />
@@ -146,7 +145,7 @@
             android:layout_marginTop="@dimen/margin_header_above"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             android:layout_marginBottom="@dimen/margin_layout_offset"
-            android:onClick="@{() -> varDialogViewModel.assignEventDialogAction(MatchAction.FOUL_QUERY)}"
+            android:onClick="@{() -> varDialogVm.assignEventDialogAction(MatchAction.FOUL_ATTEMPT)}"
             android:text="@string/f_foul_ok"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

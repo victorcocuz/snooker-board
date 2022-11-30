@@ -14,7 +14,6 @@ class DialogViewModel : ViewModel() {
     private val _eventDialogAction = MutableLiveData<Event<MatchAction>>()
     val eventDialogAction: LiveData<Event<MatchAction>> = _eventDialogAction
     fun assignEventDialogAction(matchAction: MatchAction) {
-        Timber.e("assign dialog action $matchAction")
         _eventDialogAction.value = Event(matchAction)
     }
 

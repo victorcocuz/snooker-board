@@ -62,6 +62,7 @@ fun TextView.setDialogGameB(matchAction: MatchAction, frame: DomainFrame?) {
 fun TextView.setDialogGameC(matchAction: MatchAction, matchActionB: MatchAction, frame: DomainFrame?) {
     isEnabled = !(matchActionB == MATCH_ENDED_DISCARD_FRAME && (frame?.score?.isFrameEqual() ?: false)) // This needs adjusting.
     text = when (matchAction) {
+        INFO_FOUL_DIALOG -> "OK"
         FRAME_RESPOT_BLACK -> "OK"
         else -> "Yes"
     }

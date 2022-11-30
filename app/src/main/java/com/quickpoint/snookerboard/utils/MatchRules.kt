@@ -49,7 +49,7 @@ sealed class MatchRules(
             return firstPlayer
         }
 
-        fun resetRules() {
+        fun resetRules(): Int {
             uniqueId = -1
             frames = 2
             reds = 15
@@ -58,6 +58,7 @@ sealed class MatchRules(
             crtPlayer = -1
             frameCount = 1
             frameMax = 0
+            return -1
         }
 
         fun assignRules(

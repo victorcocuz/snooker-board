@@ -15,12 +15,15 @@ import com.quickpoint.snookerboard.fragments.game.BallAdapter.ViewHolder.Compani
 import com.quickpoint.snookerboard.utils.BallAdapterType
 import com.quickpoint.snookerboard.utils.FACTOR_BALL_MATCH
 import com.quickpoint.snookerboard.utils.getFactoredDimen
+import timber.log.Timber
 
 class BallAdapter(
     private val clickListener: BallListener?, // provide the listener method through the adapter
     private val frame: LiveData<DomainFrame>?, // provide the frame as live data to dynamically get the stack size in order to show # of reds remaining
     private val adapterType: BallAdapterType, // provide adapter type to adjust view size
 ) : ListAdapter<DomainBall, BallAdapter.ViewHolder>(BallAdapterCallback()) {
+
+    private var oldList: List<DomainBall> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -32,7 +35,10 @@ class BallAdapter(
 
     override fun submitList(list: List<DomainBall>?) {
         singleItemSelectionPosition = -1
-        super.submitList(list)
+        if (adapterType == BallAdapterType.MATCH) { // Don't submit match list if old result is the same, to avoid unwanted ball animation flicker
+            if (list?.lastOrNull() != oldList.lastOrNull()) super.submitList(list)
+            oldList = list ?: mutableListOf()
+        } else super.submitList(list)
     }
 
     class ViewHolder private constructor(val binding: ItemBallViewBinding, val context: Context) : RecyclerView.ViewHolder(binding.root) {
@@ -49,7 +55,8 @@ class BallAdapter(
             clickListener: BallListener?,
             frame: LiveData<DomainFrame>?,
             adapterType: BallAdapterType,
-            adapter: BallAdapter) {
+            adapter: BallAdapter,
+        ) {
             binding.apply {
                 ball = item
                 val factor = when (adapterType) {

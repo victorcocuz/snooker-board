@@ -7,9 +7,9 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.quickpoint.snookerboard.BuildConfig
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.utils.activity
-import com.quickpoint.snookerboard.utils.isTestingMode
 import timber.log.Timber
 
 class AdMob(private val context: Context) {
@@ -56,15 +56,18 @@ class AdMob(private val context: Context) {
 
             override fun onAdShowedFullScreenContent() { // Called when ad is shown.
                 Timber.i("Ad showed fullscreen content.")
+                loadInterstitialAd()
             }
         }
     }
 
     fun showInterstitialAd() {
-        if (mInterstitialAd != null && !context.isTestingMode()) {
+        if (mInterstitialAd != null && !BuildConfig.DEBUG_TOGGLE && shouldAdShow()) {
             mInterstitialAd?.show(context.activity()!!)
         } else {
             Timber.i("The interstitial ad wasn't ready yet.")
         }
     }
 }
+
+fun shouldAdShow() = (1..100).random() <= 25

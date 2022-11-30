@@ -2,6 +2,7 @@ package com.quickpoint.snookerboard.fragments.play
 
 import android.os.Bundle
 import android.view.*
+import android.view.View.*
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -32,19 +33,20 @@ class PlayFragment : androidx.fragment.app.Fragment() {
 
         // Check match state and navigate to the correct fragment when applicable
         postponeEnterTransition() // Wait for data to load before displaying fragment
-        matchVm.eventRules.observeOnce(viewLifecycleOwner) { rules ->
-            Timber.i("ObservedOnce matchState: ${rules.matchState}")
-            when (rules.matchState) {
+      Timber.e("start play fragment")
+        matchVm.matchState.observeOnce(viewLifecycleOwner) { matchState ->
+            Timber.i("ObservedOnce matchState: $matchState")
+            when (matchState) {
                 IDLE -> {
-                    RULES.resetRules()
+                    playVm.updateRules(RULES.resetRules())
                     matchVm.transitionToFragment(this, 0)
                 }
                 IN_PROGRESS, POST_MATCH -> {
                     startPostponedEnterTransition()
-                    view?.visibility = View.GONE
-                    navigate(if (rules.matchState == IN_PROGRESS) PlayFragmentDirections.gameFrag() else PlayFragmentDirections.postGameFrag())
+                    view?.visibility = GONE
+                    navigate(if (matchState == IN_PROGRESS) PlayFragmentDirections.gameFrag() else PlayFragmentDirections.postGameFrag())
                 }
-                else -> Timber.e("matchState should not be ${rules.matchState} at this point")
+                else -> Timber.e("matchState should not be $matchState at this point")
             }
         }
 
@@ -57,6 +59,7 @@ class PlayFragment : androidx.fragment.app.Fragment() {
             // Bind fragment rules elements
             fragPlayRules.apply {
                 varMatchVm = matchVm
+                varPlayVm = playVm
                 numberPicker.apply { // For displayedValues get an array of odd numbers for the number of frames
                     minValue = 1
                     maxValue = 19
@@ -70,14 +73,8 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                         SNACKBAR_NO_PLAYER -> fragPlayCoordLayout.snackbar(getString(R.string.snackbar_f_play_no_name))
                         SNACKBAR_NO_FIRST -> fragPlayCoordLayout.snackbar(getString(R.string.snackbar_f_play_select_who_breaks))
                         MATCH_PLAY -> navigate(PlayFragmentDirections.gameFrag())
-                        else -> {}
-                    }
-                })
-                matchVm.eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
-                    when (matchAction) {
                         INFO_FOUL_DIALOG -> navigate(PlayFragmentDirections.genDialogFrag(IGNORE, IGNORE, matchAction))
-                        else -> Timber.i("Implementation for observed matchAction $matchAction not supported")
-                    }
+                        else -> Timber.i("Implementation for observed matchAction $matchAction not supported")                    }
                 })
             }
         }

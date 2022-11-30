@@ -8,8 +8,8 @@
             name="varPlayerTagType"
             type="com.quickpoint.snookerboard.utils.PlayerTagType" />
         <variable
-            name="varMatchVm"
-            type="com.quickpoint.snookerboard.MatchViewModel" />
+            name="varGameVm"
+            type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,7 +32,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:setActivePlayerTag="@{varPlayerTagType}"
-            app:setActivePlayer="@{varMatchVm.eventRules.crtPlayer == 0}">
+            app:setActivePlayer="@{varGameVm.crtPlayer == 0}">
 
             <TextView
                 android:id="@+id/game_label_name_first_a"
@@ -53,7 +53,7 @@
             app:layout_constraintStart_toEndOf="@+id/game_guide_vert_mid"
             app:layout_constraintTop_toTopOf="parent"
             app:setActivePlayerTag="@{varPlayerTagType}"
-            app:setActivePlayer="@{varMatchVm.eventRules.crtPlayer == 1}">
+            app:setActivePlayer="@{varGameVm.crtPlayer == 1}">
 
             <TextView
                 android:id="@+id/game_label_name_first_b"

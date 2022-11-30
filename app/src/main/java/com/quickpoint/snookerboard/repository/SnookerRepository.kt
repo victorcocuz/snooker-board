@@ -9,6 +9,7 @@ import com.quickpoint.snookerboard.database.asDomainFrameScoreList
 import com.quickpoint.snookerboard.domain.DomainActionLog
 import com.quickpoint.snookerboard.domain.DomainFrame
 import com.quickpoint.snookerboard.domain.DomainScore
+import com.quickpoint.snookerboard.utils.MatchRules
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -53,7 +54,9 @@ class SnookerRepository(database: SnookerDatabase) {
 //            Timber.e("GET: pots: ${frameBreaks.lastOrNull()?.breakId?.let { snookerDbDao.getCurrentBreakPots(it) }}")
 //            Timber.e("GET: ball count is: ${snookerDbDao.getMatchBallsCount()}")
 //            Timber.e("GET: debug actions: ${snookerDbDao.getDebugFrameActions()}")
-            return@withContext snookerDbDao.getCrtFrame()
+            val crtFrame = snookerDbDao.getCrtFrame()
+            Timber.i("getCrtFrame(): State is: ${MatchRules.RULES.matchState}, CrtFrame is: ${crtFrame?.frame?.frameId}, frameCount is: ${MatchRules.RULES.frameCount}")
+            return@withContext crtFrame
         }
     }
 

@@ -13,10 +13,6 @@
         <import type="com.quickpoint.snookerboard.utils.MatchAction" />
 
         <variable
-            name="varMatchVm"
-            type="com.quickpoint.snookerboard.MatchViewModel" />
-
-        <variable
             name="varMaxHeight"
             type="int" />
     </data>
@@ -144,7 +140,7 @@
             android:id="@+id/frag_post_game_btn"
             style="@style/ButtonStretched"
             android:layout_width="match_parent"
-            android:onClick="@{() -> varMatchVm.onEventMatchAction(MatchAction.NAV_TO_PLAY)}"
+            android:onClick="@{() -> varPostGameVm.onEventPostGameAction(MatchAction.NAV_TO_PLAY)}"
             android:text="@string/fragment_game_stats_btn_go_to_play"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

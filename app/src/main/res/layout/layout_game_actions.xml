@@ -5,10 +5,6 @@
     <data>
         <import type="com.quickpoint.snookerboard.domain.PotType" />
         <variable
-            name="varMatchVm"
-            type="com.quickpoint.snookerboard.MatchViewModel" />
-
-        <variable
             name="varGameVm"
             type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
     </data>
@@ -136,7 +132,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                app:bindMatchBallsRv="@{varMatchVm.displayFrame.ballStack}" />
+                app:bindMatchBallsRv="@{varGameVm.displayFrame.ballStack}" />
         </LinearLayout>
 
         <FrameLayout

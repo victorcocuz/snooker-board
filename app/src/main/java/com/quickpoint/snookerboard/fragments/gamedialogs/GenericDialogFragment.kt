@@ -7,21 +7,21 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.quickpoint.snookerboard.DialogViewModel
 import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentDialogGenBinding
-import com.quickpoint.snookerboard.utils.EventObserver
-import com.quickpoint.snookerboard.utils.MatchAction
+import com.quickpoint.snookerboard.fragments.game.GameViewModel
+import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.*
-import com.quickpoint.snookerboard.utils.listOfMatchActionsUncancelable
-import com.quickpoint.snookerboard.utils.setLayoutSizeByFactor
+import timber.log.Timber
 
 
 class GenericDialogFragment : DialogFragment() {
     private val dialogVm: DialogViewModel by activityViewModels()
-    private val matchVm: MatchViewModel by activityViewModels()
-    private lateinit var matchAction: MatchAction
+    private lateinit var gameVm: GameViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,12 +34,13 @@ class GenericDialogFragment : DialogFragment() {
     ): View {
         val binding: FragmentDialogGenBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_dialog_gen, container, false)
+        gameVm = ViewModelProvider(requireParentFragment().childFragmentManager.fragments[0])[GameViewModel::class.java]
 
         // Bind all required elements from the view
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             varDialogVm = dialogVm
-            varMatchVm = this@GenericDialogFragment.matchVm
+            varGameVm = this@GenericDialogFragment.gameVm
             GenericDialogFragmentArgs.fromBundle(requireArguments()).apply {
                 varDialogMatchActionA = matchActionA
                 varDialogMatchActionB = if (matchActionC == MATCH_TO_END) MATCH_ENDED_DISCARD_FRAME else CLOSE_DIALOG
@@ -51,17 +52,14 @@ class GenericDialogFragment : DialogFragment() {
         }
 
         // Observers
-        dialogVm.eventDialogAction.observe(viewLifecycleOwner, EventObserver {
-//            setNavigationResult("matchAction", it)
+        dialogVm.eventDialogAction.observe(viewLifecycleOwner, EventObserver { action ->
+            gameVm.onEventGameAction(action, when(action) {
+                MATCH_CANCEL, FRAME_RERACK, FRAME_START_NEW ->  true
+                else -> false
+            })
             dismiss() // Close dialog once a match action as been clicked on
-            matchAction = it // Save the recorded match action to be passed on in onDestroy
         })
         return binding.root
-    }
-
-    override fun onDestroy() { // Pass match action to view model
-        super.onDestroy()
-        if (this::matchAction.isInitialized) matchVm.onEventMatchAction(matchAction)
     }
 }
 

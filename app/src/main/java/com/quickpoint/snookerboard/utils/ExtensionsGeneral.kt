@@ -30,6 +30,7 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.quickpoint.snookerboard.R
+import com.quickpoint.snookerboard.admob.AdMob
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
@@ -37,14 +38,15 @@ import java.io.IOException
 
 
 // General
-fun Fragment.navigate(directions: NavDirections) = findNavController().navigate(directions)
+fun Fragment.navigate(directions: NavDirections, adMob: AdMob? = null) {
+    findNavController().navigate(directions)
+    adMob?.showInterstitialAd()
+}
 fun Fragment.toast(message: CharSequence) = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
 fun Activity.toast(message: CharSequence) = Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
 fun Application.toast(message: CharSequence) = Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
 fun View.snackbar(message: CharSequence) = Snackbar.make(this, message, Snackbar.LENGTH_LONG).show()
-
-fun Fragment.isTestingMode() = resources.getInteger(R.integer.testing_mode) == 1
-fun Context.isTestingMode() = resources.getInteger(R.integer.testing_mode) == 1
+fun Any?.asText() = if (this != null) ", ${this.javaClass.simpleName}: $this" else ""
 
 fun MenuItem.setItemActive(isEnabled: Boolean) {
     icon?.alpha = if (isEnabled) 255 else 120

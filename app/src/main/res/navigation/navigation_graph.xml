@@ -5,56 +5,34 @@
 
     <!-- Main Fragments -->
     <fragment
-        android:id="@+id/rankingsFragment"
-        android:name="com.quickpoint.snookerboard.fragments.rankings.RankingsFragment"
-        android:label="RankingsFragment" />
-    <fragment
-        android:id="@+id/friendsFragment"
-        android:name="com.quickpoint.snookerboard.fragments.main.FriendsFragment"
-        android:label="FriendsFragment" />
-    <fragment
         android:id="@+id/playFragment"
         android:name="com.quickpoint.snookerboard.fragments.play.PlayFragment"
         android:label="PlayFragment" >
         <action
             android:id="@+id/game_frag"
             app:destination="@id/gameFragment"
-            app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out"
+            app:enterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out_short"
             app:launchSingleTop="false"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out_short"
             app:popUpTo="@id/playFragment" />
         <action
             android:id="@+id/gen_dialog_frag"
             app:destination="@id/gameGenericDialogFragment"
-            app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out"
+            app:enterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out_short"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out_short"
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/post_game_frag"
             app:destination="@id/postGameFragment"
-            app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out" />
+            app:enterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out_short"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out_short" />
     </fragment>
-    <fragment
-        android:id="@+id/historyFragment"
-        android:name="com.quickpoint.snookerboard.fragments.main.HistoryFragment"
-        android:label="HistoryFragment" />
-    <fragment
-        android:id="@+id/statisticsFragment"
-        android:name="com.quickpoint.snookerboard.fragments.main.StatisticsFragment"
-        android:label="StatisticsFragment" />
-
-    <!-- Authentication Fragments, currently not in use -->
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.quickpoint.snookerboard.fragments.authentication.LoginFragment"
-        android:label="LoginFragment" />
 
     <!-- Game Fragments -->
     <fragment
@@ -64,34 +42,34 @@
         <action
             android:id="@+id/gen_dialog_frag"
             app:destination="@id/gameGenericDialogFragment"
-            app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out" />
+            app:enterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out_short"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out_short" />
         <action
             android:id="@+id/foul_dialog_frag"
             app:destination="@id/gameFoulDialogFragment"
-            app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out" />
+            app:enterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out_short"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out_short" />
         <action
             android:id="@+id/post_game_frag"
             app:destination="@id/postGameFragment"
-            app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out"
+            app:enterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out_short"
             app:launchSingleTop="true"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out_short"
             app:popUpTo="@id/playFragment"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/play_frag"
             app:destination="@id/playFragment"
-            app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out"
+            app:enterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out_short"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out_short"
             app:popUpTo="@id/gameFragment"
             app:popUpToInclusive="true" />
     </fragment>
@@ -102,10 +80,10 @@
         <action
             android:id="@+id/play_frag"
             app:destination="@id/playFragment"
-            app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out"
+            app:enterAnim="@anim/fade_in_short"
+            app:exitAnim="@anim/fade_out_short"
+            app:popEnterAnim="@anim/fade_in_short"
+            app:popExitAnim="@anim/fade_out_short"
             app:popUpTo="@id/postGameFragment"
             app:popUpToInclusive="true" />
     </fragment>

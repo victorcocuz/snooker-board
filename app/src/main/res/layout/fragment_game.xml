@@ -3,10 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
-            name="varMatchVm"
-            type="com.quickpoint.snookerboard.MatchViewModel" />
+            name="varGameVm"
+            type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -45,7 +44,7 @@
                     android:id="@+id/f_game_break_rv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:bindBreakData="@{varMatchVm.displayFrame.frameStack}"
+                    app:bindBreakData="@{varGameVm.displayFrame.frameStack}"
                     app:stackFromEnd="true"
                     app:reverseLayout="true"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />

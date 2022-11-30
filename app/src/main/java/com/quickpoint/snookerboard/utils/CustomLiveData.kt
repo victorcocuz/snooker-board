@@ -95,18 +95,14 @@ class ValueKeeperLiveData<T> : MutableLiveData<T>() {
 }
 
 fun <T> Fragment.setNavigationResult(key: String, value: T) {
-    Timber.e("setNavigationResult $value")
     findNavController().previousBackStackEntry?.savedStateHandle?.set(key, value)
 }
 
 fun <T>Fragment.getNavigationResult(@IdRes id: Int?, key: String, onResult: (result: T) -> Unit) {
-   Timber.e("index is $id")
     val navBackStackEntry = findNavController().currentBackStackEntry
     val observer = LifecycleEventObserver { _, event ->
         if (event == Lifecycle.Event.ON_RESUME) {
-            Timber.e("onResume")
             if (navBackStackEntry?.savedStateHandle?.contains(key) == true) {
-                Timber.e("backEntry is ${navBackStackEntry.savedStateHandle.get<T>(key)}")
                 val result = navBackStackEntry.savedStateHandle.get<T>(key)
                 result?.let(onResult)
                 navBackStackEntry.savedStateHandle.remove<T>(key)

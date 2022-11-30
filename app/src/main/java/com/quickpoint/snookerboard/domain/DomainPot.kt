@@ -70,7 +70,7 @@ sealed class DomainPot(
     }
 
     fun getActionLog(description: String, lastBall: BallType?, size: Int): DomainActionLog {
-        val actionLog = DomainActionLog(
+        return DomainActionLog(
             description = description,
             potType = potType,
             ballType = ball.ballType,
@@ -81,8 +81,6 @@ sealed class DomainPot(
             ballStackLast = lastBall,
             frameCount = RULES.frameCount
         )
-        actionLog.asText()
-        return actionLog
     }
 
 

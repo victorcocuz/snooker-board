@@ -10,11 +10,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
+import com.quickpoint.snookerboard.admob.AdMob
 import com.quickpoint.snookerboard.databinding.FragmentPostGameBinding
 import com.quickpoint.snookerboard.domain.DomainScore
 import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.NAV_TO_PLAY
 import com.quickpoint.snookerboard.utils.MatchState.*
+import timber.log.Timber
 
 class PostGameFragment : androidx.fragment.app.Fragment() {
 
@@ -31,14 +33,12 @@ class PostGameFragment : androidx.fragment.app.Fragment() {
     ): View {
         postponeEnterTransition()
         matchVm.transitionToFragment(this, 200)
-        matchVm.updateRules(-1)
 
         // Bind view elements
         val binding: FragmentPostGameBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_post_game, container, false)
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             varPostGameVm = postGameVm
-            varMatchVm = this@PostGameFragment.matchVm
 
             fragPostGameRv.apply {
                 adapter = PostGameAdapter()
@@ -75,10 +75,10 @@ class PostGameFragment : androidx.fragment.app.Fragment() {
             }
 
             // VM Observers
-            matchVm.apply {
-                eventMatchAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
+            postGameVm.apply {
+                eventPostGameAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                     if (matchAction == NAV_TO_PLAY) {
-                        deleteMatchFromDb()
+                        matchVm.deleteMatchFromDb()
                         navigate(PostGameFragmentDirections.playFrag())
                     }
                 })

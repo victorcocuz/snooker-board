@@ -96,6 +96,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) { // Save state and shared preferences on pause rather than onSaveInstanceState so that db save can complete
         matchVm.updateState(if (RULES.matchState == IN_PROGRESS) SAVED else RULES.matchState)
+        Timber.i(getString(R.string.helper_save_match))
         super.onSaveInstanceState(outState)
     }
 

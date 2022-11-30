@@ -20,14 +20,16 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        // defining the google map key
+        // defining variables
         buildConfigField "String", "ADMIN_EMAIL", ADMIN_EMAIL
+        buildConfigField "boolean", "DEBUG_TOGGLE", "true"
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "boolean", "DEBUG_TOGGLE", "false"
         }
     }
     compileOptions {

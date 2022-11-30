@@ -27,8 +27,6 @@ class MatchViewModel(
     private val snookerRepository: SnookerRepository,
 ) : AndroidViewModel(app) {
 
-    private val jobQueue = JobQueue()
-
     // Observables
     private val _keepSplashScreen = MutableStateFlow(true)
     val keepSplashScreen = _keepSplashScreen.asStateFlow()
@@ -39,51 +37,31 @@ class MatchViewModel(
         Timber.i("transitionToFragment(): ${fragment.javaClass.simpleName}")
     }
 
-    private val _eventRules = MutableLiveData<RULES>()
-    val eventRules: LiveData<RULES> = _eventRules
-    fun updateRules(_unused: Int) {
-        _eventRules.value = RULES
-    }
-
+    private val _matchState = MutableLiveData<MatchState>()
+    val matchState: LiveData<MatchState> = _matchState
     fun updateState(matchState: MatchState) = app.getSharedPref().apply {
         if (matchState == NONE) loadPref() else RULES.setMatchState(matchState)
-        if (matchState == SAVED) {
-            savePref()
-            jobQueue.cancel()
-        } else updateState()
-        if (matchState != NONE) updateRules(-1)
+        if (matchState == SAVED) savePref() else updateState()
+        if (matchState != NONE) _matchState.value = RULES.matchState
     }
 
     // Separate threads
-    private val _eventMatchAction = MutableLiveData<Event<MatchAction?>>()
-    val eventMatchAction: LiveData<Event<MatchAction?>> = _eventMatchAction
-    fun onEventMatchAction(matchAction: MatchAction?) = jobQueue.submit {
-        Timber.e("onEventMatchAction $matchAction")
-        _eventMatchAction.value = Event(matchAction)
-    }
-
+    private val _storedFrame = MutableLiveData<Event<DomainFrame>>()
+    val storedFrame: LiveData<Event<DomainFrame>> = _storedFrame
     fun loadMatchIfSaved() = viewModelScope.launch { // If db is empty reset rules, otherwise load the most recent frame
+        Timber.i("loadMatchIfSaved()")
         updateState(NONE) // Load shared preferences
         snookerRepository.getCrtFrame().let { crtFrame ->
-            if (crtFrame == null || (RULES.matchState != SAVED && RULES.matchState != POST_MATCH)) {
-                deleteMatchFromDb()
-            } else updateFrame(crtFrame.asDomainFrame())
-            Timber.i("State is: ${RULES.matchState}, CrtFrame is: ${crtFrame?.frame?.frameId}, frameCount is: ${RULES.frameCount}")
+            if (crtFrame == null || (RULES.matchState != SAVED && RULES.matchState != POST_MATCH)) deleteMatchFromDb()
+            else {
+                _storedFrame.value = Event(crtFrame.asDomainFrame())
+                updateState(IN_PROGRESS)
+            }
         }
     }
 
-    private val _displayFrame = MutableLiveData<DomainFrame>()
-    val displayFrame: LiveData<DomainFrame> = _displayFrame
-    fun updateFrame(domainFrame: DomainFrame) = jobQueue.submit {
-        _displayFrame.postValue(domainFrame)
-        if (RULES.matchState == IN_PROGRESS) snookerRepository.saveCurrentFrame(domainFrame)
-        else if (RULES.matchState == SAVED || RULES.matchState == IDLE) updateState(IN_PROGRESS)
-        updateRules(-1)
-        Timber.i(app.resources.getString(R.string.helper_update_frame_info))
-    }
-
-    fun deleteCrtFrameFromDb() = jobQueue.submit {
-       snookerRepository.deleteCurrentFrame(RULES.frameCount)
+    fun deleteCrtFrameFromDb() = viewModelScope.launch {
+        snookerRepository.deleteCurrentFrame(RULES.frameCount)
     }
 
     fun deleteMatchFromDb() = viewModelScope.launch { // When starting a new match or cancelling an existing match
@@ -93,10 +71,6 @@ class MatchViewModel(
 
     fun emailLogs() = viewModelScope.launch {
         val logs = snookerRepository.getDebugFrameActionList().toString()
-        val json = Gson().toJson(snookerRepository.getDebugFrameActionList())
-
-        val inputStream = javaClass.classLoader?.getResourceAsStream("kjjhtext.txt")
-        val inputAsString = inputStream?.bufferedReader().use { it?.readText() ?: "" }
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse(EMAIL_URI)
             putExtra(Intent.EXTRA_EMAIL, arrayOf(BuildConfig.ADMIN_EMAIL))
@@ -106,6 +80,7 @@ class MatchViewModel(
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
         if (intent.resolveActivity(app.packageManager) != null) app.applicationContext.startActivity(intent)
+        val json = Gson().toJson(snookerRepository.getDebugFrameActionList())
         Timber.e(json)
     }
 }

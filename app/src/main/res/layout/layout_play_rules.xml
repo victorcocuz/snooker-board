@@ -14,6 +14,10 @@
             name="varMatchVm"
             type="com.quickpoint.snookerboard.MatchViewModel" />
 
+        <variable
+            name="varPlayVm"
+            type="com.quickpoint.snookerboard.fragments.play.PlayViewModel" />
+
     </data>
 
     <ScrollView
@@ -157,36 +161,36 @@
                 android:id="@+id/frag_play_btn_reds_six"
                 style="@style/ButtonNarrow"
                 android:layout_marginTop="@dimen/margin_header_below"
-                android:onClick="@{() -> varMatchVm.updateRules(RULES.INSTANCE.setReds(1))}"
+                android:onClick="@{() -> varPlayVm.updateRules(RULES.INSTANCE.setReds(6))}"
                 android:text="@string/f_play_btn_reds_six"
                 app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_reds_ten"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/frag_play_label_reds"
-                app:setSelected="@{varMatchVm.eventRules.reds == 6}" />
+                app:setSelected="@{varPlayVm.eventRules.reds == 6}" />
 
             <TextView
                 android:id="@+id/frag_play_btn_reds_ten"
                 style="@style/ButtonNarrow"
-                android:onClick="@{() -> varMatchVm.updateRules(RULES.INSTANCE.setReds(10))}"
+                android:onClick="@{() -> varPlayVm.updateRules(RULES.INSTANCE.setReds(10))}"
                 android:text="@string/f_play_btn_reds_ten"
                 app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_reds_six"
                 app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_reds_fifteen"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/frag_play_btn_reds_six"
-                app:setSelected="@{varMatchVm.eventRules.reds == 10}" />
+                app:setSelected="@{varPlayVm.eventRules.reds == 10}" />
 
             <TextView
                 android:id="@+id/frag_play_btn_reds_fifteen"
                 style="@style/ButtonNarrow"
-                android:onClick="@{() -> varMatchVm.updateRules(RULES.INSTANCE.setReds(15))}"
+                android:onClick="@{() -> varPlayVm.updateRules(RULES.INSTANCE.setReds(15))}"
                 android:text="@string/f_play_btn_reds_fifteen"
                 app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_reds_six"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/frag_play_btn_reds_ten"
-                app:setSelected="@{varMatchVm.eventRules.reds == 15}" />
+                app:setSelected="@{varPlayVm.eventRules.reds == 15}" />
 
             <TextView
                 android:id="@+id/frag_play_label_foul_modifier"
@@ -204,7 +208,7 @@
                 android:layout_height="@dimen/icon_info"
                 android:layout_marginStart="@dimen/margin_xxxsmall"
                 android:contentDescription="@string/cd_foul_modifier_info"
-                android:onClick="@{() -> varMatchVm.onEventMatchAction(MatchAction.INFO_FOUL_DIALOG)}"
+                android:onClick="@{() -> varPlayVm.onEventPlayAction(MatchAction.INFO_FOUL_DIALOG)}"
                 app:layout_constraintBottom_toBottomOf="@+id/frag_play_label_foul_modifier"
                 app:layout_constraintStart_toEndOf="@+id/frag_play_label_foul_modifier"
                 app:layout_constraintTop_toTopOf="@+id/frag_play_label_foul_modifier"
@@ -214,47 +218,47 @@
                 android:id="@+id/frag_play_btn_foul_one"
                 style="@style/ButtonNarrow"
                 android:layout_marginTop="@dimen/margin_header_below"
-                android:onClick="@{() -> varMatchVm.updateRules(RULES.INSTANCE.setFoul(-3))}"
+                android:onClick="@{() -> varPlayVm.updateRules(RULES.INSTANCE.setFoul(-3))}"
                 android:text="@string/f_play_btn_foul_one"
                 app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_foul_two"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/frag_play_label_foul_modifier"
-                app:setSelected="@{varMatchVm.eventRules.foul == -3}" />
+                app:setSelected="@{varPlayVm.eventRules.foul == -3}" />
 
             <TextView
                 android:id="@+id/frag_play_btn_foul_two"
                 style="@style/ButtonNarrow"
-                android:onClick="@{() -> varMatchVm.updateRules(RULES.INSTANCE.setFoul(-2))}"
+                android:onClick="@{() -> varPlayVm.updateRules(RULES.INSTANCE.setFoul(-2))}"
                 android:text="@string/f_play_btn_foul_two"
                 app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_foul_one"
                 app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_foul_three"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/frag_play_btn_foul_one"
-                app:setSelected="@{varMatchVm.eventRules.foul == -2}" />
+                app:setSelected="@{varPlayVm.eventRules.foul == -2}" />
 
             <TextView
                 android:id="@+id/frag_play_btn_foul_three"
                 style="@style/ButtonNarrow"
-                android:onClick="@{() -> varMatchVm.updateRules(RULES.INSTANCE.setFoul(-1))}"
+                android:onClick="@{() -> varPlayVm.updateRules(RULES.INSTANCE.setFoul(-1))}"
                 android:text="@string/f_play_btn_foul_three"
                 app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_foul_one"
                 app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_foul_four"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/frag_play_btn_foul_two"
-                app:setSelected="@{varMatchVm.eventRules.foul == -1}" />
+                app:setSelected="@{varPlayVm.eventRules.foul == -1}" />
 
             <TextView
                 android:id="@+id/frag_play_btn_foul_four"
                 style="@style/ButtonNarrow"
-                android:onClick="@{() -> varMatchVm.updateRules(RULES.INSTANCE.setFoul(0))}"
+                android:onClick="@{() -> varPlayVm.updateRules(RULES.INSTANCE.setFoul(0))}"
                 android:text="@string/f_play_btn_foul_four"
                 app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_foul_one"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/frag_play_btn_foul_three"
-                app:setSelected="@{varMatchVm.eventRules.foul == 0}" />
+                app:setSelected="@{varPlayVm.eventRules.foul == 0}" />
 
             <TextView
                 android:id="@+id/frag_play_label_breaks_first"
@@ -274,7 +278,7 @@
                 android:layout_width="wrap_content"
                 android:layout_marginTop="@dimen/margin_header_below"
                 android:layout_marginBottom="@dimen/margin_header_above"
-                android:onClick="@{() -> varMatchVm.updateRules(RULES.INSTANCE.setFirst(0))}"
+                android:onClick="@{() -> varPlayVm.updateRules(RULES.INSTANCE.setFirst(0))}"
                 android:text="@string/f_play_label_player_a"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_break_random"
@@ -282,13 +286,13 @@
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/frag_play_label_breaks_first"
-                app:setSelected="@{varMatchVm.eventRules.firstPlayer == 0}" />
+                app:setSelected="@{varPlayVm.eventRules.firstPlayer == 0}" />
 
             <TextView
                 android:id="@+id/frag_play_btn_break_random"
                 style="@style/ButtonNarrow"
                 android:layout_width="wrap_content"
-                android:onClick="@{() -> varMatchVm.updateRules(RULES.INSTANCE.setFirst(2))}"
+                android:onClick="@{() -> varPlayVm.updateRules(RULES.INSTANCE.setFirst(2))}"
                 android:text="@string/f_play_btn_break_random"
                 app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_break_player_a"
                 app:layout_constraintEnd_toStartOf="@+id/frag_play_btn_break_player_b"
@@ -299,13 +303,13 @@
                 android:id="@+id/frag_play_btn_break_player_b"
                 style="@style/ButtonNarrow"
                 android:layout_width="wrap_content"
-                android:onClick="@{() -> varMatchVm.updateRules(RULES.INSTANCE.setFirst(1))}"
+                android:onClick="@{() -> varPlayVm.updateRules(RULES.INSTANCE.setFirst(1))}"
                 android:text="@string/f_play_label_player_b"
                 app:layout_constraintBottom_toBottomOf="@+id/frag_play_btn_break_player_a"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/frag_play_btn_break_random"
-                app:setSelected="@{varMatchVm.eventRules.firstPlayer == 1}" />
+                app:setSelected="@{varPlayVm.eventRules.firstPlayer == 1}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

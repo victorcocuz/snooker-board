@@ -24,7 +24,7 @@ class GenericViewModelFactory(
             return PostGameViewModel(SnookerBoardApplication.application(), SnookerBoardApplication.getSnookerRepository()) as T
         }
         if (modelClass.isAssignableFrom(GameViewModel::class.java)) {
-            return GameViewModel() as T
+            return GameViewModel(SnookerBoardApplication.application(), SnookerBoardApplication.getSnookerRepository()) as T
         }
         if (modelClass.isAssignableFrom(MatchViewModel::class.java)) {
             return MatchViewModel(SnookerBoardApplication.application(), SnookerBoardApplication.getSnookerRepository()) as T

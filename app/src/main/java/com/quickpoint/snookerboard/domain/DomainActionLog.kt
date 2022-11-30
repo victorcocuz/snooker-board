@@ -1,5 +1,6 @@
 package com.quickpoint.snookerboard.domain
 
+import com.quickpoint.snookerboard.utils.asText
 import timber.log.Timber
 
 data class DomainActionLog(
@@ -13,5 +14,10 @@ data class DomainActionLog(
     val ballStackLast: BallType? = null,
     val frameCount: Long? = null
 ) {
-    fun asText() = Timber.i("$description, potType: ${potType ?: "null"}, ballType: ${ballType ?: "null"}, ballPoints: ${ballPoints ?: "null"}, potAction: ${potAction ?: "null"}, player: ${player ?: "null"}, breakCount: ${breakCount  ?: "null"}, lastInBallStack: ${ballStackLast ?: "null"}, frame: ${frameCount ?: "null"}")
+    fun asText() = Timber.i("${description}${potType.asText()}${ballType.asText()}${ballPoints.asText()}${potAction.asText()}${player.asText()}${breakCount.asText()}${ballStackLast.asText()}${frameCount.asText()}")
+}
+
+fun MutableList<DomainActionLog>.addLog(actionLog: DomainActionLog) {
+    add(actionLog)
+    actionLog.asText()
 }

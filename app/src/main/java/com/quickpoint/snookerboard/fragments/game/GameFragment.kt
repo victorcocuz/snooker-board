@@ -10,8 +10,8 @@ import androidx.core.view.setPadding
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.quickpoint.snookerboard.DialogViewModel
 import com.quickpoint.snookerboard.MatchViewModel
@@ -28,8 +28,8 @@ import timber.log.Timber
 
 
 class GameFragment : Fragment() {
-    private val gameVm: GameViewModel by viewModels()
-    private val dialogsVm: DialogViewModel by activityViewModels()
+    private lateinit var gameVm: GameViewModel
+    private val dialogVm: DialogViewModel by activityViewModels()
     private val matchVm: MatchViewModel by activityViewModels()
     private lateinit var binding: FragmentGameBinding
 
@@ -38,6 +38,8 @@ class GameFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         postponeEnterTransition() // Wait for data to load before displaying fragment
+        gameVm = ViewModelProvider(this, GenericViewModelFactory(this, null))[GameViewModel::class.java]
+
 
         // AdMob
         val adMob = AdMob(this.requireContext())
@@ -45,11 +47,14 @@ class GameFragment : Fragment() {
         adMob.interstitialAdSetContentCallbacks()
 
         // Start new match or load existing match
-        when (RULES.matchState) {
-            IDLE -> gameVm.resetMatch()
-            IN_PROGRESS -> gameVm.loadMatch(matchVm.displayFrame.value)
-            else -> Timber.e("No implementation for action ${RULES.matchState} at this point")
+        Timber.e("start gameFragment ${RULES.matchState}")
+        if (RULES.matchState == IDLE) {
+            gameVm.resetMatch()
+            matchVm.updateState(IN_PROGRESS)
         }
+        else matchVm.storedFrame.observe(viewLifecycleOwner, EventObserver { storedFrame ->
+            gameVm.loadMatch(storedFrame)
+        })
 
         // Bind view elements
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false)
@@ -59,14 +64,14 @@ class GameFragment : Fragment() {
             // Bind top and score layouts
             fGameLayoutTop.apply {
                 varPlayerTagType = PlayerTagType.MATCH
-                varMatchVm = this@GameFragment.matchVm
+                varGameVm = this@GameFragment.gameVm
             }
             fGameLayoutScore.apply {
-                varMatchVm = this@GameFragment.matchVm
+                varGameVm = this@GameFragment.gameVm
             }
 
             // Bind break layout
-            varMatchVm = this@GameFragment.matchVm
+            varGameVm = this@GameFragment.gameVm
             fGameBreakRv.apply {
                 adapter = BreakAdapter(requireActivity())
                 itemAnimator = null
@@ -75,7 +80,6 @@ class GameFragment : Fragment() {
             // Bind buttons
             fGameLayoutActionButtons.apply {
                 varGameVm = this@GameFragment.gameVm
-                varMatchVm = this@GameFragment.matchVm
                 fGameBallsLl.layoutParams.height =
                     requireContext().getFactoredDimen(FACTOR_BALL_MATCH) + resources.getDimension(R.dimen.margin_layout_offset).toInt() * 2
                 fGameBallsRv.apply {
@@ -85,7 +89,7 @@ class GameFragment : Fragment() {
                         BallListener { ball -> // Add a listener to the adapter to handle clicking, which will check whether a ball/freeball was clicked
                             requireActivity().invalidateOptionsMenu()
                             gameVm.assignPot(TYPE_HIT, ball)
-                        }, matchVm.displayFrame, BallAdapterType.MATCH)
+                        }, gameVm.displayFrame, BallAdapterType.MATCH)
                 }
                 fGameBallMiss.apply {
                     layoutParams.width = context.getFactoredDimen(FACTOR_BALL_MATCH)
@@ -95,67 +99,48 @@ class GameFragment : Fragment() {
             }
         }
 
-        // VM Observers
-//        getNavigationResult<MatchAction>(null, "matchAction") { result ->
-//            Timber.e("method result is $result")
-//            when (result) {
-//                else -> Timber.e("not implemented")
-//            }
-//        }
+        // Observers
         gameVm.apply {
-            eventFrameAction.observe(viewLifecycleOwner, EventObserver { action ->
+            eventGameAction.observe(viewLifecycleOwner, EventObserver { action ->
                 Timber.i("Observed eventFrameAction: $action")
                 when (action) {
-                    // Called from gameVm
+                    // Directly observed from gameVm
+                    TRANSITION_TO_FRAGMENT -> matchVm.transitionToFragment(this@GameFragment, 200)
                     FRAME_UPDATED -> {
                         requireActivity().invalidateOptionsMenu() // Reset the menu every time the frame has been updated
-                        matchVm.updateFrame(DomainFrame(RULES.frameCount, ballStack, score, frameStack, actionLogs, RULES.frameMax))
+                        Timber.i(getString(R.string.helper_update_frame_info))
                     }
                     SNACKBAR_NO_BALL -> binding.fGameCoordLayout.snackbar(getString(R.string.toast_game_no_balls_left))
 
-                    // Dialog navigation
-                    TRANSITION_TO_FRAGMENT -> matchVm.transitionToFragment(this@GameFragment, 200)
+                    // Dialogs relating
                     FOUL_DIALOG -> navigate(GameFragmentDirections.foulDialogFrag())
+                    FOUL_CONFIRM -> {
+                        gameVm.assignPot(TYPE_FOUL, dialogVm.ballClicked.value!!, dialogVm.actionClicked.value!!)
+                        dialogVm.resetFoul()
+                    }
                     FRAME_LOG_ACTIONS_DIALOG, FRAME_RESPOT_BLACK_DIALOG, FRAME_RERACK_DIALOG, FRAME_ENDING_DIALOG, MATCH_ENDING_DIALOG, MATCH_CANCEL_DIALOG -> {
                         val actions = action.getListOfDialogActions(score.isMatchEnding(), isFrameMathematicallyOver())
                         navigate(GameFragmentDirections.genDialogFrag(actions[0], actions[1], actions[2]))
                     }
-                    else -> matchVm.onEventMatchAction(action)
-                }
-            })
-        }
-        matchVm.apply {
-            eventMatchAction.observe(viewLifecycleOwner, EventObserver { action ->
-                Timber.i("Observed eventMatchAction: $action")
-                when (action) {
-                    // Confirmed from dialogs
-                    FOUL_CONFIRM -> {
-                        gameVm.assignPot(action.getPotType(), dialogsVm.ballClicked.value!!, dialogsVm.actionClicked.value!!)
-                        dialogsVm.resetFoul()
-                    }
+                    FRAME_LOG_ACTIONS -> matchVm.emailLogs()
+                    FRAME_FREE_AVAILABLE, FRAME_UNDO, FRAME_RESPOT_BLACK -> gameVm.assignPot(action.getPotType())
                     FRAME_TO_END, FRAME_ENDED, MATCH_TO_END, MATCH_ENDED -> gameVm.endFrame(action)
                     FRAME_RERACK, FRAME_START_NEW -> {
                         gameVm.resetFrame(action)
                         adMob.showInterstitialAd()
                     }
                     MATCH_ENDED_DISCARD_FRAME -> {
-                        deleteCrtFrameFromDb()
-                        gameVm.onEventFrameAction(NAV_TO_POST_MATCH)
+                        matchVm.deleteCrtFrameFromDb()
+                        gameVm.onEventGameAction(NAV_TO_POST_MATCH)
                     }
                     NAV_TO_POST_MATCH -> {
-                        updateState(POST_MATCH)
-                        adMob.showInterstitialAd()
-                        navigate(GameFragmentDirections.postGameFrag())
+                        matchVm.updateState(POST_MATCH)
+                        navigate(GameFragmentDirections.postGameFrag(), adMob)
                     }
                     MATCH_CANCEL -> {
-                        adMob.showInterstitialAd()
                         matchVm.deleteMatchFromDb()
-                        navigate(GameFragmentDirections.playFrag())
+                        navigate(GameFragmentDirections.playFrag(), adMob)
                     }
-                    FRAME_LOG_ACTIONS -> emailLogs()
-
-                    // Called from matchVm to be added to job queue
-                    FRAME_RESPOT_BLACK, FRAME_FREE_AVAILABLE, FRAME_UNDO -> gameVm.assignPot(action.getPotType())
                     else -> Timber.i("Implementation for observed action $action not supported")
                 }
             })
@@ -171,7 +156,7 @@ class GameFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 gameVm.apply {
                     when (menuItem.itemId) {
-                        R.id.menu_item_log -> onEventFrameAction(FRAME_LOG_ACTIONS_DIALOG)
+                        R.id.menu_item_log -> onEventGameAction(FRAME_LOG_ACTIONS_DIALOG)
                         R.id.menu_item_undo -> {
                             if (frameStack.isFrameInProgress()) assignPot(null)
                             else binding.fGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_undo))
@@ -189,20 +174,19 @@ class GameFragment : Fragment() {
                             else binding.fGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_remove_color))
                         }
                         R.id.menu_item_rerack -> {
-                            if (frameStack.isFrameInProgress()) onEventFrameAction(FRAME_RERACK_DIALOG)
+                            if (frameStack.isFrameInProgress()) onEventGameAction(FRAME_RERACK_DIALOG)
                             else binding.fGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_rerack))
                         }
                         R.id.menu_item_concede_frame -> {
-                            if (!score.isFrameEqual()) onEventFrameAction(FRAME_ENDING_DIALOG)
+                            if (!score.isFrameEqual()) onEventGameAction(FRAME_ENDING_DIALOG)
                             else binding.fGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_concede_frame))
                         }
                         R.id.menu_item_concede_match -> {
-                            if (!score.isFrameAndMatchEqual()) onEventFrameAction(MATCH_ENDING_DIALOG)
+                            if (!score.isFrameAndMatchEqual()) onEventGameAction(MATCH_ENDING_DIALOG)
                             else binding.fGameCoordLayout.snackbar(getString(R.string.snackbar_f_game_concede_match))
                         }
                         R.id.menu_item_cancel_match -> {
-                            if (score.isMatchInProgress()) onEventFrameAction(MATCH_CANCEL_DIALOG)
-                            else matchVm.onEventMatchAction(MATCH_CANCEL)
+                            onEventGameAction(if (score.isMatchInProgress()) MATCH_CANCEL_DIALOG else MATCH_CANCEL)
                         }
                         else -> return false
                     }
