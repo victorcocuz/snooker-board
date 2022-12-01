@@ -13,11 +13,9 @@ data class DomainActionLog(
     val breakCount: Int? = null,
     val ballStackLast: BallType? = null,
     val frameCount: Long? = null
-) {
-    fun asText() = Timber.i("${description}${potType.asText()}${ballType.asText()}${ballPoints.asText()}${potAction.asText()}${player.asText()}${breakCount.asText()}${ballStackLast.asText()}${frameCount.asText()}")
-}
+)
 
 fun MutableList<DomainActionLog>.addLog(actionLog: DomainActionLog) {
     add(actionLog)
-    actionLog.asText()
+    Timber.i(actionLog.asText())
 }

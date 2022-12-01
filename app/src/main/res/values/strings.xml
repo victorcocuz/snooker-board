@@ -45,4 +45,5 @@
     <string name="helper_first_line">"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"</string>
     <string name="helper_update_frame_info">"---------------------------------------------FRAME UPDATED------------------------------------------------"</string>
     <string name="helper_save_match">"---------------------------------------------MATCH SAVED------------------------------------------------"</string>
+    <string name="menu_action_button">menu_action_button</string>
 </resources>

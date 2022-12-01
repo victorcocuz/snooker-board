@@ -157,7 +157,7 @@
                 android:id="@+id/l_play_rules_btn_reds_six"
                 style="@style/ButtonNarrow"
                 android:layout_marginTop="@dimen/margin_header_below"
-                android:onClick="@{() -> varPlayVm.updateRules(RULES.INSTANCE.setReds(6))}"
+                android:onClick="@{() -> varPlayVm.updateRules(RULES.INSTANCE.setReds(1))}"
                 android:text="@string/l_play_rules_btn_reds_six"
                 app:layout_constraintEnd_toStartOf="@+id/l_play_rules_btn_reds_ten"
                 app:layout_constraintHorizontal_bias="0.5"

@@ -15,7 +15,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 // Used to connect database to domain packages
-class SnookerRepository(database: SnookerDatabase) {
+class SnookerRepository constructor(database: SnookerDatabase) {
 
     private val snookerDbDao = database.snookerDatabaseDao
 
@@ -66,9 +66,9 @@ class SnookerRepository(database: SnookerDatabase) {
 
             // Pots - only check pots from current break
             frame.frameStack.lastOrNull()?.apply {
-                val dbBreakPots = this.asDbPots(this.breakId)
+                val dbBreakPots = asDbPots(breakId)
                 dbBreakPots.lastOrNull()?.let { insertOrUpdateBreakPot(it) }
-                for (dbPotId in getCurrentBreakPots(this.breakId).map { it.potId }) { // If pot exists in break, but not in Db, remove from Db
+                for (dbPotId in getCurrentBreakPots(breakId).map { it.potId }) { // If pot exists in break, but not in Db, remove from Db
                     if (!dbBreakPots.map { it.potId }.contains(dbPotId)) deleteBreakPot(dbPotId)
                 }
             }

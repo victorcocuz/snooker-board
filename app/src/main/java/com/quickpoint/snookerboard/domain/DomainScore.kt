@@ -1,5 +1,6 @@
 package com.quickpoint.snookerboard.domain
 
+import com.quickpoint.snookerboard.domain.BallType.TYPE_WHITE
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.MatchAction.FRAME_RERACK
@@ -22,7 +23,7 @@ data class DomainScore(
     var fouls: Int,
     var highestBreak: Int,
 ) {
-    fun isEmpty() = framePoints + matchPoints + successShots + missedShots + safetyMissedShots + safetyMissedShots + snookers + fouls == 0
+    fun cumulatedValues() = framePoints + matchPoints + successShots + missedShots + safetyMissedShots + safetyMissedShots + snookers + fouls + highestBreak
 
     fun resetFrame(index: Int, matchAction: MatchAction) {
         if (matchAction != FRAME_RERACK)  scoreId = RULES.assignUniqueId()
@@ -48,7 +49,7 @@ fun MutableList<DomainScore>.isNoFrameFinished() = this[0].matchPoints + this[1]
 fun MutableList<DomainScore>.frameWinner() = if (this[0].framePoints > this[1].framePoints) 0 else 1
 fun MutableList<DomainScore>.isFrameWinResultingMatchTie() = this[frameWinner()].matchPoints + 1 == this[1 - frameWinner()].matchPoints
 fun MutableList<DomainScore>.isMatchEnding() = this[frameWinner()].matchPoints + 1 == RULES.frames
-fun MutableList<DomainScore>.isMatchInProgress() = !(this[0].isEmpty() && this[1].isEmpty())
+fun MutableList<DomainScore>.isMatchInProgress() = (this[0].cumulatedValues() + this[1].cumulatedValues()) > 0
 
 // Helper methods
 fun MutableList<DomainScore>.resetFrame(matchAction: MatchAction) {
@@ -75,7 +76,7 @@ fun MutableList<DomainScore>.calculatePoints(pot: DomainPot, pol: Int, lastFoulS
             this[RULES.crtPlayer].successShots += pol
         }
         TYPE_FOUL -> {
-            points = RULES.foul + if (pot.ball.ballType == BallType.TYPE_WHITE) max(lastFoulSize, 4) else pot.ball.foul
+            points = if (pot.ball.ballType == TYPE_WHITE) max(lastFoulSize, 4) else pot.ball.foul
             pot.ball.foul = points
             this[RULES.getOtherPlayer()].framePoints += pol * points
             this[RULES.crtPlayer].missedShots += pol
@@ -87,5 +88,5 @@ fun MutableList<DomainScore>.calculatePoints(pot: DomainPot, pol: Int, lastFoulS
         TYPE_SNOOKER -> this[RULES.crtPlayer].snookers += pol
         else -> {}
     }
-    this[RULES.crtPlayer].highestBreak = frameStack.findMaxBreak(this[RULES.crtPlayer].highestBreak)
+    this[RULES.crtPlayer].highestBreak = frameStack.findMaxBreak()
 }

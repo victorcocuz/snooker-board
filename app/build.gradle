@@ -14,8 +14,8 @@ android {
         applicationId "com.quickpoint.snookerboard"
         minSdk 22
         targetSdkVersion 33
-        versionCode 12
-        versionName "1.0.8.1"
+        versionCode 13
+        versionName "1.0.9"
         vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -23,6 +23,7 @@ android {
         // defining variables
         buildConfigField "String", "ADMIN_EMAIL", ADMIN_EMAIL
         buildConfigField "boolean", "DEBUG_TOGGLE", "true"
+        buildConfigField "int", "ADS_SHOW_PERCENTAGE", "0"
     }
 
     buildTypes {
@@ -30,6 +31,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "boolean", "DEBUG_TOGGLE", "false"
+            buildConfigField "int", "ADS_SHOW_PERCENTAGE", "50"
         }
     }
     compileOptions {
@@ -98,15 +100,19 @@ dependencies {
 
     // Test Implementations
     testImplementation "junit:junit:$version_junit"
+    testImplementation "org.robolectric:robolectric:$version_test_roboelectric"
     testImplementation "com.google.truth:truth:$version_test_truth"
 
+    // Test Androidx Implementation
+    testImplementation "androidx.test.ext:junit-ktx:$version_test_x_junit"
+    testImplementation "androidx.test:core-ktx:$version_test_x_core"
+
     // Android Test Implementations
-    androidTestImplementation "androidx.test.ext:junit:$version_test_junit"
+    androidTestImplementation "androidx.test.ext:junit:$version_test_x_junit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$version_test_espresso_core"
 
     //    testImplementation "org.junit.jupiter:junit-jupiter:$version_test_jupiter"
 //    testImplementation "org.junit.jupiter:junit-jupiter-api:$version_test_jupiter"
-//    testImplementation "org.robolectric:robolectric:$version_test_roboelectric"
 //    androidTestImplementation "androidx.test:runner:$version_androidx_test_runner"
 //    androidTestImplementation "androidx.test:rules:$version_androidx_test_rules"
 }

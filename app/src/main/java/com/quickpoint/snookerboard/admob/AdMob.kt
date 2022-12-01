@@ -70,4 +70,4 @@ class AdMob(private val context: Context) {
     }
 }
 
-fun shouldAdShow() = (1..100).random() <= 25
+fun shouldAdShow() = (1..100).random() <= BuildConfig.ADS_SHOW_PERCENTAGE

@@ -44,7 +44,7 @@ fun SharedPreferences.savePref() {
             apply()
         }
         Timber.i("Add to sharedPref ${RULES.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}")
-        Timber.i("Add to sharedPref ${RULES.getRulesText()}")
+        Timber.i("Add to sharedPref ${RULES.getAsText()}")
         Timber.i("Add to sharedPref freeball isVisible ${FREEBALLINFO.isVisible} and isSelected ${FREEBALLINFO.isSelected}")
     }
 }
@@ -69,7 +69,7 @@ fun SharedPreferences.loadPref() {
             getBoolean(getString(R.string.sp_match_freeball_selection), false))
     }
     Timber.i("Get from sharedPref ${RULES.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}")
-    Timber.i("Get from sharedPref ${RULES.getRulesText()}")
+    Timber.i("Get from sharedPref ${RULES.getAsText()}")
     Timber.i("Get from sharedPref freeball isVisible ${FREEBALLINFO.isVisible} and isSelected ${FREEBALLINFO.isSelected}")
 
 }

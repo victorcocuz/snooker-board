@@ -5,7 +5,7 @@ import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.core.view.children
+import androidx.core.view.forEach
 import androidx.core.view.setPadding
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -40,19 +40,16 @@ class GameFragment : Fragment() {
         postponeEnterTransition() // Wait for data to load before displaying fragment
         gameVm = ViewModelProvider(this, GenericViewModelFactory(this, null))[GameViewModel::class.java]
 
-
         // AdMob
         val adMob = AdMob(this.requireContext())
         adMob.loadInterstitialAd()
         adMob.interstitialAdSetContentCallbacks()
 
         // Start new match or load existing match
-        Timber.e("start gameFragment ${RULES.matchState}")
         if (RULES.matchState == IDLE) {
             gameVm.resetMatch()
             matchVm.updateState(IN_PROGRESS)
-        }
-        else matchVm.storedFrame.observe(viewLifecycleOwner, EventObserver { storedFrame ->
+        } else matchVm.storedFrame.observe(viewLifecycleOwner, EventObserver { storedFrame ->
             gameVm.loadMatch(storedFrame)
         })
 
@@ -83,7 +80,9 @@ class GameFragment : Fragment() {
                 lGameActionsLlBalls.layoutParams.height =
                     requireContext().getFactoredDimen(FACTOR_BALL_MATCH) + resources.getDimension(R.dimen.margin_layout_offset).toInt() * 2
                 lGameActionsRvBalls.apply {
-                    layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+                    layoutManager = object : LinearLayoutManager(activity, HORIZONTAL, false) {
+                        override fun canScrollHorizontally() = false
+                    }
                     itemAnimator = null
                     adapter = BallAdapter( // Create a ball adapter for the balls recycler view
                         BallListener { ball -> // Add a listener to the adapter to handle clicking, which will check whether a ball/freeball was clicked
@@ -151,6 +150,7 @@ class GameFragment : Fragment() {
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_game_overflow, menu)
+                menu.forEach { it.onMenuItemLongClickListener(menu) {} }
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -197,7 +197,6 @@ class GameFragment : Fragment() {
 
             override fun onPrepareMenu(menu: Menu) { // Set the enabled value of menu items to match the match circumstances
                 gameVm.apply { // the menu dropdown is available when frame isn't updating, then apply rules for each button
-                    for (item in menu.children) item.setItemActive(!(gameVm.isUpdateInProgress.value ?: false))
                     menu.findItem(R.id.menu_item_undo).setItemActive(frameStack.isFrameInProgress())
                     menu.findItem(R.id.menu_item_add_red).setItemActive(ballStack.isAddRedAvailable())
                     menu.findItem(R.id.menu_item_remove_red).setItemActive(isRemoveRedAvailable())
@@ -216,4 +215,3 @@ class GameFragment : Fragment() {
         return binding.root
     }
 }
-

@@ -33,15 +33,15 @@ data class DomainBreak(
 }
 
 // Checker methods
-fun MutableList<DomainBreak>.isFrameInProgress() = this.size > 0
+fun MutableList<DomainBreak>.isFrameInProgress() = size > 0
 fun MutableList<DomainBreak>.lastPotType() = lastOrNull()?.lastPotType()
 fun MutableList<DomainBreak>.lastBall() = lastOrNull()?.lastBall()
 
 // Helper methods
-fun MutableList<DomainBreak>.findMaxBreak(highestBreak: Int): Int {
-    var newBreak = highestBreak
-    this.forEach { crtBreak ->
-        if (RULES.crtPlayer == crtBreak.player && crtBreak.breakSize > newBreak) newBreak = crtBreak.breakSize
+fun MutableList<DomainBreak>.findMaxBreak(): Int {
+    var newBreak = 0
+    forEach { crtBreak ->
+        if (crtBreak.player == RULES.crtPlayer && crtBreak.breakSize > newBreak) newBreak = crtBreak.breakSize
     }
     return newBreak
 }

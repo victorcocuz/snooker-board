@@ -12,21 +12,16 @@ import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ForegroundColorSpan
 import android.text.style.URLSpan
-import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.View
-import android.view.WindowManager
+import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ScrollView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.admob.AdMob
 import com.quickpoint.snookerboard.databinding.FragmentGameBinding
 
@@ -39,8 +34,15 @@ fun Fragment.navigate(directions: NavDirections, adMob: AdMob? = null) {
 fun Fragment.toast(message: CharSequence) = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
 fun Activity.toast(message: CharSequence) = Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
 fun View.snackbar(message: CharSequence) = Snackbar.make(this, message, Snackbar.LENGTH_LONG).show()
-fun FragmentGameBinding.snackbar(message: CharSequence) = this.fGameCdl.snackbar(message)
-fun Any?.asText() = if (this != null) ", ${this.javaClass.simpleName}: $this" else ""
+fun FragmentGameBinding.snackbar(message: CharSequence) = fGameCdl.snackbar(message)
+fun Any.asText() = toString()
+    .replace("DomainActionLog(description=", "")
+    .removeSuffix(")")
+    .split(", ")
+    .filter { !it.contains("=null")}
+    .toString()
+    .removePrefix("[")
+    .removeSuffix("]")
 
 fun MenuItem.setItemActive(isEnabled: Boolean) {
     icon?.alpha = if (isEnabled) 255 else 120
@@ -52,6 +54,18 @@ fun MenuItem.setItemActive(isEnabled: Boolean) {
         ), 0, s.length, 0
     )
     title = s
+}
+
+fun MenuItem.onMenuItemLongClickListener(menu: Menu, function: () -> (Unit)) {
+    if (itemId != R.id.menu_item_more) {
+        setActionView(R.layout.item_action_button)
+        actionView?.findViewById<ImageButton>(R.id.i_action_button)?.setImageDrawable(icon)
+        actionView?.setOnLongClickListener {
+            function()
+            true
+        }
+        actionView?.setOnClickListener { menu.performIdentifierAction(itemId, 0) }
+    }
 }
 
 // Keyboard
@@ -133,3 +147,4 @@ fun View.removeFocusAndHideKeyboard(context: Context, event: MotionEvent) {
         }
     }
 }
+

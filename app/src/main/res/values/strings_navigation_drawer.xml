@@ -46,6 +46,26 @@
     <string name="f_nav_about_tv_description">Snooker Board is a simple snooker score keeping app that focuses on recording one full match at a time, with care to encompass all rules from the WPBSA (World Professional Billiards and Snooker Association) Official Rules of the Games of Snooker and Billiards</string>
     <string name="f_nav_about_tv_version_title">Releases</string>
 
+    <string name="f_nav_about_tv_version_1_0_x">Version 1.0.x</string>
+    <string name="f_nav_about_tv_version_1_0_x_01">• </string>
+    <string name="f_nav_about_tv_version_1_0_x_02">• </string>
+    <string name="f_nav_about_tv_version_1_0_x_03">• </string>
+    <string name="f_nav_about_tv_version_1_0_x_04">• </string>
+    <string name="f_nav_about_tv_version_1_0_x_05">• </string>
+    <string name="f_nav_about_tv_version_1_0_x_06">• </string>
+    <string name="f_nav_about_tv_version_1_0_x_07">• </string>
+    <string name="f_nav_about_tv_version_1_0_x_08">• </string>
+
+    <string name="f_nav_about_tv_version_1_0_9">Version 1.0.9</string>
+    <string name="f_nav_about_tv_version_1_0_9_01">• Fixed dialogs malfunctions on screen rotation</string>
+    <string name="f_nav_about_tv_version_1_0_9_02">• Simplified background logic for better tracking of game actions</string>
+    <string name="f_nav_about_tv_version_1_0_9_03">• Fixed database access overlaps</string>
+    <string name="f_nav_about_tv_version_1_0_9_04">• Added factor variable to show ads only a percentage of the time</string>
+    <string name="f_nav_about_tv_version_1_0_9_05">• Added buttons fade-in animation</string>
+    <string name="f_nav_about_tv_version_1_0_9_06">• Fixed game glitches for foul modifier and highest score</string>
+    <string name="f_nav_about_tv_version_1_0_9_07">• Removed legacy code and standardized naming</string>
+    <string name="f_nav_about_tv_version_1_0_9_08">• Fixed minor UI glitches for balls list, splash screen, text appearance, etc</string>
+
     <string name="f_nav_about_tv_version_1_0_8">Version 1.0.8</string>
     <string name="f_nav_about_tv_version_1_0_8_01">• Added new features: Remove color, Safe miss and Snooker</string>
     <string name="f_nav_about_tv_version_1_0_8_02">• Implemented tests to check game logic</string>

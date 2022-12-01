@@ -2,7 +2,7 @@ package com.quickpoint.snookerboard.utils
 
 import com.quickpoint.snookerboard.domain.PotAction
 import com.quickpoint.snookerboard.domain.PotAction.*
-import com.quickpoint.snookerboard.utils.MatchAction.*
+import com.quickpoint.snookerboard.utils.MatchAction.FRAME_START_NEW
 import com.quickpoint.snookerboard.utils.MatchState.*
 import timber.log.Timber
 
@@ -79,7 +79,7 @@ sealed class MatchRules(
             this.crtPlayer = crtPlayer
             this.frameCount = frameCount
             this.frameMax = frameMax
-            Timber.i("assignRules(): ${getRulesText()}")
+            Timber.i("assignRules(): ${getAsText()}")
         }
 
         // Getter methods
@@ -117,7 +117,7 @@ sealed class MatchRules(
         }
 
         // Text and logs
-        fun getRulesText() =
+        fun getAsText() =
             "Frames: $frames, Reds: $reds, Foul: $foul, First: $firstPlayer, CrtPlayer: $crtPlayer, Count: $frameCount, Max: $frames"
         fun getDisplayFrames() = "(" + (frames * 2 - 1).toString() + ")"
     }

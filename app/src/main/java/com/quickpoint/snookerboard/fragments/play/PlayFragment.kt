@@ -2,7 +2,7 @@ package com.quickpoint.snookerboard.fragments.play
 
 import android.os.Bundle
 import android.view.*
-import android.view.View.*
+import android.view.View.GONE
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -33,7 +33,6 @@ class PlayFragment : androidx.fragment.app.Fragment() {
 
         // Check match state and navigate to the correct fragment when applicable
         postponeEnterTransition() // Wait for data to load before displaying fragment
-      Timber.e("start play fragment")
         matchVm.matchState.observeOnce(viewLifecycleOwner) { matchState ->
             Timber.i("ObservedOnce matchState: $matchState")
             when (matchState) {
@@ -70,10 +69,13 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                 // VM Observers
                 playVm.eventPlayAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                     when (matchAction) { // Start new match
+                        INFO_FOUL_DIALOG -> navigate(PlayFragmentDirections.genDialogFrag(IGNORE, IGNORE, matchAction))
+                        MATCH_PLAY -> {
+                            Timber.i(RULES.getAsText())
+                            navigate(PlayFragmentDirections.gameFrag())
+                        }
                         SNACKBAR_NO_PLAYER -> fPlayCdl.snackbar(getString(R.string.snackbar_f_play_no_name))
                         SNACKBAR_NO_FIRST -> fPlayCdl.snackbar(getString(R.string.snackbar_f_play_select_who_breaks))
-                        MATCH_PLAY -> navigate(PlayFragmentDirections.gameFrag())
-                        INFO_FOUL_DIALOG -> navigate(PlayFragmentDirections.genDialogFrag(IGNORE, IGNORE, matchAction))
                         else -> Timber.i("Implementation for observed matchAction $matchAction not supported")                    }
                 })
             }

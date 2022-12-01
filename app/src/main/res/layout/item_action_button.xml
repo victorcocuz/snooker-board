@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/i_action_button"
+    style="?android:attr/actionButtonStyle"
+    android:layout_width="wrap_content"
+    android:hapticFeedbackEnabled="false"
+    android:layout_height="wrap_content"
+    android:contentDescription="@string/menu_action_button" />

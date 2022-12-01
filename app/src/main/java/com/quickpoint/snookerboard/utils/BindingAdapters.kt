@@ -101,7 +101,7 @@ fun ImageView.setBallImage(item: DomainBall?, ballAdapterType: BallAdapterType) 
 // RV Adapters
 @BindingAdapter("bindMatchBallsRv")
 fun RecyclerView.bindBallsRv(ballList: MutableList<DomainBall>?) {
-    val adapter = this.adapter as BallAdapter
+    val adapter = adapter as BallAdapter
     adapter.submitList(when (ballList?.lastOrNull()) {
         is COLOR -> listOfBallsColors
         is WHITE -> listOf(NOBALL())
@@ -112,7 +112,7 @@ fun RecyclerView.bindBallsRv(ballList: MutableList<DomainBall>?) {
 
 @BindingAdapter("bindFoulBalls")
 fun RecyclerView.bindFoulBalls(ballStack: MutableList<DomainBall>?) {
-    val adapter = this.adapter as BallAdapter
+    val adapter = adapter as BallAdapter
     adapter.submitList(when (ballStack?.size) {
         null -> listOf()
         in (2..8) -> removeBallsForFoulDialog(ballStack)
@@ -122,6 +122,6 @@ fun RecyclerView.bindFoulBalls(ballStack: MutableList<DomainBall>?) {
 
 @BindingAdapter("bindGameStatsData")
 fun RecyclerView.bindGameStatsRv(data: ArrayList<Pair<DomainScore, DomainScore>>?) {
-    val adapter = this.adapter as PostGameAdapter
+    val adapter = adapter as PostGameAdapter
     adapter.submitList(data)
 }

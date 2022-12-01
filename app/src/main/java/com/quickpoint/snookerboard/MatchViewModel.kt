@@ -71,16 +71,17 @@ class MatchViewModel(
 
     fun emailLogs() = viewModelScope.launch {
         val logs = snookerRepository.getDebugFrameActionList().toString()
+        val json = Gson().toJson(snookerRepository.getDebugFrameActionList())
+        val body = "${RULES.getAsText()} \n\n $json \n\n $logs"
+        Timber.e(json)
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse(EMAIL_URI)
             putExtra(Intent.EXTRA_EMAIL, arrayOf(BuildConfig.ADMIN_EMAIL))
             putExtra(Intent.EXTRA_SUBJECT, EMAIL_LOGS_SUBJECT)
             putExtra(Intent.EXTRA_SUBJECT, EMAIL_LOGS_SUBJECT)
-            putExtra(Intent.EXTRA_TEXT, logs)
+            putExtra(Intent.EXTRA_TEXT, body)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
         if (intent.resolveActivity(app.packageManager) != null) app.applicationContext.startActivity(intent)
-        val json = Gson().toJson(snookerRepository.getDebugFrameActionList())
-        Timber.e(json)
     }
 }

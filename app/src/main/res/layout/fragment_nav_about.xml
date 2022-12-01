@@ -4,12 +4,13 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:padding="@dimen/margin_small"
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_small"
+            android:paddingEnd="@dimen/margin_small">
 
             <TextView
                 android:id="@+id/f_nav_about_tv_title"
@@ -37,12 +38,77 @@
                 app:layout_constraintTop_toBottomOf="@+id/f_nav_about_tv_description" />
 
             <TextView
+                android:id="@+id/f_nav_about_tv_version_1_0_9"
+                style="@style/TextHeaderBold"
+                android:layout_marginTop="@dimen/margin_xxsmall"
+                android:text="@string/f_nav_about_tv_version_1_0_9"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_tv_version_title" />
+
+            <TextView
+                android:id="@+id/f_nav_about_tv_version_1_0_9_01"
+                style="@style/TextBody"
+                android:layout_marginTop="@dimen/margin_xxxsmall"
+                android:text="@string/f_nav_about_tv_version_1_0_9_01"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_tv_version_1_0_9" />
+
+            <TextView
+                android:id="@+id/f_nav_about_tv_version_1_0_9_02"
+                style="@style/TextBody"
+                android:text="@string/f_nav_about_tv_version_1_0_9_02"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_tv_version_1_0_9_01" />
+
+            <TextView
+                android:id="@+id/f_nav_about_tv_version_1_0_9_03"
+                style="@style/TextBody"
+                android:text="@string/f_nav_about_tv_version_1_0_9_03"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_tv_version_1_0_9_02" />
+
+            <TextView
+                android:id="@+id/f_nav_about_tv_version_1_0_9_04"
+                style="@style/TextBody"
+                android:text="@string/f_nav_about_tv_version_1_0_9_04"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_tv_version_1_0_9_03" />
+
+            <TextView
+                android:id="@+id/f_nav_about_tv_version_1_0_9_05"
+                style="@style/TextBody"
+                android:text="@string/f_nav_about_tv_version_1_0_9_05"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_tv_version_1_0_9_04" />
+
+            <TextView
+                android:id="@+id/f_nav_about_tv_version_1_0_9_06"
+                style="@style/TextBody"
+                android:text="@string/f_nav_about_tv_version_1_0_9_06"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_tv_version_1_0_9_05" />
+
+            <TextView
+                android:id="@+id/f_nav_about_tv_version_1_0_9_07"
+                style="@style/TextBody"
+                android:text="@string/f_nav_about_tv_version_1_0_9_07"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_tv_version_1_0_9_06" />
+
+            <TextView
+                android:id="@+id/f_nav_about_tv_version_1_0_9_08"
+                style="@style/TextBody"
+                android:text="@string/f_nav_about_tv_version_1_0_9_08"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_tv_version_1_0_9_07" />
+
+            <TextView
                 android:id="@+id/f_nav_about_tv_version_1_0_8"
                 style="@style/TextHeaderBold"
                 android:layout_marginTop="@dimen/margin_xxsmall"
                 android:text="@string/f_nav_about_tv_version_1_0_8"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_tv_version_title" />
+                app:layout_constraintTop_toBottomOf="@+id/f_nav_about_tv_version_1_0_9_08" />
 
             <TextView
                 android:id="@+id/f_nav_about_tv_version_1_0_8_01"

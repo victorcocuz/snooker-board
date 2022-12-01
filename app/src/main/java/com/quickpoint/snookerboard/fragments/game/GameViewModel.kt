@@ -96,7 +96,7 @@ class GameViewModel(
         if (matchAction in listOf(MATCH_TO_END, MATCH_ENDED)) onEventGameAction(NAV_TO_POST_MATCH, true)
     }
 
-    // Handle Pot
+    // Assign pot action
     @JvmOverloads
     fun assignPot(potType: PotType?, ball: DomainBall = NOBALL(), action: PotAction = PotAction.CONTINUE) {
         if (isUpdateInProgress.value == false) {
@@ -115,6 +115,13 @@ class GameViewModel(
         }
     }
 
+    // Handle Pot
+    private fun handlePotExceptionsBefore(pot: DomainPot): Boolean = onEventGameAction(when {
+        ballStack.isLastBall() && (pot.potType in listOfPotTypesForNoBallSnackbar) -> SNACKBAR_NO_BALL
+        pot is FOULATTEMPT -> FOUL_DIALOG
+        else -> null
+    })
+
     private fun handlePot(pot: DomainPot) {
         pot.potId = RULES.assignUniqueId()
         FREEBALLINFO.handlePotFreeballInfo(pot)
@@ -125,12 +132,6 @@ class GameViewModel(
         RULES.setNextPlayerFromPotAction(pot.potAction)
         onEventFrameUpdated(actionLog)
     }
-
-    private fun handlePotExceptionsBefore(pot: DomainPot): Boolean = onEventGameAction(when {
-        ballStack.isLastBall() && (pot.potType in listOfPotTypesForNoBallSnackbar) -> SNACKBAR_NO_BALL
-        pot is FOULATTEMPT -> FOUL_DIALOG
-        else -> null
-    })
 
     private fun handlePotExceptionsPost(pot: DomainPot) = onEventGameAction(when {
         pot.potType == TYPE_HIT && ballStack.isLastBall() -> if (score.isFrameEqual()) FRAME_RESPOT_BLACK_DIALOG else FRAME_ENDING_DIALOG
