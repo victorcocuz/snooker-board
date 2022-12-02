@@ -47,7 +47,7 @@ class GenericDialogFragment : DialogFragment() {
             varGameVm = this@GenericDialogFragment.gameVm
             GenericDialogFragmentArgs.fromBundle(requireArguments()).apply {
                 varActionA = matchActionA
-                varActionB = if (matchActionC == MATCH_TO_END) MATCH_ENDED_DISCARD_FRAME else IGNORE
+                varActionB = if (matchActionC == MATCH_TO_END) MATCH_ENDED_DISCARD_FRAME else matchActionB // Avoids a double query
                 varActionC = matchActionC
                 if (varActionC in listOfMatchActionsUncancelable) {
                     this@GenericDialogFragment.isCancelable = false // An action has to be taken if game or match are ended

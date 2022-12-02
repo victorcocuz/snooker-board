@@ -1,6 +1,8 @@
 package com.quickpoint.snookerboard.fragments.game
 
 import android.app.Application
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,6 +12,7 @@ import com.quickpoint.snookerboard.domain.DomainBall.NOBALL
 import com.quickpoint.snookerboard.domain.DomainFreeBallInfo.FREEBALLINFO
 import com.quickpoint.snookerboard.domain.DomainPot.FOULATTEMPT
 import com.quickpoint.snookerboard.domain.DomainPot.FREE
+import com.quickpoint.snookerboard.domain.PotAction.FIRST
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.Event
@@ -30,6 +33,7 @@ class GameViewModel(
     var ballStack: MutableList<DomainBall> = mutableListOf()
     var frameStack: MutableList<DomainBreak> = mutableListOf()
     private var actionLogs: MutableList<DomainActionLog> = mutableListOf()
+    private var isUpdateInProgress = false // Deactivate all buttons & options menu if frame is updating
     private lateinit var jobQueue: JobQueue
 
     // Observables
@@ -49,17 +53,13 @@ class GameViewModel(
     private val _crtPlayer = MutableLiveData<Int>()
     val crtPlayer: LiveData<Int> = _crtPlayer
     private fun onEventFrameUpdated(actionLog: DomainActionLog) = jobQueue.submit {
-        _displayFrame.postValue(DomainFrame(SETTINGS.crtFrame, ballStack, score, frameStack, actionLogs, SETTINGS.maxAvailable))
+        _displayFrame.postValue(DomainFrame(SETTINGS.crtFrame, ballStack, score, frameStack, actionLogs, SETTINGS.maxAvailablePoints))
         if (actionLogs.size > 0) snookerRepository.saveCurrentFrame(_displayFrame.value!!)
         actionLogs.addLog(actionLog)
         _freeballInfo.value = FREEBALLINFO
         _crtPlayer.value = SETTINGS.crtPlayer
         onEventGameAction(FRAME_UPDATED)
     }
-
-    private val _isUpdateInProgress = MutableLiveData(false)
-    val isUpdateInProgress: LiveData<Boolean> = _isUpdateInProgress // Deactivate all buttons & options menu if frame is updating
-
 
     // Match actions
     fun loadMatch(frame: DomainFrame?) = frame?.let { // Will load latest frame once observed from play fragment
@@ -90,28 +90,28 @@ class GameViewModel(
     }
 
     fun endFrame(matchAction: MatchAction) { // Update frame data in match view model
-        onEventFrameUpdated(DomainActionLog("endFrame()"))
         score.addMatchPointAndAssignFrameId()
-        if (matchAction in listOf(FRAME_TO_END, FRAME_ENDED)) onEventGameAction(FRAME_START_NEW, true)
+        onEventFrameUpdated(DomainActionLog("endFrame()"))
+        if (matchAction in listOf(FRAME_MISS_FORFEIT, FRAME_TO_END, FRAME_ENDED)) onEventGameAction(FRAME_START_NEW, true)
         if (matchAction in listOf(MATCH_TO_END, MATCH_ENDED)) onEventGameAction(NAV_TO_POST_MATCH, true)
     }
 
     // Assign pot action
     @JvmOverloads
-    fun assignPot(potType: PotType?, ball: DomainBall = NOBALL(), action: PotAction = PotAction.CONTINUE) {
-        if (isUpdateInProgress.value == false) {
-            _isUpdateInProgress.value = true
+    fun assignPot(potType: PotType?, ball: DomainBall = NOBALL(), action: PotAction = FIRST) {
+        if (!isUpdateInProgress) {
+            isUpdateInProgress = true
             if (potType == null) handleUndo()
             else {
                 val pot = potType.getPotFromType(ball, action)
                 if (handlePotExceptionsBefore(pot)) {
-                    _isUpdateInProgress.value = false
+                    isUpdateInProgress = false
                     return
                 }
                 handlePot(if (pot.ball is FREEBALL) FREE(ball = FREEBALL(points = pot.ball.points)) else pot)
                 handlePotExceptionsPost(pot)
             }
-            _isUpdateInProgress.value = false
+            isUpdateInProgress = false
         }
     }
 
@@ -125,26 +125,33 @@ class GameViewModel(
     private fun handlePot(pot: DomainPot) {
         pot.potId = SETTINGS.assignUniqueId()
         FREEBALLINFO.handlePotFreeballInfo(pot)
-        ballStack.handlePotBallStack(pot.potType)
-        frameStack.assignPot(pot)
+        ballStack.handlePotBallStack(pot.potType, pot.potAction)
+        frameStack.onPot(pot)
         score.calculatePoints(pot, 1, ballStack.foulValue(), frameStack)
         val actionLog = pot.getActionLog("handlePot()", ballStack.lastOrNull()?.ballType, frameStack.size)
         SETTINGS.setNextPlayerFromPotAction(pot.potAction)
         onEventFrameUpdated(actionLog)
     }
 
-    private fun handlePotExceptionsPost(pot: DomainPot) = onEventGameAction(when {
-        pot.potType == TYPE_HIT && ballStack.isLastBall() -> if (score.isFrameEqual()) FRAME_RESPOT_BLACK_DIALOG else FRAME_ENDING_DIALOG
-        pot.isFreeballAvailable() -> FRAME_FREE_AVAILABLE
-        else -> null
-    }, pot.isFreeballAvailable())
+    private fun handlePotExceptionsPost(pot: DomainPot) {
+        when {
+            SETTINGS.counterRetake == 3 -> {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    onEventGameAction(FRAME_MISS_FORFEIT_DIALOG)
+                }, 200)
+            }
+            pot.potType == TYPE_HIT && ballStack.isLastBall() -> onEventGameAction(if (score.isFrameEqual()) FRAME_RESPOT_BLACK_DIALOG else FRAME_ENDING_DIALOG)
+            pot.isFreeballAvailable() -> onEventGameAction(FRAME_FREE_AVAILABLE, pot.isFreeballAvailable())
+            else -> {}
+        }
+    }
 
     // Handle Undo
     private fun handleUndo() {
         SETTINGS.crtPlayer = frameStack.last().player
         val pot = frameStack.removeLastPotFromFrameStack()
         val actionLog = pot.getActionLog("HandleUndo()", ballStack.lastOrNull()?.ballType, frameStack.size)
-        ballStack.handleUndoBallStack(pot.potType, frameStack.lastBall())
+        ballStack.handleUndoBallStack(pot.potType, pot.potAction, frameStack.lastBall())
         FREEBALLINFO.handleUndoFreeballInfo(pot.potType, frameStack.lastPotType())
         score.calculatePoints(pot, -1, ballStack.foulValue(), frameStack)
         onEventFrameUpdated(actionLog)

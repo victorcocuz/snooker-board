@@ -4,13 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.quickpoint.snookerboard.domain.DomainScoreKt"/>
+
+        <import type="com.quickpoint.snookerboard.domain.DomainScoreKt" />
+
         <import type="com.quickpoint.snookerboard.domain.DomainBallKt" />
+
         <import type="com.quickpoint.snookerboard.utils.MatchAction" />
+
         <import type="com.quickpoint.snookerboard.domain.PotAction" />
+
         <variable
             name="varDialogVm"
             type="com.quickpoint.snookerboard.DialogViewModel" />
+
         <variable
             name="varGameVm"
             type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
@@ -90,15 +96,11 @@
         <TextView
             android:id="@+id/f_dialog_foul_btn_continue"
             style="@style/ButtonNarrow"
-            android:layout_width="0dp"
-            android:layout_marginStart="@dimen/margin_layout_offset"
+            android:layout_width="wrap_content"
             android:layout_marginTop="@dimen/margin_header_below"
-            android:layout_marginEnd="@dimen/margin_layout_offset_mid"
             android:onClick="@{() -> varDialogVm.onActionClicked(PotAction.SWITCH)}"
             android:text="@string/f_dialog_foul_btn_continue"
-            app:layout_constraintEnd_toStartOf="@+id/f_dialog_foul_btn_force_continue"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_tv_choose_action_label"
             app:setSelected="@{varDialogVm.actionClicked == PotAction.SWITCH}" />
@@ -106,17 +108,28 @@
         <TextView
             android:id="@+id/f_dialog_foul_btn_force_continue"
             style="@style/ButtonNarrow"
-            android:layout_width="0dp"
-            android:layout_marginStart="@dimen/margin_layout_offset_mid"
-            android:layout_marginEnd="@dimen/margin_layout_offset"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="@dimen/margin_layout_offset"
             android:onClick="@{() -> varDialogVm.onActionClicked(PotAction.CONTINUE)}"
             android:text="@string/f_dialog_foul_btn_force_continue"
-            app:layout_constraintBottom_toBottomOf="@+id/f_dialog_foul_btn_continue"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/f_dialog_foul_btn_continue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_btn_continue"
             app:setEnabled="@{varGameVm.displayFrame.isFoulAndAMiss()}"
             app:setSelected="@{varDialogVm.actionClicked == PotAction.CONTINUE}" />
+
+        <TextView
+            android:id="@+id/f_dialog_foul_btn_force_retake"
+            style="@style/ButtonNarrow"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="@dimen/margin_layout_offset"
+            android:onClick="@{() -> varDialogVm.onActionClicked(PotAction.RETAKE)}"
+            android:text="@string/f_dialog_foul_btn_force_retake"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_btn_force_continue"
+            app:setEnabled="@{varGameVm.displayFrame.isFoulAndAMiss()}"
+            app:setSelected="@{varDialogVm.actionClicked == PotAction.RETAKE}" />
 
         <FrameLayout
             android:id="@+id/f_dialog_foul_fl_line_hor_two"
@@ -126,7 +139,7 @@
             android:layout_marginEnd="@dimen/margin_layout_offset"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_btn_force_continue" />
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_btn_force_retake" />
 
         <TextView
             android:id="@+id/f_dialog_foul_btn_cancel"

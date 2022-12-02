@@ -1,6 +1,9 @@
 package com.quickpoint.snookerboard.domain
 
 import com.quickpoint.snookerboard.database.DbPot
+import com.quickpoint.snookerboard.domain.PotAction.CONTINUE
+import com.quickpoint.snookerboard.domain.PotAction.RETAKE
+import com.quickpoint.snookerboard.domain.PotType.TYPE_FOUL
 import com.quickpoint.snookerboard.domain.PotType.TYPE_FREE_TOGGLE
 import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
 
@@ -12,8 +15,9 @@ data class DomainBreak(
     val pots: MutableList<DomainPot>,
     var breakSize: Int,
 ) {
-    fun lastPotType() = pots.lastOrNull()?.potType
-    fun lastBall() = pots.lastOrNull()?.ball
+    fun lastPot() = pots.lastOrNull()
+    fun lastPotType() = lastPot()?.potType
+    fun lastBall() = lastPot()?.ball
 
     // CONVERTER method from DOMAIN Break to a list of DATABASE Pots
     fun asDbPots(breakId: Long): List<DbPot> {
@@ -34,8 +38,9 @@ data class DomainBreak(
 
 // Checker methods
 fun MutableList<DomainBreak>.isFrameInProgress() = size > 0
+fun MutableList<DomainBreak>.lastPot() = lastOrNull()?.lastPot()
 fun MutableList<DomainBreak>.lastPotType() = lastOrNull()?.lastPotType()
-fun MutableList<DomainBreak>.lastBall() = lastOrNull()?.lastBall()
+fun MutableList<DomainBreak>.lastBall() = lastPot()?.ball
 
 // Helper methods
 fun MutableList<DomainBreak>.findMaxBreak(): Int {
@@ -47,14 +52,14 @@ fun MutableList<DomainBreak>.findMaxBreak(): Int {
 }
 
 
-fun MutableList<DomainBreak>.getDisplayShots(): MutableList<DomainBreak> {
+fun MutableList<DomainBreak>.displayShots(): MutableList<DomainBreak> {
     val list = mutableListOf<DomainBreak>() // Create a list of pots show within the break rv (SAFE, MISS, REMOVERED are not shown)
     forEach { if (it.pots.last().potType !in listOfPotTypesHelpers) list.add(it.copy()) }
     return list
 }
 
 // Pot and undo methods
-fun MutableList<DomainBreak>.assignPot(pot: DomainPot) { // Add to frameStack all pots, but remove repeated freeball toggles
+fun MutableList<DomainBreak>.onPot(pot: DomainPot) { // Add to frameStack all pots, but remove repeated freeball toggles
     if (pot.potType == TYPE_FREE_TOGGLE && lastPotType() == TYPE_FREE_TOGGLE) removeLastPotFromFrameStack()
     else addToFrameStack(pot)
 }
@@ -67,9 +72,11 @@ fun MutableList<DomainBreak>.addToFrameStack(pot: DomainPot) {
     ) add(DomainBreak(SETTINGS.assignUniqueId(), SETTINGS.crtPlayer, SETTINGS.crtFrame, mutableListOf(), 0)) // Add a new current break
     last().pots.add(pot) // Add the current pot to the current break
     if (pot.potType in listOfPotTypesPointsAdding) last().breakSize += pot.ball.points // Update the current break size
+    if (pot.potType == TYPE_FOUL && pot.potAction in listOf(RETAKE, CONTINUE)) SETTINGS.counterRetake += 1 else SETTINGS.counterRetake = 0 // Check for frame forfeit option
 }
 
 fun MutableList<DomainBreak>.removeLastPotFromFrameStack(): DomainPot {
+    if (SETTINGS.counterRetake >= 0) SETTINGS.counterRetake--
     val pot = last().pots.removeLast() // Get the last pot
     if (pot.potType in listOfPotTypesPointsAdding) last().breakSize -= pot.ball.points // Update current break size
     while (size > 0 && last().pots.size == 0) removeLast() // Remove all empty breaks, except initial one

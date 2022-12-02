@@ -117,12 +117,14 @@ class GameFragment : Fragment() {
                         gameVm.assignPot(TYPE_FOUL, dialogVm.ballClicked.value!!, dialogVm.actionClicked.value!!)
                         dialogVm.resetFoul()
                     }
-                    FRAME_LOG_ACTIONS_DIALOG, FRAME_RESPOT_BLACK_DIALOG, FRAME_RERACK_DIALOG, FRAME_ENDING_DIALOG, MATCH_ENDING_DIALOG, MATCH_CANCEL_DIALOG -> {
+                    FRAME_LOG_ACTIONS_DIALOG, FRAME_RESPOT_BLACK_DIALOG, FRAME_RERACK_DIALOG, FRAME_ENDING_DIALOG,
+                    MATCH_ENDING_DIALOG, MATCH_CANCEL_DIALOG, FRAME_MISS_FORFEIT_DIALOG -> {
                         val actions = action.getListOfDialogActions(score.isMatchEnding(), isFrameMathematicallyOver())
                         navigate(GameFragmentDirections.genDialogFrag(actions[0], actions[1], actions[2]))
                     }
                     FRAME_LOG_ACTIONS -> matchVm.emailLogs()
                     FRAME_FREE_AVAILABLE, FRAME_UNDO, FRAME_RESPOT_BLACK -> gameVm.assignPot(action.getPotType())
+                    FRAME_MISS_FORFEIT -> gameVm.onEventGameAction(action.queryEndFrameOrMatch(score.isMatchEnding(), isFrameMathematicallyOver()))
                     FRAME_TO_END, FRAME_ENDED, MATCH_TO_END, MATCH_ENDED -> gameVm.endFrame(action)
                     FRAME_RERACK, FRAME_START_NEW -> {
                         adMob.showInterstitialAd()

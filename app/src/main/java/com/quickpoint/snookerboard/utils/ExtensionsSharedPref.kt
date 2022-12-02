@@ -17,9 +17,9 @@ import com.quickpoint.snookerboard.utils.MatchSettings.*
 import timber.log.Timber
 
 // Shared preferences
-fun Fragment.getSharedPref(): SharedPreferences = requireActivity().getSharedPref()
-fun Activity.getSharedPref(): SharedPreferences = application.getSharedPref()
-fun Application.getSharedPref(): SharedPreferences = getSharedPreferences(getString(R.string.sp_file_key), Context.MODE_PRIVATE)
+fun Fragment.sharedPref(): SharedPreferences = requireActivity().sharedPref()
+fun Activity.sharedPref(): SharedPreferences = application.sharedPref()
+fun Application.sharedPref(): SharedPreferences = getSharedPreferences(getString(R.string.sp_file_key), Context.MODE_PRIVATE)
 
 fun SharedPreferences.updateState() =
     edit().putInt(SnookerBoardApplication.application().getString(R.string.sp_match_state), SETTINGS.matchState.ordinal).apply()
@@ -33,13 +33,14 @@ fun SharedPreferences.savePref() {
             putString(getString(R.string.sp_match_name_first_b), PLAYER02.firstName)
             putString(getString(R.string.sp_match_name_last_b), PLAYER02.lastName)
             putLong(getString(R.string.sp_match_unique_id), SETTINGS.uniqueId)
-            putInt(getString(R.string.sp_match_frames), SETTINGS.maxFrames)
+            putInt(getString(R.string.sp_match_max_frames_available), SETTINGS.maxFramesAvailable)
             putInt(getString(R.string.sp_match_reds), SETTINGS.reds)
             putInt(getString(R.string.sp_match_foul), SETTINGS.foul)
-            putInt(getString(R.string.sp_match_first), SETTINGS.firstPlayer)
+            putInt(getString(R.string.sp_match_first_player), SETTINGS.firstPlayer)
             putInt(getString(R.string.sp_match_crt_player), SETTINGS.crtPlayer)
-            putLong(getString(R.string.sp_match_frame_count), SETTINGS.crtFrame)
-            putInt(getString(R.string.sp_match_frame_max), SETTINGS.maxAvailable)
+            putLong(getString(R.string.sp_match_crt_frame), SETTINGS.crtFrame)
+            putInt(getString(R.string.sp_match_max_available_points), SETTINGS.maxAvailablePoints)
+            putInt(getString(R.string.sp_match_max_counter_retake), SETTINGS.counterRetake)
             putBoolean(getString(R.string.sp_match_freeball_visibility), FREEBALLINFO.isVisible)
             putBoolean(getString(R.string.sp_match_freeball_selection), FREEBALLINFO.isSelected)
             apply()
@@ -59,13 +60,15 @@ fun SharedPreferences.loadPref() {
         PLAYER02.lastName = getString(getString(R.string.sp_match_name_last_b), if (BuildConfig.DEBUG_TOGGLE)  "Higgins" else "")
         SETTINGS.assignRules(
             getLong(getString(R.string.sp_match_unique_id), -1),
-            getInt(getString(R.string.sp_match_frames), 3),
+            getInt(getString(R.string.sp_match_max_frames_available), 3),
             getInt(getString(R.string.sp_match_reds), 15),
             getInt(getString(R.string.sp_match_foul), 0),
-            getInt(getString(R.string.sp_match_first), 0),
+            getInt(getString(R.string.sp_match_first_player), 0),
             getInt(getString(R.string.sp_match_crt_player), 0),
-            getLong(getString(R.string.sp_match_frame_count), 1),
-            getInt(getString(R.string.sp_match_frame_max), 0))
+            getLong(getString(R.string.sp_match_crt_frame), 1),
+            getInt(getString(R.string.sp_match_max_available_points), 0),
+            getInt(getString(R.string.sp_match_max_counter_retake), 0),
+        )
         FREEBALLINFO.assignFreeballInfo(getBoolean(getString(R.string.sp_match_freeball_visibility), false),
             getBoolean(getString(R.string.sp_match_freeball_selection), false))
     }

@@ -56,5 +56,5 @@ fun RecyclerView.bindPotsRv(crtBreak: DomainBreak?, player: Int) {
 @BindingAdapter("bindBreakData")
 fun RecyclerView.bindBreakRv(breaks: MutableList<DomainBreak>?) = breaks?.let {
     val adapter = this.adapter as BreakAdapter
-    adapter.submitList(breaks.getDisplayShots())
+    adapter.submitList(breaks.displayShots())
 }

@@ -12,15 +12,16 @@ enum class MatchState { IDLE, IN_PROGRESS, SAVED, POST_MATCH, NONE }
 sealed class MatchSettings(
     var matchState: MatchState,
     var uniqueId: Long,
-    var maxFrames: Int,
+    var maxFramesAvailable: Int,
     var reds: Int,
     var foul: Int,
     var firstPlayer: Int,
     var crtPlayer: Int,
     var crtFrame: Long,
-    var maxAvailable: Int
+    var maxAvailablePoints: Int,
+    var counterRetake: Int,
 ) {
-    object SETTINGS : MatchSettings(IDLE, 0,2, 15, 0, -1, -1, 0, 0) {
+    object SETTINGS : MatchSettings(IDLE, 0, 2, 15, 0, -1, -1, 0, 0, 0) {
 
         // Assign methods
         fun setMatchState(state: MatchState): Int {
@@ -30,8 +31,8 @@ sealed class MatchSettings(
         }
 
         fun setFrames(number: Int): Int {
-            maxFrames = number
-            return maxFrames
+            maxFramesAvailable = number
+            return maxFramesAvailable
         }
 
         fun setReds(number: Int): Int {
@@ -51,48 +52,52 @@ sealed class MatchSettings(
 
         fun resetRules(): Int {
             uniqueId = -1
-            maxFrames = 2
+            maxFramesAvailable = 2
             reds = 15
             foul = 0
             firstPlayer = -1
             crtPlayer = -1
             crtFrame = 1
-            maxAvailable = 0
+            maxAvailablePoints = 0
+            counterRetake = 0
             return -1
         }
 
         fun assignRules(
             uniqueId: Long,
-            frames: Int,
+            maxFramesAvailable: Int,
             reds: Int,
             foul: Int,
-            first: Int,
+            firstPlayer: Int,
             crtPlayer: Int,
-            frameCount: Long,
-            frameMax: Int
+            crtFrame: Long,
+            maxAvailablePoints: Int,
+            retakeCounter: Int,
         ) {
             this.uniqueId = uniqueId
-            this.maxFrames = frames
+            this.maxFramesAvailable = maxFramesAvailable
             this.reds = reds
             this.foul = foul
-            this.firstPlayer = first
+            this.firstPlayer = firstPlayer
             this.crtPlayer = crtPlayer
-            this.crtFrame = frameCount
-            this.maxAvailable = frameMax
+            this.crtFrame = crtFrame
+            this.maxAvailablePoints = maxAvailablePoints
+            this.counterRetake = retakeCounter
             Timber.i("assignRules(): ${getAsText()}")
         }
 
         // Getter methods
-        fun getMatchStateFromOrdinal(ordinal: Int) = when (ordinal) {
-            0 -> this.matchState = IDLE
-            1 -> this.matchState = IN_PROGRESS
-            2 -> this.matchState = SAVED
-            3 -> this.matchState = POST_MATCH
-            else -> Timber.e("No match state has been implemented for this ordinal")
+        fun getMatchStateFromOrdinal(ordinal: Int) {
+            matchState = when (ordinal) {
+                0 -> IDLE
+                1 -> IN_PROGRESS
+                2 -> SAVED
+                else -> POST_MATCH // Always 3
+            }
         }
 
         fun assignUniqueId(): Long {
-            uniqueId ++
+            uniqueId++
             return uniqueId
         }
 
@@ -104,21 +109,23 @@ sealed class MatchSettings(
                 crtFrame += 1
                 firstPlayer = 1 - firstPlayer
             }
-            maxAvailable = reds * 8 + 27
+            maxAvailablePoints = reds * 8 + 27
             crtPlayer = firstPlayer
+            counterRetake = 0
         }
 
         fun setNextPlayerFromPotAction(potAction: PotAction) {
             crtPlayer = when (potAction) {
                 SWITCH -> 1 - crtPlayer
                 FIRST -> firstPlayer
-                CONTINUE -> crtPlayer
+                CONTINUE, RETAKE -> crtPlayer
             }
         }
 
         // Text and logs
         fun getAsText() =
-            "Frames: $maxFrames, Reds: $reds, Foul: $foul, First: $firstPlayer, CrtPlayer: $crtPlayer, Count: $crtFrame, Max: $maxFrames"
-        fun getDisplayFrames() = "(" + (maxFrames * 2 - 1).toString() + ")"
+            "Frames: $maxFramesAvailable, Reds: $reds, Foul: $foul, First: $firstPlayer, CrtPlayer: $crtPlayer, Count: $crtFrame, Max: $maxFramesAvailable"
+
+        fun getDisplayFrames() = "(" + (maxFramesAvailable * 2 - 1).toString() + ")"
     }
 }

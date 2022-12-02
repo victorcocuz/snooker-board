@@ -1,6 +1,6 @@
 package com.quickpoint.snookerboard.utils
 
-import android.view.View
+import android.view.View.*
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
@@ -20,6 +20,7 @@ fun TextView.setDialogGameGenLabel(matchAction: MatchAction) {
         INFO_FOUL_DIALOG -> "Info foul"
         FRAME_RESPOT_BLACK -> "Re-spot black"
         FRAME_LOG_ACTIONS -> "Actions log"
+        FRAME_MISS_FORFEIT -> "Forfeit frame"
         else -> "$matchAction not implemented"
     }
 }
@@ -36,6 +37,7 @@ fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
         INFO_FOUL_DIALOG -> "A typical foul in snooker is worth 4 points. You may wish to decrease this value."
         FRAME_RESPOT_BLACK -> "Looks like you and your opponent are tied at the end of the frame! The black ball will be re-spotted to decide the winner. The player who started the frame will attempt to pot the black first."
         FRAME_LOG_ACTIONS -> "If you've experienced any issues during this match you can submit an action log, which will be reviewed by the developer. Would you like to submit an action log?"
+        FRAME_MISS_FORFEIT -> "If a player commits Foul and a Miss three times in a row while the object ball is fully visible, this results in the frame being automatically lost. If this is the case, please choose to forfeit frame."
         else -> "$matchAction not implemented"
     }
 }
@@ -56,16 +58,18 @@ fun TextView.setDialogGameBText(matchAction: MatchAction) {
 @BindingAdapter("dialogGameGenCText", "dialogGameGenCActionB", "dialogGameGenCScore")
 fun TextView.setDialogGameCText(matchAction: MatchAction, matchActionB: MatchAction, frame: DomainFrame?) {
     isVisible = !(matchActionB == MATCH_ENDED_DISCARD_FRAME && (frame?.score?.isFrameEqual() ?: false))
-    text = when (matchAction) {
-        INFO_FOUL_DIALOG, FRAME_RESPOT_BLACK -> "I understand"
+    text = when {
+        matchAction in listOf(INFO_FOUL_DIALOG, FRAME_RESPOT_BLACK) -> "I understand"
+        matchActionB == FRAME_MISS_FORFEIT -> "Yes, forfeit the frame"
         else -> "Yes"
     }
 }
 
 @BindingAdapter("dialogGameNote", "dialogGameNoteScore")
 fun TextView.setDialogGameNote(matchAction: MatchAction, frame: DomainFrame?) {
-    visibility = if (matchAction == MATCH_ENDED_DISCARD_FRAME) View.VISIBLE else View.GONE
+    visibility = if (matchAction in listOf(MATCH_ENDED_DISCARD_FRAME, FRAME_MISS_FORFEIT)) VISIBLE else GONE
     text = when {
+        matchAction == FRAME_MISS_FORFEIT -> "NOTE: Please read carefully, this action cannot be undone"
         frame == null -> ""
         frame.score.isNoFrameFinished() -> ""
         frame.score.isFrameWinResultingMatchTie() -> "NOTE: Keeping the current frame will result in a draw"

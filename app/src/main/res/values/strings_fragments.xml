@@ -61,7 +61,8 @@
     <string name="f_dialog_foul_tv_balls_label">Which ball was fouled?</string>
     <string name="f_dialog_foul_tv_choose_action_label">Do you wish to continue?</string>
     <string name="f_dialog_foul_btn_continue">OK, I will play</string>
-    <string name="f_dialog_foul_btn_force_continue">Force continue or retake</string>
+    <string name="f_dialog_foul_btn_force_continue">Force opponent to continue</string>
+    <string name="f_dialog_foul_btn_force_retake">Force opponent to retake</string>
     <string name="f_dialog_foul_btn_cancel">Cancel</string>
     <string name="f_dialog_foul_btn_submit">Proceed</string>
 

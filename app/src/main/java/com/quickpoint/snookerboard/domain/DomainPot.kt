@@ -14,7 +14,7 @@ val listOfPotTypesPointsAdding = listOf(TYPE_HIT, TYPE_FREE, TYPE_ADDRED)
 val listOfPotTypesPointGenerating = listOfPotTypesPointsAdding.plus(TYPE_FOUL)
 val listOfPotTypesForNoBallSnackbar = listOf(TYPE_HIT, TYPE_MISS, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_SNOOKER, TYPE_FOUL, TYPE_FOUL_ATTEMPT)
 
-enum class PotAction { FIRST, CONTINUE, SWITCH }
+enum class PotAction { FIRST, SWITCH, CONTINUE, RETAKE }
 
 // All game logic is based on DOMAIN Pots. Every shot that happens is defined within the constraints below
 sealed class DomainPot(

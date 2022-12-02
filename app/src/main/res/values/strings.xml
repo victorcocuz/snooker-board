@@ -26,19 +26,20 @@
 
     <!-- Shared Preferences -->
     <string name="sp_file_key">PREFERENCE_FILE_KEY</string>
-    <string name="sp_match_unique_id">matchUniqueId</string>
-    <string name="sp_match_frames">matchFrames</string>
-    <string name="sp_match_reds">matchReds</string>
-    <string name="sp_match_foul">matchFoul</string>
-    <string name="sp_match_first">matchFirst</string>
-    <string name="sp_match_frame_count">matchCrtFrame</string>
-    <string name="sp_match_frame_max">matchFrameMax</string>
-    <string name="sp_match_crt_player">matchCrtPlayer</string>
     <string name="sp_match_state">matchState</string>
     <string name="sp_match_name_first_a">matchNameFirstA</string>
-    <string name="sp_match_name_first_b">matchNameFirstB</string>
     <string name="sp_match_name_last_a">matchNameLastA</string>
+    <string name="sp_match_name_first_b">matchNameFirstB</string>
     <string name="sp_match_name_last_b">matchNameLastB</string>
+    <string name="sp_match_unique_id">matchUniqueId</string>
+    <string name="sp_match_max_frames_available">matchFrames</string>
+    <string name="sp_match_reds">matchReds</string>
+    <string name="sp_match_foul">matchFoul</string>
+    <string name="sp_match_first_player">matchFirst</string>
+    <string name="sp_match_crt_player">matchCrtPlayer</string>
+    <string name="sp_match_crt_frame">matchCrtFrame</string>
+    <string name="sp_match_max_available_points">matchFrameMax</string>
+    <string name="sp_match_max_counter_retake">matchCounterRetake</string>
     <string name="sp_match_freeball_visibility">matchFreeballVisibility</string>
     <string name="sp_match_freeball_selection">matchFreeballSelection</string>
 

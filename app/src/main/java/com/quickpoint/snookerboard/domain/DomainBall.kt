@@ -4,6 +4,7 @@ import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.annota
 import com.quickpoint.snookerboard.domain.BallType.*
 import com.quickpoint.snookerboard.domain.DomainBall.*
 import com.quickpoint.snookerboard.domain.DomainFreeBallInfo.FREEBALLINFO
+import com.quickpoint.snookerboard.domain.PotAction.RETAKE
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
 
@@ -76,12 +77,12 @@ fun MutableList<DomainBall>.resetBalls() {
     addNextBalls(SETTINGS.reds * 2 + 7)
 }
 
-fun MutableList<DomainBall>.handlePotBallStack(potType: PotType) {
+fun MutableList<DomainBall>.handlePotBallStack(potType: PotType, potAction: PotAction) {
     when (potType) {
         TYPE_HIT, TYPE_REMOVE_COLOR, TYPE_FREE -> removeBalls(1)
         TYPE_ADDRED, TYPE_REMOVE_RED -> removeBalls(2)
         TYPE_SAFE, TYPE_MISS, TYPE_SAFE_MISS, TYPE_SNOOKER, TYPE_FOUL -> {
-            if (last() is COLOR) removeBalls(1)
+            if (last() is COLOR && potAction != RETAKE) removeBalls(1)
             if (last() is FREEBALL) removeFreeBall()
         }
         TYPE_FREE_TOGGLE -> if (FREEBALLINFO.isSelected) addFreeBall(1) else removeFreeBall()
@@ -90,14 +91,14 @@ fun MutableList<DomainBall>.handlePotBallStack(potType: PotType) {
     }
 }
 
-fun MutableList<DomainBall>.handleUndoBallStack(potType: PotType, lastBall: DomainBall?) {
+fun MutableList<DomainBall>.handleUndoBallStack(potType: PotType, potAction: PotAction, lastBall: DomainBall?) {
     when (potType) {
         TYPE_HIT, TYPE_REMOVE_COLOR -> addNextBalls(1)
         TYPE_FREE -> addFreeBall(0)
         TYPE_ADDRED, TYPE_REMOVE_RED -> addNextBalls(2)
         TYPE_SAFE, TYPE_MISS, TYPE_SAFE_MISS, TYPE_SNOOKER, TYPE_FOUL -> {
             when (lastBall?.ballType) {
-                TYPE_RED -> addNextBalls(1)
+                TYPE_RED -> if (potAction != RETAKE) addNextBalls(1)
                 TYPE_FREEBALL -> if (!isInColors()) addNextBalls(1) // Adds a color to the ballstack
                 TYPE_FREEBALLTOGGLE -> addFreeBall(1)
                 else -> {}
@@ -145,7 +146,7 @@ internal fun MutableList<DomainBall>.addBalls(vararg balls: DomainBall): Int {
 
 @VisibleForTesting
 internal fun MutableList<DomainBall>.addFreeBall(pol: Int) {
-    SETTINGS.maxAvailable += if (isInColors() || !wasPreviousBallColor()) {
+    SETTINGS.maxAvailablePoints += if (isInColors() || !wasPreviousBallColor()) {
         addBalls(FREEBALL(points = last().points)) * pol
     } else {
         addBalls(COLOR(), FREEBALL()) * pol
@@ -162,7 +163,7 @@ internal fun MutableList<DomainBall>.removeBalls(times: Int): Int = if (times ==
 }
 
 fun MutableList<DomainBall>.removeFreeBall() {
-    SETTINGS.maxAvailable += removeBalls(if (isInColorsWithFreeBall()) 1 else 2)
+    SETTINGS.maxAvailablePoints += removeBalls(if (isInColorsWithFreeBall()) 1 else 2)
 }
 
 // Converter methods

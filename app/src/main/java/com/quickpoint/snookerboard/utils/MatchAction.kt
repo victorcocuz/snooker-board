@@ -18,7 +18,6 @@ enum class MatchAction {
     SNACKBAR_NO_PLAYER, // Assign snackbar when player names are not fully completed
     SNACKBAR_NO_FIRST, // Assign snackbar when no first player is selected
 
-
     // Game Fragment Match Actions
     MATCH_START_NEW, // When actioned from the game fragment, if no match exists in the db
     MATCH_CANCEL_DIALOG, // On clicking cancel match
@@ -34,7 +33,7 @@ enum class MatchAction {
     FRAME_START_NEW, // When actioned from endFrameOrMatch method in matchVm
     FRAME_RERACK_DIALOG, // On clicking rerack button
     FRAME_RERACK, // Action to reset frame
-    FRAME_MISS_FORFEIT_DIALOG, // Warn player that the next miss will result in losing frame
+    FRAME_MISS_FORFEIT_DIALOG, // On rerack counter reaching value of 3
     FRAME_MISS_FORFEIT, // Person who missed 3 times in a row loses frame if he was not snookered
     FRAME_ENDING_DIALOG, // Open frame end dialog
     FRAME_TO_END, // On clicking the concede frame button while the frame is still ongoing
@@ -49,10 +48,8 @@ enum class MatchAction {
 
     SNACKBAR_NO_BALL, // Assign snackbar when there are no balls on the table instead handling pot
 
-
     // Summary Fragment Actions
     NAV_TO_PLAY, // Go to main menu
-
 
     // Redundant Actions
     CLOSE_DIALOG, // Used when the action is to continue current state
@@ -70,6 +67,7 @@ fun MatchAction.getListOfDialogActions(isMatchEnding: Boolean, isFrameMathematic
     FRAME_ENDING_DIALOG, MATCH_ENDING_DIALOG -> listOf(CLOSE_DIALOG, IGNORE, queryEndFrameOrMatch(isMatchEnding, isFrameMathematicallyOver))
     MATCH_CANCEL_DIALOG -> listOf(CLOSE_DIALOG, IGNORE, MATCH_CANCEL)
     FRAME_LOG_ACTIONS_DIALOG -> listOf(CLOSE_DIALOG, IGNORE, FRAME_LOG_ACTIONS)
+    FRAME_MISS_FORFEIT_DIALOG -> listOf(CLOSE_DIALOG, FRAME_MISS_FORFEIT, queryEndFrameOrMatch(isMatchEnding, isFrameMathematicallyOver))
     else -> listOf()
 }
 

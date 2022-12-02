@@ -48,7 +48,7 @@ fun MutableList<DomainScore>.isFrameAndMatchEqual() = isFrameEqual() && isMatchE
 fun MutableList<DomainScore>.isNoFrameFinished() = this[0].matchPoints + this[1].matchPoints == 0
 fun MutableList<DomainScore>.frameWinner() = if (this[0].framePoints > this[1].framePoints) 0 else 1
 fun MutableList<DomainScore>.isFrameWinResultingMatchTie() = this[frameWinner()].matchPoints + 1 == this[1 - frameWinner()].matchPoints
-fun MutableList<DomainScore>.isMatchEnding() = this[frameWinner()].matchPoints + 1 == SETTINGS.maxFrames
+fun MutableList<DomainScore>.isMatchEnding() = this[frameWinner()].matchPoints + 1 == SETTINGS.maxFramesAvailable
 fun MutableList<DomainScore>.isMatchInProgress() = (this[0].cumulatedValues() + this[1].cumulatedValues()) > 0
 
 // Helper methods
@@ -62,7 +62,8 @@ fun MutableList<DomainScore>.resetMatch() {
 }
 
 fun MutableList<DomainScore>.addMatchPointAndAssignFrameId() {
-    this[frameWinner()].matchPoints += 1
+    if (SETTINGS.counterRetake == 3) this[1 - SETTINGS.crtPlayer].matchPoints += 1 // If a non-snooker shot was retaken 3 times game is lost by the crt player
+    else this[frameWinner()].matchPoints += 1
     for (score in this) score.frameId = SETTINGS.crtFrame // TEMP - Assign a frameId to later use to add frame info to DATABASE
 }
 

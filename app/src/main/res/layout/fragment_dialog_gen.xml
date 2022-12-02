@@ -99,7 +99,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/f_dialog_gen_btn_answer_c"
             app:layout_constraintTop_toBottomOf="@+id/f_dialog_gen_tv_note"
-            app:setVisible="@{varActionB != MatchAction.IGNORE}" />
+            app:setVisible="@{varActionB == MatchAction.MATCH_ENDED_DISCARD_FRAME}" />
 
         <TextView
             android:id="@+id/f_dialog_gen_btn_answer_c"

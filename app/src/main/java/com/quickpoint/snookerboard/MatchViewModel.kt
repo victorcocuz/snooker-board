@@ -39,7 +39,7 @@ class MatchViewModel(
 
     private val _matchState = MutableLiveData<MatchState>()
     val matchState: LiveData<MatchState> = _matchState
-    fun updateState(matchState: MatchState) = app.getSharedPref().apply {
+    fun updateState(matchState: MatchState) = app.sharedPref().apply {
         if (matchState == NONE) loadPref() else SETTINGS.setMatchState(matchState)
         if (matchState == SAVED) savePref() else updateState()
         if (matchState != NONE) _matchState.value = SETTINGS.matchState
