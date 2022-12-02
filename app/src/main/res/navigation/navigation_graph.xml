@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:startDestination="@id/playFragment">
+    app:startDestination="@id/RulesFragment">
 
     <!-- Main Fragments -->
     <fragment
-        android:id="@+id/playFragment"
-        android:name="com.quickpoint.snookerboard.fragments.play.PlayFragment"
-        android:label="PlayFragment" >
+        android:id="@+id/RulesFragment"
+        android:name="com.quickpoint.snookerboard.fragments.rules.RulesFragment"
+        android:label="RulesFragment">
         <action
             android:id="@+id/game_frag"
             app:destination="@id/gameFragment"
@@ -16,7 +16,7 @@
             app:launchSingleTop="false"
             app:popEnterAnim="@anim/fade_in_short"
             app:popExitAnim="@anim/fade_out_short"
-            app:popUpTo="@id/playFragment" />
+            app:popUpTo="@id/RulesFragment" />
         <action
             android:id="@+id/gen_dialog_frag"
             app:destination="@id/gameGenericDialogFragment"
@@ -26,8 +26,8 @@
             app:popExitAnim="@anim/fade_out_short"
             app:popUpToInclusive="false" />
         <action
-            android:id="@+id/post_game_frag"
-            app:destination="@id/postGameFragment"
+            android:id="@+id/summary_frag"
+            app:destination="@id/summaryFragment"
             app:enterAnim="@anim/fade_in_short"
             app:exitAnim="@anim/fade_out_short"
             app:popEnterAnim="@anim/fade_in_short"
@@ -54,18 +54,18 @@
             app:popEnterAnim="@anim/fade_in_short"
             app:popExitAnim="@anim/fade_out_short" />
         <action
-            android:id="@+id/post_game_frag"
-            app:destination="@id/postGameFragment"
+            android:id="@+id/summary_frag"
+            app:destination="@id/summaryFragment"
             app:enterAnim="@anim/fade_in_short"
             app:exitAnim="@anim/fade_out_short"
             app:launchSingleTop="true"
             app:popEnterAnim="@anim/fade_in_short"
             app:popExitAnim="@anim/fade_out_short"
-            app:popUpTo="@id/playFragment"
+            app:popUpTo="@id/RulesFragment"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/play_frag"
-            app:destination="@id/playFragment"
+            android:id="@+id/rules_frag"
+            app:destination="@id/RulesFragment"
             app:enterAnim="@anim/fade_in_short"
             app:exitAnim="@anim/fade_out_short"
             app:popEnterAnim="@anim/fade_in_short"
@@ -74,17 +74,17 @@
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
-        android:id="@+id/postGameFragment"
-        android:name="com.quickpoint.snookerboard.fragments.postgame.PostGameFragment"
+        android:id="@+id/summaryFragment"
+        android:name="com.quickpoint.snookerboard.fragments.summary.SummaryFragment"
         android:label="PostGameFragment" >
         <action
-            android:id="@+id/play_frag"
-            app:destination="@id/playFragment"
+            android:id="@+id/rules_frag"
+            app:destination="@id/RulesFragment"
             app:enterAnim="@anim/fade_in_short"
             app:exitAnim="@anim/fade_out_short"
             app:popEnterAnim="@anim/fade_in_short"
             app:popExitAnim="@anim/fade_out_short"
-            app:popUpTo="@id/postGameFragment"
+            app:popUpTo="@id/summaryFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <dialog

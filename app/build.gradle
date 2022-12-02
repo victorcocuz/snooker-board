@@ -14,8 +14,8 @@ android {
         applicationId "com.quickpoint.snookerboard"
         minSdk 22
         targetSdkVersion 33
-        versionCode 13
-        versionName "1.0.9"
+        versionCode 14
+        versionName "1.0.9.1"
         vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -23,7 +23,7 @@ android {
         // defining variables
         buildConfigField "String", "ADMIN_EMAIL", ADMIN_EMAIL
         buildConfigField "boolean", "DEBUG_TOGGLE", "true"
-        buildConfigField "int", "ADS_SHOW_PERCENTAGE", "0"
+        buildConfigField "int", "ADS_SHOW_PERCENTAGE", "50"
     }
 
     buildTypes {

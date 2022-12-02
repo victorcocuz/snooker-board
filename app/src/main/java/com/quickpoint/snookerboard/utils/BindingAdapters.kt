@@ -14,9 +14,11 @@ import com.quickpoint.snookerboard.domain.BallType.*
 import com.quickpoint.snookerboard.domain.DomainBall.*
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.fragments.game.BallAdapter
-import com.quickpoint.snookerboard.fragments.postgame.PostGameAdapter
+import com.quickpoint.snookerboard.fragments.summary.SummaryAdapter
 import com.quickpoint.snookerboard.utils.BallAdapterType.*
+import com.quickpoint.snookerboard.utils.BallAdapterType.MATCH
 import com.quickpoint.snookerboard.utils.MatchAction.*
+import com.quickpoint.snookerboard.utils.PlayerTagType.*
 
 // General
 @BindingAdapter("setSelected")
@@ -50,26 +52,15 @@ fun TextView.setFreeballVisible(isVisible: Boolean) {
 
 // Game Display
 @BindingAdapter("setActivePlayer", "setActivePlayerTag")
-fun LinearLayout.setActivePlayer(activePlayer: Boolean, activePlayerTag: PlayerTagType) {
-    setBackgroundColor(ContextCompat.getColor(context,
-        if (activePlayer || activePlayerTag == PlayerTagType.STATISTICS) R.color.transparent else R.color.brown))
-    for (i in 0 until childCount) {
-        getChildAt(i).alpha = if (activePlayer || activePlayerTag == PlayerTagType.STATISTICS) 1F else 0.5F
-    }
-}
-
-@BindingAdapter("setBarWeightScoreFirst1", "setBarWeightScoreSecond1")
-fun LinearLayout.setBarWeight1(scoreFirst: Int, scoreSecond: Int) {
-//       Timber.e("scoreFirst $scoreFirst")
-//       Timber.e("scoreSecond $scoreSecond")
-    layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, scoreFirst.toFloat() / scoreSecond.toFloat())
+fun LinearLayout.setActivePlayer(isActivePlayer: Boolean, activePlayerTag: PlayerTagType) {
+    if (activePlayerTag == STATISTICS) setBackgroundColor(ContextCompat.getColor(context, R.color.transparent))
+    else colorTransition(isActivePlayer, if (isActivePlayer) R.color.transparent else R.color.brown)
 }
 
 @BindingAdapter("setBarWeightScoreFirst", "setBarWeightScoreSecond")
 fun LinearLayout.setBarWeight(scoreFirst: Int, scoreSecond: Int) {
     layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, scoreFirst.toFloat() / scoreSecond.toFloat())
 }
-
 
 // Ball Item View
 @BindingAdapter("ballValue", "stackSize")
@@ -122,6 +113,6 @@ fun RecyclerView.bindFoulBalls(ballStack: MutableList<DomainBall>?) {
 
 @BindingAdapter("bindGameStatsData")
 fun RecyclerView.bindGameStatsRv(data: ArrayList<Pair<DomainScore, DomainScore>>?) {
-    val adapter = adapter as PostGameAdapter
+    val adapter = adapter as SummaryAdapter
     adapter.submitList(data)
 }

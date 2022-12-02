@@ -13,7 +13,7 @@ import com.quickpoint.snookerboard.database.asDomainFrame
 import com.quickpoint.snookerboard.domain.DomainFrame
 import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.*
-import com.quickpoint.snookerboard.utils.MatchRules.RULES
+import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
 import com.quickpoint.snookerboard.utils.MatchState.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,9 +40,9 @@ class MatchViewModel(
     private val _matchState = MutableLiveData<MatchState>()
     val matchState: LiveData<MatchState> = _matchState
     fun updateState(matchState: MatchState) = app.getSharedPref().apply {
-        if (matchState == NONE) loadPref() else RULES.setMatchState(matchState)
+        if (matchState == NONE) loadPref() else SETTINGS.setMatchState(matchState)
         if (matchState == SAVED) savePref() else updateState()
-        if (matchState != NONE) _matchState.value = RULES.matchState
+        if (matchState != NONE) _matchState.value = SETTINGS.matchState
     }
 
     // Separate threads
@@ -52,16 +52,16 @@ class MatchViewModel(
         Timber.i("loadMatchIfSaved()")
         updateState(NONE) // Load shared preferences
         snookerRepository.getCrtFrame().let { crtFrame ->
-            if (crtFrame == null || (RULES.matchState != SAVED && RULES.matchState != POST_MATCH)) deleteMatchFromDb()
+            if (crtFrame == null || (SETTINGS.matchState != SAVED && SETTINGS.matchState != POST_MATCH)) deleteMatchFromDb()
             else {
                 _storedFrame.value = Event(crtFrame.asDomainFrame())
-                updateState(IN_PROGRESS)
+                 updateState(if(SETTINGS.matchState == SAVED) IN_PROGRESS else POST_MATCH)
             }
         }
     }
 
     fun deleteCrtFrameFromDb() = viewModelScope.launch {
-        snookerRepository.deleteCurrentFrame(RULES.frameCount)
+        snookerRepository.deleteCurrentFrame(SETTINGS.crtFrame)
     }
 
     fun deleteMatchFromDb() = viewModelScope.launch { // When starting a new match or cancelling an existing match
@@ -72,7 +72,7 @@ class MatchViewModel(
     fun emailLogs() = viewModelScope.launch {
         val logs = snookerRepository.getDebugFrameActionList().toString()
         val json = Gson().toJson(snookerRepository.getDebugFrameActionList())
-        val body = "${RULES.getAsText()} \n\n $json \n\n $logs"
+        val body = "${SETTINGS.getAsText()} \n\n $json \n\n $logs"
         Timber.e(json)
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse(EMAIL_URI)

@@ -12,7 +12,7 @@ class DialogViewModel : ViewModel() {
     // Dialog events must be observed separately to allow to close dialog window before taking action
     private val _eventDialogAction = MutableLiveData<Event<MatchAction>>()
     val eventDialogAction: LiveData<Event<MatchAction>> = _eventDialogAction
-    fun assignEventDialogAction(matchAction: MatchAction) {
+    fun onEventDialogAction(matchAction: MatchAction) {
         _eventDialogAction.value = Event(matchAction)
     }
 

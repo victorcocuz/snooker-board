@@ -1,5 +1,7 @@
 package com.quickpoint.snookerboard.utils
 
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
@@ -7,6 +9,7 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
 import android.text.SpannableString
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
@@ -15,6 +18,8 @@ import android.text.style.URLSpan
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
@@ -29,17 +34,22 @@ import com.quickpoint.snookerboard.databinding.FragmentGameBinding
 // General
 fun Fragment.navigate(directions: NavDirections, adMob: AdMob? = null) {
     findNavController().navigate(directions)
-    adMob?.showInterstitialAd()
 }
+
 fun Fragment.toast(message: CharSequence) = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
 fun Activity.toast(message: CharSequence) = Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
-fun View.snackbar(message: CharSequence) = Snackbar.make(this, message, Snackbar.LENGTH_LONG).show()
+fun View.snackbar(message: CharSequence) {
+    val snackbar = Snackbar.make(this, message, Snackbar.LENGTH_LONG)
+    snackbar.isGestureInsetBottomIgnored = true
+    snackbar.show()
+}
+
 fun FragmentGameBinding.snackbar(message: CharSequence) = fGameCdl.snackbar(message)
 fun Any.asText() = toString()
     .replace("DomainActionLog(description=", "")
     .removeSuffix(")")
     .split(", ")
-    .filter { !it.contains("=null")}
+    .filter { !it.contains("=null") }
     .toString()
     .removePrefix("[")
     .removeSuffix("]")
@@ -148,3 +158,27 @@ fun View.removeFocusAndHideKeyboard(context: Context, event: MotionEvent) {
     }
 }
 
+// Other
+fun LinearLayout.colorTransition(isActivePlayer: Boolean, @ColorRes endColor: Int, delay: Long = 200L) {
+    var colorFrom = Color.TRANSPARENT
+    if (background is ColorDrawable)
+        colorFrom = (background as ColorDrawable).color
+    val colorTo = ContextCompat.getColor(context, endColor)
+    val colorAnimation: ValueAnimator = ValueAnimator.ofObject(ArgbEvaluator(), colorFrom, colorTo)
+    colorAnimation.apply {
+        duration = delay
+        addUpdateListener {
+            if (it.animatedValue is Int) {
+                val color = it.animatedValue as Int
+                setBackgroundColor(color)
+            }
+        }
+        start()
+    }
+    for (i in 0 until childCount) {
+        getChildAt(i).animate().apply {
+            duration = delay
+            alpha(if (isActivePlayer) 1F else 0.5F)
+        }
+    }
+}

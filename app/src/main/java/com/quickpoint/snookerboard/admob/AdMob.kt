@@ -19,21 +19,24 @@ class AdMob(private val context: Context) {
     fun loadInterstitialAd() {
         val adRequest = AdRequest.Builder().build()
 
-        InterstitialAd.load(context, context.getString(R.string.ad_mob_id_interstitial_end_of_game), adRequest, object : InterstitialAdLoadCallback() {
-            override fun onAdFailedToLoad(adError: LoadAdError) {
-                Timber.e(adError.toString())
-                mInterstitialAd = null
-            }
+        InterstitialAd.load(context,
+            context.getString(if (BuildConfig.DEBUG_TOGGLE) R.string.admob_id_interstitial_test else R.string.admob_id_interstitial),
+            adRequest,
+            object : InterstitialAdLoadCallback() {
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    Timber.e(adError.toString())
+                    mInterstitialAd = null
+                }
 
-            override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                Timber.i("Ad was loaded.")
-                mInterstitialAd = interstitialAd
-            }
-        })
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    Timber.i("Ad was loaded.")
+                    mInterstitialAd = interstitialAd
+                }
+            })
     }
 
     fun interstitialAdSetContentCallbacks() {
-        mInterstitialAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
+        mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdClicked() { // Called when a click is recorded for an ad.
                 Timber.i("Ad was clicked.")
             }
@@ -56,14 +59,14 @@ class AdMob(private val context: Context) {
 
             override fun onAdShowedFullScreenContent() { // Called when ad is shown.
                 Timber.i("Ad showed fullscreen content.")
-                loadInterstitialAd()
             }
         }
     }
 
     fun showInterstitialAd() {
-        if (mInterstitialAd != null && !BuildConfig.DEBUG_TOGGLE && shouldAdShow()) {
+        if (mInterstitialAd != null && shouldAdShow()) {
             mInterstitialAd?.show(context.activity()!!)
+            loadInterstitialAd()
         } else {
             Timber.i("The interstitial ad wasn't ready yet.")
         }

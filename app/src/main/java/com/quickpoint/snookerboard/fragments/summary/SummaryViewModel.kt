@@ -1,4 +1,4 @@
-package com.quickpoint.snookerboard.fragments.postgame
+package com.quickpoint.snookerboard.fragments.summary
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -12,16 +12,16 @@ import com.quickpoint.snookerboard.utils.MatchAction
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class PostGameViewModel(
+class SummaryViewModel(
     application: Application,
     private val snookerRepository: SnookerRepository,
 ) : AndroidViewModel(application) {
 
-    private val _eventPostGameAction = MutableLiveData<Event<MatchAction?>>()
-    val eventPostGameAction: LiveData<Event<MatchAction?>> = _eventPostGameAction
-    fun onEventPostGameAction(matchAction: MatchAction?) {
-        Timber.e("onEventPostGameAction $matchAction")
-        _eventPostGameAction.value = Event(matchAction)
+    private val _eventSummaryAction = MutableLiveData<Event<MatchAction?>>()
+    val eventSummaryAction: LiveData<Event<MatchAction?>> = _eventSummaryAction
+    fun onEventSummaryAction(matchAction: MatchAction?) {
+        Timber.e("onEventSummaryAction $matchAction")
+        _eventSummaryAction.value = Event(matchAction)
     }
 
     private val _totalsA = MutableLiveData<DomainScore>()

@@ -18,7 +18,7 @@ import com.google.android.gms.ads.MobileAds
 import com.quickpoint.snookerboard.billing.Billing
 import com.quickpoint.snookerboard.databinding.ActivityMainBinding
 import com.quickpoint.snookerboard.utils.GenericViewModelFactory
-import com.quickpoint.snookerboard.utils.MatchRules.RULES
+import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
 import com.quickpoint.snookerboard.utils.MatchState.IN_PROGRESS
 import com.quickpoint.snookerboard.utils.MatchState.SAVED
 import com.quickpoint.snookerboard.utils.removeFocusAndHideKeyboard
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
             // Prevent nav gesture if not on start destination
             navController.addOnDestinationChangedListener { _: NavController, nd: NavDestination, _: Bundle? ->
                 when (nd.id) {
-                    R.id.playFragment -> mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+                    R.id.RulesFragment -> mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
                     R.id.navRulesFragment, R.id.navImproveFragment, R.id.navAboutFragment, R.id.navDonateFragment -> {
                         mainDrawerLayout.setDrawerLockMode(
                             DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) { // Save state and shared preferences on pause rather than onSaveInstanceState so that db save can complete
-        matchVm.updateState(if (RULES.matchState == IN_PROGRESS) SAVED else RULES.matchState)
+        matchVm.updateState(if (SETTINGS.matchState == IN_PROGRESS) SAVED else SETTINGS.matchState)
         Timber.i(getString(R.string.helper_save_match))
         super.onSaveInstanceState(outState)
     }

@@ -16,7 +16,7 @@ import com.quickpoint.snookerboard.utils.Event
 import com.quickpoint.snookerboard.utils.JobQueue
 import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.MatchAction.*
-import com.quickpoint.snookerboard.utils.MatchRules.RULES
+import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
 import com.quickpoint.snookerboard.utils.ValueKeeperLiveData
 import timber.log.Timber
 
@@ -49,11 +49,11 @@ class GameViewModel(
     private val _crtPlayer = MutableLiveData<Int>()
     val crtPlayer: LiveData<Int> = _crtPlayer
     private fun onEventFrameUpdated(actionLog: DomainActionLog) = jobQueue.submit {
-        _displayFrame.postValue(DomainFrame(RULES.frameCount, ballStack, score, frameStack, actionLogs, RULES.frameMax))
+        _displayFrame.postValue(DomainFrame(SETTINGS.crtFrame, ballStack, score, frameStack, actionLogs, SETTINGS.maxAvailable))
         if (actionLogs.size > 0) snookerRepository.saveCurrentFrame(_displayFrame.value!!)
         actionLogs.addLog(actionLog)
         _freeballInfo.value = FREEBALLINFO
-        _crtPlayer.value = RULES.crtPlayer
+        _crtPlayer.value = SETTINGS.crtPlayer
         onEventGameAction(FRAME_UPDATED)
     }
 
@@ -82,7 +82,7 @@ class GameViewModel(
 
     fun resetFrame(matchAction: MatchAction) { // Reset all frame values on match reset, frame rerack and frame start new
         FREEBALLINFO.resetFreeball()
-        RULES.resetFrameAndGetFirstPlayer(matchAction)
+        SETTINGS.resetFrameAndGetFirstPlayer(matchAction)
         score.resetFrame(matchAction)
         ballStack.resetBalls()
         frameStack.clear()
@@ -123,13 +123,13 @@ class GameViewModel(
     })
 
     private fun handlePot(pot: DomainPot) {
-        pot.potId = RULES.assignUniqueId()
+        pot.potId = SETTINGS.assignUniqueId()
         FREEBALLINFO.handlePotFreeballInfo(pot)
         ballStack.handlePotBallStack(pot.potType)
         frameStack.assignPot(pot)
         score.calculatePoints(pot, 1, ballStack.foulValue(), frameStack)
         val actionLog = pot.getActionLog("handlePot()", ballStack.lastOrNull()?.ballType, frameStack.size)
-        RULES.setNextPlayerFromPotAction(pot.potAction)
+        SETTINGS.setNextPlayerFromPotAction(pot.potAction)
         onEventFrameUpdated(actionLog)
     }
 
@@ -141,7 +141,7 @@ class GameViewModel(
 
     // Handle Undo
     private fun handleUndo() {
-        RULES.crtPlayer = frameStack.last().player
+        SETTINGS.crtPlayer = frameStack.last().player
         val pot = frameStack.removeLastPotFromFrameStack()
         val actionLog = pot.getActionLog("HandleUndo()", ballStack.lastOrNull()?.ballType, frameStack.size)
         ballStack.handleUndoBallStack(pot.potType, frameStack.lastBall())

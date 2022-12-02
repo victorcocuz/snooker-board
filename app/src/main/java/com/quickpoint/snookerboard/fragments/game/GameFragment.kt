@@ -22,7 +22,7 @@ import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.*
-import com.quickpoint.snookerboard.utils.MatchRules.RULES
+import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
 import com.quickpoint.snookerboard.utils.MatchState.*
 import timber.log.Timber
 
@@ -46,7 +46,7 @@ class GameFragment : Fragment() {
         adMob.interstitialAdSetContentCallbacks()
 
         // Start new match or load existing match
-        if (RULES.matchState == IDLE) {
+        if (SETTINGS.matchState == IDLE) {
             gameVm.resetMatch()
             matchVm.updateState(IN_PROGRESS)
         } else matchVm.storedFrame.observe(viewLifecycleOwner, EventObserver { storedFrame ->
@@ -125,8 +125,8 @@ class GameFragment : Fragment() {
                     FRAME_FREE_AVAILABLE, FRAME_UNDO, FRAME_RESPOT_BLACK -> gameVm.assignPot(action.getPotType())
                     FRAME_TO_END, FRAME_ENDED, MATCH_TO_END, MATCH_ENDED -> gameVm.endFrame(action)
                     FRAME_RERACK, FRAME_START_NEW -> {
-                        gameVm.resetFrame(action)
                         adMob.showInterstitialAd()
+                        gameVm.resetFrame(action)
                     }
                     MATCH_ENDED_DISCARD_FRAME -> {
                         matchVm.deleteCrtFrameFromDb()
@@ -134,13 +134,13 @@ class GameFragment : Fragment() {
                     }
                     NAV_TO_POST_MATCH -> {
                         matchVm.updateState(POST_MATCH)
-                        navigate(GameFragmentDirections.postGameFrag(), adMob)
+                        navigate(GameFragmentDirections.summaryFrag(), adMob)
                     }
                     MATCH_CANCEL -> {
                         matchVm.deleteMatchFromDb()
-                        navigate(GameFragmentDirections.playFrag(), adMob)
+                        navigate(GameFragmentDirections.rulesFrag(), adMob)
                     }
-                    else -> Timber.i("Implementation for observed action $action not supported")
+                    else -> Timber.i("No implementation for observed action $action")
                 }
             })
         }
@@ -208,8 +208,11 @@ class GameFragment : Fragment() {
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
+        // Handle back button pressing
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {} // Disable back pressing
+            override fun handleOnBackPressed() {
+                gameVm.onEventGameAction(if (gameVm.score.isMatchInProgress()) MATCH_CANCEL_DIALOG else MATCH_CANCEL)
+            }
         })
 
         return binding.root

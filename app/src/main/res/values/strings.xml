@@ -1,9 +1,15 @@
 <resources>
+    <!--General-->
     <string name="app_name">Snooker Board</string>
-    <string name="ad_mob_id">ca-app-pub-8063036382786622~9725880072</string>
-    <string name="ad_mob_id_interstitial_end_of_game">ca-app-pub-8063036382786622/4940511157</string>
+    <string name="cd_logo">Logo</string>
+
+    <!-- Ad Mob-->
+    <string name="admob_id">ca-app-pub-8063036382786622~9725880072</string>
+    <string name="admob_id_interstitial">ca-app-pub-8063036382786622/4940511157</string>
+    <string name="admob_id_interstitial_test">ca-app-pub-3940256099942544/1033173712</string>
 
     <!-- Menu Items -->
+    <string name="menu_action_button">menu_action_button</string>
     <string name="menu_item_more">Main Menu</string>
     <string name="menu_item_log">Submit Issues Log</string>
     <string name="menu_item_undo">Undo</string>
@@ -35,15 +41,9 @@
     <string name="sp_match_name_last_b">matchNameLastB</string>
     <string name="sp_match_freeball_visibility">matchFreeballVisibility</string>
     <string name="sp_match_freeball_selection">matchFreeballSelection</string>
-    <string name="cd_foul_modifier_info">Foul Modifier Info</string>
-    <string name="cd_logo">Logo</string>
-
-    <!-- Binding -->
-    <string name="game_match_score">(%1$d - %2$d)</string>
 
     <!-- Helper   -->
     <string name="helper_first_line">"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"</string>
     <string name="helper_update_frame_info">"---------------------------------------------FRAME UPDATED------------------------------------------------"</string>
     <string name="helper_save_match">"---------------------------------------------MATCH SAVED------------------------------------------------"</string>
-    <string name="menu_action_button">menu_action_button</string>
 </resources>

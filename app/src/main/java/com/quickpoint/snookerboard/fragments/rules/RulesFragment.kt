@@ -1,29 +1,29 @@
-package com.quickpoint.snookerboard.fragments.play
+package com.quickpoint.snookerboard.fragments.rules
 
 import android.os.Bundle
 import android.view.*
 import android.view.View.GONE
-import androidx.activity.OnBackPressedCallback
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.databinding.FragmentPlayBinding
+import com.quickpoint.snookerboard.databinding.FragmentRulesBinding
 import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.*
-import com.quickpoint.snookerboard.utils.MatchRules.RULES
+import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
 import com.quickpoint.snookerboard.utils.MatchState.*
 import timber.log.Timber
 
-class PlayFragment : androidx.fragment.app.Fragment() {
+class RulesFragment : Fragment() {
     // Variables
     private val matchVm: MatchViewModel by activityViewModels()
-    private val playVm: PlayViewModel by viewModels()
+    private val rulesVm: RulesViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,29 +37,29 @@ class PlayFragment : androidx.fragment.app.Fragment() {
             Timber.i("ObservedOnce matchState: $matchState")
             when (matchState) {
                 IDLE -> {
-                    playVm.updateRules(RULES.resetRules())
+                    rulesVm.updateRules(SETTINGS.resetRules())
                     matchVm.transitionToFragment(this, 0)
                 }
                 IN_PROGRESS, POST_MATCH -> {
                     startPostponedEnterTransition()
                     view?.visibility = GONE
-                    navigate(if (matchState == IN_PROGRESS) PlayFragmentDirections.gameFrag() else PlayFragmentDirections.postGameFrag())
+                    navigate(if (matchState == IN_PROGRESS) RulesFragmentDirections.gameFrag() else RulesFragmentDirections.summaryFrag())
                 }
                 else -> Timber.e("matchState should not be $matchState at this point")
             }
         }
 
         // Bind view elements
-        val binding: FragmentPlayBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_play, container, false)
+        val binding: FragmentRulesBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_rules, container, false)
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
-            varPlayVm = playVm
+            varRulesVm = rulesVm
 
             // Bind fragment rules elements
-            fPlayLRules.apply {
+            fRulesLMain.apply {
                 varMatchVm = matchVm
-                varPlayVm = playVm
-                lPlayRulesNpFrameCount.apply { // For displayedValues get an array of odd numbers for the number of frames
+                varRulesVm = rulesVm
+                lRulesMainNpFrameCount.apply { // For displayedValues get an array of odd numbers for the number of frames
                     minValue = 1
                     maxValue = 19
                     value = 2
@@ -67,15 +67,15 @@ class PlayFragment : androidx.fragment.app.Fragment() {
                 }
 
                 // VM Observers
-                playVm.eventPlayAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
+                rulesVm.eventRulesAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                     when (matchAction) { // Start new match
-                        INFO_FOUL_DIALOG -> navigate(PlayFragmentDirections.genDialogFrag(IGNORE, IGNORE, matchAction))
+                        INFO_FOUL_DIALOG -> navigate(RulesFragmentDirections.genDialogFrag(IGNORE, IGNORE, matchAction))
                         MATCH_PLAY -> {
-                            Timber.i(RULES.getAsText())
-                            navigate(PlayFragmentDirections.gameFrag())
+                            Timber.i(SETTINGS.getAsText())
+                            navigate(RulesFragmentDirections.gameFrag())
                         }
-                        SNACKBAR_NO_PLAYER -> fPlayCdl.snackbar(getString(R.string.snackbar_f_play_no_name))
-                        SNACKBAR_NO_FIRST -> fPlayCdl.snackbar(getString(R.string.snackbar_f_play_select_who_breaks))
+                        SNACKBAR_NO_PLAYER -> fRulesCdl.snackbar(getString(R.string.snackbar_f_rules_no_name))
+                        SNACKBAR_NO_FIRST -> fRulesCdl.snackbar(getString(R.string.snackbar_f_rules_select_who_breaks))
                         else -> Timber.i("Implementation for observed matchAction $matchAction not supported")                    }
                 })
             }
@@ -89,12 +89,6 @@ class PlayFragment : androidx.fragment.app.Fragment() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean { // Navbar navigation listener
                 return view?.findNavController()?.let { NavigationUI.onNavDestinationSelected(menuItem, it) } ?: false
-            }
-        })
-
-        // Disable back pressing
-        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
             }
         })
 

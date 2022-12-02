@@ -12,15 +12,15 @@
             type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
 
         <variable
-            name="varDialogMatchActionA"
+            name="varActionA"
             type="com.quickpoint.snookerboard.utils.MatchAction" />
 
         <variable
-            name="varDialogMatchActionB"
+            name="varActionB"
             type="com.quickpoint.snookerboard.utils.MatchAction" />
 
         <variable
-            name="varDialogMatchActionC"
+            name="varActionC"
             type="com.quickpoint.snookerboard.utils.MatchAction" />
 
         <variable
@@ -46,7 +46,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:setDialogGameGenLabel="@{varDialogMatchActionC}" />
+            app:setDialogGameGenLabel="@{varActionC}" />
 
         <TextView
             android:id="@+id/f_dialog_gen_tv_question"
@@ -56,7 +56,7 @@
             android:paddingStart="@dimen/margin_layout_offset"
             android:paddingTop="@dimen/margin_layout_offset"
             android:paddingEnd="@dimen/margin_layout_offset"
-            app:dialogGameGenQuestion="@{varDialogMatchActionC}"
+            app:dialogGameGenQuestion="@{varActionC}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/f_dialog_gen_tv_title" />
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_layout_offset"
             android:layout_marginTop="@dimen/margin_header_below"
-            app:dialogGameNote="@{varDialogMatchActionB}"
+            app:dialogGameNote="@{varActionB}"
             app:dialogGameNoteScore="@{varGameVm.displayFrame}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/f_dialog_gen_tv_question" />
@@ -77,24 +77,29 @@
             android:id="@+id/f_dialog_gen_btn_answer_a"
             style="@style/ButtonNarrow"
             android:layout_width="wrap_content"
+            android:layout_marginTop="@dimen/margin_header_above"
             android:layout_marginEnd="@dimen/margin_layout_offset"
-            android:onClick="@{() -> varDialogVm.assignEventDialogAction(varDialogMatchActionA)}"
-            app:dialogGameGenA="@{varDialogMatchActionC}"
-            app:layout_constraintBottom_toBottomOf="@+id/f_dialog_gen_btn_answer_c"
+            android:layout_marginBottom="@dimen/margin_layout_offset"
+            android:onClick="@{() -> varDialogVm.onEventDialogAction(varActionA)}"
+            app:dialogGameGenAText="@{varActionC}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/f_dialog_gen_btn_answer_b"
-            app:setVisible="@{varDialogMatchActionA != MatchAction.IGNORE}" />
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_gen_tv_note"
+            app:setVisible="@{(varActionA != MatchAction.IGNORE)}" />
 
         <TextView
             android:id="@+id/f_dialog_gen_btn_answer_b"
             style="@style/ButtonNarrow"
             android:layout_width="wrap_content"
+            android:layout_marginTop="@dimen/margin_header_above"
             android:layout_marginEnd="@dimen/margin_layout_offset"
-            android:onClick="@{() -> varDialogVm.assignEventDialogAction(varDialogMatchActionB)}"
-            app:dialogGameGenB="@{varDialogMatchActionB}"
-            app:dialogGameGenBScore="@{varGameVm.displayFrame}"
-            app:layout_constraintBottom_toBottomOf="@+id/f_dialog_gen_btn_answer_c"
+            android:layout_marginBottom="@dimen/margin_layout_offset"
+            android:onClick="@{() -> varDialogVm.onEventDialogAction(varActionB)}"
+            app:dialogGameGenBText="@{varActionB}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/f_dialog_gen_btn_answer_c"
-            app:setVisible="@{varDialogMatchActionB != MatchAction.IGNORE}" />
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_gen_tv_note"
+            app:setVisible="@{varActionB != MatchAction.IGNORE}" />
 
         <TextView
             android:id="@+id/f_dialog_gen_btn_answer_c"
@@ -103,14 +108,14 @@
             android:layout_marginTop="@dimen/margin_header_above"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             android:layout_marginBottom="@dimen/margin_layout_offset"
-            android:onClick="@{() -> varDialogVm.assignEventDialogAction(varDialogMatchActionC)}"
-            app:dialogGameGenC="@{varDialogMatchActionC}"
-            app:dialogGameGenCActionB="@{varDialogMatchActionB}"
+            android:onClick="@{() -> varDialogVm.onEventDialogAction(varActionC)}"
+            app:dialogGameGenCText="@{varActionC}"
+            app:dialogGameGenCActionB="@{varActionB}"
             app:dialogGameGenCScore="@{varGameVm.displayFrame}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/f_dialog_gen_tv_note"
-            app:setVisible="@{(varDialogMatchActionC != MatchAction.IGNORE)}" />
+            app:setVisible="@{(varActionC != MatchAction.IGNORE)}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

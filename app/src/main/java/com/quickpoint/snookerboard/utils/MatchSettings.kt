@@ -9,18 +9,18 @@ import timber.log.Timber
 enum class MatchState { IDLE, IN_PROGRESS, SAVED, POST_MATCH, NONE }
 
 // The DOMAIN rules
-sealed class MatchRules(
+sealed class MatchSettings(
     var matchState: MatchState,
     var uniqueId: Long,
-    var frames: Int,
+    var maxFrames: Int,
     var reds: Int,
     var foul: Int,
     var firstPlayer: Int,
     var crtPlayer: Int,
-    var frameCount: Long,
-    var frameMax: Int
+    var crtFrame: Long,
+    var maxAvailable: Int
 ) {
-    object RULES : MatchRules(IDLE, 0,2, 15, 0, -1, -1, 0, 0) {
+    object SETTINGS : MatchSettings(IDLE, 0,2, 15, 0, -1, -1, 0, 0) {
 
         // Assign methods
         fun setMatchState(state: MatchState): Int {
@@ -30,8 +30,8 @@ sealed class MatchRules(
         }
 
         fun setFrames(number: Int): Int {
-            frames = number
-            return frames
+            maxFrames = number
+            return maxFrames
         }
 
         fun setReds(number: Int): Int {
@@ -51,13 +51,13 @@ sealed class MatchRules(
 
         fun resetRules(): Int {
             uniqueId = -1
-            frames = 2
+            maxFrames = 2
             reds = 15
             foul = 0
             firstPlayer = -1
             crtPlayer = -1
-            frameCount = 1
-            frameMax = 0
+            crtFrame = 1
+            maxAvailable = 0
             return -1
         }
 
@@ -72,13 +72,13 @@ sealed class MatchRules(
             frameMax: Int
         ) {
             this.uniqueId = uniqueId
-            this.frames = frames
+            this.maxFrames = frames
             this.reds = reds
             this.foul = foul
             this.firstPlayer = first
             this.crtPlayer = crtPlayer
-            this.frameCount = frameCount
-            this.frameMax = frameMax
+            this.crtFrame = frameCount
+            this.maxAvailable = frameMax
             Timber.i("assignRules(): ${getAsText()}")
         }
 
@@ -101,10 +101,10 @@ sealed class MatchRules(
 
         fun resetFrameAndGetFirstPlayer(action: MatchAction) {
             if (action == FRAME_START_NEW) {
-                frameCount += 1
+                crtFrame += 1
                 firstPlayer = 1 - firstPlayer
             }
-            frameMax = reds * 8 + 27
+            maxAvailable = reds * 8 + 27
             crtPlayer = firstPlayer
         }
 
@@ -118,7 +118,7 @@ sealed class MatchRules(
 
         // Text and logs
         fun getAsText() =
-            "Frames: $frames, Reds: $reds, Foul: $foul, First: $firstPlayer, CrtPlayer: $crtPlayer, Count: $frameCount, Max: $frames"
-        fun getDisplayFrames() = "(" + (frames * 2 - 1).toString() + ")"
+            "Frames: $maxFrames, Reds: $reds, Foul: $foul, First: $firstPlayer, CrtPlayer: $crtPlayer, Count: $crtFrame, Max: $maxFrames"
+        fun getDisplayFrames() = "(" + (maxFrames * 2 - 1).toString() + ")"
     }
 }

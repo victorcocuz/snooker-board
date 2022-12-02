@@ -2,6 +2,7 @@ package com.quickpoint.snookerboard.utils
 
 import android.view.View
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.utils.MatchAction.*
@@ -39,31 +40,24 @@ fun TextView.setDialogGameGenQuestion(matchAction: MatchAction) {
     }
 }
 
-@BindingAdapter("dialogGameGenA")
-fun TextView.setDialogGameA(matchAction: MatchAction) {
+@BindingAdapter("dialogGameGenAText")
+fun TextView.setDialogGameAText(matchAction: MatchAction) {
     text = "No"
 }
 
-@BindingAdapter("dialogGameGenB", "dialogGameGenBScore")
-fun TextView.setDialogGameB(matchAction: MatchAction, frame: DomainFrame?) {
-    visibility = when {
-        frame == null -> View.GONE
-        frame.score.isNoFrameFinished() -> View.GONE
-        matchAction == MATCH_ENDED_DISCARD_FRAME -> View.VISIBLE
-        else -> View.GONE
-    }
+@BindingAdapter("dialogGameGenBText")
+fun TextView.setDialogGameBText(matchAction: MatchAction) {
     text = when (matchAction) {
-        MATCH_ENDED_DISCARD_FRAME -> "Yes & Remove Frame"
+        MATCH_ENDED_DISCARD_FRAME -> "Yes & remove this frame"
         else -> ""
     }
 }
 
-@BindingAdapter("dialogGameGenC", "dialogGameGenCActionB", "dialogGameGenCScore")
-fun TextView.setDialogGameC(matchAction: MatchAction, matchActionB: MatchAction, frame: DomainFrame?) {
-    isEnabled = !(matchActionB == MATCH_ENDED_DISCARD_FRAME && (frame?.score?.isFrameEqual() ?: false)) // This needs adjusting.
+@BindingAdapter("dialogGameGenCText", "dialogGameGenCActionB", "dialogGameGenCScore")
+fun TextView.setDialogGameCText(matchAction: MatchAction, matchActionB: MatchAction, frame: DomainFrame?) {
+    isVisible = !(matchActionB == MATCH_ENDED_DISCARD_FRAME && (frame?.score?.isFrameEqual() ?: false))
     text = when (matchAction) {
-        INFO_FOUL_DIALOG -> "OK"
-        FRAME_RESPOT_BLACK -> "OK"
+        INFO_FOUL_DIALOG, FRAME_RESPOT_BLACK -> "I understand"
         else -> "Yes"
     }
 }

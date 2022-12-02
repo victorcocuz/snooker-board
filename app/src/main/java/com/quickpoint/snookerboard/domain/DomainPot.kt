@@ -4,7 +4,7 @@ import com.quickpoint.snookerboard.domain.DomainBall.*
 import com.quickpoint.snookerboard.domain.DomainPot.*
 import com.quickpoint.snookerboard.domain.PotAction.*
 import com.quickpoint.snookerboard.domain.PotType.*
-import com.quickpoint.snookerboard.utils.MatchRules.RULES
+import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
 
 // Classes and variables that define all pot types and pot actions
 enum class PotType { TYPE_HIT, TYPE_FOUL, TYPE_FREE, TYPE_FOUL_ATTEMPT, TYPE_SNOOKER, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_MISS, TYPE_FREE_AVAILABLE, TYPE_FREE_TOGGLE, TYPE_REMOVE_RED, TYPE_REMOVE_COLOR, TYPE_ADDRED, TYPE_RESPOT_BLACK }
@@ -56,10 +56,10 @@ sealed class DomainPot(
             ballType = ball.ballType,
             ballPoints = ball.points,
             potAction = potAction,
-            player = RULES.crtPlayer,
+            player = SETTINGS.crtPlayer,
             breakCount = size,
             ballStackLast = lastBall,
-            frameCount = RULES.frameCount
+            frameCount = SETTINGS.crtFrame
         )
     }
 
@@ -67,18 +67,18 @@ sealed class DomainPot(
 }
 
 fun PotType.getPotFromType(ball: DomainBall = NOBALL(), action: PotAction = CONTINUE) = when (this) {
-    TYPE_HIT -> HIT((RULES.assignUniqueId()), ball)
-    TYPE_FOUL -> FOUL((RULES.assignUniqueId()), ball, action)
-    TYPE_FREE -> FREE(RULES.assignUniqueId(), ball)
-    TYPE_FOUL_ATTEMPT -> FOULATTEMPT(RULES.assignUniqueId())
-    TYPE_SNOOKER -> SNOOKER(RULES.assignUniqueId())
-    TYPE_SAFE -> SAFE(RULES.assignUniqueId())
-    TYPE_SAFE_MISS -> SAFEMISS(RULES.assignUniqueId())
-    TYPE_MISS -> MISS(RULES.assignUniqueId())
-    TYPE_FREE_AVAILABLE -> FREEAVAILABLE(RULES.assignUniqueId())
-    TYPE_FREE_TOGGLE -> FREETOGGLE(RULES.assignUniqueId())
-    TYPE_REMOVE_RED -> REMOVERED(RULES.assignUniqueId())
-    TYPE_REMOVE_COLOR -> REMOVECOLOR(RULES.assignUniqueId())
-    TYPE_ADDRED -> ADDRED(RULES.assignUniqueId())
-    TYPE_RESPOT_BLACK -> RESPOTBLACK(RULES.assignUniqueId())
+    TYPE_HIT -> HIT((SETTINGS.assignUniqueId()), ball)
+    TYPE_FOUL -> FOUL((SETTINGS.assignUniqueId()), ball, action)
+    TYPE_FREE -> FREE(SETTINGS.assignUniqueId(), ball)
+    TYPE_FOUL_ATTEMPT -> FOULATTEMPT(SETTINGS.assignUniqueId())
+    TYPE_SNOOKER -> SNOOKER(SETTINGS.assignUniqueId())
+    TYPE_SAFE -> SAFE(SETTINGS.assignUniqueId())
+    TYPE_SAFE_MISS -> SAFEMISS(SETTINGS.assignUniqueId())
+    TYPE_MISS -> MISS(SETTINGS.assignUniqueId())
+    TYPE_FREE_AVAILABLE -> FREEAVAILABLE(SETTINGS.assignUniqueId())
+    TYPE_FREE_TOGGLE -> FREETOGGLE(SETTINGS.assignUniqueId())
+    TYPE_REMOVE_RED -> REMOVERED(SETTINGS.assignUniqueId())
+    TYPE_REMOVE_COLOR -> REMOVECOLOR(SETTINGS.assignUniqueId())
+    TYPE_ADDRED -> ADDRED(SETTINGS.assignUniqueId())
+    TYPE_RESPOT_BLACK -> RESPOTBLACK(SETTINGS.assignUniqueId())
 }

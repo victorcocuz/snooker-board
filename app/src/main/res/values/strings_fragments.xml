@@ -7,30 +7,31 @@
     <string name="l_game_actions_btn_ball_miss">MISS</string>
     <string name="l_game_actions_btn_foul">FOUL</string>
 
-    <!-- Fragment Play -->
-    <string name="l_play_rules_hint_name_first">First Name</string>
-    <string name="l_play_rules_hint_name_last">Last Name</string>
-    <string name="l_play_rules_autofill_name_first">personGivenName</string>
-    <string name="l_play_rules_autofill_name_last">personFamilyName</string>
+    <!-- Fragment Rules -->
+    <string name="l_rules_main_hint_name_first">First Name</string>
+    <string name="l_rules_main_hint_name_last">Last Name</string>
+    <string name="l_rules_main_autofill_name_first">personGivenName</string>
+    <string name="l_rules_main_autofill_name_last">personFamilyName</string>
 
-    <string name="l_play_rules_tv_player_a_label">Player 1</string>
-    <string name="l_play_rules_tv_player_b_label">Player 2</string>
-    <string name="l_play_rules_tv_frames_label">Number of Frames</string>
-    <string name="l_play_rules_tv_reds_label">Number of Reds</string>
-    <string name="l_play_rules_btn_reds_six">6</string>
-    <string name="l_play_rules_btn_reds_ten">10</string>
-    <string name="l_play_rules_btn_reds_fifteen">15</string>
-    <string name="l_play_rules_tv_foul_modifier_label">Standard Foul Value</string>
-    <string name="l_play_rules_btn_foul_one">1</string>
-    <string name="l_play_rules_btn_foul_two">2</string>
-    <string name="l_play_rules_btn_foul_three">3</string>
-    <string name="l_play_rules_btn_foul_four">4</string>
-    <string name="l_play_rules_tv_breaks_first_label">Player to Break</string>
-    <string name="l_play_rules_btn_breaks_random">Coin toss</string>
-    <string name="f_play_btn_game_f">START</string>
+    <string name="l_rules_main_tv_player_a_label">Player 1</string>
+    <string name="l_rules_main_tv_player_b_label">Player 2</string>
+    <string name="l_rules_main_tv_frames_label">Number of Frames</string>
+    <string name="l_rules_main_tv_reds_label">Number of Reds</string>
+    <string name="l_rules_main_btn_reds_six">6</string>
+    <string name="l_rules_main_btn_reds_ten">10</string>
+    <string name="l_rules_main_btn_reds_fifteen">15</string>
+    <string name="l_rules_main_tv_foul_modifier_label">Standard Foul Value</string>
+    <string name="l_rules_main_btn_foul_one">1</string>
+    <string name="l_rules_main_btn_foul_two">2</string>
+    <string name="l_rules_main_btn_foul_three">3</string>
+    <string name="l_rules_main_btn_foul_four">4</string>
+    <string name="l_rules_main_tv_breaks_first_label">Player to Break</string>
+    <string name="l_rules_main_btn_breaks_random">Coin toss</string>
+    <string name="f_rules_btn_game_f">START</string>
 
-    <string name="snackbar_f_play_no_name">Please add player names to start a new match</string>
-    <string name="snackbar_f_play_select_who_breaks">Please select who is breaking first</string>
+    <string name="snackbar_f_rules_no_name">Please add player names to start a new match</string>
+    <string name="snackbar_f_rules_select_who_breaks">Please select who is breaking first</string>
+    <string name="cd_f_rules_foul_modifier_info">Foul Modifier Info</string>
 
     <!-- Fragment Game -->
     <string name="l_game_score_tv_remaining_label">Remaining</string>
@@ -66,12 +67,13 @@
 
     <string name="toast_f_dialog_foul_invalid">Select a ball and an action to continue</string>
 
-    <!-- Fragment Post Game -->
-    <string name="l_post_game_tv_header_break">Break</string>
-    <string name="l_post_game_tv_header_points">Points</string>
-    <string name="l_post_game_tv_header_score">Score</string>
-    <string name="l_post_game_tv_footer_total">Total</string>
-    <string name="l_post_game_tv_header_frame_id">#</string>
-    <string name="l_post_game_tv_header_percentage">%</string>
-    <string name="f_post_game_btn_home">GO TO MAIN MENU</string>
+    <!-- Fragment Summary -->
+    <string name="l_summary_tv_header_break">Break</string>
+    <string name="l_summary_tv_header_points">Points</string>
+    <string name="l_summary_tv_header_score">Score</string>
+    <string name="l_summary_tv_footer_total">Total</string>
+    <string name="l_summary_tv_header_frame_id">#</string>
+    <string name="l_summary_tv_header_percentage">%</string>
+    <string name="f_summary_btn_home">GO TO MAIN MENU</string>
+    <string name="f_summary_game_match_score">(%1$d - %2$d)</string>
 </resources>

@@ -4,7 +4,7 @@ import com.quickpoint.snookerboard.domain.BallType.TYPE_WHITE
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.MatchAction.FRAME_RERACK
-import com.quickpoint.snookerboard.utils.MatchRules.RULES
+import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -26,7 +26,7 @@ data class DomainScore(
     fun cumulatedValues() = framePoints + matchPoints + successShots + missedShots + safetyMissedShots + safetyMissedShots + snookers + fouls + highestBreak
 
     fun resetFrame(index: Int, matchAction: MatchAction) {
-        if (matchAction != FRAME_RERACK)  scoreId = RULES.assignUniqueId()
+        if (matchAction != FRAME_RERACK)  scoreId = SETTINGS.assignUniqueId()
         playerId = index
         framePoints = 0
         successShots = 0
@@ -48,7 +48,7 @@ fun MutableList<DomainScore>.isFrameAndMatchEqual() = isFrameEqual() && isMatchE
 fun MutableList<DomainScore>.isNoFrameFinished() = this[0].matchPoints + this[1].matchPoints == 0
 fun MutableList<DomainScore>.frameWinner() = if (this[0].framePoints > this[1].framePoints) 0 else 1
 fun MutableList<DomainScore>.isFrameWinResultingMatchTie() = this[frameWinner()].matchPoints + 1 == this[1 - frameWinner()].matchPoints
-fun MutableList<DomainScore>.isMatchEnding() = this[frameWinner()].matchPoints + 1 == RULES.frames
+fun MutableList<DomainScore>.isMatchEnding() = this[frameWinner()].matchPoints + 1 == SETTINGS.maxFrames
 fun MutableList<DomainScore>.isMatchInProgress() = (this[0].cumulatedValues() + this[1].cumulatedValues()) > 0
 
 // Helper methods
@@ -63,7 +63,7 @@ fun MutableList<DomainScore>.resetMatch() {
 
 fun MutableList<DomainScore>.addMatchPointAndAssignFrameId() {
     this[frameWinner()].matchPoints += 1
-    for (score in this) score.frameId = RULES.frameCount // TEMP - Assign a frameId to later use to add frame info to DATABASE
+    for (score in this) score.frameId = SETTINGS.crtFrame // TEMP - Assign a frameId to later use to add frame info to DATABASE
 }
 
 fun MutableList<DomainScore>.calculatePoints(pot: DomainPot, pol: Int, lastFoulSize: Int, frameStack: MutableList<DomainBreak>) {
@@ -71,22 +71,22 @@ fun MutableList<DomainScore>.calculatePoints(pot: DomainPot, pol: Int, lastFoulS
     when (pot.potType) {
         TYPE_HIT, TYPE_FREE, TYPE_ADDRED -> {
             points = pot.ball.points
-            this[RULES.crtPlayer].framePoints += pol * points // Polarity is used to reverse score on undo
+            this[SETTINGS.crtPlayer].framePoints += pol * points // Polarity is used to reverse score on undo
             pot.ball.points = points
-            this[RULES.crtPlayer].successShots += pol
+            this[SETTINGS.crtPlayer].successShots += pol
         }
         TYPE_FOUL -> {
             points = if (pot.ball.ballType == TYPE_WHITE) max(lastFoulSize, 4) else pot.ball.foul
             pot.ball.foul = points
-            this[RULES.getOtherPlayer()].framePoints += pol * points
-            this[RULES.crtPlayer].missedShots += pol
-            this[RULES.crtPlayer].fouls += pol
+            this[SETTINGS.getOtherPlayer()].framePoints += pol * points
+            this[SETTINGS.crtPlayer].missedShots += pol
+            this[SETTINGS.crtPlayer].fouls += pol
         }
-        TYPE_MISS -> this[RULES.crtPlayer].missedShots += pol
-        TYPE_SAFE -> this[RULES.crtPlayer].safetySuccessShots += pol
-        TYPE_SAFE_MISS -> this[RULES.crtPlayer].safetyMissedShots += pol
-        TYPE_SNOOKER -> this[RULES.crtPlayer].snookers += pol
+        TYPE_MISS -> this[SETTINGS.crtPlayer].missedShots += pol
+        TYPE_SAFE -> this[SETTINGS.crtPlayer].safetySuccessShots += pol
+        TYPE_SAFE_MISS -> this[SETTINGS.crtPlayer].safetyMissedShots += pol
+        TYPE_SNOOKER -> this[SETTINGS.crtPlayer].snookers += pol
         else -> {}
     }
-    this[RULES.crtPlayer].highestBreak = frameStack.findMaxBreak()
+    this[SETTINGS.crtPlayer].highestBreak = frameStack.findMaxBreak()
 }

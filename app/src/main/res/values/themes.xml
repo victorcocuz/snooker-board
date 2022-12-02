@@ -20,7 +20,7 @@
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/beige</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_temp_splash_screen_inset</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_temp_splash_screen</item>
         <item name="postSplashScreenTheme">@style/Theme.SnookerBoard</item>
     </style>
 

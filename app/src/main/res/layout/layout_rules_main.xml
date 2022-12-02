@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.quickpoint.snookerboard.utils.MatchAction" />
+
+        <import type="com.quickpoint.snookerboard.domain.DomainPlayer" />
+
+        <import type="com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS" />
+
+        <variable
+            name="varMatchVm"
+            type="com.quickpoint.snookerboard.MatchViewModel" />
+
+        <variable
+            name="varRulesVm"
+            type="com.quickpoint.snookerboard.fragments.rules.RulesViewModel" />
+
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".fragments.rules.RulesFragment">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/l_rules_main_gd_mid_vert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintGuide_percent="0.5"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/l_rules_main_tv_player_a_label"
+                style="@style/TextHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_header_above"
+                android:text="@string/l_rules_main_tv_player_a_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="spread_inside" />
+
+            <EditText
+                android:id="@+id/l_rules_main_et_player_a_name_first"
+                style="@style/edit_text"
+                android:layout_marginTop="@dimen/margin_header_below"
+                android:layout_marginEnd="@dimen/margin_xsmall"
+                android:autofillHints="@string/l_rules_main_autofill_name_first"
+                android:ems="10"
+                android:hint="@string/l_rules_main_hint_name_first"
+                android:nextFocusForward="@id/l_rules_main_et_player_a_name_last"
+                android:text="@={DomainPlayer.PLAYER01.INSTANCE.firstName}"
+                app:layout_constraintEnd_toStartOf="@+id/l_rules_main_gd_mid_vert"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/l_rules_main_tv_player_a_label" />
+
+            <EditText
+                android:id="@+id/l_rules_main_et_player_a_name_last"
+                style="@style/edit_text"
+                android:layout_marginStart="@dimen/margin_xsmall"
+                android:autofillHints="@string/l_rules_main_autofill_name_last"
+                android:ems="10"
+                android:hint="@string/l_rules_main_hint_name_last"
+                android:nextFocusForward="@id/l_rules_main_et_player_b_name_first"
+                android:text="@={DomainPlayer.PLAYER01.INSTANCE.lastName}"
+                app:layout_constraintBottom_toBottomOf="@+id/l_rules_main_et_player_a_name_first"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/l_rules_main_gd_mid_vert" />
+
+            <TextView
+                android:id="@+id/l_rules_main_tv_player_b_label"
+                style="@style/TextHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_header_above"
+                android:text="@string/l_rules_main_tv_player_b_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/l_rules_main_et_player_a_name_first" />
+
+            <EditText
+                android:id="@+id/l_rules_main_et_player_b_name_first"
+                style="@style/edit_text"
+                android:layout_marginTop="@dimen/margin_header_below"
+                android:layout_marginEnd="@dimen/margin_xsmall"
+                android:autofillHints="@string/l_rules_main_autofill_name_first"
+                android:ems="10"
+                android:hint="@string/l_rules_main_hint_name_first"
+                android:nextFocusForward="@id/l_rules_main_et_player_b_name_last"
+                android:text="@={DomainPlayer.PLAYER02.INSTANCE.firstName}"
+                app:layout_constraintEnd_toStartOf="@+id/l_rules_main_gd_mid_vert"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/l_rules_main_tv_player_b_label" />
+
+            <EditText
+                android:id="@+id/l_rules_main_et_player_b_name_last"
+                style="@style/edit_text"
+                android:layout_marginStart="@dimen/margin_xsmall"
+                android:autofillHints="@string/l_rules_main_autofill_name_last"
+                android:ems="10"
+                android:imeOptions="actionDone"
+                android:hint="@string/l_rules_main_hint_name_last"
+                android:text="@={DomainPlayer.PLAYER02.INSTANCE.lastName}"
+                app:layout_constraintBottom_toBottomOf="@+id/l_rules_main_et_player_b_name_first"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/l_rules_main_gd_mid_vert" />
+
+            <TextView
+                android:id="@+id/l_rules_main_tv_frames_label"
+                style="@style/TextHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_header_above"
+                android:hint="@string/l_rules_main_hint_name_last"
+                android:text="@string/l_rules_main_tv_frames_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/l_rules_main_et_player_b_name_first" />
+
+            <com.shawnlin.numberpicker.NumberPicker
+                android:id="@+id/l_rules_main_np_frame_count"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/btn_height"
+                android:layout_marginTop="@dimen/margin_header_below"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/l_rules_main_tv_frames_label"
+                app:np_dividerColor="@color/white"
+                app:np_dividerDistance="@dimen/btn_width_large"
+                app:np_orientation="horizontal"
+                app:np_selectedTextColor="@color/white"
+                app:np_selectedTypeface="@font/montserrat"
+                app:np_textColor="@color/white"
+                app:np_typeface="@font/montserrat"
+                app:onValueChangedListener="@{(picker,oldv,newv) -> SETTINGS.INSTANCE.setFrames(newv)}"
+                tools:orientation="horizontal" />
+
+            <TextView
+                android:id="@+id/l_rules_main_tv_reds_label"
+                style="@style/TextHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_header_above"
+                android:text="@string/l_rules_main_tv_reds_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/l_rules_main_np_frame_count" />
+
+            <TextView
+                android:id="@+id/l_rules_main_btn_reds_six"
+                style="@style/ButtonNarrow"
+                android:layout_marginTop="@dimen/margin_header_below"
+                android:onClick="@{() -> varRulesVm.updateRules(SETTINGS.INSTANCE.setReds(6))}"
+                android:text="@string/l_rules_main_btn_reds_six"
+                app:layout_constraintEnd_toStartOf="@+id/l_rules_main_btn_reds_ten"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/l_rules_main_tv_reds_label"
+                app:setSelected="@{varRulesVm.eventRules.reds == 6}" />
+
+            <TextView
+                android:id="@+id/l_rules_main_btn_reds_ten"
+                style="@style/ButtonNarrow"
+                android:onClick="@{() -> varRulesVm.updateRules(SETTINGS.INSTANCE.setReds(10))}"
+                android:text="@string/l_rules_main_btn_reds_ten"
+                app:layout_constraintBottom_toBottomOf="@+id/l_rules_main_btn_reds_six"
+                app:layout_constraintEnd_toStartOf="@+id/l_rules_main_btn_reds_fifteen"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/l_rules_main_btn_reds_six"
+                app:setSelected="@{varRulesVm.eventRules.reds == 10}" />
+
+            <TextView
+                android:id="@+id/l_rules_main_btn_reds_fifteen"
+                style="@style/ButtonNarrow"
+                android:onClick="@{() -> varRulesVm.updateRules(SETTINGS.INSTANCE.setReds(15))}"
+                android:text="@string/l_rules_main_btn_reds_fifteen"
+                app:layout_constraintBottom_toBottomOf="@+id/l_rules_main_btn_reds_six"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/l_rules_main_btn_reds_ten"
+                app:setSelected="@{varRulesVm.eventRules.reds == 15}" />
+
+            <TextView
+                android:id="@+id/l_rules_main_tv_foul_modifier_label"
+                style="@style/TextHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_header_above"
+                android:text="@string/l_rules_main_tv_foul_modifier_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/l_rules_main_btn_reds_six" />
+
+            <ImageView
+                android:id="@+id/l_rules_main_btn_foul_modifier_info"
+                android:layout_width="@dimen/icon_info"
+                android:layout_height="@dimen/icon_info"
+                android:layout_marginStart="@dimen/margin_xxxsmall"
+                android:contentDescription="@string/cd_f_rules_foul_modifier_info"
+                android:onClick="@{() -> varRulesVm.onEventRulesAction(MatchAction.INFO_FOUL_DIALOG)}"
+                app:layout_constraintBottom_toBottomOf="@+id/l_rules_main_tv_foul_modifier_label"
+                app:layout_constraintStart_toEndOf="@+id/l_rules_main_tv_foul_modifier_label"
+                app:layout_constraintTop_toTopOf="@+id/l_rules_main_tv_foul_modifier_label"
+                app:srcCompat="@drawable/ic_temp_info" />
+
+            <TextView
+                android:id="@+id/l_rules_main_btn_foul_one"
+                style="@style/ButtonNarrow"
+                android:layout_marginTop="@dimen/margin_header_below"
+                android:onClick="@{() -> varRulesVm.updateRules(SETTINGS.INSTANCE.setFoul(-3))}"
+                android:text="@string/l_rules_main_btn_foul_one"
+                app:layout_constraintEnd_toStartOf="@+id/l_rules_main_btn_foul_two"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/l_rules_main_tv_foul_modifier_label"
+                app:setSelected="@{varRulesVm.eventRules.foul == -3}" />
+
+            <TextView
+                android:id="@+id/l_rules_main_btn_foul_two"
+                style="@style/ButtonNarrow"
+                android:onClick="@{() -> varRulesVm.updateRules(SETTINGS.INSTANCE.setFoul(-2))}"
+                android:text="@string/l_rules_main_btn_foul_two"
+                app:layout_constraintBottom_toBottomOf="@+id/l_rules_main_btn_foul_one"
+                app:layout_constraintEnd_toStartOf="@+id/l_rules_main_btn_foul_three"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/l_rules_main_btn_foul_one"
+                app:setSelected="@{varRulesVm.eventRules.foul == -2}" />
+
+            <TextView
+                android:id="@+id/l_rules_main_btn_foul_three"
+                style="@style/ButtonNarrow"
+                android:onClick="@{() -> varRulesVm.updateRules(SETTINGS.INSTANCE.setFoul(-1))}"
+                android:text="@string/l_rules_main_btn_foul_three"
+                app:layout_constraintBottom_toBottomOf="@+id/l_rules_main_btn_foul_one"
+                app:layout_constraintEnd_toStartOf="@+id/l_rules_main_btn_foul_four"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/l_rules_main_btn_foul_two"
+                app:setSelected="@{varRulesVm.eventRules.foul == -1}" />
+
+            <TextView
+                android:id="@+id/l_rules_main_btn_foul_four"
+                style="@style/ButtonNarrow"
+                android:onClick="@{() -> varRulesVm.updateRules(SETTINGS.INSTANCE.setFoul(0))}"
+                android:text="@string/l_rules_main_btn_foul_four"
+                app:layout_constraintBottom_toBottomOf="@+id/l_rules_main_btn_foul_one"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/l_rules_main_btn_foul_three"
+                app:setSelected="@{varRulesVm.eventRules.foul == 0}" />
+
+            <TextView
+                android:id="@+id/l_rules_main_tv_breaks_first_label"
+                style="@style/TextHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_header_above"
+                android:layout_marginBottom="@dimen/margin_header_below"
+                android:fontFamily="@font/montserrat"
+                android:text="@string/l_rules_main_tv_breaks_first_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/l_rules_main_btn_foul_one" />
+
+            <TextView
+                android:id="@+id/l_rules_main_btn_breaks_player_a"
+                style="@style/ButtonNarrow"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="@dimen/margin_header_below"
+                android:layout_marginBottom="@dimen/margin_header_above"
+                android:onClick="@{() -> varRulesVm.updateRules(SETTINGS.INSTANCE.setFirst(0))}"
+                android:text="@string/l_rules_main_tv_player_a_label"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/l_rules_main_btn_breaks_random"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/l_rules_main_tv_breaks_first_label"
+                app:setSelected="@{varRulesVm.eventRules.firstPlayer == 0}" />
+
+            <TextView
+                android:id="@+id/l_rules_main_btn_breaks_random"
+                style="@style/ButtonNarrow"
+                android:layout_width="wrap_content"
+                android:onClick="@{() -> varRulesVm.updateRules(SETTINGS.INSTANCE.setFirst(2))}"
+                android:text="@string/l_rules_main_btn_breaks_random"
+                app:layout_constraintBottom_toBottomOf="@+id/l_rules_main_btn_breaks_player_a"
+                app:layout_constraintEnd_toStartOf="@+id/l_rules_main_btn_breaks_player_b"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/l_rules_main_btn_breaks_player_a" />
+
+            <TextView
+                android:id="@+id/l_rules_main_btn_breaks_player_b"
+                style="@style/ButtonNarrow"
+                android:layout_width="wrap_content"
+                android:onClick="@{() -> varRulesVm.updateRules(SETTINGS.INSTANCE.setFirst(1))}"
+                android:text="@string/l_rules_main_tv_player_b_label"
+                app:layout_constraintBottom_toBottomOf="@+id/l_rules_main_btn_breaks_player_a"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/l_rules_main_btn_breaks_random"
+                app:setSelected="@{varRulesVm.eventRules.firstPlayer == 1}" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

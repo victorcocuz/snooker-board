@@ -2,7 +2,7 @@ package com.quickpoint.snookerboard.domain
 
 import com.quickpoint.snookerboard.database.DbPot
 import com.quickpoint.snookerboard.domain.PotType.TYPE_FREE_TOGGLE
-import com.quickpoint.snookerboard.utils.MatchRules.RULES
+import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
 
 // The DOMAIN Break class is a list of balls potted in one visit (consecutive balls by one player until the other player takes over or the frame ends)
 data class DomainBreak(
@@ -41,7 +41,7 @@ fun MutableList<DomainBreak>.lastBall() = lastOrNull()?.lastBall()
 fun MutableList<DomainBreak>.findMaxBreak(): Int {
     var newBreak = 0
     forEach { crtBreak ->
-        if (crtBreak.player == RULES.crtPlayer && crtBreak.breakSize > newBreak) newBreak = crtBreak.breakSize
+        if (crtBreak.player == SETTINGS.crtPlayer && crtBreak.breakSize > newBreak) newBreak = crtBreak.breakSize
     }
     return newBreak
 }
@@ -63,8 +63,8 @@ fun MutableList<DomainBreak>.addToFrameStack(pot: DomainPot) {
     if (size == 0 // or if there are no breaks
         || pot.potType !in listOfPotTypesPointsAdding // If the current pot is not generating points
         || lastPotType() !in listOfPotTypesPointsAdding // or if previous pot was not generating points
-        || last().player != RULES.crtPlayer // or if player has changed
-    ) add(DomainBreak(RULES.assignUniqueId(), RULES.crtPlayer, RULES.frameCount, mutableListOf(), 0)) // Add a new current break
+        || last().player != SETTINGS.crtPlayer // or if player has changed
+    ) add(DomainBreak(SETTINGS.assignUniqueId(), SETTINGS.crtPlayer, SETTINGS.crtFrame, mutableListOf(), 0)) // Add a new current break
     last().pots.add(pot) // Add the current pot to the current break
     if (pot.potType in listOfPotTypesPointsAdding) last().breakSize += pot.ball.points // Update the current break size
 }

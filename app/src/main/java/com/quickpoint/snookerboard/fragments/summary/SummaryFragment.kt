@@ -1,4 +1,4 @@
-package com.quickpoint.snookerboard.fragments.postgame
+package com.quickpoint.snookerboard.fragments.summary
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,19 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.quickpoint.snookerboard.MatchViewModel
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.databinding.FragmentPostGameBinding
+import com.quickpoint.snookerboard.databinding.FragmentSummaryBinding
 import com.quickpoint.snookerboard.domain.DomainScore
 import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.NAV_TO_PLAY
 
-class PostGameFragment : androidx.fragment.app.Fragment() {
+class SummaryFragment : Fragment() {
 
-    private val postGameVm: PostGameViewModel by lazy {
-        ViewModelProvider(this, GenericViewModelFactory(this, null))[PostGameViewModel::class.java]
+    private val summaryVm: SummaryViewModel by lazy {
+        ViewModelProvider(this, GenericViewModelFactory(this, null))[SummaryViewModel::class.java]
     }
     private val matchVm: MatchViewModel by activityViewModels()
     private var scrollHeight = 0
@@ -32,31 +33,31 @@ class PostGameFragment : androidx.fragment.app.Fragment() {
         matchVm.transitionToFragment(this, 200)
 
         // Bind view elements
-        val binding: FragmentPostGameBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_post_game, container, false)
+        val binding: FragmentSummaryBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_summary, container, false)
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
-            varPostGameVm = postGameVm
+            varSummaryVm = summaryVm
 
-            fPostGameRvScore.apply {
-                adapter = PostGameAdapter()
+            fSummaryRvScore.apply {
+                adapter = SummaryAdapter()
                 itemAnimator = null
             }
 
-            fPostGameLTop.apply {
+            fSummaryLTop.apply {
                 varPlayerTagType = PlayerTagType.STATISTICS
             }
 
-            fPostGameSvScore.viewTreeObserver.addOnGlobalLayoutListener { // Assign ghost & scroll view height that lines up with the top of the action button
-                scrollHeight = fPostGameSvScore.measuredHeight
-                fPostGameSvScore.assignScrollHeight(scrollHeight, ghostHeight)
+            fSummarySvScore.viewTreeObserver.addOnGlobalLayoutListener { // Assign ghost & scroll view height that lines up with the top of the action button
+                scrollHeight = fSummarySvScore.measuredHeight
+                fSummarySvScore.assignScrollHeight(scrollHeight, ghostHeight)
             }
-            fPostGameFlGhostFrameForHeight.viewTreeObserver.addOnGlobalLayoutListener { // Assign ghost & scroll view height that lines up with the top of the action button
-                ghostHeight = fPostGameFlGhostFrameForHeight.measuredHeight
-                fPostGameSvScore.assignScrollHeight(scrollHeight, ghostHeight)
+            fSummaryFlGhostFrameForHeight.viewTreeObserver.addOnGlobalLayoutListener { // Assign ghost & scroll view height that lines up with the top of the action button
+                ghostHeight = fSummaryFlGhostFrameForHeight.measuredHeight
+                fSummarySvScore.assignScrollHeight(scrollHeight, ghostHeight)
             }
 
             // Header format
-            fPostGameLStatsHeader.apply {
+            fSummaryLStatsHeader.apply {
                 varBgType = 2
                 varTextType = 1
                 frameScoreA = DomainScore(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,-1)
@@ -64,27 +65,29 @@ class PostGameFragment : androidx.fragment.app.Fragment() {
             }
 
             // Footer format
-            fPostGameLStatsFooter.apply {
+            fSummaryLStatsFooter.apply {
                 varBgType = 2
                 varTextType = 1
-                postGameVm.totalsA.observe(viewLifecycleOwner) { frameScoreA = it }
-                postGameVm.totalsB.observe(viewLifecycleOwner) { frameScoreB = it }
+                summaryVm.totalsA.observe(viewLifecycleOwner) { frameScoreA = it }
+                summaryVm.totalsB.observe(viewLifecycleOwner) { frameScoreB = it }
             }
 
             // VM Observers
-            postGameVm.apply {
-                eventPostGameAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
+            summaryVm.apply {
+                eventSummaryAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                     if (matchAction == NAV_TO_PLAY) {
                         matchVm.deleteMatchFromDb()
-                        navigate(PostGameFragmentDirections.playFrag())
+                        navigate(SummaryFragmentDirections.rulesFrag())
                     }
                 })
             }
         }
 
-        // Disable back pressing
+        // Handle back button pressing
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {}
+            override fun handleOnBackPressed() {
+                summaryVm.onEventSummaryAction(NAV_TO_PLAY)
+            }
         })
 
         return binding.root

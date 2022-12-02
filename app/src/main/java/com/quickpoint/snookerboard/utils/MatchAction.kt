@@ -11,7 +11,7 @@ enum class MatchAction {
     FOUL_CONFIRM, // Foul has been confirmed and will be processed
     FOUL_DIALOG, // Open foul dialog fragment
 
-    // Play Fragment Actions
+    // Rules Fragment Actions
     MATCH_PLAY, // When actioned from the play fragment
     INFO_FOUL_DIALOG, // On clicking the info foul button on the rules screen, it will open a generic dialog
 
@@ -28,7 +28,7 @@ enum class MatchAction {
     MATCH_TO_END, // On clicking the concede match button while the match is still in play
     MATCH_ENDED, // Match end has been confirmed and will be processed. On clicking the concede frame / match button after the frame is mathematically complete and if it is enough to win the game
 
-    NAV_TO_POST_MATCH, // Last frame has been saved to repo so it's save to navigate to FragmentPostGame
+    NAV_TO_POST_MATCH, // Last frame has been saved to repo so it's save to navigate to SummaryFragment
 
     // Game Fragment Frame Actions
     FRAME_START_NEW, // When actioned from endFrameOrMatch method in matchVm
@@ -50,7 +50,7 @@ enum class MatchAction {
     SNACKBAR_NO_BALL, // Assign snackbar when there are no balls on the table instead handling pot
 
 
-    // PostGame Fragment Actions
+    // Summary Fragment Actions
     NAV_TO_PLAY, // Go to main menu
 
 

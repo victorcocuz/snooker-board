@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<inset xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/ic_temp_splash_screen"
-    android:insetLeft="@dimen/splash_screen_inset"
-    android:insetRight="@dimen/splash_screen_inset"
-    android:insetTop="@dimen/splash_screen_inset"
-    android:insetBottom="@dimen/splash_screen_inset"/>

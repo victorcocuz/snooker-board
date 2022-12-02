@@ -133,7 +133,7 @@
             style="@style/ButtonNarrow"
             android:layout_width="wrap_content"
             android:layout_marginEnd="@dimen/margin_layout_offset"
-            android:onClick="@{() -> varDialogVm.assignEventDialogAction(MatchAction.CLOSE_DIALOG)}"
+            android:onClick="@{() -> varDialogVm.onEventDialogAction(MatchAction.CLOSE_DIALOG)}"
             android:text="@string/f_dialog_foul_btn_cancel"
             app:layout_constraintBottom_toBottomOf="@+id/f_dialog_foul_btn_submit"
             app:layout_constraintEnd_toStartOf="@+id/f_dialog_foul_btn_submit" />
@@ -145,7 +145,7 @@
             android:layout_marginTop="@dimen/margin_header_above"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             android:layout_marginBottom="@dimen/margin_layout_offset"
-            android:onClick="@{() -> varDialogVm.assignEventDialogAction(MatchAction.FOUL_ATTEMPT)}"
+            android:onClick="@{() -> varDialogVm.onEventDialogAction(MatchAction.FOUL_ATTEMPT)}"
             android:text="@string/f_dialog_foul_btn_submit"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

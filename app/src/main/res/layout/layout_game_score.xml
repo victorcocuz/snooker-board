@@ -6,7 +6,7 @@
     <data>
         <import type="com.quickpoint.snookerboard.domain.DomainScoreKt"/>
         <import type="com.quickpoint.snookerboard.domain.DomainBallKt" />
-        <import type="com.quickpoint.snookerboard.utils.MatchRules.RULES"/>
+        <import type="com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS"/>
         <variable
             name="varGameVm"
             type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
@@ -90,7 +90,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_frame_a"
             app:layout_constraintEnd_toStartOf="@+id/l_game_score_gd_vert_mid"
             app:layout_constraintStart_toStartOf="@+id/l_game_score_gd_vert_mid"
-            android:text="@{String.valueOf(RULES.INSTANCE.getDisplayFrames())}" />
+            android:text="@{String.valueOf(SETTINGS.INSTANCE.getDisplayFrames())}" />
 
         <LinearLayout
             android:id="@+id/l_game_score_ll_line_chapter_statistics"
@@ -281,8 +281,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                app:setBarWeightScoreFirst1="@{DomainBallKt.availablePoints(varGameVm.displayFrame.ballStack)}"
-                app:setBarWeightScoreSecond1="@{varGameVm.displayFrame.frameMax}"
+                app:setBarWeightScoreFirst="@{DomainBallKt.availablePoints(varGameVm.displayFrame.ballStack)}"
+                app:setBarWeightScoreSecond="@{varGameVm.displayFrame.frameMax}"
                 tools:layout_weight="0.7" />
 
             <LinearLayout

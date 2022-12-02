@@ -1,4 +1,4 @@
-package com.quickpoint.snookerboard.fragments.postgame
+package com.quickpoint.snookerboard.fragments.summary
 
 
 import android.view.LayoutInflater
@@ -6,11 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.quickpoint.snookerboard.databinding.LayoutPostGameStatsBinding
+import com.quickpoint.snookerboard.databinding.LayoutSummaryStatsBinding
 import com.quickpoint.snookerboard.domain.DomainScore
 
-class PostGameAdapter:
-    ListAdapter<Pair<DomainScore, DomainScore>, PostGameAdapter.ViewHolder>(DiffCallback) {
+class SummaryAdapter:
+    ListAdapter<Pair<DomainScore, DomainScore>, SummaryAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -20,7 +20,7 @@ class PostGameAdapter:
         holder.bind(getItem(position), position)
     }
 
-    class ViewHolder private constructor(private val binding: LayoutPostGameStatsBinding): RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder private constructor(private val binding: LayoutSummaryStatsBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(frameScores: Pair<DomainScore, DomainScore>, position: Int) {
             binding.apply {
                 varBgType = position % 2
@@ -32,7 +32,7 @@ class PostGameAdapter:
 
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
-                val binding = LayoutPostGameStatsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                val binding = LayoutSummaryStatsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 return ViewHolder(binding)
             }
         }
