@@ -37,10 +37,11 @@
             android:gravity="center_vertical"
             android:paddingStart="@dimen/margin_layout_offset"
             android:paddingEnd="@dimen/margin_layout_offset"
+            app:dialogGameGenLabel="@{MatchAction.FOUL_DIALOG}"
+            app:dialogGameGenLabelActionB="@{MatchAction.FOUL_DIALOG}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:setDialogGameGenLabel="@{MatchAction.FOUL_DIALOG}" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/f_dialog_foul_tv_balls_label"

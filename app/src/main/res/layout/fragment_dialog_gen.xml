@@ -43,10 +43,11 @@
             android:gravity="center_vertical"
             android:paddingStart="@dimen/margin_layout_offset"
             android:paddingEnd="@dimen/margin_layout_offset"
+            app:dialogGameGenLabel="@{varActionC}"
+            app:dialogGameGenLabelActionB="@{varActionB}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:setDialogGameGenLabel="@{varActionC}" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/f_dialog_gen_tv_question"
@@ -57,6 +58,7 @@
             android:paddingTop="@dimen/margin_layout_offset"
             android:paddingEnd="@dimen/margin_layout_offset"
             app:dialogGameGenQuestion="@{varActionC}"
+            app:dialogGameGenQuestionActionB="@{varActionB}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/f_dialog_gen_tv_title" />
@@ -109,9 +111,9 @@
             android:layout_marginEnd="@dimen/margin_layout_offset"
             android:layout_marginBottom="@dimen/margin_layout_offset"
             android:onClick="@{() -> varDialogVm.onEventDialogAction(varActionC)}"
-            app:dialogGameGenCText="@{varActionC}"
             app:dialogGameGenCActionB="@{varActionB}"
             app:dialogGameGenCScore="@{varGameVm.displayFrame}"
+            app:dialogGameGenCText="@{varActionC}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/f_dialog_gen_tv_note"

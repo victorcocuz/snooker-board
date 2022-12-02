@@ -72,7 +72,8 @@ fun MutableList<DomainBreak>.addToFrameStack(pot: DomainPot) {
     ) add(DomainBreak(SETTINGS.assignUniqueId(), SETTINGS.crtPlayer, SETTINGS.crtFrame, mutableListOf(), 0)) // Add a new current break
     last().pots.add(pot) // Add the current pot to the current break
     if (pot.potType in listOfPotTypesPointsAdding) last().breakSize += pot.ball.points // Update the current break size
-    if (pot.potType == TYPE_FOUL && pot.potAction in listOf(RETAKE, CONTINUE)) SETTINGS.counterRetake += 1 else SETTINGS.counterRetake = 0 // Check for frame forfeit option
+    if (pot.potAction == RETAKE || (pot.potType == TYPE_FOUL && pot.potAction == CONTINUE && SETTINGS.counterRetake == 2))
+        SETTINGS.counterRetake += 1 else SETTINGS.counterRetake = 0 // Check for frame forfeit option
 }
 
 fun MutableList<DomainBreak>.removeLastPotFromFrameStack(): DomainPot {
