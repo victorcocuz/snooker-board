@@ -10,6 +10,7 @@
     <dimen name="dialog_title_height">32dp</dimen>
     <dimen name="name_tag_height">44dp</dimen>
     <dimen name="splash_screen_inset">30dp</dimen>
+    <dimen name="toggle_slider">20dp</dimen>
 
     <!-- Margins -->
     <dimen name="margin_xxxsmall">4dp</dimen>

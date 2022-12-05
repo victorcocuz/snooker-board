@@ -124,5 +124,9 @@
         android:id="@+id/navAboutFragment"
         android:name="com.quickpoint.snookerboard.fragments.navdrawer.NavAboutFragment"
         android:label="@string/menu_drawer_about" />
+    <fragment
+        android:id="@+id/navSettingsFragment"
+        android:name="com.quickpoint.snookerboard.fragments.navdrawer.NavSettingsFragment"
+        android:label="@string/menu_drawer_settings" />
 
 </navigation>

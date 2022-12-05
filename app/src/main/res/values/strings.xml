@@ -42,8 +42,12 @@
     <string name="sp_match_max_counter_retake">matchCounterRetake</string>
     <string name="sp_match_freeball_visibility">matchFreeballVisibility</string>
     <string name="sp_match_freeball_selection">matchFreeballSelection</string>
+    <string name="sp_match_handicap_frame">matchHandicapFrame</string>
+    <string name="sp_match_handicap_match">matchHandicapMatch</string>
+    <string name="sp_toggle_advanced_rules">toggleAdvancedRules</string>
 
     <!-- Helper   -->
+    <string name="empty" />
     <string name="helper_first_line">"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"</string>
     <string name="helper_update_frame_info">"---------------------------------------------FRAME UPDATED------------------------------------------------"</string>
     <string name="helper_save_match">"---------------------------------------------MATCH SAVED------------------------------------------------"</string>

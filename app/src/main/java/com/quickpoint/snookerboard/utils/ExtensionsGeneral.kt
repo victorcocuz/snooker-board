@@ -10,6 +10,10 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import android.text.SpannableString
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
@@ -29,6 +33,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.admob.AdMob
 import com.quickpoint.snookerboard.databinding.FragmentGameBinding
+import com.quickpoint.snookerboard.databinding.FragmentRulesBinding
 
 
 // General
@@ -38,13 +43,14 @@ fun Fragment.navigate(directions: NavDirections, adMob: AdMob? = null) {
 
 fun Fragment.toast(message: CharSequence) = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
 fun Activity.toast(message: CharSequence) = Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
-fun View.snackbar(message: CharSequence) {
-    val snackbar = Snackbar.make(this, message, Snackbar.LENGTH_LONG)
+fun View.snackbar(matchAction: MatchAction) {
+    val snackbar = Snackbar.make(this, matchAction.getSnackText(context), Snackbar.LENGTH_LONG)
     snackbar.isGestureInsetBottomIgnored = true
     snackbar.show()
 }
+fun FragmentGameBinding.snackbar(matchAction: MatchAction) = fGameCdl.snackbar(matchAction)
+fun FragmentRulesBinding.snackbar(matchAction: MatchAction) = fRulesCdl.snackbar(matchAction)
 
-fun FragmentGameBinding.snackbar(message: CharSequence) = fGameCdl.snackbar(message)
 fun Any.asText() = toString()
     .replace("DomainActionLog(description=", "")
     .removeSuffix(")")
@@ -144,6 +150,20 @@ tailrec fun Context.activity(): Activity? = when (this) {
     else -> (this as? ContextWrapper)?.baseContext?.activity()
 }
 
+
+fun Context.vibrateOnce() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val vibratorManager =  this.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+        val vib  = vibratorManager.defaultVibrator
+        vib.vibrate(VibrationEffect.createOneShot(50,1 ))
+    } else {
+        @Suppress("DEPRECATION")
+        val vib  = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        vib.vibrate(50)
+    }
+}
+
+// Other
 fun View.removeFocusAndHideKeyboard(context: Context, event: MotionEvent) {
     if (event.action == MotionEvent.ACTION_DOWN) {
         if (this is EditText) {
@@ -158,7 +178,6 @@ fun View.removeFocusAndHideKeyboard(context: Context, event: MotionEvent) {
     }
 }
 
-// Other
 fun LinearLayout.colorTransition(isActivePlayer: Boolean, @ColorRes endColor: Int, delay: Long = 200L) {
     var colorFrom = Color.TRANSPARENT
     if (background is ColorDrawable)

@@ -14,6 +14,7 @@ import com.quickpoint.snookerboard.domain.DomainFreeBallInfo.FREEBALLINFO
 import com.quickpoint.snookerboard.domain.DomainPlayer.PLAYER01
 import com.quickpoint.snookerboard.domain.DomainPlayer.PLAYER02
 import com.quickpoint.snookerboard.utils.MatchSettings.*
+import com.quickpoint.snookerboard.utils.MatchToggle.*
 import timber.log.Timber
 
 // Shared preferences
@@ -41,8 +42,11 @@ fun SharedPreferences.savePref() {
             putLong(getString(R.string.sp_match_crt_frame), SETTINGS.crtFrame)
             putInt(getString(R.string.sp_match_max_available_points), SETTINGS.maxAvailablePoints)
             putInt(getString(R.string.sp_match_max_counter_retake), SETTINGS.counterRetake)
+            putInt(getString(R.string.sp_match_handicap_frame), SETTINGS.handicapFrame)
+            putInt(getString(R.string.sp_match_handicap_match), SETTINGS.handicapMatch)
             putBoolean(getString(R.string.sp_match_freeball_visibility), FREEBALLINFO.isVisible)
             putBoolean(getString(R.string.sp_match_freeball_selection), FREEBALLINFO.isSelected)
+            putInt(getString(R.string.sp_toggle_advanced_rules), TOGGLE.toggleAdvancedRules)
             apply()
         }
         Timber.i("Add to sharedPref ${SETTINGS.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}")
@@ -68,9 +72,12 @@ fun SharedPreferences.loadPref() {
             getLong(getString(R.string.sp_match_crt_frame), 1),
             getInt(getString(R.string.sp_match_max_available_points), 0),
             getInt(getString(R.string.sp_match_max_counter_retake), 0),
+            getInt(getString(R.string.sp_match_handicap_frame), 0),
+            getInt(getString(R.string.sp_match_handicap_match), 0),
         )
         FREEBALLINFO.assignFreeballInfo(getBoolean(getString(R.string.sp_match_freeball_visibility), false),
             getBoolean(getString(R.string.sp_match_freeball_selection), false))
+        TOGGLE.toggleAdvancedRules = getInt(getString(R.string.sp_toggle_advanced_rules), 1)
     }
     Timber.i("Get from sharedPref ${SETTINGS.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}")
     Timber.i("Get from sharedPref ${SETTINGS.getAsText()}")

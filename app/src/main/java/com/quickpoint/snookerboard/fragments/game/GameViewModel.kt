@@ -21,7 +21,6 @@ import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.MatchAction.*
 import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
 import com.quickpoint.snookerboard.utils.ValueKeeperLiveData
-import timber.log.Timber
 
 class GameViewModel(
     app: Application,
@@ -67,17 +66,16 @@ class GameViewModel(
         score = it.score
         ballStack = it.ballStack
         frameStack = it.frameStack
-        Timber.i("loadMatch(): ${it.getTextInfo()}")
         onEventGameAction(TRANSITION_TO_FRAGMENT)
-        onEventFrameUpdated(DomainActionLog("frameUpdated()"))
+        onEventFrameUpdated(DomainActionLog("loadMatch(): ${it.getTextInfo()}"))
     }
 
     fun resetMatch() { // When starting new match, cancelling or ending an existing match
         jobQueue = JobQueue()
         score.resetMatch()
         resetFrame(MATCH_START_NEW)
-        Timber.i("resetMatch()")
         onEventGameAction(TRANSITION_TO_FRAGMENT)
+        onEventFrameUpdated(DomainActionLog("resetMatch()"))
     }
 
     fun resetFrame(matchAction: MatchAction) { // Reset all frame values on match reset, frame rerack and frame start new
@@ -117,7 +115,7 @@ class GameViewModel(
 
     // Handle Pot
     private fun handlePotExceptionsBefore(pot: DomainPot): Boolean = onEventGameAction(when {
-        ballStack.isLastBall() && (pot.potType in listOfPotTypesForNoBallSnackbar) -> SNACKBAR_NO_BALL
+        ballStack.isLastBall() && (pot.potType in listOfPotTypesForNoBallSnackbar) -> SNACK_NO_BALL
         pot is FOULATTEMPT -> FOUL_DIALOG
         else -> null
     })

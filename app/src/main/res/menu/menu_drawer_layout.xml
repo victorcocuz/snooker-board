@@ -14,6 +14,10 @@
             android:icon="@drawable/ic_temp_menu_nav_donate"
             android:title="@string/menu_drawer_donate" />
         <item
+            android:id="@+id/navSettingsFragment"
+            android:icon="@drawable/ic_temp_menu_nav_settings"
+            android:title="@string/menu_drawer_settings" />
+        <item
             android:id="@+id/navAboutFragment"
             android:icon="@drawable/ic_temp_menu_nav_about"
             android:title="@string/menu_drawer_about" />

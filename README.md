@@ -1,5 +1,5 @@
 # Snooker Board
-**Version 1.0.9**
+**Version 1.0.10**
 
 Snooker Board is a simple snooker score keeping app.
 

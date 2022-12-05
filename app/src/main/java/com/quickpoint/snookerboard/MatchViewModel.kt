@@ -15,6 +15,7 @@ import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
 import com.quickpoint.snookerboard.utils.MatchState.*
+import com.quickpoint.snookerboard.utils.MatchToggle.TOGGLE
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,12 +38,19 @@ class MatchViewModel(
         Timber.i("transitionToFragment(): ${fragment.javaClass.simpleName}")
     }
 
-    private val _matchState = MutableLiveData<MatchState>()
-    val matchState: LiveData<MatchState> = _matchState
+    private val _matchToggle = MutableLiveData<MatchToggle>()
+    val matchToggle : LiveData<MatchToggle> = _matchToggle
+    fun updateMatchToggle() {
+        _matchToggle.postValue(TOGGLE)
+        app.sharedPref().savePref()
+    }
+
+    private val _matchState = MutableLiveData<Event<MatchState>>()
+    val matchState: LiveData<Event<MatchState>> = _matchState
     fun updateState(matchState: MatchState) = app.sharedPref().apply {
         if (matchState == NONE) loadPref() else SETTINGS.setMatchState(matchState)
-        if (matchState == SAVED) savePref() else updateState()
-        if (matchState != NONE) _matchState.value = SETTINGS.matchState
+        if (matchState in listOf(RULES_PENDING, GAME_SAVED)) savePref() else updateState()
+        if (matchState != NONE) _matchState.value = Event(SETTINGS.matchState)
     }
 
     // Separate threads
@@ -51,11 +59,19 @@ class MatchViewModel(
     fun loadMatchIfSaved() = viewModelScope.launch { // If db is empty reset rules, otherwise load the most recent frame
         Timber.i("loadMatchIfSaved()")
         updateState(NONE) // Load shared preferences
+        updateMatchToggle()
         snookerRepository.getCrtFrame().let { crtFrame ->
-            if (crtFrame == null || (SETTINGS.matchState != SAVED && SETTINGS.matchState != POST_MATCH)) deleteMatchFromDb()
-            else {
-                _storedFrame.value = Event(crtFrame.asDomainFrame())
-                 updateState(if(SETTINGS.matchState == SAVED) IN_PROGRESS else POST_MATCH)
+            when (SETTINGS.matchState) {
+                GAME_IN_PROGRESS -> deleteMatchFromDb() // Helps reset the match when debug-reinstalling from android studio
+                GAME_SAVED, SUMMARY -> {
+                    if (crtFrame == null) updateState(RULES_IDLE) // Helps reset the app when something went wrong after previous reinstall
+                    else {
+                        _storedFrame.value = Event(crtFrame.asDomainFrame())
+                        updateState(if (SETTINGS.matchState == GAME_SAVED) GAME_IN_PROGRESS else SUMMARY)
+                    }
+                }
+                RULES_IDLE, RULES_PENDING -> updateState(RULES_IDLE) // Idle helps reset the match when debug-reinstalling from android studio
+                else -> Timber.e("No implementation for state ${SETTINGS.matchState} at this point")
             }
         }
     }
@@ -65,7 +81,8 @@ class MatchViewModel(
     }
 
     fun deleteMatchFromDb() = viewModelScope.launch { // When starting a new match or cancelling an existing match
-        updateState(IDLE)
+        updateState(RULES_IDLE)
+        SETTINGS.resetRules()
         snookerRepository.deleteCurrentMatch()
     }
 

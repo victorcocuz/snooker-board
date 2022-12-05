@@ -1,5 +1,7 @@
 package com.quickpoint.snookerboard.utils
 
+import android.content.Context
+import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.domain.PotType
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.utils.MatchAction.*
@@ -15,8 +17,10 @@ enum class MatchAction {
     MATCH_PLAY, // When actioned from the play fragment
     INFO_FOUL_DIALOG, // On clicking the info foul button on the rules screen, it will open a generic dialog
 
-    SNACKBAR_NO_PLAYER, // Assign snackbar when player names are not fully completed
-    SNACKBAR_NO_FIRST, // Assign snackbar when no first player is selected
+    SNACK_NO_PLAYER, // Assign snackbar when player names are not fully completed
+    SNACK_NO_FIRST, // Assign snackbar when no first player is selected
+    SNACK_HANDICAP_FRAME_LIMIT,
+    SNACK_HANDICAP_MATCH_LIMIT,
 
     // Game Fragment Match Actions
     MATCH_START_NEW, // When actioned from the game fragment, if no match exists in the db
@@ -46,7 +50,15 @@ enum class MatchAction {
     FRAME_LOG_ACTIONS_DIALOG, // Opens a dialog allowing users to submit an action log
     FRAME_LOG_ACTIONS, // Submit an action log by e-mail to be tested and reviewed
 
-    SNACKBAR_NO_BALL, // Assign snackbar when there are no balls on the table instead handling pot
+
+    SNACK_UNDO,
+    SNACK_ADD_RED,
+    SNACK_REMOVE_RED,
+    SNACK_REMOVE_COLOR,
+    SNACK_FRAME_RERACK_DIALOG,
+    SNACK_FRAME_ENDING_DIALOG,
+    SNACK_MATCH_ENDING_DIALOG,
+    SNACK_NO_BALL, // Assign snackbar when there are no balls on the table instead handling pot
 
     // Summary Fragment Actions
     NAV_TO_PLAY, // Go to main menu
@@ -61,10 +73,14 @@ val listOfMatchActionsUncancelable = listOf(MATCH_ENDED, FRAME_ENDED, FRAME_RESP
 
 
 // Helper functions
-fun MatchAction.getListOfDialogActions(isMatchEnding: Boolean, isFrameMathematicallyOver: Boolean): List<MatchAction> = when (this) {
+fun MatchAction.getListOfDialogActions(isMatchEnding: Boolean, isNoFrameFinished: Boolean, isFrameMathematicallyOver: Boolean): List<MatchAction> = when (this) {
     FRAME_RESPOT_BLACK_DIALOG -> listOf(IGNORE, IGNORE, FRAME_RESPOT_BLACK)
     FRAME_RERACK_DIALOG -> listOf(CLOSE_DIALOG, IGNORE, FRAME_RERACK)
-    FRAME_ENDING_DIALOG, MATCH_ENDING_DIALOG -> listOf(CLOSE_DIALOG, IGNORE, queryEndFrameOrMatch(isMatchEnding, isFrameMathematicallyOver))
+    FRAME_ENDING_DIALOG, MATCH_ENDING_DIALOG -> {
+        val actionC = queryEndFrameOrMatch(isMatchEnding, isFrameMathematicallyOver)
+        val actionB = if (actionC == MATCH_TO_END && !isNoFrameFinished) MATCH_ENDED_DISCARD_FRAME else IGNORE
+        listOf(CLOSE_DIALOG, actionB, actionC)
+    }
     MATCH_CANCEL_DIALOG -> listOf(CLOSE_DIALOG, IGNORE, MATCH_CANCEL)
     FRAME_LOG_ACTIONS_DIALOG -> listOf(CLOSE_DIALOG, IGNORE, FRAME_LOG_ACTIONS)
     FRAME_MISS_FORFEIT_DIALOG -> listOf(CLOSE_DIALOG, FRAME_MISS_FORFEIT, queryEndFrameOrMatch(isMatchEnding, isFrameMathematicallyOver))
@@ -75,7 +91,7 @@ fun MatchAction.queryEndFrameOrMatch(
     isMatchEnding: Boolean,
     isFrameMathematicallyOver: Boolean,
 ): MatchAction { // When actioned from options menu or if last ball has been potted
-    Timber.i("queryEndFrameOrMatch($this)")
+    Timber.i("queryEndFrameOrMatch($this), isMatchEnding $isMatchEnding, isFrameMathematicallyOver $isFrameMathematicallyOver")
     return when { // Else assign a match action for a MATCH end query or else assign a FRAME ending action
         isMatchEnding -> { // If the frame would push player to win, assign a MATCH ending action
             if (isFrameMathematicallyOver) MATCH_ENDED
@@ -93,3 +109,21 @@ fun MatchAction.getPotType(): PotType? = when (this) {
     FOUL_CONFIRM -> TYPE_FOUL
     else -> null // For FRAME_UNDO
 }
+
+fun MatchAction.getSnackText(context: Context) = context.getString(
+    when (this) {
+        SNACK_NO_PLAYER -> R.string.snack_f_rules_no_player
+        SNACK_NO_FIRST -> R.string.snack_f_rules_select_no_first
+        SNACK_HANDICAP_FRAME_LIMIT -> R.string.snack_f_rules_handicap_frame_limit
+        SNACK_HANDICAP_MATCH_LIMIT -> R.string.snack_f_rules_handicap_match_limit
+        SNACK_UNDO -> R.string.snack_f_game_undo
+        SNACK_ADD_RED -> R.string.snack_f_game_add_red
+        SNACK_REMOVE_RED -> R.string.snack_f_game_remove_red
+        SNACK_REMOVE_COLOR -> R.string.snack_f_game_remove_color
+        SNACK_FRAME_RERACK_DIALOG -> R.string.snack_f_game_rerack
+        SNACK_FRAME_ENDING_DIALOG -> R.string.snack_f_game_concede_frame
+        SNACK_MATCH_ENDING_DIALOG -> R.string.snack_f_game_concede_match
+        SNACK_NO_BALL -> R.string.toast_f_game_no_balls_left
+        else -> R.string.empty
+    }
+)

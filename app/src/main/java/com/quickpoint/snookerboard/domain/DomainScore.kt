@@ -23,12 +23,13 @@ data class DomainScore(
     var fouls: Int,
     var highestBreak: Int,
 ) {
-    fun cumulatedValues() = framePoints + matchPoints + successShots + missedShots + safetyMissedShots + safetyMissedShots + snookers + fouls + highestBreak
+    fun cumulatedValues() =
+        framePoints + matchPoints + successShots + missedShots + safetyMissedShots + safetyMissedShots + snookers + fouls + highestBreak
 
     fun resetFrame(index: Int, matchAction: MatchAction) {
-        if (matchAction != FRAME_RERACK)  scoreId = SETTINGS.assignUniqueId()
+        if (matchAction != FRAME_RERACK) scoreId = SETTINGS.assignUniqueId()
         playerId = index
-        framePoints = 0
+        framePoints = SETTINGS.getHandicap(SETTINGS.handicapFrame, if (index == 0) -1 else 1)
         successShots = 0
         missedShots = 0
         safetySuccessShots = 0
@@ -42,6 +43,7 @@ data class DomainScore(
 // Checker Methods
 fun MutableList<DomainScore>?.frameScoreDiff() =
     if (this == null || this.size == 0) 0 else abs((this[0].framePoints) - (this[1].framePoints))
+
 fun MutableList<DomainScore>.isFrameEqual() = this[0].framePoints == this[1].framePoints
 fun MutableList<DomainScore>.isMatchEqual() = this[0].matchPoints == this[1].matchPoints
 fun MutableList<DomainScore>.isFrameAndMatchEqual() = isFrameEqual() && isMatchEqual()
@@ -58,7 +60,9 @@ fun MutableList<DomainScore>.resetFrame(matchAction: MatchAction) {
 
 fun MutableList<DomainScore>.resetMatch() {
     this.clear()
-    repeat(2) { this.add(DomainScore(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0)) }
+    (0 until 2).forEach {
+        this.add(DomainScore(0, 0, 0, 0, SETTINGS.getHandicap(SETTINGS.handicapMatch, if (it == 0) -1 else 1), 0, 0, 0, 0, 0, 0, 0))
+    }
 }
 
 fun MutableList<DomainScore>.addMatchPointAndAssignFrameId() {

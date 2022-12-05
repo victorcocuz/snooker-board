@@ -43,6 +43,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_layout_offset"
                         android:layout_marginEnd="@dimen/margin_layout_offset" />
+
+                    <include
+                        android:id="@+id/f_rules_l_extra"
+                        layout="@layout/layout_rules_extra"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_layout_offset"
+                        android:layout_marginEnd="@dimen/margin_layout_offset" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <FrameLayout

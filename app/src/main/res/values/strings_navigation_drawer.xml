@@ -3,6 +3,7 @@
     <string name="menu_drawer_rules">Rules</string>
     <string name="menu_drawer_improve">Help improve the app</string>
     <string name="menu_drawer_donate">Support the app</string>
+    <string name="menu_drawer_settings">Settings</string>
     <string name="menu_drawer_about">About</string>
 
     <!-- Fragment Rules -->
@@ -40,7 +41,11 @@
     <string name="f_nav_donate_beer_price">£5.00</string>
     <string name="f_nav_donate_tv_lunch_title">Lunch</string>
     <string name="f_nav_donate_lunch_price">£10.00</string>
-    <string name="snackbar_donation">Thank you, that is most kind of you :)</string>
+    <string name="snack_f_nav_donate_donation">Thank you, that is most kind of you :)</string>
+
+    <!--Fragment Settings-->
+    <string name="f_nav_settings_toggle_rules_advanced_title">Advanced Rules</string>
+    <string name="f_nav_settings_toggle_rules_advanced_description">Show options for setting number of reds, faul modifier and handicap</string>
 
     <!--Fragment About-->
     <string name="f_nav_about_tv_description">Snooker Board is a simple snooker score keeping app that focuses on recording one full match at a time, with care to encompass all rules from the WPBSA (World Professional Billiards and Snooker Association) Official Rules of the Games of Snooker and Billiards</string>
@@ -55,6 +60,14 @@
     <string name="f_nav_about_tv_version_1_0_x_06">• </string>
     <string name="f_nav_about_tv_version_1_0_x_07">• </string>
     <string name="f_nav_about_tv_version_1_0_x_08">• </string>
+
+    <string name="f_nav_about_tv_version_1_0_10">Version 1.0.10</string>
+    <string name="f_nav_about_tv_version_1_0_10_01">• Added new features: Force retake option, check for game forfeiting at 3 consecutive fouls, frame handicap, match handicap</string>
+    <string name="f_nav_about_tv_version_1_0_10_02">• Added a new screen for settings</string>
+    <string name="f_nav_about_tv_version_1_0_10_03">• Implemented a toggle button in the settings screen to show/hide advanced game rules for match setting up</string>
+    <string name="f_nav_about_tv_version_1_0_10_04">• Fixed minor game logic glitches for conceding match</string>
+    <string name="f_nav_about_tv_version_1_0_10_05">• Fixed glitch for remembering game rules selection when leaving app before starting new game</string>
+    <string name="f_nav_about_tv_version_1_0_10_06">• Minor UI fixes for foul dialog, switch player animation, balls remaining, ad showing, splash screen, etc.</string>
 
     <string name="f_nav_about_tv_version_1_0_9">Version 1.0.9</string>
     <string name="f_nav_about_tv_version_1_0_9_01">• Fixed dialogs malfunctions on screen rotation</string>

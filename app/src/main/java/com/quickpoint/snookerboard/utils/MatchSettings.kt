@@ -6,7 +6,7 @@ import com.quickpoint.snookerboard.utils.MatchAction.FRAME_START_NEW
 import com.quickpoint.snookerboard.utils.MatchState.*
 import timber.log.Timber
 
-enum class MatchState { IDLE, IN_PROGRESS, SAVED, POST_MATCH, NONE }
+enum class MatchState { RULES_IDLE, RULES_PENDING, GAME_IN_PROGRESS, GAME_SAVED, SUMMARY, NONE }
 
 // The DOMAIN rules
 sealed class MatchSettings(
@@ -20,8 +20,10 @@ sealed class MatchSettings(
     var crtFrame: Long,
     var maxAvailablePoints: Int,
     var counterRetake: Int,
+    var handicapFrame: Int,
+    var handicapMatch: Int,
 ) {
-    object SETTINGS : MatchSettings(IDLE, 0, 2, 15, 0, -1, -1, 0, 0, 0) {
+    object SETTINGS : MatchSettings(NONE, 0, 2, 15, 0, -1, -1, 0, 0, 0, 0, 0) {
 
         // Assign methods
         fun setMatchState(state: MatchState): Int {
@@ -30,25 +32,7 @@ sealed class MatchSettings(
             return -1
         }
 
-        fun setFrames(number: Int): Int {
-            maxFramesAvailable = number
-            return maxFramesAvailable
-        }
-
-        fun setReds(number: Int): Int {
-            reds = number
-            return reds
-        }
-
-        fun setFoul(number: Int): Int {
-            foul = number
-            return foul
-        }
-
-        fun setFirst(position: Int): Int {
-            firstPlayer = if (position == 2) (0..1).random() else position
-            return firstPlayer
-        }
+        fun getHandicap(value: Int, pol: Int) = if (pol * value > 0) pol * value else 0
 
         fun resetRules(): Int {
             uniqueId = -1
@@ -60,6 +44,8 @@ sealed class MatchSettings(
             crtFrame = 1
             maxAvailablePoints = 0
             counterRetake = 0
+            handicapFrame = 0
+            handicapMatch = 0
             return -1
         }
 
@@ -73,6 +59,8 @@ sealed class MatchSettings(
             crtFrame: Long,
             maxAvailablePoints: Int,
             retakeCounter: Int,
+            handicapFrame: Int,
+            handicapMatch: Int,
         ) {
             this.uniqueId = uniqueId
             this.maxFramesAvailable = maxFramesAvailable
@@ -83,16 +71,20 @@ sealed class MatchSettings(
             this.crtFrame = crtFrame
             this.maxAvailablePoints = maxAvailablePoints
             this.counterRetake = retakeCounter
+            this.handicapFrame = handicapFrame
+            this.handicapMatch = handicapMatch
             Timber.i("assignRules(): ${getAsText()}")
         }
 
         // Getter methods
         fun getMatchStateFromOrdinal(ordinal: Int) {
             matchState = when (ordinal) {
-                0 -> IDLE
-                1 -> IN_PROGRESS
-                2 -> SAVED
-                else -> POST_MATCH // Always 3
+                0 -> RULES_IDLE
+                1 -> RULES_PENDING
+                2 -> GAME_IN_PROGRESS
+                3 -> GAME_SAVED
+                4 -> SUMMARY
+                else -> NONE // Always 5
             }
         }
 

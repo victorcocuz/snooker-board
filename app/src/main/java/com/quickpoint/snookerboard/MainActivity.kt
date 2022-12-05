@@ -19,8 +19,7 @@ import com.quickpoint.snookerboard.billing.Billing
 import com.quickpoint.snookerboard.databinding.ActivityMainBinding
 import com.quickpoint.snookerboard.utils.GenericViewModelFactory
 import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
-import com.quickpoint.snookerboard.utils.MatchState.IN_PROGRESS
-import com.quickpoint.snookerboard.utils.MatchState.SAVED
+import com.quickpoint.snookerboard.utils.MatchState.*
 import com.quickpoint.snookerboard.utils.removeFocusAndHideKeyboard
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -39,7 +38,6 @@ class MainActivity : AppCompatActivity() {
 
         // Initiate the matchVm from the start to be readily accessed from all fragments when needed; pass in application and repository
         matchVm = ViewModelProvider(this, GenericViewModelFactory(this, null))[MatchViewModel::class.java]
-        matchVm.loadMatchIfSaved()
 
         // Bind view elements
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -56,9 +54,8 @@ class MainActivity : AppCompatActivity() {
             navController.addOnDestinationChangedListener { _: NavController, nd: NavDestination, _: Bundle? ->
                 when (nd.id) {
                     R.id.RulesFragment -> mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-                    R.id.navRulesFragment, R.id.navImproveFragment, R.id.navAboutFragment, R.id.navDonateFragment -> {
-                        mainDrawerLayout.setDrawerLockMode(
-                            DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+                    R.id.navRulesFragment, R.id.navImproveFragment, R.id.navDonateFragment, R.id.navSettingsFragment, R.id.navAboutFragment -> {
+                        mainDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                     }
                     else -> {
                         binding.layoutAppBarMain.lToolbarMain.navigationIcon = null
@@ -87,6 +84,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        matchVm.loadMatchIfSaved()
+    }
+
     override fun onResume() {
         lifecycleScope.launch {
             Billing.queryPurchasesAsync(this@MainActivity)
@@ -95,7 +97,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) { // Save state and shared preferences on pause rather than onSaveInstanceState so that db save can complete
-        matchVm.updateState(if (SETTINGS.matchState == IN_PROGRESS) SAVED else SETTINGS.matchState)
+        matchVm.updateState(when (SETTINGS.matchState) {
+            RULES_IDLE -> RULES_PENDING
+            GAME_IN_PROGRESS -> GAME_SAVED
+            else -> SETTINGS.matchState
+        })
         Timber.i(getString(R.string.helper_save_match))
         super.onSaveInstanceState(outState)
     }

@@ -118,7 +118,7 @@ object Billing {
         when (purchase.purchaseState) {
             PurchaseState.PURCHASED -> {
                 billingClient.consumePurchase(consumeParams)
-                context.activity()!!.toast(context.getString(R.string.snackbar_donation))
+                context.activity()!!.toast(context.getString(R.string.snack_f_nav_donate_donation))
             }
             PurchaseState.PENDING -> Timber.e("Transaction is pending")
             else -> Timber.e("No implementation for purchase state ${purchase.purchaseState}")
