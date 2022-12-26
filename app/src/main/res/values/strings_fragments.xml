@@ -68,10 +68,12 @@
 
     <!-- Fragment Foul -->
     <string name="f_dialog_foul_tv_balls_label">Which ball was fouled?</string>
-    <string name="f_dialog_foul_tv_choose_action_label">Do you wish to continue?</string>
+    <string name="f_dialog_foul_tv_action_label">Do you wish to continue?</string>
+    <string name="f_dialog_foul_tv_reds_label">Were there any reds potted?</string>
+    <string name="f_dialog_foul_tv_freeball_label">Is it a freeball?</string>
     <string name="f_dialog_foul_btn_continue">OK, I will play</string>
-    <string name="f_dialog_foul_btn_force_continue">Force opponent to continue</string>
-    <string name="f_dialog_foul_btn_force_retake">Force opponent to retake</string>
+    <string name="f_dialog_foul_btn_force_continue">Force continue</string>
+    <string name="f_dialog_foul_btn_force_retake">Force retake</string>
     <string name="f_dialog_foul_btn_cancel">Cancel</string>
     <string name="f_dialog_foul_btn_submit">Proceed</string>
 

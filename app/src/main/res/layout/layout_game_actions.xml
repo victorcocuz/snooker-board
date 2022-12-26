@@ -102,20 +102,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/l_game_actions_btn_free_ball"
-            style="@style/ButtonNarrow"
-            android:layout_width="0dp"
-            android:layout_marginStart="@dimen/margin_layout_offset"
-            android:layout_marginEnd="@dimen/margin_layout_offset_mid"
-            android:onClick="@{() -> varGameVm.assignPot(PotType.TYPE_FREE_TOGGLE)}"
-            android:text="@string/l_game_actions_btn_free_ball"
-            app:layout_constraintBottom_toBottomOf="@id/l_game_actions_ll_balls"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/l_game_actions_ll_balls"
-            app:setFreeballVisible="@{varGameVm.freeballInfo.visible}"
-            app:setSelected="@{varGameVm.freeballInfo.selected}" />
+<!--        <TextView-->
+<!--            android:id="@+id/l_game_actions_btn_free_ball"-->
+<!--            style="@style/ButtonNarrow"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_marginStart="@dimen/margin_layout_offset"-->
+<!--            android:layout_marginEnd="@dimen/margin_layout_offset_mid"-->
+<!--            android:onClick="@{() -> varGameVm.assignPot(PotType.TYPE_FREE_TOGGLE)}"-->
+<!--            android:text="@string/l_game_actions_btn_free_ball"-->
+<!--            app:layout_constraintBottom_toBottomOf="@id/l_game_actions_ll_balls"-->
+<!--            app:layout_constraintHorizontal_bias="0.5"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="@id/l_game_actions_ll_balls"-->
+<!--            app:setFreeballVisible="@{varGameVm.freeballInfo.visible}"-->
+<!--            app:setSelected="@{varGameVm.freeballInfo.selected}" />-->
 
         <LinearLayout
             android:id="@+id/l_game_actions_ll_balls"

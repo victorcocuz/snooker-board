@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.quickpoint.snookerboard.domain.DomainBall
+import com.quickpoint.snookerboard.domain.DomainFreeBallInfo.FREEBALLINFO
 import com.quickpoint.snookerboard.domain.PotAction
 import com.quickpoint.snookerboard.utils.Event
 import com.quickpoint.snookerboard.utils.MatchAction
@@ -23,15 +24,31 @@ class DialogViewModel : ViewModel() {
         _ballClicked.value = ball
     }
 
+    private val _eventDialogReds = MutableLiveData(0)
+    val eventDialogReds: LiveData<Int> = _eventDialogReds
+    val onDialogReds = fun (value: Int) {
+        _eventDialogReds.postValue(value)
+    }
+
     private val _actionClicked = MutableLiveData<PotAction?>(null)
     val actionClicked: LiveData<PotAction?> = _actionClicked
     fun onActionClicked(action: PotAction) {
         _actionClicked.value = action
     }
 
+    private val _freeballInfo = MutableLiveData(FREEBALLINFO)
+    val freeballInfo: LiveData<FREEBALLINFO> = _freeballInfo
+    fun onFreeballClicked() {
+        FREEBALLINFO.toggleActive()
+        _freeballInfo.postValue(FREEBALLINFO)
+    }
+
     fun foulIsValid() = _ballClicked.value != null && actionClicked.value != null
     fun resetFoul() {
-        _actionClicked.value = null
         _ballClicked.value = null
+        _eventDialogReds.value = 0
+        _actionClicked.value = null
+        FREEBALLINFO.setInactive()
+        _freeballInfo.value = FREEBALLINFO
     }
 }

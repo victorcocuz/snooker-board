@@ -38,13 +38,13 @@
             android:id="@+id/nav_host_fragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="0dp"
-            app:navGraph="@navigation/navigation_graph"
             android:layout_height="0dp"
             app:defaultNavHost="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/app_bar_layout" />
+            app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
+            app:navGraph="@navigation/navigation_graph" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

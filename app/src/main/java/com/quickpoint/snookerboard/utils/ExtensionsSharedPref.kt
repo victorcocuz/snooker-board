@@ -44,14 +44,13 @@ fun SharedPreferences.savePref() {
             putInt(getString(R.string.sp_match_max_counter_retake), SETTINGS.counterRetake)
             putInt(getString(R.string.sp_match_handicap_frame), SETTINGS.handicapFrame)
             putInt(getString(R.string.sp_match_handicap_match), SETTINGS.handicapMatch)
-            putBoolean(getString(R.string.sp_match_freeball_visibility), FREEBALLINFO.isVisible)
-            putBoolean(getString(R.string.sp_match_freeball_selection), FREEBALLINFO.isSelected)
+            putBoolean(getString(R.string.sp_match_freeball_is_active), FREEBALLINFO.isActive)
             putInt(getString(R.string.sp_toggle_advanced_rules), TOGGLE.toggleAdvancedRules)
             apply()
         }
         Timber.i("Add to sharedPref ${SETTINGS.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}")
         Timber.i("Add to sharedPref ${SETTINGS.getAsText()}")
-        Timber.i("Add to sharedPref freeball isVisible ${FREEBALLINFO.isVisible} and isSelected ${FREEBALLINFO.isSelected}")
+        Timber.i("Add to sharedPref freeball isActive ${FREEBALLINFO.isActive}")
     }
 }
 
@@ -75,12 +74,11 @@ fun SharedPreferences.loadPref() {
             getInt(getString(R.string.sp_match_handicap_frame), 0),
             getInt(getString(R.string.sp_match_handicap_match), 0),
         )
-        FREEBALLINFO.assignFreeballInfo(getBoolean(getString(R.string.sp_match_freeball_visibility), false),
-            getBoolean(getString(R.string.sp_match_freeball_selection), false))
+        FREEBALLINFO.assignFreeballInfo(getBoolean(getString(R.string.sp_match_freeball_is_active), false))
         TOGGLE.toggleAdvancedRules = getInt(getString(R.string.sp_toggle_advanced_rules), 1)
     }
     Timber.i("Get from sharedPref ${SETTINGS.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}")
     Timber.i("Get from sharedPref ${SETTINGS.getAsText()}")
-    Timber.i("Get from sharedPref freeball isVisible ${FREEBALLINFO.isVisible} and isSelected ${FREEBALLINFO.isSelected}")
+    Timber.i("Get from sharedPref freeball isActive ${FREEBALLINFO.isActive}")
 
 }

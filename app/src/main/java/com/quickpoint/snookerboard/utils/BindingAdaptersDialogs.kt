@@ -1,9 +1,11 @@
 package com.quickpoint.snookerboard.utils
 
+import android.view.View
 import android.view.View.*
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
+import com.google.android.material.slider.Slider
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.utils.MatchAction.*
 
@@ -75,5 +77,24 @@ fun TextView.setDialogGameNote(matchAction: MatchAction, frame: DomainFrame?) {
         frame.score.isFrameWinResultingMatchTie() -> "NOTE: Keeping the current frame will result in a draw"
         frame.score.isMatchEqual() -> "NOTE: Discarding the current frame will result in a draw"
         else -> ""
+    }
+}
+
+@BindingAdapter("setRemoveRedsRange")
+fun Slider.setRemoveRedsRange(ballStack: MutableList<DomainBall>) {
+    valueTo = ballStack.maxRemoveReds().toFloat()
+    visibility = if (ballStack.maxRemoveReds() > 0) VISIBLE else GONE
+}
+
+
+@BindingAdapter("setRemoveRedsVisibility", "setRemoveRedsVisibilityRedsDesired")
+fun View.setRemoveRedsVisibility(ballStack: MutableList<DomainBall>, redsDesired: Int) {
+    visibility = if (ballStack.maxRemoveReds() >= redsDesired) VISIBLE else GONE
+}
+
+@BindingAdapter("onChangeListener")
+fun Slider.onChangeListener(function: (Int) -> Unit) {
+    addOnChangeListener { slider, value, fromUser ->
+        function(value.toInt())
     }
 }

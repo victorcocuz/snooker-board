@@ -17,8 +17,11 @@ import com.quickpoint.snookerboard.databinding.FragmentDialogFoulBinding
 import com.quickpoint.snookerboard.fragments.game.BallAdapter
 import com.quickpoint.snookerboard.fragments.game.BallListener
 import com.quickpoint.snookerboard.fragments.game.GameViewModel
-import com.quickpoint.snookerboard.utils.*
+import com.quickpoint.snookerboard.utils.BallAdapterType
+import com.quickpoint.snookerboard.utils.EventObserver
 import com.quickpoint.snookerboard.utils.MatchAction.*
+import com.quickpoint.snookerboard.utils.setLayoutSizeByFactor
+import com.quickpoint.snookerboard.utils.toast
 
 class FoulDialogFragment : DialogFragment() {
     private val dialogVm: DialogViewModel by activityViewModels()
@@ -55,7 +58,9 @@ class FoulDialogFragment : DialogFragment() {
                 when (action) {
                     FOUL_ATTEMPT ->
                         if (foulIsValid()) {
-                            gameVm.onEventGameAction(FOUL_CONFIRM)
+                            repeat(eventDialogReds.value!!) {gameVm.onEventGameAction(FRAME_REMOVE_RED, true)}
+                            gameVm.onEventGameAction(FOUL_CONFIRM, true)
+                            gameVm.onEventGameAction(FRAME_FREE_ACTIVE, true)
                             dismiss()
                         }
                         else toast(getString(R.string.toast_f_dialog_foul_invalid))

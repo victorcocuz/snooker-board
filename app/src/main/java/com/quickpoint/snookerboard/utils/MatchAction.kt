@@ -44,16 +44,16 @@ enum class MatchAction {
     FRAME_ENDED, // Frame end has been confirmed and will be processed. On clicking the concede frame button when the point difference is big enough, or automatically triggered when only one ball left
     FRAME_RESPOT_BLACK_DIALOG, // When both players are tied at the end of the frame
     FRAME_RESPOT_BLACK, // After the RESPOT_BLACK_DIALOG is closed, respot black
-    FRAME_FREE_AVAILABLE, // After a foul, uses observer to handle pot instead of directly from gameVm
+    FRAME_FREE_ACTIVE, // After a foul, uses observer to handle pot instead of directly from gameVm
     FRAME_UPDATED, // When frame updates are completed assign frame action that triggers the matchVm ot update DisplayScore
     FRAME_UNDO, // When triggered from gameVm execute as an action instead of recursive method
+    FRAME_REMOVE_RED,
     FRAME_LOG_ACTIONS_DIALOG, // Opens a dialog allowing users to submit an action log
     FRAME_LOG_ACTIONS, // Submit an action log by e-mail to be tested and reviewed
 
 
     SNACK_UNDO,
     SNACK_ADD_RED,
-    SNACK_REMOVE_RED,
     SNACK_REMOVE_COLOR,
     SNACK_FRAME_RERACK_DIALOG,
     SNACK_FRAME_ENDING_DIALOG,
@@ -105,7 +105,8 @@ fun MatchAction.queryEndFrameOrMatch(
 
 fun MatchAction.getPotType(): PotType? = when (this) {
     FRAME_RESPOT_BLACK -> TYPE_RESPOT_BLACK
-    FRAME_FREE_AVAILABLE -> TYPE_FREE_AVAILABLE
+    FRAME_FREE_ACTIVE -> TYPE_FREE_ACTIVE
+    FRAME_REMOVE_RED -> TYPE_REMOVE_RED
     FOUL_CONFIRM -> TYPE_FOUL
     else -> null // For FRAME_UNDO
 }
@@ -118,7 +119,6 @@ fun MatchAction.getSnackText(context: Context) = context.getString(
         SNACK_HANDICAP_MATCH_LIMIT -> R.string.snack_f_rules_handicap_match_limit
         SNACK_UNDO -> R.string.snack_f_game_undo
         SNACK_ADD_RED -> R.string.snack_f_game_add_red
-        SNACK_REMOVE_RED -> R.string.snack_f_game_remove_red
         SNACK_REMOVE_COLOR -> R.string.snack_f_game_remove_color
         SNACK_FRAME_RERACK_DIALOG -> R.string.snack_f_game_rerack
         SNACK_FRAME_ENDING_DIALOG -> R.string.snack_f_game_concede_frame

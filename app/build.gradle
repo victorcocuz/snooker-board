@@ -9,6 +9,7 @@ android {
     compileSdkVersion 33
     buildFeatures {
         viewBinding true
+        dataBinding true
     }
     defaultConfig {
         applicationId "com.quickpoint.snookerboard"
@@ -20,7 +21,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        // defining variables
+        // Global variables
         buildConfigField "String", "ADMIN_EMAIL", ADMIN_EMAIL
         buildConfigField "boolean", "DEBUG_TOGGLE", "true"
         buildConfigField "int", "ADS_SHOW_PERCENTAGE", "50"
@@ -41,9 +42,6 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-    buildFeatures {
-        dataBinding true
-    }
     namespace 'com.quickpoint.snookerboard'
     configurations.all {
         resolutionStrategy {
@@ -60,8 +58,12 @@ dependencies {
     implementation "androidx.legacy:legacy-support-v4:$version_legacy_support"
     implementation "com.google.android.material:material:$version_material"
     implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
+
+    // Splash screen
     implementation "androidx.core:core-splashscreen:$version_splash_screen"
     implementation "com.android.support:design:$version_design"
+
+    // Billing
     implementation "com.android.billingclient:billing:$version_billing"
     implementation "com.android.billingclient:billing-ktx:$version_billing"
     implementation "com.google.android.gms:play-services-ads:$version_ad_mob"

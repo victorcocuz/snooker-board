@@ -7,9 +7,9 @@ import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
 
 // Classes and variables that define all pot types and pot actions
-enum class PotType { TYPE_HIT, TYPE_FOUL, TYPE_FREE, TYPE_FOUL_ATTEMPT, TYPE_SNOOKER, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_MISS, TYPE_FREE_AVAILABLE, TYPE_FREE_TOGGLE, TYPE_REMOVE_RED, TYPE_REMOVE_COLOR, TYPE_ADDRED, TYPE_RESPOT_BLACK }
+enum class PotType { TYPE_HIT, TYPE_FOUL, TYPE_FREE, TYPE_FOUL_ATTEMPT, TYPE_SNOOKER, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_MISS, TYPE_FREE_ACTIVE, TYPE_REMOVE_RED, TYPE_REMOVE_COLOR, TYPE_ADDRED, TYPE_RESPOT_BLACK }
 
-val listOfPotTypesHelpers = listOf(TYPE_FREE_AVAILABLE, TYPE_FREE_TOGGLE, TYPE_RESPOT_BLACK)
+val listOfPotTypesHelpers = listOf(TYPE_FREE_ACTIVE, TYPE_RESPOT_BLACK)
 val listOfPotTypesPointsAdding = listOf(TYPE_HIT, TYPE_FREE, TYPE_ADDRED)
 val listOfPotTypesPointGenerating = listOfPotTypesPointsAdding.plus(TYPE_FOUL)
 val listOfPotTypesForNoBallSnackbar = listOf(TYPE_HIT, TYPE_MISS, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_SNOOKER, TYPE_FOUL, TYPE_FOUL_ATTEMPT)
@@ -25,27 +25,17 @@ sealed class DomainPot(
 ) {
     class HIT(potId: Long = 0, ball: DomainBall) : DomainPot(potId, ball, TYPE_HIT, CONTINUE) // Ball can vary
     class FOUL(potId: Long = 0, ball: DomainBall, action: PotAction) : DomainPot(potId, ball, TYPE_FOUL, action) // Ball and action can vary
-    class FREE(potId: Long = 0, ball: DomainBall) :
-        DomainPot(potId, ball, TYPE_FREE, CONTINUE) // Ball should only be FREEBALL(), but points may vary
-
-    class FOULATTEMPT(potId: Long = 0) :
-        DomainPot(potId, NOBALL(), TYPE_FOUL_ATTEMPT, CONTINUE) // Foul will only be validated if there are balls left on the table
-
+    class FREE(potId: Long = 0, ball: DomainBall) : DomainPot(potId, ball, TYPE_FREE, CONTINUE) // Ball should only be FREEBALL(), but points may vary
+    class FOULATTEMPT(potId: Long = 0) : DomainPot(potId, NOBALL(), TYPE_FOUL_ATTEMPT, CONTINUE) // Foul will only be validated if there are balls left on the table
     class SNOOKER(potId: Long = 0) : DomainPot(potId, NOBALL(), TYPE_SNOOKER, SWITCH) // Static action for a successful snooker shot
     class SAFE(potId: Long = 0) : DomainPot(potId, NOBALL(), TYPE_SAFE, SWITCH) // Static action for a safety shot
     class SAFEMISS(potId: Long = 0) : DomainPot(potId, NOBALL(), TYPE_SAFE_MISS, SWITCH) // Static action for a missed safety shot
     class MISS(potId: Long = 0) : DomainPot(potId, NOBALL(), TYPE_MISS, SWITCH) // Static action for a missed shot
-    class FREEAVAILABLE(potId: Long = 0) : DomainPot(potId, FREEBALLAVAILABLE(), TYPE_FREE_AVAILABLE, CONTINUE)
-    class FREETOGGLE(potId: Long = 0) :
-        DomainPot(potId, FREEBALLTOGGLE(), TYPE_FREE_TOGGLE, CONTINUE) // Static action for a miss on a free ball
-
+    class FREETOGGLE(potId: Long = 0) : DomainPot(potId, FREEBALLTOGGLE(), TYPE_FREE_ACTIVE, CONTINUE) // Static action for a miss on a free ball
     class REMOVERED(potId: Long = 0) : DomainPot(potId, RED(), TYPE_REMOVE_RED, CONTINUE) // Static action for removing a red ball
     class REMOVECOLOR(potId: Long = 0) : DomainPot(potId, COLOR(), TYPE_REMOVE_COLOR, CONTINUE) // Static action for removing a red ball
-    class ADDRED(potId: Long = 0) :
-        DomainPot(potId, RED(), TYPE_ADDRED, CONTINUE) // Static action for adding a red ball (when more than one red is sunk at once)
-
-    class RESPOTBLACK(potId: Long = 0) :
-        DomainPot(potId, NOBALL(), TYPE_RESPOT_BLACK, FIRST) // Static action for re-spotting black ball when players are tied
+    class ADDRED(potId: Long = 0) : DomainPot(potId, RED(), TYPE_ADDRED, CONTINUE) // Static action for adding a red ball (when more than one red is sunk at once)
+    class RESPOTBLACK(potId: Long = 0) : DomainPot(potId, NOBALL(), TYPE_RESPOT_BLACK, FIRST) // Static action for re-spotting black ball when players are tied
 
     fun isFreeballAvailable() = potType == TYPE_FOUL && potAction == SWITCH
 
@@ -75,8 +65,7 @@ fun PotType.getPotFromType(ball: DomainBall = NOBALL(), action: PotAction = CONT
     TYPE_SAFE -> SAFE(SETTINGS.assignUniqueId())
     TYPE_SAFE_MISS -> SAFEMISS(SETTINGS.assignUniqueId())
     TYPE_MISS -> MISS(SETTINGS.assignUniqueId())
-    TYPE_FREE_AVAILABLE -> FREEAVAILABLE(SETTINGS.assignUniqueId())
-    TYPE_FREE_TOGGLE -> FREETOGGLE(SETTINGS.assignUniqueId())
+    TYPE_FREE_ACTIVE -> FREETOGGLE(SETTINGS.assignUniqueId())
     TYPE_REMOVE_RED -> REMOVERED(SETTINGS.assignUniqueId())
     TYPE_REMOVE_COLOR -> REMOVECOLOR(SETTINGS.assignUniqueId())
     TYPE_ADDRED -> ADDRED(SETTINGS.assignUniqueId())

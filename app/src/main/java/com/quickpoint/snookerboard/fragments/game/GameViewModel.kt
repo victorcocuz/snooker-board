@@ -47,15 +47,13 @@ class GameViewModel(
 
     private val _displayFrame = MutableLiveData<DomainFrame>()
     val displayFrame: LiveData<DomainFrame> = _displayFrame
-    private val _freeballInfo = MutableLiveData(FREEBALLINFO)
-    val freeballInfo: LiveData<FREEBALLINFO> = _freeballInfo
+
     private val _crtPlayer = MutableLiveData<Int>()
     val crtPlayer: LiveData<Int> = _crtPlayer
     private fun onEventFrameUpdated(actionLog: DomainActionLog) = jobQueue.submit {
         _displayFrame.postValue(DomainFrame(SETTINGS.crtFrame, ballStack, score, frameStack, actionLogs, SETTINGS.maxAvailablePoints))
         if (actionLogs.size > 0) snookerRepository.saveCurrentFrame(_displayFrame.value!!)
         actionLogs.addLog(actionLog)
-        _freeballInfo.value = FREEBALLINFO
         _crtPlayer.value = SETTINGS.crtPlayer
         onEventGameAction(FRAME_UPDATED)
     }
@@ -79,7 +77,7 @@ class GameViewModel(
     }
 
     fun resetFrame(matchAction: MatchAction) { // Reset all frame values on match reset, frame rerack and frame start new
-        FREEBALLINFO.resetFreeball()
+        FREEBALLINFO.setInactive()
         SETTINGS.resetFrameAndGetFirstPlayer(matchAction)
         score.resetFrame(matchAction)
         ballStack.resetBalls()
@@ -139,7 +137,6 @@ class GameViewModel(
                 }, 200)
             }
             pot.potType == TYPE_HIT && ballStack.isLastBall() -> onEventGameAction(if (score.isFrameEqual()) FRAME_RESPOT_BLACK_DIALOG else FRAME_ENDING_DIALOG)
-            pot.isFreeballAvailable() -> onEventGameAction(FRAME_FREE_AVAILABLE, pot.isFreeballAvailable())
             else -> {}
         }
     }
@@ -149,7 +146,7 @@ class GameViewModel(
         SETTINGS.crtPlayer = frameStack.last().player
         val pot = frameStack.removeLastPotFromFrameStack()
         val actionLog = pot.getActionLog("HandleUndo()", ballStack.lastOrNull()?.ballType, frameStack.size)
-        ballStack.handleUndoBallStack(pot.potType, pot.potAction, frameStack.lastBall())
+        ballStack.handleUndoBallStack(pot.potType, pot.potAction, frameStack)
         FREEBALLINFO.handleUndoFreeballInfo(pot.potType, frameStack.lastPotType())
         score.calculatePoints(pot, -1, ballStack.foulValue(), frameStack)
         onEventFrameUpdated(actionLog)
@@ -157,12 +154,12 @@ class GameViewModel(
     }
 
     private fun handleUndoExceptionsPost(pot: DomainPot) = onEventGameAction(when (pot.potType) {
-        TYPE_FREE_AVAILABLE -> FRAME_UNDO
+        TYPE_FREE_ACTIVE -> FRAME_UNDO
+        TYPE_FOUL, TYPE_REMOVE_RED -> if (frameStack.lastPotType() == TYPE_REMOVE_RED) FRAME_UNDO else null
         else -> null
-    }, pot.potType == TYPE_FREE_AVAILABLE)
+    }, pot.potType in listOf(TYPE_FOUL, TYPE_REMOVE_RED, TYPE_FREE_ACTIVE))
 
     // Checker methods
     fun isFrameMathematicallyOver() = ballStack.availablePoints() < score.frameScoreDiff()
     fun isRemoveColorAvailable() = ballStack.isInColors() && frameStack.lastPotType() == TYPE_FREE
-    fun isRemoveRedAvailable() = ballStack.areRedsOnTheTable() && !FREEBALLINFO.isVisible && frameStack.lastPotType() != TYPE_FOUL
 }

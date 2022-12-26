@@ -3,8 +3,7 @@ package com.quickpoint.snookerboard.domain
 import com.quickpoint.snookerboard.database.DbPot
 import com.quickpoint.snookerboard.domain.PotAction.CONTINUE
 import com.quickpoint.snookerboard.domain.PotAction.RETAKE
-import com.quickpoint.snookerboard.domain.PotType.TYPE_FOUL
-import com.quickpoint.snookerboard.domain.PotType.TYPE_FREE_TOGGLE
+import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
 
 // The DOMAIN Break class is a list of balls potted in one visit (consecutive balls by one player until the other player takes over or the frame ends)
@@ -41,6 +40,15 @@ fun MutableList<DomainBreak>.isFrameInProgress() = size > 0
 fun MutableList<DomainBreak>.lastPot() = lastOrNull()?.lastPot()
 fun MutableList<DomainBreak>.lastPotType() = lastOrNull()?.lastPotType()
 fun MutableList<DomainBreak>.lastBall() = lastPot()?.ball
+fun MutableList<DomainBreak>.lastBallType() = lastBall()?.ballType
+fun MutableList<DomainBreak>.lastBallTypeBeforeRemoveBall(): BallType? {
+    reversed().forEach { crtBreak ->
+        crtBreak.pots.reversed().forEach { crtPot ->
+            if (crtPot.potType == TYPE_HIT) return crtPot.ball.ballType
+        }
+    }
+    return null
+}
 
 // Helper methods
 fun MutableList<DomainBreak>.findMaxBreak(): Int {
@@ -60,7 +68,7 @@ fun MutableList<DomainBreak>.displayShots(): MutableList<DomainBreak> {
 
 // Pot and undo methods
 fun MutableList<DomainBreak>.onPot(pot: DomainPot) { // Add to frameStack all pots, but remove repeated freeball toggles
-    if (pot.potType == TYPE_FREE_TOGGLE && lastPotType() == TYPE_FREE_TOGGLE) removeLastPotFromFrameStack()
+    if (pot.potType == TYPE_FREE_ACTIVE && lastPotType() == TYPE_FREE_ACTIVE) removeLastPotFromFrameStack()
     else addToFrameStack(pot)
 }
 

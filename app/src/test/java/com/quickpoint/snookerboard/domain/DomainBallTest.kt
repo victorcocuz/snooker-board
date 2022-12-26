@@ -31,12 +31,12 @@ internal class DomainBallTest {
 
         assertThat(ballStack.ballTypeList()).isEqualTo(listOf(TYPE_NOBALL, TYPE_BLACK, TYPE_PINK))
         ballStack.addFreeBall(1) // Size 4 - FREE()
-        DomainFreeBallInfo.FREEBALLINFO.isSelected = true
+        DomainFreeBallInfo.FREEBALLINFO.isActive = true
         assertThat(ballStack.ballTypeList()).isEqualTo(listOf(TYPE_NOBALL, TYPE_BLACK, TYPE_PINK, TYPE_FREEBALL))
         assertThat(ballStack.availablePoints()).isEqualTo(19)
 
         ballStack.removeFreeBall() // Size 3 - RED()
-        DomainFreeBallInfo.FREEBALLINFO.isSelected = false
+        DomainFreeBallInfo.FREEBALLINFO.isActive = false
         assertThat(ballStack.availablePoints()).isEqualTo(13)
 
         ballStack.addNextBalls(4) // Size 7 - YELLOW()

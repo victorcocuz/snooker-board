@@ -85,14 +85,102 @@
             app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_ll_balls" />
 
         <TextView
-            android:id="@+id/f_dialog_foul_tv_choose_action_label"
+            android:id="@+id/f_dialog_foul_tv_reds_label"
             style="@style/TextDialog"
             android:layout_marginTop="@dimen/margin_header_above"
             android:paddingStart="@dimen/margin_layout_offset"
             android:paddingEnd="@dimen/margin_layout_offset"
-            android:text="@string/f_dialog_foul_tv_choose_action_label"
+            android:text="@string/f_dialog_foul_tv_reds_label"
             app:layout_constraintStart_toStartOf="@+id/f_dialog_foul_tv_balls_label"
-            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_fl_line_hor_one" />
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_fl_line_hor_one"
+            app:setRemoveRedsVisibility="@{varGameVm.ballStack}"
+            app:setRemoveRedsVisibilityRedsDesired="@{1}" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/f_dialog_foul_sl_reds_slider"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:stepSize="1"
+            android:theme="@style/Theme.SnookerBoard"
+            android:value="0"
+            android:valueFrom="0"
+            app:labelBehavior="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_tv_reds_label"
+            app:onChangeListener="@{varDialogVm.onDialogReds}"
+            app:setRemoveRedsRange="@{varGameVm.ballStack}" />
+
+        <TextView
+            android:id="@+id/f_dialog_foul_tv_reds_slider_zero"
+            style="@style/TextDialog"
+            android:layout_marginStart="@dimen/margin_xsmall"
+            android:text="@string/_0"
+            app:layout_constraintEnd_toStartOf="@id/f_dialog_foul_tv_reds_slider_one"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="@+id/f_dialog_foul_sl_reds_slider"
+            app:layout_constraintTop_toBottomOf="@id/f_dialog_foul_sl_reds_slider"
+            app:setRemoveRedsVisibility="@{varGameVm.ballStack}"
+            app:setRemoveRedsVisibilityRedsDesired="@{1}" />
+
+        <TextView
+            android:id="@+id/f_dialog_foul_tv_reds_slider_one"
+            style="@style/TextDialog"
+            android:layout_marginStart="@dimen/margin_xsmall"
+            android:layout_marginEnd="@dimen/margin_xsmall"
+            android:text="@string/_1"
+            app:layout_constraintBottom_toBottomOf="@id/f_dialog_foul_tv_reds_slider_zero"
+            app:layout_constraintEnd_toStartOf="@id/f_dialog_foul_tv_reds_slider_two"
+            app:layout_constraintStart_toEndOf="@id/f_dialog_foul_tv_reds_slider_zero"
+            app:setRemoveRedsVisibility="@{varGameVm.ballStack}"
+            app:setRemoveRedsVisibilityRedsDesired="@{1}" />
+
+        <TextView
+            android:id="@+id/f_dialog_foul_tv_reds_slider_two"
+            style="@style/TextDialog"
+            android:layout_marginStart="@dimen/margin_xsmall"
+            android:layout_marginEnd="@dimen/margin_xsmall"
+            android:text="@string/_2"
+            app:layout_constraintBottom_toBottomOf="@id/f_dialog_foul_tv_reds_slider_zero"
+            app:layout_constraintEnd_toStartOf="@id/f_dialog_foul_tv_reds_slider_three"
+            app:layout_constraintStart_toEndOf="@id/f_dialog_foul_tv_reds_slider_one"
+            app:setRemoveRedsVisibility="@{varGameVm.ballStack}"
+            app:setRemoveRedsVisibilityRedsDesired="@{2}" />
+
+        <TextView
+            android:id="@+id/f_dialog_foul_tv_reds_slider_three"
+            style="@style/TextDialog"
+            android:layout_marginEnd="@dimen/margin_xsmall"
+            android:text="@string/_3"
+            app:layout_constraintBottom_toBottomOf="@id/f_dialog_foul_tv_reds_slider_zero"
+            app:layout_constraintEnd_toEndOf="@+id/f_dialog_foul_sl_reds_slider"
+            app:layout_constraintStart_toEndOf="@id/f_dialog_foul_tv_reds_slider_two"
+            app:setRemoveRedsVisibility="@{varGameVm.ballStack}"
+            app:setRemoveRedsVisibilityRedsDesired="@{3}" />
+
+        <FrameLayout
+            android:id="@+id/f_dialog_foul_fl_line_hor_two"
+            style="@style/LineHorizontalChapter"
+            android:layout_marginStart="@dimen/margin_layout_offset"
+            android:layout_marginTop="@dimen/margin_header_above"
+            android:layout_marginEnd="@dimen/margin_layout_offset"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_tv_reds_slider_zero"
+            app:setRemoveRedsVisibility="@{varGameVm.ballStack}"
+            app:setRemoveRedsVisibilityRedsDesired="@{1}" />
+
+        <TextView
+            android:id="@+id/f_dialog_foul_tv_action_label"
+            style="@style/TextDialog"
+            android:layout_marginTop="@dimen/margin_header_above"
+            android:paddingStart="@dimen/margin_layout_offset"
+            android:paddingEnd="@dimen/margin_layout_offset"
+            android:text="@string/f_dialog_foul_tv_action_label"
+            app:layout_constraintStart_toStartOf="@+id/f_dialog_foul_tv_balls_label"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_fl_line_hor_two" />
 
         <TextView
             android:id="@+id/f_dialog_foul_btn_continue"
@@ -103,7 +191,7 @@
             android:text="@string/f_dialog_foul_btn_continue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_tv_choose_action_label"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_tv_action_label"
             app:setSelected="@{varDialogVm.actionClicked == PotAction.SWITCH}" />
 
         <TextView
@@ -113,7 +201,7 @@
             android:layout_marginTop="@dimen/margin_layout_offset"
             android:onClick="@{() -> varDialogVm.onActionClicked(PotAction.CONTINUE)}"
             android:text="@string/f_dialog_foul_btn_force_continue"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/f_dialog_foul_btn_force_retake"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_btn_continue"
             app:setEnabled="@{varGameVm.displayFrame.isFoulAndAMiss()}"
@@ -127,13 +215,13 @@
             android:onClick="@{() -> varDialogVm.onActionClicked(PotAction.RETAKE)}"
             android:text="@string/f_dialog_foul_btn_force_retake"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_btn_force_continue"
+            app:layout_constraintStart_toEndOf="@+id/f_dialog_foul_btn_force_continue"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_btn_continue"
             app:setEnabled="@{varGameVm.displayFrame.isFoulAndAMiss()}"
             app:setSelected="@{varDialogVm.actionClicked == PotAction.RETAKE}" />
 
         <FrameLayout
-            android:id="@+id/f_dialog_foul_fl_line_hor_two"
+            android:id="@+id/f_dialog_foul_fl_line_hor_three"
             style="@style/LineHorizontalChapter"
             android:layout_marginStart="@dimen/margin_layout_offset"
             android:layout_marginTop="@dimen/margin_header_above"
@@ -143,27 +231,61 @@
             app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_btn_force_retake" />
 
         <TextView
-            android:id="@+id/f_dialog_foul_btn_cancel"
-            style="@style/ButtonNarrow"
-            android:layout_width="wrap_content"
-            android:layout_marginEnd="@dimen/margin_layout_offset"
-            android:onClick="@{() -> varDialogVm.onEventDialogAction(MatchAction.CLOSE_DIALOG)}"
-            android:text="@string/f_dialog_foul_btn_cancel"
-            app:layout_constraintBottom_toBottomOf="@+id/f_dialog_foul_btn_submit"
-            app:layout_constraintEnd_toStartOf="@+id/f_dialog_foul_btn_submit" />
+            android:id="@+id/f_dialog_foul_tv_freeball_label"
+            style="@style/TextDialog"
+            android:layout_marginTop="@dimen/margin_header_above"
+            android:paddingStart="@dimen/margin_layout_offset"
+            android:paddingEnd="@dimen/margin_layout_offset"
+            android:text="@string/f_dialog_foul_tv_freeball_label"
+            app:layout_constraintStart_toStartOf="@+id/f_dialog_foul_tv_balls_label"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_fl_line_hor_three" />
 
         <TextView
-            android:id="@+id/f_dialog_foul_btn_submit"
+            android:id="@+id/f_dialog_foul_btn_free_ball"
+            style="@style/ButtonNarrow"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="@dimen/margin_layout_offset"
+            android:text="@string/l_game_actions_btn_free_ball"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:setEnabled="@{varDialogVm.actionClicked == PotAction.SWITCH}"
+            android:onClick="@{() -> varDialogVm.onFreeballClicked()}"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_tv_freeball_label"
+            app:setSelected="@{varDialogVm.freeballInfo.isActive}" />
+
+        <FrameLayout
+            android:id="@+id/f_dialog_foul_fl_line_hor_four"
+            style="@style/LineHorizontalChapter"
+            android:layout_marginStart="@dimen/margin_layout_offset"
+            android:layout_marginTop="@dimen/margin_header_above"
+            android:layout_marginEnd="@dimen/margin_layout_offset"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_btn_free_ball" />
+
+
+        <TextView
+            android:id="@+id/f_dialog_foul_btn_cancel"
             style="@style/ButtonNarrow"
             android:layout_width="wrap_content"
             android:layout_marginTop="@dimen/margin_header_above"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             android:layout_marginBottom="@dimen/margin_layout_offset"
+            android:onClick="@{() -> varDialogVm.onEventDialogAction(MatchAction.CLOSE_DIALOG)}"
+            android:text="@string/f_dialog_foul_btn_cancel"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/f_dialog_foul_btn_submit"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_fl_line_hor_four" />
+
+        <TextView
+            android:id="@+id/f_dialog_foul_btn_submit"
+            style="@style/ButtonNarrow"
+            android:layout_width="wrap_content"
+            android:layout_marginEnd="@dimen/margin_layout_offset"
             android:onClick="@{() -> varDialogVm.onEventDialogAction(MatchAction.FOUL_ATTEMPT)}"
             android:text="@string/f_dialog_foul_btn_submit"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/f_dialog_foul_btn_cancel"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_fl_line_hor_two"
             app:layout_goneMarginBottom="@dimen/margin_layout_offset" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

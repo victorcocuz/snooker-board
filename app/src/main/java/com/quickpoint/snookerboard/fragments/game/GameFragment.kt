@@ -109,7 +109,7 @@ class GameFragment : Fragment() {
                         requireActivity().invalidateOptionsMenu() // Reset the menu every time the frame has been updated
                         Timber.i(getString(R.string.helper_update_frame_info))
                     }
-                    SNACK_UNDO, SNACK_ADD_RED, SNACK_REMOVE_RED, SNACK_REMOVE_COLOR, SNACK_FRAME_RERACK_DIALOG,
+                    SNACK_UNDO, SNACK_ADD_RED,  SNACK_REMOVE_COLOR, SNACK_FRAME_RERACK_DIALOG,
                     SNACK_FRAME_ENDING_DIALOG, SNACK_MATCH_ENDING_DIALOG, SNACK_NO_BALL,
                     -> binding.snackbar(action)
 
@@ -126,7 +126,7 @@ class GameFragment : Fragment() {
                         navigate(GameFragmentDirections.genDialogFrag(actions[0], actions[1], actions[2]))
                     }
                     FRAME_LOG_ACTIONS -> matchVm.emailLogs()
-                    FRAME_FREE_AVAILABLE, FRAME_UNDO, FRAME_RESPOT_BLACK -> gameVm.assignPot(action.getPotType())
+                    FRAME_FREE_ACTIVE, FRAME_UNDO, FRAME_REMOVE_RED, FRAME_RESPOT_BLACK -> gameVm.assignPot(action.getPotType())
                     FRAME_MISS_FORFEIT -> gameVm.onEventGameAction(action.queryEndFrameOrMatch(score.isMatchEnding(),
                         isFrameMathematicallyOver()))
                     FRAME_TO_END, FRAME_ENDED, MATCH_TO_END, MATCH_ENDED -> gameVm.endFrame(action)
@@ -167,8 +167,6 @@ class GameFragment : Fragment() {
                             if (frameStack.isFrameInProgress()) assignPot(null) else onEventGameAction(SNACK_UNDO)
                         R.id.menu_item_add_red ->
                             if (ballStack.isAddRedAvailable()) assignPot(TYPE_ADDRED) else onEventGameAction(SNACK_ADD_RED)
-                        R.id.menu_item_remove_red ->
-                            if (isRemoveRedAvailable()) assignPot(TYPE_REMOVE_RED) else onEventGameAction(SNACK_REMOVE_RED)
                         R.id.menu_item_remove_color ->
                             if (isRemoveColorAvailable()) assignPot(TYPE_REMOVE_COLOR) else onEventGameAction(SNACK_REMOVE_COLOR)
                         R.id.menu_item_rerack ->
@@ -190,7 +188,6 @@ class GameFragment : Fragment() {
                 gameVm.apply { // the menu dropdown is available when frame isn't updating, then apply rules for each button
                     menu.findItem(R.id.menu_item_undo).setItemActive(frameStack.isFrameInProgress())
                     menu.findItem(R.id.menu_item_add_red).setItemActive(ballStack.isAddRedAvailable())
-                    menu.findItem(R.id.menu_item_remove_red).setItemActive(isRemoveRedAvailable())
                     menu.findItem(R.id.menu_item_remove_color).setItemActive(isRemoveColorAvailable())
                     menu.findItem(R.id.menu_item_rerack).setItemActive(frameStack.isFrameInProgress())
                     menu.findItem(R.id.menu_item_concede_frame).setItemActive(!score.isFrameEqual())
