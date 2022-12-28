@@ -2,8 +2,7 @@ package com.quickpoint.snookerboard.domain
 
 import com.google.common.truth.Truth.assertThat
 import com.quickpoint.snookerboard.domain.BallType.*
-import com.quickpoint.snookerboard.domain.PotType.TYPE_ADDRED
-import com.quickpoint.snookerboard.domain.PotType.TYPE_HIT
+import com.quickpoint.snookerboard.utils.FrameToggles
 import org.junit.Test
 
 internal class DomainBallTest {
@@ -15,8 +14,8 @@ internal class DomainBallTest {
         val ballStack: MutableList<DomainBall> = mutableListOf()
         ballStack.resetBalls()
 
-        val listOfActions = listOf(TYPE_HIT, TYPE_ADDRED, TYPE_HIT)
-        for (action in listOfActions) ballStack.handlePotBallStack(action)
+//        val listOfActions = listOf(TYPE_HIT, TYPE_ADDRED, TYPE_HIT)
+//        for (action in listOfActions) ballStack.handlePotBallStack(potAction = action, potType = )
     }
 
     @Test
@@ -31,12 +30,12 @@ internal class DomainBallTest {
 
         assertThat(ballStack.ballTypeList()).isEqualTo(listOf(TYPE_NOBALL, TYPE_BLACK, TYPE_PINK))
         ballStack.addFreeBall(1) // Size 4 - FREE()
-        DomainFreeBallInfo.FREEBALLINFO.isActive = true
+        FrameToggles.FRAMETOGGLES.isFreeball = true
         assertThat(ballStack.ballTypeList()).isEqualTo(listOf(TYPE_NOBALL, TYPE_BLACK, TYPE_PINK, TYPE_FREEBALL))
         assertThat(ballStack.availablePoints()).isEqualTo(19)
 
         ballStack.removeFreeBall() // Size 3 - RED()
-        DomainFreeBallInfo.FREEBALLINFO.isActive = false
+        FrameToggles.FRAMETOGGLES.isFreeball = false
         assertThat(ballStack.availablePoints()).isEqualTo(13)
 
         ballStack.addNextBalls(4) // Size 7 - YELLOW()

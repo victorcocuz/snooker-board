@@ -45,7 +45,8 @@
                 android:id="@+id/l_summary_stats_tv_player_a_percentage"
                 style="@style/TextStatisticsHeader"
                 app:setStatsTableStyle="@{varTextType}"
-                app:setFrameScorePercentage="@{frameScoreA}"
+                app:setPercentageA="@{frameScoreA.successShots}"
+                app:setPercentageB="@{frameScoreA.missedShots}"
                 tools:text="50%" />
 
             <TextView
@@ -76,7 +77,8 @@
                 android:id="@+id/l_summary_stats_tv_player_b_percentage"
                 style="@style/TextStatisticsHeader"
                 app:setStatsTableStyle="@{varTextType}"
-                app:setFrameScorePercentage="@{frameScoreB}"
+                app:setPercentageA="@{frameScoreB.successShots}"
+                app:setPercentageB="@{frameScoreB.missedShots}"
                 tools:text="48%" />
 
             <TextView

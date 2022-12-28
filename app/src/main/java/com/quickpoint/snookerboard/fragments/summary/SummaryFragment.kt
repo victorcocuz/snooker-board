@@ -9,7 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import com.quickpoint.snookerboard.MatchViewModel
+import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentSummaryBinding
 import com.quickpoint.snookerboard.domain.DomainScore
@@ -21,7 +21,7 @@ class SummaryFragment : Fragment() {
     private val summaryVm: SummaryViewModel by lazy {
         ViewModelProvider(this, GenericViewModelFactory(this, null))[SummaryViewModel::class.java]
     }
-    private val matchVm: MatchViewModel by activityViewModels()
+    private val mainVm: MainViewModel by activityViewModels()
     private var scrollHeight = 0
     private var ghostHeight = 0
 
@@ -30,7 +30,7 @@ class SummaryFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         postponeEnterTransition()
-        matchVm.transitionToFragment(this, 200)
+        mainVm.transitionToFragment(this, 200)
 
         // Bind view elements
         val binding: FragmentSummaryBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_summary, container, false)
@@ -60,8 +60,8 @@ class SummaryFragment : Fragment() {
             fSummaryLStatsHeader.apply {
                 varBgType = 2
                 varTextType = 1
-                frameScoreA = DomainScore(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,-1)
-                frameScoreB = DomainScore(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
+                frameScoreA = DomainScore(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,-1, -1, -1, -1, -1, -1)
+                frameScoreB = DomainScore(-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1)
             }
 
             // Footer format
@@ -76,7 +76,7 @@ class SummaryFragment : Fragment() {
             summaryVm.apply {
                 eventSummaryAction.observe(viewLifecycleOwner, EventObserver { matchAction ->
                     if (matchAction == NAV_TO_PLAY) {
-                        matchVm.deleteMatchFromDb()
+                        mainVm.deleteMatchFromDb()
                         navigate(SummaryFragmentDirections.rulesFrag())
                     }
                 })

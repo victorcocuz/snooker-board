@@ -6,6 +6,8 @@
     <string name="l_game_actions_btn_snooker">SNOOKER</string>
     <string name="l_game_actions_btn_ball_miss">MISS</string>
     <string name="l_game_actions_btn_foul">FOUL</string>
+    <string name="l_game_actions_btn_long">LONG</string>
+    <string name="l_game_actions_btn_rest">REST</string>
 
     <!-- Fragment Rules -->
     <string name="l_rules_main_hint_name_first">First Name</string>
@@ -47,6 +49,9 @@
     <string name="l_game_score_tv_diff_label">Difference</string>
     <string name="l_game_score_tv_snookers_label">Number of Snookers</string>
     <string name="l_game_score_tv_fouls_label">Number of Fouls</string>
+    <string name="l_game_score_tv_long_shots_label">Percentage of Long Shots</string>
+    <string name="l_game_score_tv_rest_shots_label">Percentage of Rest Shots</string>
+    <string name="l_game_score_tv_points_with_no_return_label">Points without return</string>
     <string name="l_game_score_tv_percentage_label">Pot Success</string>
     <string name="l_game_score_tv_safety_percentage_label">Safety Success</string>
     <string name="l_game_score_tv_break_label">Highest Break</string>
@@ -69,8 +74,9 @@
     <!-- Fragment Foul -->
     <string name="f_dialog_foul_tv_balls_label">Which ball was fouled?</string>
     <string name="f_dialog_foul_tv_action_label">Do you wish to continue?</string>
+    <string name="f_dialog_foul_tv_shot_type_label">Was it a long or a rest shot?</string>
     <string name="f_dialog_foul_tv_reds_label">Were there any reds potted?</string>
-    <string name="f_dialog_foul_tv_freeball_label">Is it a freeball?</string>
+    <string name="f_dialog_foul_tv_freeball_label">Was it a freeball?</string>
     <string name="f_dialog_foul_btn_continue">OK, I will play</string>
     <string name="f_dialog_foul_btn_force_continue">Force continue</string>
     <string name="f_dialog_foul_btn_force_retake">Force retake</string>

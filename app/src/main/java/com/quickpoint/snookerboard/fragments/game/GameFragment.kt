@@ -13,24 +13,25 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.quickpoint.snookerboard.DialogViewModel
-import com.quickpoint.snookerboard.MatchViewModel
+import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.admob.AdMob
 import com.quickpoint.snookerboard.databinding.FragmentGameBinding
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.PotType.*
+import com.quickpoint.snookerboard.fragments.gamedialogs.DialogViewModel
 import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.*
 import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
 import com.quickpoint.snookerboard.utils.MatchState.*
+import com.quickpoint.snookerboard.utils.PlayerTagType.MATCH
 import timber.log.Timber
 
 
 class GameFragment : Fragment() {
     private lateinit var gameVm: GameViewModel
     private val dialogVm: DialogViewModel by activityViewModels()
-    private val matchVm: MatchViewModel by activityViewModels()
+    private val mainVm: MainViewModel by activityViewModels()
     private lateinit var binding: FragmentGameBinding
 
     override fun onCreateView(
@@ -48,8 +49,8 @@ class GameFragment : Fragment() {
         // Start new match or load existing match
         if (SETTINGS.matchState == RULES_IDLE) {
             gameVm.resetMatch()
-            matchVm.updateState(GAME_IN_PROGRESS)
-        } else matchVm.storedFrame.observe(viewLifecycleOwner, EventObserver { storedFrame ->
+            mainVm.updateState(GAME_IN_PROGRESS)
+        } else mainVm.storedFrame.observe(viewLifecycleOwner, EventObserver { storedFrame ->
             gameVm.loadMatch(storedFrame)
         })
 
@@ -60,15 +61,15 @@ class GameFragment : Fragment() {
 
             // Bind top and score layouts
             fGameLTop.apply {
-                varPlayerTagType = PlayerTagType.MATCH
-                varGameVm = this@GameFragment.gameVm
+                varPlayerTagType = MATCH
+                varGameVm = gameVm
             }
             fGameLScore.apply {
-                varGameVm = this@GameFragment.gameVm
+                varGameVm = gameVm
             }
 
             // Bind break layout
-            varGameVm = this@GameFragment.gameVm
+            varGameVm = gameVm
             fGameRvBreak.apply {
                 adapter = BreakAdapter(requireActivity())
                 itemAnimator = null
@@ -104,7 +105,7 @@ class GameFragment : Fragment() {
                 Timber.i("Observed eventFrameAction: $action")
                 when (action) {
                     // Directly observed from gameVm
-                    TRANSITION_TO_FRAGMENT -> matchVm.transitionToFragment(this@GameFragment, 200)
+                    TRANSITION_TO_FRAGMENT -> mainVm.transitionToFragment(this@GameFragment, 200)
                     FRAME_UPDATED -> {
                         requireActivity().invalidateOptionsMenu() // Reset the menu every time the frame has been updated
                         Timber.i(getString(R.string.helper_update_frame_info))
@@ -125,7 +126,7 @@ class GameFragment : Fragment() {
                         val actions = action.getListOfDialogActions(score.isMatchEnding(), score.isNoFrameFinished(), isFrameMathematicallyOver())
                         navigate(GameFragmentDirections.genDialogFrag(actions[0], actions[1], actions[2]))
                     }
-                    FRAME_LOG_ACTIONS -> matchVm.emailLogs()
+                    FRAME_LOG_ACTIONS -> mainVm.emailLogs()
                     FRAME_FREE_ACTIVE, FRAME_UNDO, FRAME_REMOVE_RED, FRAME_RESPOT_BLACK -> gameVm.assignPot(action.getPotType())
                     FRAME_MISS_FORFEIT -> gameVm.onEventGameAction(action.queryEndFrameOrMatch(score.isMatchEnding(),
                         isFrameMathematicallyOver()))
@@ -135,15 +136,15 @@ class GameFragment : Fragment() {
                         gameVm.resetFrame(action)
                     }
                     MATCH_ENDED_DISCARD_FRAME -> {
-                        matchVm.deleteCrtFrameFromDb()
+                        mainVm.deleteCrtFrameFromDb()
                         gameVm.onEventGameAction(NAV_TO_POST_MATCH)
                     }
                     NAV_TO_POST_MATCH -> {
-                        matchVm.updateState(SUMMARY)
+                        mainVm.updateState(SUMMARY)
                         navigate(GameFragmentDirections.summaryFrag(), adMob)
                     }
                     MATCH_CANCEL -> {
-                        matchVm.deleteMatchFromDb()
+                        mainVm.deleteMatchFromDb()
                         navigate(GameFragmentDirections.rulesFrag(), adMob)
                     }
                     else -> Timber.i("No implementation for observed action $action")

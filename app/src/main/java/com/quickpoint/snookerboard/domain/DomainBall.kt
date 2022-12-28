@@ -3,11 +3,10 @@ package com.quickpoint.snookerboard.domain
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.annotations.VisibleForTesting
 import com.quickpoint.snookerboard.domain.BallType.*
 import com.quickpoint.snookerboard.domain.DomainBall.*
-import com.quickpoint.snookerboard.domain.DomainFreeBallInfo.FREEBALLINFO
 import com.quickpoint.snookerboard.domain.PotAction.RETAKE
 import com.quickpoint.snookerboard.domain.PotType.*
+import com.quickpoint.snookerboard.utils.FrameToggles.FRAMETOGGLES
 import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
-import timber.log.Timber
 
 // The DOMAIN Ball is the simplest game data unit. It stores ball information
 enum class BallType { TYPE_NOBALL, TYPE_WHITE, TYPE_RED, TYPE_YELLOW, TYPE_GREEN, TYPE_BROWN, TYPE_BLUE, TYPE_PINK, TYPE_BLACK, TYPE_COLOR, TYPE_FREEBALL, TYPE_FREEBALLTOGGLE, TYPE_FREEBALLAVAILABLE }
@@ -63,7 +62,7 @@ fun MutableList<DomainBall>.isInColors() = size <= 7
 fun MutableList<DomainBall>.isInColorsWithFreeBall() = size <= 8
 fun MutableList<DomainBall>.wasPreviousBallColor() = size in (7..37).filter { it % 2 == 1 }
 fun MutableList<DomainBall>.isThisBallColorAndNotLast() = size in (10..38).filter { it % 2 == 0 }
-fun MutableList<DomainBall>.isAddRedAvailable() = isThisBallColorAndNotLast() && !FREEBALLINFO.isActive
+fun MutableList<DomainBall>.isAddRedAvailable() = isThisBallColorAndNotLast() && !FRAMETOGGLES.isFreeball
 fun MutableList<DomainBall>.redsOnTheTable(): Int {
     var counter = 0
     forEach {
@@ -78,8 +77,8 @@ fun MutableList<DomainBall>.maxRemoveReds() = minOf(redsOnTheTable(), 3)
 fun MutableList<DomainBall>.foulValue() = if (size > 4) 4 else (7 - 2 * (size - 1))
 fun MutableList<DomainBall>?.availablePoints(): Int {
     if (this == null) return 0
-    val freeSize = (if (FREEBALLINFO.isActive) size - 1 else size)
-    return if (freeSize <= 7) (-(8 - freeSize) * ((8 - freeSize) + 1) + 56) / 2 + (if (FREEBALLINFO.isActive) (9 - freeSize) else 0)
+    val freeSize = (if (FRAMETOGGLES.isFreeball) size - 1 else size)
+    return if (freeSize <= 7) (-(8 - freeSize) * ((8 - freeSize) + 1) + 56) / 2 + (if (FRAMETOGGLES.isFreeball) (9 - freeSize) else 0)
     else 27 + ((size - 7) / 2) * 8 + (if (size % 2 == 0) 7 else 0)
 }
 
@@ -89,22 +88,23 @@ fun MutableList<DomainBall>.resetBalls() {
     addNextBalls(SETTINGS.reds * 2 + 7)
 }
 
-fun MutableList<DomainBall>.handlePotBallStack(potType: PotType, potAction: PotAction) {
+fun MutableList<DomainBall>.onPot(potType: PotType, potAction: PotAction) {
     when (potType) {
         TYPE_HIT, TYPE_REMOVE_COLOR, TYPE_FREE -> removeBalls(1)
         TYPE_ADDRED, TYPE_REMOVE_RED -> removeBalls(2)
         TYPE_SAFE, TYPE_MISS, TYPE_SAFE_MISS, TYPE_SNOOKER, TYPE_FOUL -> {
-            Timber.e("TYPE IS $potType")
             if (last() is COLOR && potAction != RETAKE) removeBalls(1)
-            if (last() is FREEBALL) removeFreeBall()
+            if (last() is FREEBALL) {
+                removeFreeBall()
+            }
         }
-        TYPE_FREE_ACTIVE -> if (FREEBALLINFO.isActive) addFreeBall(1) else removeFreeBall()
+        TYPE_FREE_ACTIVE -> if (FRAMETOGGLES.isFreeball) addFreeBall(1) else removeFreeBall()
         TYPE_RESPOT_BLACK -> addBalls(BLACK())
         TYPE_FOUL_ATTEMPT -> {}
     }
 }
 
-fun MutableList<DomainBall>.handleUndoBallStack(potType: PotType, potAction: PotAction, frameStack: MutableList<DomainBreak>) {
+fun MutableList<DomainBall>.onUndo(potType: PotType, potAction: PotAction, frameStack: MutableList<DomainBreak>) {
     when (potType) {
         TYPE_HIT, TYPE_REMOVE_COLOR -> addNextBalls(1)
         TYPE_FREE -> addFreeBall(0)
@@ -112,13 +112,13 @@ fun MutableList<DomainBall>.handleUndoBallStack(potType: PotType, potAction: Pot
         TYPE_SAFE, TYPE_MISS, TYPE_SAFE_MISS, TYPE_SNOOKER, TYPE_FOUL -> {
             when (frameStack.lastPotType()) {
                 TYPE_REMOVE_RED -> if (frameStack.lastBallTypeBeforeRemoveBall() == TYPE_RED) addNextBalls(1)
-                TYPE_HIT -> if (frameStack.lastBallType() == TYPE_COLOR && potAction != RETAKE) addNextBalls(1)
+                TYPE_HIT -> if (frameStack.lastBallType() == TYPE_RED && potAction != RETAKE) addNextBalls(1)
                 TYPE_FREE -> if (!isInColors()) addNextBalls(1) // Adds a color to the ballstack
                 TYPE_FREE_ACTIVE -> addFreeBall(1)
                 else -> {}
             }
         }
-        TYPE_FREE_ACTIVE -> if (FREEBALLINFO.isActive) removeFreeBall() else addFreeBall(1)
+        TYPE_FREE_ACTIVE -> if (FRAMETOGGLES.isFreeball) removeFreeBall() else addFreeBall(1)
         TYPE_RESPOT_BLACK -> removeBalls(1)
         TYPE_FOUL_ATTEMPT -> {}
     }

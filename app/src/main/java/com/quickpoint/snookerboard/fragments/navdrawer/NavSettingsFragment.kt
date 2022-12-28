@@ -6,14 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
-import com.quickpoint.snookerboard.MatchViewModel
+import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentNavSettingsBinding
-import com.quickpoint.snookerboard.utils.MatchToggle.TOGGLE
+import com.quickpoint.snookerboard.utils.MatchToggle.MATCHTOGGLES
 import com.quickpoint.snookerboard.utils.vibrateOnce
 
 class NavSettingsFragment : androidx.fragment.app.Fragment() {
-    private val matchVm: MatchViewModel by activityViewModels()
+    private val mainVm: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,14 +26,14 @@ class NavSettingsFragment : androidx.fragment.app.Fragment() {
             fNavSettingsLToggleRules.apply {
                 lNavSettingsToggleTvTitle.text = getString(R.string.f_nav_settings_toggle_rules_advanced_title)
                 lNavSettingsToggleTvDescription.text = getString(R.string.f_nav_settings_toggle_rules_advanced_description)
-                lNavSettingsToggleScSlider.isChecked = matchVm.matchToggle.value!!.toggleAdvancedRulesOn()
-                matchVm.matchToggle.observe(viewLifecycleOwner) { toggle ->
+                lNavSettingsToggleScSlider.isChecked = mainVm.matchToggle.value!!.toggleAdvancedRulesOn()
+                mainVm.matchToggle.observe(viewLifecycleOwner) { toggle ->
                     lNavSettingsToggleScSlider.isChecked = toggle.toggleAdvancedRulesOn()
                 }
                 lNavSettingsLlRulesAdvanced.setOnClickListener {
-                    TOGGLE.switchToggleAdvancedRules()
+                    MATCHTOGGLES.switchToggleAdvancedRules()
                     context?.vibrateOnce()
-                    matchVm.updateMatchToggle()
+                    mainVm.updateMatchToggle()
                 }
             }
         }

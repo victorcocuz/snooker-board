@@ -12,7 +12,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
-import com.quickpoint.snookerboard.MatchViewModel
+import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentRulesBinding
 import com.quickpoint.snookerboard.utils.EventObserver
@@ -26,7 +26,7 @@ import timber.log.Timber
 
 class RulesFragment : Fragment() {
     // Variables
-    private val matchVm: MatchViewModel by activityViewModels()
+    private val mainVm: MainViewModel by activityViewModels()
     private val rulesVm: RulesViewModel by viewModels()
 
     override fun onCreateView(
@@ -37,14 +37,14 @@ class RulesFragment : Fragment() {
 
         // Check match state and navigate to the correct fragment when applicable
         postponeEnterTransition() // Wait for data to load before displaying fragment
-        if (SETTINGS.matchState == RULES_IDLE) matchVm.transitionToFragment(this, 0) // For returning from navDrawer
-        matchVm.matchState.observe(viewLifecycleOwner, EventObserver { matchState ->
+        if (SETTINGS.matchState == RULES_IDLE) mainVm.transitionToFragment(this, 0) // For returning from navDrawer
+        mainVm.matchState.observe(viewLifecycleOwner, EventObserver { matchState ->
             Timber.i("ObservedOnce matchState: $matchState")
             when (matchState) {
                 RULES_IDLE -> {
                     rulesVm.updateRules()
                     rulesVm.updatePlayer()
-                    matchVm.transitionToFragment(this, 0)
+                    mainVm.transitionToFragment(this, 0)
                 }
                 GAME_IN_PROGRESS, SUMMARY -> {
                     startPostponedEnterTransition()
@@ -63,7 +63,6 @@ class RulesFragment : Fragment() {
 
             // Bind fragment rules elements
             fRulesLMain.apply {
-                varMatchVm = matchVm
                 varRulesVm = rulesVm
                 lRulesMainNpFrameCount.apply { // For displayedValues get an array of odd numbers for the number of frames
                     minValue = 1
@@ -73,7 +72,6 @@ class RulesFragment : Fragment() {
                 }
             }
             fRulesLExtra.apply {
-                varMatchVm = matchVm
                 varRulesVm = rulesVm
             }
         }
@@ -91,7 +89,7 @@ class RulesFragment : Fragment() {
             }
         })
 
-        matchVm.matchToggle.observe(viewLifecycleOwner) { toggle ->
+        mainVm.matchToggle.observe(viewLifecycleOwner) { toggle ->
             binding.fRulesLExtra.root.visibility = if (toggle.toggleAdvancedRulesOn()) VISIBLE else GONE
         }
 

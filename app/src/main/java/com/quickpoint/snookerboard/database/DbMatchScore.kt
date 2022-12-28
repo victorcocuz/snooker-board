@@ -19,7 +19,12 @@ data class DbScore(
     val safetyMissedShots: Int,
     val snookers: Int,
     val fouls: Int,
-    val highestBreak: Int
+    val highestBreak: Int,
+    val longShotsSuccess: Int,
+    val longShotsMissed: Int,
+    val restShotsSuccess: Int,
+    val restShotsMissed: Int,
+    val pointsWithNoReturn: Int
 )
 
 // CONVERTER method from list of DATABASE Break to list of DOMAIN Player Score
@@ -38,6 +43,11 @@ fun List<DbScore>.asDomainScoreList(): MutableList<DomainScore> {
             snookers = it.snookers,
             fouls = it.fouls,
             highestBreak = it.highestBreak,
+            longShotsSuccess = it.longShotsSuccess,
+            longShotsMissed = it.longShotsMissed,
+            restShotsSuccess = it.restShotsSuccess,
+            restShotsMissed = it.restShotsMissed,
+            pointsWithoutReturn = it.pointsWithNoReturn
         )
     }.toMutableList()
 }

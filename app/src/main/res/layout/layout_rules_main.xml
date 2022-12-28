@@ -11,10 +11,6 @@
         <import type="com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS" />
 
         <variable
-            name="varMatchVm"
-            type="com.quickpoint.snookerboard.MatchViewModel" />
-
-        <variable
             name="varRulesVm"
             type="com.quickpoint.snookerboard.fragments.rules.RulesViewModel" />
 

@@ -13,7 +13,8 @@ data class DbBreak(
     val breakId: Long,
     val player: Int,
     val frameId: Long,
-    val breakSize: Int
+    val breakSize: Int,
+    val pointsWithoutReturn: Int
 )
 
 // Used to combine Break and Pots information for DATABASE storage
@@ -34,7 +35,8 @@ fun List<DbBreakWithPots>.asDomainBreakList(): MutableList<DomainBreak> {
             player = it.matchBreak.player,
             frameId = it.matchBreak.frameId,
             pots = it.matchPots.asDomainPotList(),
-            breakSize = it.matchBreak.breakSize
+            breakSize = it.matchBreak.breakSize,
+            pointsWithoutReturn = it.matchBreak.pointsWithoutReturn
         )
     }.toMutableList()
 }

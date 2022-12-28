@@ -34,7 +34,12 @@ class SnookerRepository constructor(database: SnookerDatabase) {
                 snookerDbDao.getSumOfSafetyMissedShots(playerId),
                 snookerDbDao.getSumOfSnookers(playerId),
                 snookerDbDao.getSumOfFouls(playerId),
-                snookerDbDao.getMaxBreak(playerId)
+                snookerDbDao.getMaxBreak(playerId),
+                snookerDbDao.getSumOfLongShotsSuccess(playerId),
+                snookerDbDao.getSumOfLongShotsMissed(playerId),
+                snookerDbDao.getSumOfRestShotsSuccess(playerId),
+                snookerDbDao.getSumOfRestShotsMissed(playerId),
+                snookerDbDao.getMaxPointsWithNoReturn(playerId)
             )
         }
     }

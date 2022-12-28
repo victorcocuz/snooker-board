@@ -15,7 +15,7 @@
 
         <variable
             name="varDialogVm"
-            type="com.quickpoint.snookerboard.DialogViewModel" />
+            type="com.quickpoint.snookerboard.fragments.gamedialogs.DialogViewModel" />
 
         <variable
             name="varGameVm"
@@ -43,6 +43,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Balls -->
         <TextView
             android:id="@+id/f_dialog_foul_tv_balls_label"
             style="@style/TextDialog"
@@ -75,7 +76,7 @@
         </LinearLayout>
 
         <FrameLayout
-            android:id="@+id/f_dialog_foul_fl_line_hor_one"
+            android:id="@+id/f_dialog_foul_fl_line_hor_balls"
             style="@style/LineHorizontalChapter"
             android:layout_marginStart="@dimen/margin_layout_offset"
             android:layout_marginTop="@dimen/margin_header_below"
@@ -84,6 +85,115 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_ll_balls" />
 
+        <!-- Action -->
+        <TextView
+            android:id="@+id/f_dialog_foul_tv_action_label"
+            style="@style/TextDialog"
+            android:layout_marginTop="@dimen/margin_header_above"
+            android:paddingStart="@dimen/margin_layout_offset"
+            android:paddingEnd="@dimen/margin_layout_offset"
+            android:text="@string/f_dialog_foul_tv_action_label"
+            app:layout_constraintStart_toStartOf="@+id/f_dialog_foul_tv_balls_label"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_fl_line_hor_balls" />
+
+        <TextView
+            android:id="@+id/f_dialog_foul_btn_continue"
+            style="@style/ButtonNarrow"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="@dimen/margin_header_below"
+            android:onClick="@{() -> varDialogVm.onActionClicked(PotAction.SWITCH)}"
+            android:text="@string/f_dialog_foul_btn_continue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_tv_action_label"
+            app:setSelected="@{varDialogVm.actionClicked == PotAction.SWITCH}" />
+
+        <TextView
+            android:id="@+id/f_dialog_foul_btn_force_continue"
+            style="@style/ButtonNarrow"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="@dimen/margin_layout_offset"
+            android:onClick="@{() -> varDialogVm.onActionClicked(PotAction.CONTINUE)}"
+            android:text="@string/f_dialog_foul_btn_force_continue"
+            app:layout_constraintEnd_toStartOf="@+id/f_dialog_foul_btn_force_retake"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_btn_continue"
+            app:setEnabled="@{varGameVm.displayFrame.isFoulAndAMiss()}"
+            app:setSelected="@{varDialogVm.actionClicked == PotAction.CONTINUE}" />
+
+        <TextView
+            android:id="@+id/f_dialog_foul_btn_force_retake"
+            style="@style/ButtonNarrow"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="@dimen/margin_layout_offset"
+            android:onClick="@{() -> varDialogVm.onActionClicked(PotAction.RETAKE)}"
+            android:text="@string/f_dialog_foul_btn_force_retake"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/f_dialog_foul_btn_force_continue"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_btn_continue"
+            app:setEnabled="@{varGameVm.displayFrame.isFoulAndAMiss()}"
+            app:setSelected="@{varDialogVm.actionClicked == PotAction.RETAKE}" />
+
+        <FrameLayout
+            android:id="@+id/f_dialog_foul_fl_line_hor_action"
+            style="@style/LineHorizontalChapter"
+            android:layout_marginStart="@dimen/margin_layout_offset"
+            android:layout_marginTop="@dimen/margin_header_above"
+            android:layout_marginEnd="@dimen/margin_layout_offset"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_btn_force_retake" />
+
+        <!-- Shot type -->
+        <TextView
+            android:id="@+id/f_dialog_tv_btn_shot_type_label"
+            style="@style/TextDialog"
+            android:layout_marginTop="@dimen/margin_header_above"
+            android:paddingStart="@dimen/margin_layout_offset"
+            android:paddingEnd="@dimen/margin_layout_offset"
+            android:text="@string/f_dialog_foul_tv_shot_type_label"
+            app:layout_constraintStart_toStartOf="@+id/f_dialog_foul_tv_balls_label"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_fl_line_hor_action"
+            app:setRemoveRedsVisibility="@{varGameVm.ballStack}"
+            app:setRemoveRedsVisibilityRedsDesired="@{1}" />
+
+        <TextView
+            android:id="@+id/f_dialog_tv_btn_shot_type_long"
+            style="@style/ButtonNarrow"
+            android:layout_width="wrap_content"
+            android:onClick="@{() -> varGameVm.onToggleLongClicked()}"
+            android:text="@string/l_game_actions_btn_long"
+            android:layout_marginBottom="@dimen/margin_xsmall"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_tv_btn_shot_type_label"
+            app:layout_constraintEnd_toStartOf="@id/f_dialog_tv_btn_shot_type_rest"
+            app:layout_constraintStart_toStartOf="parent"
+            app:setSelected="@{varGameVm.toggles.longShot}" />
+
+
+        <TextView
+            android:id="@+id/f_dialog_tv_btn_shot_type_rest"
+            style="@style/ButtonNarrow"
+            android:layout_width="wrap_content"
+            android:onClick="@{() -> varGameVm.onToggleRestClicked()}"
+            android:text="@string/l_game_actions_btn_rest"
+            app:layout_constraintBottom_toBottomOf="@id/f_dialog_tv_btn_shot_type_long"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/f_dialog_tv_btn_shot_type_long"
+            app:setSelected="@{varGameVm.toggles.restShot}" />
+
+        <FrameLayout
+            android:id="@+id/f_dialog_foul_fl_line_hor_shot_type"
+            style="@style/LineHorizontalChapter"
+            android:layout_marginStart="@dimen/margin_layout_offset"
+            android:layout_marginTop="@dimen/margin_header_above"
+            android:layout_marginEnd="@dimen/margin_layout_offset"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_tv_btn_shot_type_long"
+            app:setRemoveRedsVisibility="@{varGameVm.ballStack}"
+            app:setRemoveRedsVisibilityRedsDesired="@{1}" />
+
+        <!-- Remove reds -->
         <TextView
             android:id="@+id/f_dialog_foul_tv_reds_label"
             style="@style/TextDialog"
@@ -92,7 +202,7 @@
             android:paddingEnd="@dimen/margin_layout_offset"
             android:text="@string/f_dialog_foul_tv_reds_label"
             app:layout_constraintStart_toStartOf="@+id/f_dialog_foul_tv_balls_label"
-            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_fl_line_hor_one"
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_fl_line_hor_shot_type"
             app:setRemoveRedsVisibility="@{varGameVm.ballStack}"
             app:setRemoveRedsVisibilityRedsDesired="@{1}" />
 
@@ -161,7 +271,7 @@
             app:setRemoveRedsVisibilityRedsDesired="@{3}" />
 
         <FrameLayout
-            android:id="@+id/f_dialog_foul_fl_line_hor_two"
+            android:id="@+id/f_dialog_foul_fl_line_hor_remove_reds"
             style="@style/LineHorizontalChapter"
             android:layout_marginStart="@dimen/margin_layout_offset"
             android:layout_marginTop="@dimen/margin_header_above"
@@ -172,64 +282,7 @@
             app:setRemoveRedsVisibility="@{varGameVm.ballStack}"
             app:setRemoveRedsVisibilityRedsDesired="@{1}" />
 
-        <TextView
-            android:id="@+id/f_dialog_foul_tv_action_label"
-            style="@style/TextDialog"
-            android:layout_marginTop="@dimen/margin_header_above"
-            android:paddingStart="@dimen/margin_layout_offset"
-            android:paddingEnd="@dimen/margin_layout_offset"
-            android:text="@string/f_dialog_foul_tv_action_label"
-            app:layout_constraintStart_toStartOf="@+id/f_dialog_foul_tv_balls_label"
-            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_fl_line_hor_two" />
-
-        <TextView
-            android:id="@+id/f_dialog_foul_btn_continue"
-            style="@style/ButtonNarrow"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="@dimen/margin_header_below"
-            android:onClick="@{() -> varDialogVm.onActionClicked(PotAction.SWITCH)}"
-            android:text="@string/f_dialog_foul_btn_continue"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_tv_action_label"
-            app:setSelected="@{varDialogVm.actionClicked == PotAction.SWITCH}" />
-
-        <TextView
-            android:id="@+id/f_dialog_foul_btn_force_continue"
-            style="@style/ButtonNarrow"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="@dimen/margin_layout_offset"
-            android:onClick="@{() -> varDialogVm.onActionClicked(PotAction.CONTINUE)}"
-            android:text="@string/f_dialog_foul_btn_force_continue"
-            app:layout_constraintEnd_toStartOf="@+id/f_dialog_foul_btn_force_retake"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_btn_continue"
-            app:setEnabled="@{varGameVm.displayFrame.isFoulAndAMiss()}"
-            app:setSelected="@{varDialogVm.actionClicked == PotAction.CONTINUE}" />
-
-        <TextView
-            android:id="@+id/f_dialog_foul_btn_force_retake"
-            style="@style/ButtonNarrow"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="@dimen/margin_layout_offset"
-            android:onClick="@{() -> varDialogVm.onActionClicked(PotAction.RETAKE)}"
-            android:text="@string/f_dialog_foul_btn_force_retake"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/f_dialog_foul_btn_force_continue"
-            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_btn_continue"
-            app:setEnabled="@{varGameVm.displayFrame.isFoulAndAMiss()}"
-            app:setSelected="@{varDialogVm.actionClicked == PotAction.RETAKE}" />
-
-        <FrameLayout
-            android:id="@+id/f_dialog_foul_fl_line_hor_three"
-            style="@style/LineHorizontalChapter"
-            android:layout_marginStart="@dimen/margin_layout_offset"
-            android:layout_marginTop="@dimen/margin_header_above"
-            android:layout_marginEnd="@dimen/margin_layout_offset"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_btn_force_retake" />
-
+        <!-- Freeball -->
         <TextView
             android:id="@+id/f_dialog_foul_tv_freeball_label"
             style="@style/TextDialog"
@@ -238,7 +291,7 @@
             android:paddingEnd="@dimen/margin_layout_offset"
             android:text="@string/f_dialog_foul_tv_freeball_label"
             app:layout_constraintStart_toStartOf="@+id/f_dialog_foul_tv_balls_label"
-            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_fl_line_hor_three" />
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_fl_line_hor_remove_reds" />
 
         <TextView
             android:id="@+id/f_dialog_foul_btn_free_ball"
@@ -249,21 +302,22 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:setEnabled="@{varDialogVm.actionClicked == PotAction.SWITCH}"
-            android:onClick="@{() -> varDialogVm.onFreeballClicked()}"
+            android:onClick="@{() -> varDialogVm.onToggleFreeballedClicked()}"
             app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_tv_freeball_label"
-            app:setSelected="@{varDialogVm.freeballInfo.isActive}" />
+            app:setSelected="@{varDialogVm.toggles.freeball}" />
 
         <FrameLayout
-            android:id="@+id/f_dialog_foul_fl_line_hor_four"
+            android:id="@+id/f_dialog_foul_fl_line_hor_freeball"
             style="@style/LineHorizontalChapter"
             android:layout_marginStart="@dimen/margin_layout_offset"
             android:layout_marginTop="@dimen/margin_header_above"
+            android:layout_marginBottom="@dimen/margin_layout_offset"
             android:layout_marginEnd="@dimen/margin_layout_offset"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_btn_free_ball" />
 
-
+        <!-- Confirm / Cancel -->
         <TextView
             android:id="@+id/f_dialog_foul_btn_cancel"
             style="@style/ButtonNarrow"
@@ -275,7 +329,7 @@
             android:text="@string/f_dialog_foul_btn_cancel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/f_dialog_foul_btn_submit"
-            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_fl_line_hor_four" />
+            app:layout_constraintTop_toBottomOf="@+id/f_dialog_foul_fl_line_hor_freeball" />
 
         <TextView
             android:id="@+id/f_dialog_foul_btn_submit"

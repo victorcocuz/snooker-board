@@ -22,8 +22,9 @@ sealed class MatchSettings(
     var counterRetake: Int,
     var handicapFrame: Int,
     var handicapMatch: Int,
+    var ongoingPointsWithoutReturn: Int
 ) {
-    object SETTINGS : MatchSettings(NONE, 0, 2, 15, 0, -1, -1, 0, 0, 0, 0, 0) {
+    object SETTINGS : MatchSettings(NONE, 0, 2, 15, 0, -1, -1, 0, 0, 0, 0, 0,0) {
 
         // Assign methods
         fun setMatchState(state: MatchState): Int {
@@ -46,6 +47,7 @@ sealed class MatchSettings(
             counterRetake = 0
             handicapFrame = 0
             handicapMatch = 0
+            ongoingPointsWithoutReturn = 0
             return -1
         }
 
@@ -61,6 +63,7 @@ sealed class MatchSettings(
             retakeCounter: Int,
             handicapFrame: Int,
             handicapMatch: Int,
+            ongoingPointsWithoutReturn: Int
         ) {
             this.uniqueId = uniqueId
             this.maxFramesAvailable = maxFramesAvailable
@@ -73,6 +76,7 @@ sealed class MatchSettings(
             this.counterRetake = retakeCounter
             this.handicapFrame = handicapFrame
             this.handicapMatch = handicapMatch
+            this.ongoingPointsWithoutReturn = ongoingPointsWithoutReturn
             Timber.i("assignRules(): ${getAsText()}")
         }
 

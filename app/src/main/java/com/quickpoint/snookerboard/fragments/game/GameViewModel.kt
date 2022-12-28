@@ -9,13 +9,13 @@ import androidx.lifecycle.MutableLiveData
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.DomainBall.FREEBALL
 import com.quickpoint.snookerboard.domain.DomainBall.NOBALL
-import com.quickpoint.snookerboard.domain.DomainFreeBallInfo.FREEBALLINFO
 import com.quickpoint.snookerboard.domain.DomainPot.FOULATTEMPT
 import com.quickpoint.snookerboard.domain.DomainPot.FREE
 import com.quickpoint.snookerboard.domain.PotAction.FIRST
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.Event
+import com.quickpoint.snookerboard.utils.FrameToggles.FRAMETOGGLES
 import com.quickpoint.snookerboard.utils.JobQueue
 import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.MatchAction.*
@@ -48,6 +48,17 @@ class GameViewModel(
     private val _displayFrame = MutableLiveData<DomainFrame>()
     val displayFrame: LiveData<DomainFrame> = _displayFrame
 
+    private val _toggles = MutableLiveData(FRAMETOGGLES)
+    val toggles: LiveData<FRAMETOGGLES> = _toggles
+    fun onToggleLongClicked() {
+        FRAMETOGGLES.toggleLongShot()
+        _toggles.postValue(FRAMETOGGLES)
+    }
+    fun onToggleRestClicked() {
+        FRAMETOGGLES.toggleRestShot()
+        _toggles.postValue(FRAMETOGGLES)
+    }
+
     private val _crtPlayer = MutableLiveData<Int>()
     val crtPlayer: LiveData<Int> = _crtPlayer
     private fun onEventFrameUpdated(actionLog: DomainActionLog) = jobQueue.submit {
@@ -55,6 +66,7 @@ class GameViewModel(
         if (actionLogs.size > 0) snookerRepository.saveCurrentFrame(_displayFrame.value!!)
         actionLogs.addLog(actionLog)
         _crtPlayer.value = SETTINGS.crtPlayer
+        _toggles.postValue(FRAMETOGGLES)
         onEventGameAction(FRAME_UPDATED)
     }
 
@@ -77,7 +89,7 @@ class GameViewModel(
     }
 
     fun resetFrame(matchAction: MatchAction) { // Reset all frame values on match reset, frame rerack and frame start new
-        FREEBALLINFO.setInactive()
+        FRAMETOGGLES.setFreeballInactive()
         SETTINGS.resetFrameAndGetFirstPlayer(matchAction)
         score.resetFrame(matchAction)
         ballStack.resetBalls()
@@ -86,25 +98,24 @@ class GameViewModel(
     }
 
     fun endFrame(matchAction: MatchAction) { // Update frame data in match view model
-        score.addMatchPointAndAssignFrameId()
+        score.endFrame()
         onEventFrameUpdated(DomainActionLog("endFrame()"))
         if (matchAction in listOf(FRAME_MISS_FORFEIT, FRAME_TO_END, FRAME_ENDED)) onEventGameAction(FRAME_START_NEW, true)
         if (matchAction in listOf(MATCH_TO_END, MATCH_ENDED)) onEventGameAction(NAV_TO_POST_MATCH, true)
     }
 
-    // Assign pot action
-    @JvmOverloads
+    @JvmOverloads // Assign pot action
     fun assignPot(potType: PotType?, ball: DomainBall = NOBALL(), action: PotAction = FIRST) {
         if (!isUpdateInProgress) {
             isUpdateInProgress = true
             if (potType == null) handleUndo()
             else {
-                val pot = potType.getPotFromType(ball, action)
+                val pot = potType.getPotFromType(ball, action, FRAMETOGGLES.getShotType())
                 if (handlePotExceptionsBefore(pot)) {
                     isUpdateInProgress = false
                     return
                 }
-                handlePot(if (pot.ball is FREEBALL) FREE(ball = FREEBALL(points = pot.ball.points)) else pot)
+                handlePot(if (pot.ball is FREEBALL) FREE(ball = FREEBALL(points = pot.ball.points), shotType = FRAMETOGGLES.getShotType()) else pot)
                 handlePotExceptionsPost(pot)
             }
             isUpdateInProgress = false
@@ -120,10 +131,10 @@ class GameViewModel(
 
     private fun handlePot(pot: DomainPot) {
         pot.potId = SETTINGS.assignUniqueId()
-        FREEBALLINFO.handlePotFreeballInfo(pot)
-        ballStack.handlePotBallStack(pot.potType, pot.potAction)
-        frameStack.onPot(pot)
-        score.calculatePoints(pot, 1, ballStack.foulValue(), frameStack)
+        FRAMETOGGLES.handlePotFreeballToggle(pot)
+        ballStack.onPot(pot.potType, pot.potAction)
+        frameStack.onPot(pot, score[SETTINGS.crtPlayer].pointsWithoutReturn, score)
+        score.calculatePoints(pot, 1, ballStack.foulValue())
         val actionLog = pot.getActionLog("handlePot()", ballStack.lastOrNull()?.ballType, frameStack.size)
         SETTINGS.setNextPlayerFromPotAction(pot.potAction)
         onEventFrameUpdated(actionLog)
@@ -144,11 +155,11 @@ class GameViewModel(
     // Handle Undo
     private fun handleUndo() {
         SETTINGS.crtPlayer = frameStack.last().player
-        val pot = frameStack.removeLastPotFromFrameStack()
+        val pot = frameStack.removeLastPotFromFrameStack(score)
         val actionLog = pot.getActionLog("HandleUndo()", ballStack.lastOrNull()?.ballType, frameStack.size)
-        ballStack.handleUndoBallStack(pot.potType, pot.potAction, frameStack)
-        FREEBALLINFO.handleUndoFreeballInfo(pot.potType, frameStack.lastPotType())
-        score.calculatePoints(pot, -1, ballStack.foulValue(), frameStack)
+        ballStack.onUndo(pot.potType, pot.potAction, frameStack)
+        FRAMETOGGLES.handleUndoFreeballToggle(pot.potType, frameStack.lastPotType())
+        score.calculatePoints(pot, -1, ballStack.foulValue())
         onEventFrameUpdated(actionLog)
         handleUndoExceptionsPost(pot)
     }

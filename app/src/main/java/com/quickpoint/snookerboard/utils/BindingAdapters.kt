@@ -39,17 +39,6 @@ fun TextView.setVisible(isVisible: Boolean) {
     }
 }
 
-@BindingAdapter("setFreeballVisible")
-fun TextView.setFreeballVisible(isVisible: Boolean) {
-    visibility = when (isVisible) {
-        true -> {
-            if (visibility == INVISIBLE) startAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_in_short))
-            VISIBLE
-        }
-        false -> GONE
-    }
-}
-
 // Game Display
 @BindingAdapter("setActivePlayer", "setActivePlayerTag")
 fun LinearLayout.setActivePlayer(isActivePlayer: Boolean, activePlayerTag: PlayerTagType) {

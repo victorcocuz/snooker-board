@@ -5,27 +5,16 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.domain.DomainScore
 import com.quickpoint.snookerboard.utils.StatisticsType.*
 import java.text.DecimalFormat
 
 // Statistics Adapters
-@BindingAdapter("setFrameScorePercentage")
-fun TextView.setFrameScorePercentage(frameScore: DomainScore?) = frameScore?.apply {
+@BindingAdapter("setPercentageA", "setPercentageB")
+fun TextView.setPercentage(scoreA: Int, scoreB: Int) {
     val df = DecimalFormat("##%")
-    text = when ((successShots + missedShots)) {
-        in (1..10000) -> df.format((successShots.toDouble() / (successShots.toDouble() + missedShots.toDouble())))
+    text = when ((scoreA + scoreB)) {
+        in (1..10000) -> df.format((scoreA.toDouble() / (scoreA.toDouble() + scoreB.toDouble())))
         -2 -> context.getString(R.string.l_summary_tv_header_percentage)
-        else -> "N/A"
-    }
-}
-
-@BindingAdapter("setFrameSafetyPercentage")
-fun TextView.setFrameSafetyPercentage(frameScore: DomainScore?) = frameScore?.apply {
-    val df = DecimalFormat("##%")
-    text = when ((safetySuccessShots + safetyMissedShots)) {
-        in (1..10000) -> df.format((safetySuccessShots.toDouble() / (safetySuccessShots.toDouble() + safetyMissedShots.toDouble())))
-        -1 -> context.getString(R.string.l_summary_tv_header_percentage)
         else -> "N/A"
     }
 }

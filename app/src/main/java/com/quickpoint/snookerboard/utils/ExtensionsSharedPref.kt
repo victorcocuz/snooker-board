@@ -10,9 +10,9 @@ import androidx.fragment.app.Fragment
 import com.quickpoint.snookerboard.BuildConfig
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.SnookerBoardApplication
-import com.quickpoint.snookerboard.domain.DomainFreeBallInfo.FREEBALLINFO
 import com.quickpoint.snookerboard.domain.DomainPlayer.PLAYER01
 import com.quickpoint.snookerboard.domain.DomainPlayer.PLAYER02
+import com.quickpoint.snookerboard.utils.FrameToggles.FRAMETOGGLES
 import com.quickpoint.snookerboard.utils.MatchSettings.*
 import com.quickpoint.snookerboard.utils.MatchToggle.*
 import timber.log.Timber
@@ -44,13 +44,16 @@ fun SharedPreferences.savePref() {
             putInt(getString(R.string.sp_match_max_counter_retake), SETTINGS.counterRetake)
             putInt(getString(R.string.sp_match_handicap_frame), SETTINGS.handicapFrame)
             putInt(getString(R.string.sp_match_handicap_match), SETTINGS.handicapMatch)
-            putBoolean(getString(R.string.sp_match_freeball_is_active), FREEBALLINFO.isActive)
-            putInt(getString(R.string.sp_toggle_advanced_rules), TOGGLE.toggleAdvancedRules)
+            putInt(getString(R.string.sp_match_ongoing_points_without_return), SETTINGS.ongoingPointsWithoutReturn)
+            putBoolean(getString(R.string.sp_match_toggle_freeball), FRAMETOGGLES.isFreeball)
+            putBoolean(getString(R.string.sp_match_toggle_long), FRAMETOGGLES.isLongShot)
+            putBoolean(getString(R.string.sp_match_toggle_rest), FRAMETOGGLES.isRestShot)
+            putInt(getString(R.string.sp_toggle_advanced_rules), MATCHTOGGLES.toggleAdvancedRules)
             apply()
         }
         Timber.i("Add to sharedPref ${SETTINGS.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}")
         Timber.i("Add to sharedPref ${SETTINGS.getAsText()}")
-        Timber.i("Add to sharedPref freeball isActive ${FREEBALLINFO.isActive}")
+        Timber.i("Add to sharedPref freeball isActive ${FRAMETOGGLES.isFreeball}")
     }
 }
 
@@ -73,12 +76,18 @@ fun SharedPreferences.loadPref() {
             getInt(getString(R.string.sp_match_max_counter_retake), 0),
             getInt(getString(R.string.sp_match_handicap_frame), 0),
             getInt(getString(R.string.sp_match_handicap_match), 0),
+            getInt(getString(R.string.sp_match_ongoing_points_without_return), 0),
         )
-        FREEBALLINFO.assignFreeballInfo(getBoolean(getString(R.string.sp_match_freeball_is_active), false))
-        TOGGLE.toggleAdvancedRules = getInt(getString(R.string.sp_toggle_advanced_rules), 1)
+        FRAMETOGGLES.assignToggles(
+            getBoolean(getString(R.string.sp_match_toggle_freeball), false),
+            getBoolean(getString(R.string.sp_match_toggle_freeball), false),
+            getBoolean(getString(R.string.sp_match_toggle_freeball), false),
+
+        )
+        MATCHTOGGLES.toggleAdvancedRules = getInt(getString(R.string.sp_toggle_advanced_rules), 1)
     }
     Timber.i("Get from sharedPref ${SETTINGS.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}")
     Timber.i("Get from sharedPref ${SETTINGS.getAsText()}")
-    Timber.i("Get from sharedPref freeball isActive ${FREEBALLINFO.isActive}")
+    Timber.i("Get from sharedPref freeball isActive ${FRAMETOGGLES.isFreeball}")
 
 }

@@ -15,7 +15,7 @@ import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
 import com.quickpoint.snookerboard.utils.MatchState.*
-import com.quickpoint.snookerboard.utils.MatchToggle.TOGGLE
+import com.quickpoint.snookerboard.utils.MatchToggle.MATCHTOGGLES
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
-class MatchViewModel(
+class MainViewModel(
     private val app: Application,
     private val snookerRepository: SnookerRepository,
 ) : AndroidViewModel(app) {
@@ -41,7 +41,7 @@ class MatchViewModel(
     private val _matchToggle = MutableLiveData<MatchToggle>()
     val matchToggle : LiveData<MatchToggle> = _matchToggle
     fun updateMatchToggle() {
-        _matchToggle.postValue(TOGGLE)
+        _matchToggle.postValue(MATCHTOGGLES)
         app.sharedPref().savePref()
     }
 

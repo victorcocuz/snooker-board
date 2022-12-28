@@ -8,6 +8,7 @@ import com.quickpoint.snookerboard.domain.DomainPot
 import com.quickpoint.snookerboard.domain.DomainPot.*
 import com.quickpoint.snookerboard.domain.PotAction
 import com.quickpoint.snookerboard.domain.PotType.*
+import com.quickpoint.snookerboard.domain.ShotType
 
 // Used to store pots information in the DATABASE
 @Entity(tableName = "match_pots_table")
@@ -20,26 +21,27 @@ data class DbPot(
     val ballPoints: Int,
     val ballFoul: Int,
     val potType: Int,
-    val potAction: Int
+    val potAction: Int,
+    val shotType: Int
 )
 
 // CONVERTER method from list of DATABASE list to list of DOMAIN Pots
 fun List<DbPot>.asDomainPotList(): MutableList<DomainPot> {
     return map { pot ->
         when (values()[pot.potType]) {
-            TYPE_HIT -> HIT(pot.potId, getBallFromValues(pot.ballOrdinal, pot.ballId, pot.ballPoints, pot.ballFoul))
-            TYPE_FOUL -> FOUL(pot.potId, getBallFromValues(pot.ballOrdinal, pot.ballId,  pot.ballPoints, pot.ballFoul), PotAction.values()[pot.potAction])
-            TYPE_FREE -> FREETOGGLE(pot.potId)
-            TYPE_SAFE -> SAFE(pot.potId)
-            TYPE_SAFE_MISS -> SAFEMISS(pot.potId)
-            TYPE_SNOOKER -> SNOOKER(pot.potId)
-            TYPE_MISS -> MISS(pot.potId)
+            TYPE_HIT -> HIT(pot.potId, getBallFromValues(pot.ballOrdinal, pot.ballId, pot.ballPoints, pot.ballFoul), ShotType.values()[pot.shotType])
+            TYPE_FOUL -> FOUL(pot.potId, getBallFromValues(pot.ballOrdinal, pot.ballId,  pot.ballPoints, pot.ballFoul), PotAction.values()[pot.potAction], ShotType.values()[pot.shotType])
+            TYPE_FOUL_ATTEMPT -> FOULATTEMPT(pot.potId, ShotType.values()[pot.shotType])
+            TYPE_FREE_ACTIVE -> FREEACTIVE(pot.potId)
+            TYPE_FREE -> FREEACTIVE(pot.potId)
+            TYPE_SNOOKER -> SNOOKER(pot.potId, ShotType.values()[pot.shotType])
+            TYPE_SAFE -> SAFE(pot.potId, ShotType.values()[pot.shotType])
+            TYPE_SAFE_MISS -> SAFEMISS(pot.potId, ShotType.values()[pot.shotType])
+            TYPE_MISS -> MISS(pot.potId, ShotType.values()[pot.shotType])
             TYPE_REMOVE_RED -> REMOVERED(pot.potId)
             TYPE_REMOVE_COLOR -> REMOVECOLOR(pot.potId)
             TYPE_ADDRED -> ADDRED(pot.potId)
-            TYPE_FREE_ACTIVE -> FREETOGGLE(pot.potId)
             TYPE_RESPOT_BLACK -> RESPOTBLACK(pot.potId)
-            TYPE_FOUL_ATTEMPT -> FOULATTEMPT(pot.potId)
         }
     }.toMutableList()
 }

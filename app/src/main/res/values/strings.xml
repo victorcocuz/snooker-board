@@ -31,6 +31,7 @@
     <string name="sp_match_name_last_a">matchNameLastA</string>
     <string name="sp_match_name_first_b">matchNameFirstB</string>
     <string name="sp_match_name_last_b">matchNameLastB</string>
+
     <string name="sp_match_unique_id">matchUniqueId</string>
     <string name="sp_match_max_frames_available">matchFrames</string>
     <string name="sp_match_reds">matchReds</string>
@@ -40,9 +41,13 @@
     <string name="sp_match_crt_frame">matchCrtFrame</string>
     <string name="sp_match_max_available_points">matchFrameMax</string>
     <string name="sp_match_max_counter_retake">matchCounterRetake</string>
-    <string name="sp_match_freeball_is_active">matchFreeballIsActive</string>
+    <string name="sp_match_toggle_freeball">matchToggleFreeball</string>
+    <string name="sp_match_toggle_long">matchToggleLong</string>
+    <string name="sp_match_toggle_rest">matchToggleRest</string>
     <string name="sp_match_handicap_frame">matchHandicapFrame</string>
     <string name="sp_match_handicap_match">matchHandicapMatch</string>
+    <string name="sp_match_ongoing_points_without_return">matchOngoingPointsWithoutReturn</string>
+
     <string name="sp_toggle_advanced_rules">toggleAdvancedRules</string>
 
     <!-- Helper   -->

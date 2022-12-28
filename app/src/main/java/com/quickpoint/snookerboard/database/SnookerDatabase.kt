@@ -13,10 +13,9 @@ import androidx.room.RoomDatabase
         DbBall::class,
         DbActionLog::class,
         DbFrame::class],
-    version = 22,
+    version = 25,
     exportSchema = false
 )
-
 abstract class SnookerDatabase : RoomDatabase() {
     abstract val snookerDatabaseDao: SnookerDatabaseDao
 
@@ -33,6 +32,7 @@ abstract class SnookerDatabase : RoomDatabase() {
                         SnookerDatabase::class.java,
                         "snooker_database"
                     )
+                        .addMigrations(MIGRATION_24_25)
                         .fallbackToDestructiveMigration()
                         .build()
                     INSTANCE = instance

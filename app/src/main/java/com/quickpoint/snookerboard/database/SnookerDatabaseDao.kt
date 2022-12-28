@@ -204,4 +204,19 @@ interface SnookerDatabaseDao {
 
     @Query("SELECT MAX(highestBreak) FROM match_score_table WHERE playerId = :playerId")
     fun getMaxBreak(playerId: Int): Int
+
+    @Query("SELECT SUM(longShotsSuccess) FROM match_score_table WHERE playerId = :playerId")
+    fun getSumOfLongShotsSuccess(playerId: Int): Int
+
+    @Query("SELECT SUM(longShotsMissed) FROM match_score_table WHERE playerId = :playerId")
+    fun getSumOfLongShotsMissed(playerId: Int): Int
+
+    @Query("SELECT SUM(restShotsSuccess) FROM match_score_table WHERE playerId = :playerId")
+    fun getSumOfRestShotsSuccess(playerId: Int): Int
+
+    @Query("SELECT SUM(restShotsMissed) FROM match_score_table WHERE playerId = :playerId")
+    fun getSumOfRestShotsMissed(playerId: Int): Int
+
+    @Query("SELECT MAX(pointsWithNoReturn) FROM match_score_table WHERE playerId = :playerId")
+    fun getMaxPointsWithNoReturn(playerId: Int): Int
 }

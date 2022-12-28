@@ -34,7 +34,7 @@ enum class MatchAction {
     NAV_TO_POST_MATCH, // Last frame has been saved to repo so it's save to navigate to SummaryFragment
 
     // Game Fragment Frame Actions
-    FRAME_START_NEW, // When actioned from endFrameOrMatch method in matchVm
+    FRAME_START_NEW, // When actioned from endFrameOrMatch method in mainVm
     FRAME_RERACK_DIALOG, // On clicking rerack button
     FRAME_RERACK, // Action to reset frame
     FRAME_MISS_FORFEIT_DIALOG, // On rerack counter reaching value of 3
@@ -45,7 +45,7 @@ enum class MatchAction {
     FRAME_RESPOT_BLACK_DIALOG, // When both players are tied at the end of the frame
     FRAME_RESPOT_BLACK, // After the RESPOT_BLACK_DIALOG is closed, respot black
     FRAME_FREE_ACTIVE, // After a foul, uses observer to handle pot instead of directly from gameVm
-    FRAME_UPDATED, // When frame updates are completed assign frame action that triggers the matchVm ot update DisplayScore
+    FRAME_UPDATED, // When frame updates are completed assign frame action that triggers the mainVm ot update DisplayScore
     FRAME_UNDO, // When triggered from gameVm execute as an action instead of recursive method
     FRAME_REMOVE_RED,
     FRAME_LOG_ACTIONS_DIALOG, // Opens a dialog allowing users to submit an action log

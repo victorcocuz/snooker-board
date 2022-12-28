@@ -2,9 +2,12 @@ package com.quickpoint.snookerboard.domain
 
 import com.quickpoint.snookerboard.domain.BallType.TYPE_WHITE
 import com.quickpoint.snookerboard.domain.PotType.*
+import com.quickpoint.snookerboard.domain.ShotType.*
+import com.quickpoint.snookerboard.utils.FrameToggles.FRAMETOGGLES
 import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.MatchAction.FRAME_RERACK
 import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
+import timber.log.Timber
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -22,6 +25,11 @@ data class DomainScore(
     var snookers: Int,
     var fouls: Int,
     var highestBreak: Int,
+    var longShotsSuccess: Int,
+    var longShotsMissed: Int,
+    var restShotsSuccess: Int,
+    var restShotsMissed: Int,
+    var pointsWithoutReturn: Int,
 ) {
     fun cumulatedValues() =
         framePoints + matchPoints + successShots + missedShots + safetyMissedShots + safetyMissedShots + snookers + fouls + highestBreak
@@ -37,7 +45,12 @@ data class DomainScore(
         snookers = 0
         fouls = 0
         highestBreak = 0
+        longShotsSuccess = 0
+        longShotsMissed = 0
+        restShotsSuccess = 0
+        restShotsMissed = 0
     }
+
 }
 
 // Checker Methods
@@ -61,19 +74,22 @@ fun MutableList<DomainScore>.resetFrame(matchAction: MatchAction) {
 fun MutableList<DomainScore>.resetMatch() {
     this.clear()
     (0 until 2).forEach {
-        this.add(DomainScore(0, 0, 0, 0, SETTINGS.getHandicap(SETTINGS.handicapMatch, if (it == 0) -1 else 1), 0, 0, 0, 0, 0, 0, 0))
+        this.add(DomainScore(0, 0, 0, 0, SETTINGS.getHandicap(SETTINGS.handicapMatch, if (it == 0) -1 else 1), 0, 0, 0, 0, 0, 0, 0,0,0,0,0, 0))
     }
 }
 
-fun MutableList<DomainScore>.addMatchPointAndAssignFrameId() {
+fun MutableList<DomainScore>.endFrame() {
     if (SETTINGS.counterRetake == 3) this[1 - SETTINGS.crtPlayer].matchPoints += 1 // If a non-snooker shot was retaken 3 times game is lost by the crt player
     else this[frameWinner()].matchPoints += 1
     for (score in this) score.frameId = SETTINGS.crtFrame // TEMP - Assign a frameId to later use to add frame info to DATABASE
+    SETTINGS.ongoingPointsWithoutReturn =
+        if (this[0].pointsWithoutReturn > 0) this[0].pointsWithoutReturn * -1
+        else this[1].pointsWithoutReturn
 }
 
-fun MutableList<DomainScore>.calculatePoints(pot: DomainPot, pol: Int, lastFoulSize: Int, frameStack: MutableList<DomainBreak>) {
+fun MutableList<DomainScore>.calculatePoints(pot: DomainPot, pol: Int, lastFoulSize: Int) {
     val points: Int
-    when (pot.potType) {
+    when (pot.potType) { // General shots score
         TYPE_HIT, TYPE_FREE, TYPE_ADDRED -> {
             points = pot.ball.points
             this[SETTINGS.crtPlayer].framePoints += pol * points // Polarity is used to reverse score on undo
@@ -93,5 +109,20 @@ fun MutableList<DomainScore>.calculatePoints(pot: DomainPot, pol: Int, lastFoulS
         TYPE_SNOOKER -> this[SETTINGS.crtPlayer].snookers += pol
         else -> {}
     }
-    this[SETTINGS.crtPlayer].highestBreak = frameStack.findMaxBreak()
+    when (pot.potType) { // Long shots and rest shots score
+        TYPE_HIT, TYPE_FREE, TYPE_SAFE, TYPE_SNOOKER -> {
+            if (pot.shotType in listOf(LONG_AND_REST, LONG)) this[SETTINGS.crtPlayer].longShotsSuccess += pol
+            if (pot.shotType in listOf(LONG_AND_REST, REST)) this[SETTINGS.crtPlayer].restShotsSuccess += pol
+            FRAMETOGGLES.resetToggleLongAndRest()
+        }
+        TYPE_FOUL, TYPE_MISS, TYPE_SAFE_MISS -> {
+            if (pot.shotType in listOf(LONG_AND_REST, LONG)) this[SETTINGS.crtPlayer].longShotsMissed += pol
+            if (pot.shotType in listOf(LONG_AND_REST, REST)) this[SETTINGS.crtPlayer].restShotsMissed += pol
+            FRAMETOGGLES.resetToggleLongAndRest()
+        }
+        else -> {}
+    }
+    Timber.e("crtPlayer ${SETTINGS.crtPlayer}")
+    Timber.e("pointsA ${this[SETTINGS.crtPlayer].pointsWithoutReturn}")
+    Timber.e("pointsB ${this[SETTINGS.getOtherPlayer()].pointsWithoutReturn}")
 }

@@ -27,17 +27,17 @@ import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var matchVm: MatchViewModel
+    private lateinit var mainVm: MainViewModel
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen() // Keep splash screen on until match loading check is complete
-        splashScreen.setKeepOnScreenCondition { matchVm.keepSplashScreen.value }
+        splashScreen.setKeepOnScreenCondition { mainVm.keepSplashScreen.value }
         super.onCreate(savedInstanceState) // Create view after installing splash screen
 
-        // Initiate the matchVm from the start to be readily accessed from all fragments when needed; pass in application and repository
-        matchVm = ViewModelProvider(this, GenericViewModelFactory(this, null))[MatchViewModel::class.java]
+        // Initiate mainVm from the start to be readily accessed from all fragments when needed; pass in application and repository
+        mainVm = ViewModelProvider(this, GenericViewModelFactory(this, null))[MainViewModel::class.java]
 
         // Bind view elements
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        matchVm.loadMatchIfSaved()
+        mainVm.loadMatchIfSaved()
     }
 
     override fun onResume() {
@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) { // Save state and shared preferences on pause rather than onSaveInstanceState so that db save can complete
-        matchVm.updateState(when (SETTINGS.matchState) {
+        mainVm.updateState(when (SETTINGS.matchState) {
             RULES_IDLE -> RULES_PENDING
             GAME_IN_PROGRESS -> GAME_SAVED
             else -> SETTINGS.matchState

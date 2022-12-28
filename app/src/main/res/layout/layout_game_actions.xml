@@ -3,10 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="com.quickpoint.snookerboard.domain.PotType" />
+
         <variable
             name="varGameVm"
             type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
+
+        <import type="com.quickpoint.snookerboard.utils.FrameToggles.FRAMETOGGLES" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,7 +19,7 @@
         android:background="?attr/colorPrimaryVariant">
 
         <FrameLayout
-            android:id="@+id/l_game_actions_fl_line_hor_two"
+            android:id="@+id/l_game_actions_fl_line_hor_three"
             style="@style/LineHorizontalAccent"
             android:layout_width="0dp"
             app:layout_constraintBottom_toTopOf="@id/l_game_actions_btn_foul"
@@ -28,7 +32,7 @@
             android:layout_width="0dp"
             android:onClick="@{() -> varGameVm.assignPot(PotType.TYPE_FOUL_ATTEMPT)}"
             android:text="@string/l_game_actions_btn_foul"
-            app:layout_constraintBottom_toTopOf="@id/l_game_actions_fl_line_hor_one"
+            app:layout_constraintBottom_toTopOf="@id/l_game_actions_fl_line_hor_two"
             app:layout_constraintEnd_toStartOf="@id/l_game_actions_fl_line_vert_one"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintWidth_percent="0.2" />
@@ -72,7 +76,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/l_game_actions_btn_foul"
             app:layout_constraintEnd_toStartOf="@id/l_game_actions_fl_line_vert_three"
             app:layout_constraintStart_toEndOf="@id/l_game_actions_fl_line_vert_two"
-            app:layout_constraintTop_toTopOf="@+id/l_game_actions_btn_foul"/>
+            app:layout_constraintTop_toTopOf="@+id/l_game_actions_btn_foul" />
 
         <FrameLayout
             android:id="@+id/l_game_actions_fl_line_vert_three"
@@ -95,27 +99,12 @@
             app:layout_constraintTop_toTopOf="@+id/l_game_actions_btn_foul" />
 
         <FrameLayout
-            android:id="@+id/l_game_actions_fl_line_hor_one"
+            android:id="@+id/l_game_actions_fl_line_hor_two"
             style="@style/LineHorizontalAccent"
             android:layout_width="0dp"
             app:layout_constraintBottom_toTopOf="@id/l_game_actions_ll_balls"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
-<!--        <TextView-->
-<!--            android:id="@+id/l_game_actions_btn_free_ball"-->
-<!--            style="@style/ButtonNarrow"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_marginStart="@dimen/margin_layout_offset"-->
-<!--            android:layout_marginEnd="@dimen/margin_layout_offset_mid"-->
-<!--            android:onClick="@{() -> varGameVm.assignPot(PotType.TYPE_FREE_TOGGLE)}"-->
-<!--            android:text="@string/l_game_actions_btn_free_ball"-->
-<!--            app:layout_constraintBottom_toBottomOf="@id/l_game_actions_ll_balls"-->
-<!--            app:layout_constraintHorizontal_bias="0.5"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="@id/l_game_actions_ll_balls"-->
-<!--            app:setFreeballVisible="@{varGameVm.freeballInfo.visible}"-->
-<!--            app:setSelected="@{varGameVm.freeballInfo.selected}" />-->
 
         <LinearLayout
             android:id="@+id/l_game_actions_ll_balls"
@@ -123,7 +112,7 @@
             android:layout_height="@dimen/btn_balls_height"
             android:gravity="center"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/l_game_actions_fl_line_hor_one"
             app:layout_constraintEnd_toStartOf="@id/l_game_actions_fl_line_vert_balls"
             app:layout_constraintStart_toStartOf="parent">
 
@@ -147,10 +136,10 @@
         <FrameLayout
             android:id="@+id/l_game_actions_fl_ball_miss"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@id/l_game_actions_ll_balls"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/l_game_actions_ll_balls"
-            android:layout_height="wrap_content">
+            app:layout_constraintTop_toTopOf="@+id/l_game_actions_ll_balls">
 
             <ImageButton
                 android:id="@+id/l_game_actions_btn_ball_miss"
@@ -160,6 +149,39 @@
                 android:contentDescription="@string/l_game_actions_btn_ball_miss"
                 android:onClick="@{() -> varGameVm.assignPot(PotType.TYPE_MISS)}" />
         </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/l_game_actions_fl_line_hor_one"
+            style="@style/LineHorizontalAccent"
+            android:layout_width="0dp"
+            app:layout_constraintBottom_toTopOf="@id/l_game_actions_btn_long"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="@dimen/margin_xsmall"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/l_game_actions_btn_long"
+            style="@style/ButtonNarrow"
+            android:layout_width="wrap_content"
+            android:onClick="@{() -> varGameVm.onToggleLongClicked()}"
+            android:text="@string/l_game_actions_btn_long"
+            android:layout_marginBottom="@dimen/margin_xsmall"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/l_game_actions_btn_rest"
+            app:layout_constraintStart_toStartOf="parent"
+            app:setSelected="@{varGameVm.toggles.longShot}" />
+
+
+        <TextView
+            android:id="@+id/l_game_actions_btn_rest"
+            style="@style/ButtonNarrow"
+            android:layout_width="wrap_content"
+            android:onClick="@{() -> varGameVm.onToggleRestClicked()}"
+            android:text="@string/l_game_actions_btn_rest"
+            app:layout_constraintBottom_toBottomOf="@id/l_game_actions_btn_long"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/l_game_actions_btn_long"
+            app:setSelected="@{varGameVm.toggles.restShot}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

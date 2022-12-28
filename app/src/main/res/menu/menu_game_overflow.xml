@@ -17,10 +17,6 @@
                 android:icon="@drawable/ic_temp_action_add_red"
                 android:title="@string/menu_item_add_red" />
             <item
-                android:id="@+id/menu_item_remove_red"
-                android:icon="@drawable/ic_temp_action_remove_red"
-                android:title="@string/menu_item_remove_red" />
-            <item
                 android:id="@+id/menu_item_remove_color"
                 android:icon="@drawable/ic_temp_action_remove_color"
                 android:title="@string/menu_item_remove_color" />

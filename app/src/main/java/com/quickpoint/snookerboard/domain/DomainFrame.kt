@@ -58,7 +58,12 @@ data class DomainFrame(
                 safetyMissedShots = score.safetyMissedShots,
                 snookers = score.snookers,
                 fouls = score.fouls,
-                highestBreak = score.highestBreak
+                highestBreak = score.highestBreak,
+                longShotsSuccess = score.longShotsSuccess,
+                longShotsMissed = score.longShotsMissed,
+                restShotsSuccess = score.longShotsSuccess,
+                restShotsMissed = score.longShotsMissed,
+                pointsWithNoReturn = score.pointsWithoutReturn
             )
         }
     }
@@ -70,7 +75,8 @@ data class DomainFrame(
                 breakId = it.breakId,
                 player = it.player,
                 frameId = it.frameId,
-                breakSize = it.breakSize
+                breakSize = it.breakSize,
+                pointsWithoutReturn = it.pointsWithoutReturn
             )
         }
     }

@@ -8,7 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
-import com.quickpoint.snookerboard.DialogViewModel
+import com.quickpoint.snookerboard.fragments.gamedialogs.DialogViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentDialogGenBinding
 import com.quickpoint.snookerboard.fragments.game.GameFragment
