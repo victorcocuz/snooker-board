@@ -42,6 +42,8 @@ enum class MatchAction {
     FRAME_ENDING_DIALOG, // Open frame end dialog
     FRAME_TO_END, // On clicking the concede frame button while the frame is still ongoing
     FRAME_ENDED, // Frame end has been confirmed and will be processed. On clicking the concede frame button when the point difference is big enough, or automatically triggered when only one ball left
+    FRAME_LAST_BLACK_FOULED_DIALOG, // When a foul is commetted on the last black the black will not be repositioned unless there is a tie
+    FRAME_LAST_BLACK_FOULED, // After dialog is closed, remove last black from ballstack
     FRAME_RESPOT_BLACK_DIALOG, // When both players are tied at the end of the frame
     FRAME_RESPOT_BLACK, // After the RESPOT_BLACK_DIALOG is closed, respot black
     FRAME_FREE_ACTIVE, // After a foul, uses observer to handle pot instead of directly from gameVm
@@ -69,12 +71,13 @@ enum class MatchAction {
     TRANSITION_TO_FRAGMENT, // Action to transition to fragment in a queue
 }
 
-val listOfMatchActionsUncancelable = listOf(MATCH_ENDED, FRAME_ENDED, FRAME_RESPOT_BLACK_DIALOG)
+val listOfMatchActionsUncancelable = listOf(MATCH_ENDED, FRAME_ENDED, FRAME_RESPOT_BLACK_DIALOG, FRAME_LAST_BLACK_FOULED_DIALOG)
 
 
 // Helper functions
 fun MatchAction.getListOfDialogActions(isMatchEnding: Boolean, isNoFrameFinished: Boolean, isFrameMathematicallyOver: Boolean): List<MatchAction> = when (this) {
     FRAME_RESPOT_BLACK_DIALOG -> listOf(IGNORE, IGNORE, FRAME_RESPOT_BLACK)
+    FRAME_LAST_BLACK_FOULED_DIALOG -> listOf(IGNORE, IGNORE, FRAME_LAST_BLACK_FOULED)
     FRAME_RERACK_DIALOG -> listOf(CLOSE_DIALOG, IGNORE, FRAME_RERACK)
     FRAME_ENDING_DIALOG, MATCH_ENDING_DIALOG -> {
         val actionC = queryEndFrameOrMatch(isMatchEnding, isFrameMathematicallyOver)
@@ -104,6 +107,7 @@ fun MatchAction.queryEndFrameOrMatch(
 }
 
 fun MatchAction.getPotType(): PotType? = when (this) {
+    FRAME_LAST_BLACK_FOULED -> TYPE_LAST_BLACK_FOULED
     FRAME_RESPOT_BLACK -> TYPE_RESPOT_BLACK
     FRAME_FREE_ACTIVE -> TYPE_FREE_ACTIVE
     FRAME_REMOVE_RED -> TYPE_REMOVE_RED

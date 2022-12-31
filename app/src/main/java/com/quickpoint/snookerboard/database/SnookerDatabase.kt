@@ -32,7 +32,11 @@ abstract class SnookerDatabase : RoomDatabase() {
                         SnookerDatabase::class.java,
                         "snooker_database"
                     )
-                        .addMigrations(MIGRATION_24_25)
+                        .addMigrations(
+                            MIGRATION_22_23,
+                            MIGRATION_23_24,
+                            MIGRATION_24_25
+                        )
                         .fallbackToDestructiveMigration()
                         .build()
                     INSTANCE = instance

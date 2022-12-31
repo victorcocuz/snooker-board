@@ -7,7 +7,6 @@ import com.quickpoint.snookerboard.utils.FrameToggles.FRAMETOGGLES
 import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.MatchAction.FRAME_RERACK
 import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
-import timber.log.Timber
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -122,7 +121,4 @@ fun MutableList<DomainScore>.calculatePoints(pot: DomainPot, pol: Int, lastFoulS
         }
         else -> {}
     }
-    Timber.e("crtPlayer ${SETTINGS.crtPlayer}")
-    Timber.e("pointsA ${this[SETTINGS.crtPlayer].pointsWithoutReturn}")
-    Timber.e("pointsB ${this[SETTINGS.getOtherPlayer()].pointsWithoutReturn}")
 }

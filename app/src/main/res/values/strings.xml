@@ -48,7 +48,9 @@
     <string name="sp_match_handicap_match">matchHandicapMatch</string>
     <string name="sp_match_ongoing_points_without_return">matchOngoingPointsWithoutReturn</string>
 
-    <string name="sp_toggle_advanced_rules">toggleAdvancedRules</string>
+    <string name="sp_toggle_advanced_rules">matchToggleAdvancedRules</string>
+    <string name="sp_toggle_advanced_statistics">matchToggleAdvancedStatistics</string>
+    <string name="sp_toggle_advanced_breaks">matchToggleAdvancedBreaks</string>
 
     <!-- Helper   -->
     <string name="empty" />
@@ -59,4 +61,6 @@
     <string name="_1">1</string>
     <string name="_2">2</string>
     <string name="_3">3</string>
+    <string name="cd_shot_type_long_button">Long shot type button</string>
+    <string name="cd_shot_type_rest_button">Rest shot type button</string>
 </resources>

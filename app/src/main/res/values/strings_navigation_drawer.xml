@@ -44,8 +44,12 @@
     <string name="snack_f_nav_donate_donation">Thank you, that is most kind of you :)</string>
 
     <!--Fragment Settings-->
-    <string name="f_nav_settings_toggle_rules_advanced_title">Advanced Rules</string>
-    <string name="f_nav_settings_toggle_rules_advanced_description">Show options for setting number of reds, faul modifier and handicap</string>
+    <string name="f_nav_settings_toggle_advanced_rules_title">Advanced Rules</string>
+    <string name="f_nav_settings_toggle_advanced_rules_description">Show options for setting number of reds, faul modifier and handicap</string>
+    <string name="f_nav_settings_toggle_advanced_statistics_title">Advanced Statistics</string>
+    <string name="f_nav_settings_toggle_advanced_statistics_description">Show detailed score statistics during the match</string>
+    <string name="f_nav_settings_toggle_advanced_breaks_title">Advanced Breaks</string>
+    <string name="f_nav_settings_toggle_advanced_breaks_description">Show all the shots during the match, not only the ones that add to the score</string>
 
     <!--Fragment About-->
     <string name="f_nav_about_tv_description">Snooker Board is a simple snooker score keeping app that focuses on recording one full match at a time, with care to encompass all rules from the WPBSA (World Professional Billiards and Snooker Association) Official Rules of the Games of Snooker and Billiards</string>
@@ -60,6 +64,14 @@
     <string name="f_nav_about_tv_version_1_0_x_06">• </string>
     <string name="f_nav_about_tv_version_1_0_x_07">• </string>
     <string name="f_nav_about_tv_version_1_0_x_08">• </string>
+
+    <string name="f_nav_about_tv_version_1_0_11">Version 1.0.11</string>
+    <string name="f_nav_about_tv_version_1_0_11_01">• Added Remove reds and free ball functionality too the foul screen</string>
+    <string name="f_nav_about_tv_version_1_0_11_02">• Added options to keep statistics on long shots and rest shots</string>
+    <string name="f_nav_about_tv_version_1_0_11_03">• Added statistics for points without return</string>
+    <string name="f_nav_about_tv_version_1_0_11_04">• Designed icons for long shots, rest shots and free ball toggles</string>
+    <string name="f_nav_about_tv_version_1_0_11_05">• Added settings toggles to show/hide advanced statistics and advanced breaks</string>
+    <string name="f_nav_about_tv_version_1_0_11_06">• Implemented logic for an edge rule of finishing the match when fouling on the last black</string>
 
     <string name="f_nav_about_tv_version_1_0_10">Version 1.0.10</string>
     <string name="f_nav_about_tv_version_1_0_10_01">• Added new features: Force retake option, check for game forfeiting at 3 consecutive fouls, frame handicap, match handicap</string>

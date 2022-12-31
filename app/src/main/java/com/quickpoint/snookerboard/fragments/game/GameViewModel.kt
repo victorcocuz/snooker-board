@@ -1,11 +1,10 @@
 package com.quickpoint.snookerboard.fragments.game
 
 import android.app.Application
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.DomainBall.FREEBALL
 import com.quickpoint.snookerboard.domain.DomainBall.NOBALL
@@ -21,6 +20,8 @@ import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.MatchAction.*
 import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
 import com.quickpoint.snookerboard.utils.ValueKeeperLiveData
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class GameViewModel(
     app: Application,
@@ -54,6 +55,7 @@ class GameViewModel(
         FRAMETOGGLES.toggleLongShot()
         _toggles.postValue(FRAMETOGGLES)
     }
+
     fun onToggleRestClicked() {
         FRAMETOGGLES.toggleRestShot()
         _toggles.postValue(FRAMETOGGLES)
@@ -115,7 +117,8 @@ class GameViewModel(
                     isUpdateInProgress = false
                     return
                 }
-                handlePot(if (pot.ball is FREEBALL) FREE(ball = FREEBALL(points = pot.ball.points), shotType = FRAMETOGGLES.getShotType()) else pot)
+                handlePot(if (pot.ball is FREEBALL) FREE(ball = FREEBALL(points = pot.ball.points),
+                    shotType = FRAMETOGGLES.getShotType()) else pot)
                 handlePotExceptionsPost(pot)
             }
             isUpdateInProgress = false
@@ -141,15 +144,12 @@ class GameViewModel(
     }
 
     private fun handlePotExceptionsPost(pot: DomainPot) {
-        when {
-            SETTINGS.counterRetake == 3 -> {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    onEventGameAction(FRAME_MISS_FORFEIT_DIALOG)
-                }, 200)
-            }
-            pot.potType == TYPE_HIT && ballStack.isLastBall() -> onEventGameAction(if (score.isFrameEqual()) FRAME_RESPOT_BLACK_DIALOG else FRAME_ENDING_DIALOG)
-            else -> {}
+        if (SETTINGS.counterRetake == 3) viewModelScope.launch {
+            delay(200)
+            onEventGameAction(FRAME_MISS_FORFEIT_DIALOG)
         }
+        if (pot.potType == TYPE_FOUL && ballStack.isLastBlack() && !score.isFrameEqual()) onEventGameAction(FRAME_LAST_BLACK_FOULED_DIALOG, true)
+        if (ballStack.isLastBall()) onEventGameAction(if (score.isFrameEqual()) FRAME_RESPOT_BLACK_DIALOG else FRAME_ENDING_DIALOG)
     }
 
     // Handle Undo
@@ -165,6 +165,7 @@ class GameViewModel(
     }
 
     private fun handleUndoExceptionsPost(pot: DomainPot) = onEventGameAction(when (pot.potType) {
+        TYPE_LAST_BLACK_FOULED -> FRAME_UNDO
         TYPE_FREE_ACTIVE -> FRAME_UNDO
         TYPE_FOUL, TYPE_REMOVE_RED -> if (frameStack.lastPotType() == TYPE_REMOVE_RED) FRAME_UNDO else null
         else -> null

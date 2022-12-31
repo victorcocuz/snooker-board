@@ -40,8 +40,9 @@ class FoulDialogFragment : DialogFragment() {
         // Bind all required elements from the view
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
-            varGameVm = this@FoulDialogFragment.gameVm
-            varDialogVm = this@FoulDialogFragment.dialogVm
+            varGameVm = gameVm
+            varDialogVm = dialogVm
+
             fDialogFoulRvBalls.apply {
                 layoutManager = GridLayoutManager(activity, 4)
                 adapter = BallAdapter(

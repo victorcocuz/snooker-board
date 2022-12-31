@@ -10,7 +10,7 @@
             name="varGameVm"
             type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
 
-        <import type="com.quickpoint.snookerboard.utils.FrameToggles.FRAMETOGGLES" />
+        <import type="com.quickpoint.snookerboard.utils.MatchToggle.MATCHTOGGLES"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -151,37 +151,87 @@
         </FrameLayout>
 
         <FrameLayout
+            app:setVisible="@{MATCHTOGGLES.INSTANCE.advancedStatistics}"
             android:id="@+id/l_game_actions_fl_line_hor_one"
             style="@style/LineHorizontalAccent"
             android:layout_width="0dp"
-            app:layout_constraintBottom_toTopOf="@id/l_game_actions_btn_long"
+            app:layout_constraintBottom_toTopOf="@id/l_game_actions_cl_btn_shot_type_long"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginBottom="@dimen/margin_xsmall"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/l_game_actions_btn_long"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            app:setVisible="@{MATCHTOGGLES.INSTANCE.advancedStatistics}"
+            android:id="@+id/l_game_actions_cl_btn_shot_type_long"
             style="@style/ButtonNarrow"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/btn_standard"
+            android:layout_height="@dimen/btn_standard"
             android:onClick="@{() -> varGameVm.onToggleLongClicked()}"
-            android:text="@string/l_game_actions_btn_long"
             android:layout_marginBottom="@dimen/margin_xsmall"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/l_game_actions_btn_rest"
+            app:layout_constraintEnd_toStartOf="@id/l_game_actions_cl_btn_shot_type_rest"
             app:layout_constraintStart_toStartOf="parent"
-            app:setSelected="@{varGameVm.toggles.longShot}" />
+            app:setSelected="@{varGameVm.toggles.longShot}">
 
+            <ImageView
+                android:id="@+id/l_game_actions_iv_btn_shot_type_long"
+                android:layout_width="@dimen/icon_btn_standard"
+                android:layout_height="@dimen/icon_btn_standard"
+                android:layout_marginTop="@dimen/stroke_double"
+                android:background="@drawable/ic_temp_shot_type_long"
+                android:contentDescription="@string/cd_shot_type_long_button"
+                app:layout_constraintBottom_toTopOf="@+id/l_game_actions_tv_btn_shot_type_long"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/l_game_actions_btn_rest"
+            <TextView
+                android:id="@+id/l_game_actions_tv_btn_shot_type_long"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_xxxsmall"
+                android:text="@string/l_game_actions_btn_long"
+                android:textSize="@dimen/text_button_caption"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            app:setVisible="@{MATCHTOGGLES.INSTANCE.advancedStatistics}"
+            android:id="@+id/l_game_actions_cl_btn_shot_type_rest"
             style="@style/ButtonNarrow"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/btn_standard"
+            android:layout_height="@dimen/btn_standard"
             android:onClick="@{() -> varGameVm.onToggleRestClicked()}"
-            android:text="@string/l_game_actions_btn_rest"
-            app:layout_constraintBottom_toBottomOf="@id/l_game_actions_btn_long"
+            app:layout_constraintBottom_toBottomOf="@id/l_game_actions_cl_btn_shot_type_long"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/l_game_actions_btn_long"
-            app:setSelected="@{varGameVm.toggles.restShot}" />
+            app:layout_constraintStart_toEndOf="@id/l_game_actions_cl_btn_shot_type_long"
+            app:setSelected="@{varGameVm.toggles.restShot}" >
+
+            <ImageView
+                android:id="@+id/l_game_actions_iv_btn_shot_type_rest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/stroke_double"
+                android:background="@drawable/ic_temp_shot_type_rest"
+                android:contentDescription="@string/cd_shot_type_rest_button"
+                app:layout_constraintBottom_toTopOf="@id/l_game_actions_tv_btn_shot_type_rest"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/l_game_actions_tv_btn_shot_type_rest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_xxxsmall"
+                android:text="@string/l_game_actions_btn_rest"
+                android:textSize="@dimen/text_button_caption"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

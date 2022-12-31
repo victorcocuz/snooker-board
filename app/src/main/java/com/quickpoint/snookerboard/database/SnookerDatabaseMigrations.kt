@@ -3,7 +3,7 @@ package com.quickpoint.snookerboard.database
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-val MIGRATION_24_25: Migration = object : Migration(23, 24) {
+val MIGRATION_24_25: Migration = object : Migration(24, 25) {
     override fun migrate(database: SupportSQLiteDatabase) {
         database.execSQL("ALTER TABLE match_score_table ADD COLUMN pointsWithoutReturn INT NOT NULL DEFAULT (0)")
     }

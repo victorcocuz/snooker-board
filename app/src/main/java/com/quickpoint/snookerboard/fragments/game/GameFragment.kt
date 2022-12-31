@@ -59,25 +59,28 @@ class GameFragment : Fragment() {
         binding.apply { // Bind all layouts
             lifecycleOwner = viewLifecycleOwner
 
-            // Bind top and score layouts
+            // Bind included layouts
             fGameLTop.apply {
                 varPlayerTagType = MATCH
                 varGameVm = gameVm
             }
-            fGameLScore.apply {
+            fGameLScoreMain.apply {
                 varGameVm = gameVm
             }
-
-            // Bind break layout
-            varGameVm = gameVm
-            fGameRvBreak.apply {
-                adapter = BreakAdapter(requireActivity())
-                itemAnimator = null
+            fGameLScoreExtra.apply {
+                varGameVm = gameVm
+            }
+            fGameLScoreBreakdown.apply {
+                varGameVm = gameVm
+                fGameRvBreak.apply {
+                    adapter = BreakAdapter(requireActivity())
+                    itemAnimator = null
+                }
             }
 
             // Bind buttons
             fGameLActions.apply {
-                varGameVm = this@GameFragment.gameVm
+                varGameVm = gameVm
                 lGameActionsLlBalls.layoutParams.height =
                     requireContext().getFactoredDimen(FACTOR_BALL_MATCH) + resources.getDimension(R.dimen.margin_layout_offset).toInt() * 2
                 lGameActionsRvBalls.apply {
@@ -120,14 +123,14 @@ class GameFragment : Fragment() {
                         gameVm.assignPot(TYPE_FOUL, dialogVm.ballClicked.value!!, dialogVm.actionClicked.value!!)
                         dialogVm.resetFoul()
                     }
-                    FRAME_LOG_ACTIONS_DIALOG, FRAME_RESPOT_BLACK_DIALOG, FRAME_RERACK_DIALOG, FRAME_ENDING_DIALOG, MATCH_ENDING_DIALOG,
+                    FRAME_LOG_ACTIONS_DIALOG, FRAME_LAST_BLACK_FOULED_DIALOG, FRAME_RESPOT_BLACK_DIALOG, FRAME_RERACK_DIALOG, FRAME_ENDING_DIALOG, MATCH_ENDING_DIALOG,
                     MATCH_CANCEL_DIALOG, FRAME_MISS_FORFEIT_DIALOG,
                     -> {
                         val actions = action.getListOfDialogActions(score.isMatchEnding(), score.isNoFrameFinished(), isFrameMathematicallyOver())
                         navigate(GameFragmentDirections.genDialogFrag(actions[0], actions[1], actions[2]))
                     }
                     FRAME_LOG_ACTIONS -> mainVm.emailLogs()
-                    FRAME_FREE_ACTIVE, FRAME_UNDO, FRAME_REMOVE_RED, FRAME_RESPOT_BLACK -> gameVm.assignPot(action.getPotType())
+                    FRAME_FREE_ACTIVE, FRAME_UNDO, FRAME_REMOVE_RED, FRAME_LAST_BLACK_FOULED, FRAME_RESPOT_BLACK -> gameVm.assignPot(action.getPotType())
                     FRAME_MISS_FORFEIT -> gameVm.onEventGameAction(action.queryEndFrameOrMatch(score.isMatchEnding(),
                         isFrameMathematicallyOver()))
                     FRAME_TO_END, FRAME_ENDED, MATCH_TO_END, MATCH_ENDED -> gameVm.endFrame(action)

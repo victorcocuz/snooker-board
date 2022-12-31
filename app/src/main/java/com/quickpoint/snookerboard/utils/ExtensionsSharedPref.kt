@@ -29,10 +29,14 @@ fun SharedPreferences.savePref() {
     edit().apply {
         SnookerBoardApplication.application().apply {
             putInt(getString(R.string.sp_match_state), SETTINGS.matchState.ordinal)
+
+            // Player
             putString(getString(R.string.sp_match_name_first_a), PLAYER01.firstName)
             putString(getString(R.string.sp_match_name_last_a), PLAYER01.lastName)
             putString(getString(R.string.sp_match_name_first_b), PLAYER02.firstName)
             putString(getString(R.string.sp_match_name_last_b), PLAYER02.lastName)
+
+            // Settings
             putLong(getString(R.string.sp_match_unique_id), SETTINGS.uniqueId)
             putInt(getString(R.string.sp_match_max_frames_available), SETTINGS.maxFramesAvailable)
             putInt(getString(R.string.sp_match_reds), SETTINGS.reds)
@@ -45,15 +49,24 @@ fun SharedPreferences.savePref() {
             putInt(getString(R.string.sp_match_handicap_frame), SETTINGS.handicapFrame)
             putInt(getString(R.string.sp_match_handicap_match), SETTINGS.handicapMatch)
             putInt(getString(R.string.sp_match_ongoing_points_without_return), SETTINGS.ongoingPointsWithoutReturn)
+
+            // Frame Toggles
             putBoolean(getString(R.string.sp_match_toggle_freeball), FRAMETOGGLES.isFreeball)
             putBoolean(getString(R.string.sp_match_toggle_long), FRAMETOGGLES.isLongShot)
             putBoolean(getString(R.string.sp_match_toggle_rest), FRAMETOGGLES.isRestShot)
-            putInt(getString(R.string.sp_toggle_advanced_rules), MATCHTOGGLES.toggleAdvancedRules)
+
+            // Match Toggles
+            putBoolean(getString(R.string.sp_toggle_advanced_rules), MATCHTOGGLES.isAdvancedRules)
+            putBoolean(getString(R.string.sp_toggle_advanced_statistics), MATCHTOGGLES.isAdvancedStatistics)
+            putBoolean(getString(R.string.sp_toggle_advanced_breaks), MATCHTOGGLES.isAdvancedBreaks)
+
             apply()
         }
-        Timber.i("Add to sharedPref ${SETTINGS.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}")
-        Timber.i("Add to sharedPref ${SETTINGS.getAsText()}")
-        Timber.i("Add to sharedPref freeball isActive ${FRAMETOGGLES.isFreeball}")
+        Timber.i("-----------------------------------------ADD TO SHARED PREF---------------------------------------------\n" +
+                "Player ${SETTINGS.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}\n" +
+                "${SETTINGS.getAsText()}\n" +
+                "${FRAMETOGGLES.getAsText()}\n" +
+                "${MATCHTOGGLES.getAsText()}\n")
     }
 }
 
@@ -64,6 +77,7 @@ fun SharedPreferences.loadPref() {
         PLAYER01.lastName = getString(getString(R.string.sp_match_name_last_a), if (BuildConfig.DEBUG_TOGGLE) "O'Sullivan" else "")
         PLAYER02.firstName = getString(getString(R.string.sp_match_name_first_b), if (BuildConfig.DEBUG_TOGGLE)  "John" else "")
         PLAYER02.lastName = getString(getString(R.string.sp_match_name_last_b), if (BuildConfig.DEBUG_TOGGLE)  "Higgins" else "")
+
         SETTINGS.assignRules(
             getLong(getString(R.string.sp_match_unique_id), -1),
             getInt(getString(R.string.sp_match_max_frames_available), 3),
@@ -78,16 +92,23 @@ fun SharedPreferences.loadPref() {
             getInt(getString(R.string.sp_match_handicap_match), 0),
             getInt(getString(R.string.sp_match_ongoing_points_without_return), 0),
         )
-        FRAMETOGGLES.assignToggles(
-            getBoolean(getString(R.string.sp_match_toggle_freeball), false),
-            getBoolean(getString(R.string.sp_match_toggle_freeball), false),
-            getBoolean(getString(R.string.sp_match_toggle_freeball), false),
 
+        FRAMETOGGLES.assignFrameToggles(
+            getBoolean(getString(R.string.sp_match_toggle_freeball), false),
+            getBoolean(getString(R.string.sp_match_toggle_long), false),
+            getBoolean(getString(R.string.sp_match_toggle_rest), false),
         )
-        MATCHTOGGLES.toggleAdvancedRules = getInt(getString(R.string.sp_toggle_advanced_rules), 1)
+
+        MATCHTOGGLES.assignMatchToggles(
+            getBoolean(getString(R.string.sp_toggle_advanced_rules), true),
+            getBoolean(getString(R.string.sp_toggle_advanced_statistics), true),
+            getBoolean(getString(R.string.sp_toggle_advanced_breaks), true)
+        )
     }
-    Timber.i("Get from sharedPref ${SETTINGS.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}")
-    Timber.i("Get from sharedPref ${SETTINGS.getAsText()}")
-    Timber.i("Get from sharedPref freeball isActive ${FRAMETOGGLES.isFreeball}")
+    Timber.i("----------------------------------------GET FROM SHARED PREF--------------------------------------------\n" +
+            "Player ${SETTINGS.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}\n" +
+            "${SETTINGS.getAsText()}\n" +
+            "${FRAMETOGGLES.getAsText()}\n" +
+            "${MATCHTOGGLES.getAsText()}\n")
 
 }

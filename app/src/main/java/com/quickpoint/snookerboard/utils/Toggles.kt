@@ -5,30 +5,55 @@ import com.quickpoint.snookerboard.domain.PotType
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.domain.ShotType
 import com.quickpoint.snookerboard.domain.ShotType.*
+import com.quickpoint.snookerboard.utils.MatchToggleType.*
 
-sealed class MatchToggle (
-    var toggleAdvancedRules: Int
-){
-    object MATCHTOGGLES: MatchToggle(0)
+enum class MatchToggleType { ADVANCED_RULES, ADVANCED_STATISTICS, ADVANCED_BREAKS }
 
-    fun toggleAdvancedRulesOn() = toggleAdvancedRules == 1
+sealed class MatchToggle(
+    var isAdvancedRules: Boolean,
+    var isAdvancedStatistics: Boolean,
+    var isAdvancedBreaks: Boolean,
+) {
+    object MATCHTOGGLES : MatchToggle(true, true, true)
 
-    fun switchToggleAdvancedRules(){
-        toggleAdvancedRules = 1 - toggleAdvancedRules
+    fun toggle(matchToggleType: MatchToggleType) {
+        when (matchToggleType) {
+            ADVANCED_RULES -> isAdvancedRules = !isAdvancedRules
+            ADVANCED_STATISTICS -> isAdvancedStatistics = !isAdvancedStatistics
+            ADVANCED_BREAKS -> isAdvancedBreaks = !isAdvancedBreaks
+        }
     }
+
+    fun getToggleValue(matchToggleType: MatchToggleType) = when (matchToggleType) {
+        ADVANCED_RULES -> isAdvancedRules
+        ADVANCED_STATISTICS -> isAdvancedStatistics
+        ADVANCED_BREAKS -> isAdvancedBreaks
+    }
+
+    fun assignMatchToggles(
+        isAdvancedRules: Boolean,
+        isAdvancedStatistics: Boolean,
+        isAdvancedBreaks: Boolean,
+    ) {
+        this.isAdvancedRules = isAdvancedRules
+        this.isAdvancedStatistics = isAdvancedStatistics
+        this.isAdvancedBreaks = isAdvancedBreaks
+    }
+
+    fun getAsText() = "Match Toggles: isAdvancedRules: $isAdvancedRules, isAdvancedStatistics: $isAdvancedStatistics, isAdvancedBreaks: $isAdvancedBreaks"
 }
 
 sealed class FrameToggles(
     var isFreeball: Boolean,
     var isLongShot: Boolean,
-    var isRestShot: Boolean
+    var isRestShot: Boolean,
 ) {
     object FRAMETOGGLES : FrameToggles(false, false, false)
 
-    fun assignToggles(
+    fun assignFrameToggles(
         isFreeball: Boolean,
         isLongShot: Boolean,
-        isRestShot: Boolean
+        isRestShot: Boolean,
     ) {
         this.isFreeball = isFreeball
         this.isLongShot = isLongShot
@@ -48,7 +73,7 @@ sealed class FrameToggles(
         when (pot.potType) {
             TYPE_FREE_ACTIVE -> toggleFreeball()
             TYPE_HIT, TYPE_FREE, TYPE_MISS, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_SNOOKER, TYPE_FOUL -> setFreeballInactive()
-            TYPE_ADDRED, TYPE_REMOVE_RED, TYPE_REMOVE_COLOR, TYPE_RESPOT_BLACK, TYPE_FOUL_ATTEMPT -> {}
+            TYPE_ADDRED, TYPE_REMOVE_RED, TYPE_REMOVE_COLOR, TYPE_LAST_BLACK_FOULED, TYPE_RESPOT_BLACK, TYPE_FOUL_ATTEMPT -> {}
         }
     }
 
@@ -60,7 +85,7 @@ sealed class FrameToggles(
                 TYPE_FREE_ACTIVE -> toggleFreeball()
                 else -> setFreeballInactive()
             }
-            TYPE_HIT, TYPE_ADDRED, TYPE_REMOVE_RED, TYPE_REMOVE_COLOR, TYPE_RESPOT_BLACK, TYPE_FOUL_ATTEMPT -> {}
+            TYPE_HIT, TYPE_ADDRED, TYPE_REMOVE_RED, TYPE_REMOVE_COLOR, TYPE_LAST_BLACK_FOULED, TYPE_RESPOT_BLACK, TYPE_FOUL_ATTEMPT -> {}
         }
     }
 
@@ -87,4 +112,6 @@ sealed class FrameToggles(
         }
         return shotType
     }
+
+    fun getAsText() = "Frame Toggles: isFreeball: $isFreeball, isLongShot $isLongShot, isRestShot: $isRestShot"
 }

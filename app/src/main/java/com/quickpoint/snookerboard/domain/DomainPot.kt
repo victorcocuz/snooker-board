@@ -8,12 +8,15 @@ import com.quickpoint.snookerboard.domain.ShotType.STANDARD
 import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
 
 // Classes and variables that define all pot types and pot actions
-enum class PotType { TYPE_HIT, TYPE_FOUL, TYPE_FREE, TYPE_FOUL_ATTEMPT, TYPE_SNOOKER, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_MISS, TYPE_FREE_ACTIVE, TYPE_REMOVE_RED, TYPE_REMOVE_COLOR, TYPE_ADDRED, TYPE_RESPOT_BLACK }
+enum class PotType { TYPE_HIT, TYPE_FOUL, TYPE_FREE, TYPE_FOUL_ATTEMPT, TYPE_SNOOKER, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_MISS, TYPE_FREE_ACTIVE, TYPE_REMOVE_RED, TYPE_REMOVE_COLOR, TYPE_ADDRED, TYPE_LAST_BLACK_FOULED, TYPE_RESPOT_BLACK }
 enum class ShotType { STANDARD, LONG, REST, LONG_AND_REST }
 
-val listOfPotTypesHelpers = listOf(TYPE_FREE_ACTIVE, TYPE_RESPOT_BLACK)
+val listOfAllPotTypes = listOf(TYPE_HIT, TYPE_FOUL, TYPE_FREE, TYPE_FOUL_ATTEMPT, TYPE_SNOOKER, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_MISS, TYPE_FREE_ACTIVE, TYPE_REMOVE_RED, TYPE_REMOVE_COLOR, TYPE_ADDRED, TYPE_LAST_BLACK_FOULED, TYPE_RESPOT_BLACK)
+val listOfPotTypesHelpers = listOf(TYPE_FREE_ACTIVE, TYPE_LAST_BLACK_FOULED, TYPE_RESPOT_BLACK, TYPE_FOUL_ATTEMPT)
+val listOfAdvancedShowablePotTypes = listOf(TYPE_HIT, TYPE_FOUL, TYPE_FREE, TYPE_SNOOKER, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_MISS, TYPE_REMOVE_RED, TYPE_REMOVE_COLOR, TYPE_ADDRED)
 val listOfPotTypesPointsAdding = listOf(TYPE_HIT, TYPE_FREE, TYPE_ADDRED)
 val listOfPotTypesPointGenerating = listOfPotTypesPointsAdding.plus(TYPE_FOUL)
+val listOfStandardShowablePotTypes = listOfPotTypesPointGenerating.plus(TYPE_REMOVE_RED)
 val listOfPotTypesForNoBallSnackbar = listOf(TYPE_HIT, TYPE_MISS, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_SNOOKER, TYPE_FOUL, TYPE_FOUL_ATTEMPT)
 
 enum class PotAction { FIRST, SWITCH, CONTINUE, RETAKE }
@@ -38,6 +41,7 @@ sealed class DomainPot(
     class REMOVERED(potId: Long = 0) : DomainPot(potId, RED(), TYPE_REMOVE_RED, CONTINUE, STANDARD) // Static action for removing a red ball
     class REMOVECOLOR(potId: Long = 0) : DomainPot(potId, COLOR(), TYPE_REMOVE_COLOR, CONTINUE, STANDARD) // Static action for removing a red ball
     class ADDRED(potId: Long = 0) : DomainPot(potId, RED(), TYPE_ADDRED, CONTINUE, STANDARD) // Static action for adding a red ball (when more than one red is sunk at once)
+    class LASTBLACKFOULED(potId: Long = 0) : DomainPot(potId, NOBALL(), TYPE_LAST_BLACK_FOULED, FIRST, STANDARD) // Static action for committing foul on the las black ball
     class RESPOTBLACK(potId: Long = 0) : DomainPot(potId, NOBALL(), TYPE_RESPOT_BLACK, FIRST, STANDARD) // Static action for re-spotting black ball when players are tied
 
     fun getActionLog(description: String, lastBall: BallType?, size: Int): DomainActionLog {
@@ -68,6 +72,7 @@ fun PotType.getPotFromType(ball: DomainBall = NOBALL(), action: PotAction = CONT
     TYPE_REMOVE_RED -> REMOVERED(SETTINGS.assignUniqueId())
     TYPE_REMOVE_COLOR -> REMOVECOLOR(SETTINGS.assignUniqueId())
     TYPE_ADDRED -> ADDRED(SETTINGS.assignUniqueId())
+    TYPE_LAST_BLACK_FOULED -> LASTBLACKFOULED(SETTINGS.assignUniqueId())
     TYPE_RESPOT_BLACK -> RESPOTBLACK(SETTINGS.assignUniqueId())
 }
 

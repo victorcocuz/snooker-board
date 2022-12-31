@@ -21,6 +21,7 @@ fun TextView.setDialogGameGenLabel(matchAction: MatchAction, matchActionB: Match
         matchAction == MATCH_ENDED -> "Match ended"
         matchAction == FOUL_DIALOG -> "Foul"
         matchAction == INFO_FOUL_DIALOG -> "Info foul"
+        matchAction == FRAME_LAST_BLACK_FOULED -> "Last black fouled"
         matchAction == FRAME_RESPOT_BLACK -> "Re-spot black"
         matchAction == FRAME_LOG_ACTIONS -> "Actions log"
         else -> "$matchAction not implemented"
@@ -38,6 +39,7 @@ fun TextView.setDialogGameGenQuestion(matchAction: MatchAction, matchActionB: Ma
         matchAction == FRAME_ENDED -> "This frame has mathematically ended. Would you like to proceed?"
         matchAction == MATCH_ENDED -> "This match has mathematically ended. Would you like to proceed?"
         matchAction == INFO_FOUL_DIALOG -> "A typical foul in snooker is worth 4 points. You may wish to decrease this value."
+        matchAction == FRAME_LAST_BLACK_FOULED -> "There was a foul committed on the last black. According to regulations, the frame is now over."
         matchAction == FRAME_RESPOT_BLACK -> "Looks like you and your opponent are tied at the end of the frame! The black ball will be re-spotted to decide the winner. The player who started the frame will attempt to pot the black first."
         matchAction == FRAME_LOG_ACTIONS -> "If you've experienced any issues during this match you can submit an action log, which will be reviewed by the developer. Would you like to submit an action log?"
         else -> "$matchAction not implemented"
@@ -61,7 +63,7 @@ fun TextView.setDialogGameBText(matchAction: MatchAction) {
 fun TextView.setDialogGameCText(matchAction: MatchAction, matchActionB: MatchAction, frame: DomainFrame?) {
     isVisible = !(matchActionB == MATCH_ENDED_DISCARD_FRAME && (frame?.score?.isFrameEqual() ?: false))
     text = when {
-        matchAction in listOf(INFO_FOUL_DIALOG, FRAME_RESPOT_BLACK) -> "I understand"
+        matchAction in listOf(INFO_FOUL_DIALOG, FRAME_LAST_BLACK_FOULED, FRAME_RESPOT_BLACK) -> "I understand"
         matchActionB == FRAME_MISS_FORFEIT -> "Yes, forfeit the frame"
         else -> "Yes"
     }
@@ -96,5 +98,13 @@ fun View.setRemoveRedsVisibility(ballStack: MutableList<DomainBall>, redsDesired
 fun Slider.onChangeListener(function: (Int) -> Unit) {
     addOnChangeListener { slider, value, fromUser ->
         function(value.toInt())
+    }
+}
+
+@BindingAdapter("setFreeballEnabledAction", "setFreeballEnabledBallStack")
+fun View.setFreeballEnabled(potAction: PotAction?, ballStack: MutableList<DomainBall>) {
+    isEnabled = false
+    potAction?.let {
+        isEnabled = potAction == PotAction.SWITCH && ballStack.size > 2
     }
 }

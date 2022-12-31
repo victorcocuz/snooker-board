@@ -58,6 +58,7 @@ sealed class DomainBall(
 
 // Checker methods
 fun MutableList<DomainBall>.isLastBall() = size == 1
+fun MutableList<DomainBall>.isLastBlack() = size == 2
 fun MutableList<DomainBall>.isInColors() = size <= 7
 fun MutableList<DomainBall>.isInColorsWithFreeBall() = size <= 8
 fun MutableList<DomainBall>.wasPreviousBallColor() = size in (7..37).filter { it % 2 == 1 }
@@ -99,6 +100,7 @@ fun MutableList<DomainBall>.onPot(potType: PotType, potAction: PotAction) {
             }
         }
         TYPE_FREE_ACTIVE -> if (FRAMETOGGLES.isFreeball) addFreeBall(1) else removeFreeBall()
+        TYPE_LAST_BLACK_FOULED -> removeBalls(1)
         TYPE_RESPOT_BLACK -> addBalls(BLACK())
         TYPE_FOUL_ATTEMPT -> {}
     }
@@ -119,6 +121,7 @@ fun MutableList<DomainBall>.onUndo(potType: PotType, potAction: PotAction, frame
             }
         }
         TYPE_FREE_ACTIVE -> if (FRAMETOGGLES.isFreeball) removeFreeBall() else addFreeBall(1)
+        TYPE_LAST_BLACK_FOULED -> addNextBalls(1)
         TYPE_RESPOT_BLACK -> removeBalls(1)
         TYPE_FOUL_ATTEMPT -> {}
     }

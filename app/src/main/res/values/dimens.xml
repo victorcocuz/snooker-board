@@ -3,6 +3,7 @@
     <!-- Buttons -->>
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="btn_width_large">120dp</dimen>
+    <dimen name="btn_standard">60dp</dimen>
     <dimen name="btn_width">66dp</dimen>
     <dimen name="btn_height">40dp</dimen>
     <dimen name="btn_stretched_height">40dp</dimen>
@@ -34,6 +35,7 @@
     <!-- Icons -->
     <dimen name="icon_bar">8dp</dimen>
     <dimen name="icon_btn_nav_size">24dp</dimen>
+    <dimen name="icon_btn_standard">36dp</dimen>
     <dimen name="icon_logo">40dp</dimen>
     <dimen name="icon_info">20dp</dimen>
     <dimen name="icon_ball">48dp</dimen>
@@ -57,4 +59,5 @@
     <dimen name="text_header">16sp</dimen>
     <dimen name="text_regular">14sp</dimen>
     <dimen name="text_caption">12sp</dimen>
+    <dimen name="text_button_caption">10sp</dimen>
 </resources>

@@ -1,12 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="varMainVm"
+            type="com.quickpoint.snookerboard.MainViewModel" />
+        <import type="com.quickpoint.snookerboard.utils.MatchToggleType"/>
+        <variable
+            name="varMatchToggle"
+            type="com.quickpoint.snookerboard.utils.MatchToggleType" />
+    </data>
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/l_nav_settings_ll_rules_advanced"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
     android:paddingStart="@dimen/margin_small"
+    app:setupSettingsTogglesVm="@{varMainVm}"
+    app:setupSettingsTogglesEnum="@{varMatchToggle}"
     android:paddingEnd="@dimen/margin_small"
     android:paddingTop="@dimen/margin_xxsmall"
     android:paddingBottom="@dimen/margin_xxsmall"
@@ -17,7 +31,7 @@
     <TextView
         android:id="@+id/l_nav_settings_toggle_tv_title"
         style="@style/TextHeaderBold"
-        tools:text="@string/f_nav_settings_toggle_rules_advanced_title"
+        tools:text="@string/f_nav_settings_toggle_advanced_rules_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,7 +40,7 @@
         style="@style/TextBody"
         android:layout_width="0dp"
         android:layout_marginEnd="@dimen/margin_small"
-        tools:text="@string/f_nav_settings_toggle_rules_advanced_description"
+        tools:text="@string/f_nav_settings_toggle_advanced_rules_description"
         app:layout_constraintEnd_toStartOf="@id/l_nav_settings_toggle_sc_slider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/l_nav_settings_toggle_tv_title" />
@@ -36,6 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textOff=""
+        android:checked="@{varMainVm.matchToggle.getToggleValue(varMatchToggle)}"
         android:textOn=""
         android:thumb="@drawable/toggle_slider_thumb"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -44,3 +59,4 @@
         app:showText="true"
         app:track="@drawable/toggle_slider_track" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

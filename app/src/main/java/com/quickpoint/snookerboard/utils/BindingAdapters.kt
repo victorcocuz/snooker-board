@@ -1,13 +1,16 @@
 package com.quickpoint.snookerboard.utils
 
+import android.view.View
 import android.view.View.*
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.BallType.*
@@ -18,6 +21,7 @@ import com.quickpoint.snookerboard.fragments.summary.SummaryAdapter
 import com.quickpoint.snookerboard.utils.BallAdapterType.*
 import com.quickpoint.snookerboard.utils.BallAdapterType.MATCH
 import com.quickpoint.snookerboard.utils.MatchAction.*
+import com.quickpoint.snookerboard.utils.MatchToggleType.*
 import com.quickpoint.snookerboard.utils.PlayerTagType.*
 
 // General
@@ -32,8 +36,8 @@ fun TextView.setViewSelected(selected: Boolean) {
 }
 
 @BindingAdapter("setVisible")
-fun TextView.setVisible(isVisible: Boolean) {
-    visibility = when (isVisible) {
+fun setVisible(view: View, isVisible: Boolean) {
+    view.visibility = when (isVisible) {
         true -> VISIBLE
         false -> GONE
     }
@@ -104,4 +108,23 @@ fun RecyclerView.bindFoulBalls(ballStack: MutableList<DomainBall>?) {
 fun RecyclerView.bindGameStatsRv(data: ArrayList<Pair<DomainScore, DomainScore>>?) {
     val adapter = adapter as SummaryAdapter
     adapter.submitList(data)
+}
+
+@BindingAdapter("setupSettingsTogglesVm", "setupSettingsTogglesEnum")
+fun ConstraintLayout.setupSettingsToggles(mainVm: MainViewModel, matchToggleType: MatchToggleType){
+    when (matchToggleType) {
+        ADVANCED_RULES -> {
+            (getChildAt(0) as TextView).text = context.getString(R.string.f_nav_settings_toggle_advanced_rules_title)
+            (getChildAt(1) as TextView).text = context.getString(R.string.f_nav_settings_toggle_advanced_rules_description)
+        }
+        ADVANCED_STATISTICS -> {
+            (getChildAt(0) as TextView).text = context.getString(R.string.f_nav_settings_toggle_advanced_statistics_title)
+            (getChildAt(1) as TextView).text = context.getString(R.string.f_nav_settings_toggle_advanced_statistics_description)
+        }
+        ADVANCED_BREAKS -> {
+            (getChildAt(0) as TextView).text = context.getString(R.string.f_nav_settings_toggle_advanced_breaks_title)
+            (getChildAt(1) as TextView).text = context.getString(R.string.f_nav_settings_toggle_advanced_breaks_description)
+        }
+    }
+    setOnClickListener { mainVm.updateMatchToggle(matchToggleType) }
 }

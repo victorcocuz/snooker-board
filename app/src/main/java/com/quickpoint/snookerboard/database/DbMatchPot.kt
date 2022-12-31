@@ -41,6 +41,7 @@ fun List<DbPot>.asDomainPotList(): MutableList<DomainPot> {
             TYPE_REMOVE_RED -> REMOVERED(pot.potId)
             TYPE_REMOVE_COLOR -> REMOVECOLOR(pot.potId)
             TYPE_ADDRED -> ADDRED(pot.potId)
+            TYPE_LAST_BLACK_FOULED -> LASTBLACKFOULED(pot.potId)
             TYPE_RESPOT_BLACK -> RESPOTBLACK(pot.potId)
         }
     }.toMutableList()

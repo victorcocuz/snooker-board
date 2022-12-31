@@ -40,7 +40,9 @@ class MainViewModel(
 
     private val _matchToggle = MutableLiveData<MatchToggle>()
     val matchToggle : LiveData<MatchToggle> = _matchToggle
-    fun updateMatchToggle() {
+    fun updateMatchToggle(matchToggleType: MatchToggleType?) {
+        app.applicationContext.vibrateOnce()
+        matchToggleType?.let { MATCHTOGGLES.toggle(it) }
         _matchToggle.postValue(MATCHTOGGLES)
         app.sharedPref().savePref()
     }
@@ -59,7 +61,7 @@ class MainViewModel(
     fun loadMatchIfSaved() = viewModelScope.launch { // If db is empty reset rules, otherwise load the most recent frame
         Timber.i("loadMatchIfSaved()")
         updateState(NONE) // Load shared preferences
-        updateMatchToggle()
+        updateMatchToggle(null)
         snookerRepository.getCrtFrame().let { crtFrame ->
             when (SETTINGS.matchState) {
                 GAME_IN_PROGRESS -> deleteMatchFromDb() // Helps reset the match when debug-reinstalling from android studio

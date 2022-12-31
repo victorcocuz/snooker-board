@@ -8,6 +8,8 @@
     <string name="l_game_actions_btn_foul">FOUL</string>
     <string name="l_game_actions_btn_long">LONG</string>
     <string name="l_game_actions_btn_rest">REST</string>
+    <string name="l_game_actions_btn_free_ball">FREE</string>
+
 
     <!-- Fragment Rules -->
     <string name="l_rules_main_hint_name_first">First Name</string>
@@ -58,7 +60,6 @@
     <string name="l_game_score_ll_line_chapter_score">Frame Score</string>
     <string name="l_game_score_ll_line_chapter_statistics">Frame Statistics</string>
     <string name="l_game_score_ll_line_chapter_breakdown">Frame Breakdown</string>
-    <string name="l_game_actions_btn_free_ball">Free Ball</string>
 
     <string name="toast_f_game_no_balls_left">There is no ball left on the table</string>
 
@@ -74,7 +75,7 @@
     <!-- Fragment Foul -->
     <string name="f_dialog_foul_tv_balls_label">Which ball was fouled?</string>
     <string name="f_dialog_foul_tv_action_label">Do you wish to continue?</string>
-    <string name="f_dialog_foul_tv_shot_type_label">Was it a long or a rest shot?</string>
+    <string name="f_dialog_foul_tv_shot_type_label">Any other actions?</string>
     <string name="f_dialog_foul_tv_reds_label">Were there any reds potted?</string>
     <string name="f_dialog_foul_tv_freeball_label">Was it a freeball?</string>
     <string name="f_dialog_foul_btn_continue">OK, I will play</string>

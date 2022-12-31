@@ -90,7 +90,7 @@ class RulesFragment : Fragment() {
         })
 
         mainVm.matchToggle.observe(viewLifecycleOwner) { toggle ->
-            binding.fRulesLExtra.root.visibility = if (toggle.toggleAdvancedRulesOn()) VISIBLE else GONE
+            binding.fRulesLExtra.root.visibility = if (toggle.isAdvancedRules) VISIBLE else GONE
         }
 
         // Add toolbar menu

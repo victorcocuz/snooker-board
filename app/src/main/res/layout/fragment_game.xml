@@ -6,6 +6,7 @@
         <variable
             name="varGameVm"
             type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
+        <import type="com.quickpoint.snookerboard.utils.MatchToggle.MATCHTOGGLES"/>
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -21,40 +22,27 @@
 
             <include
                 android:id="@+id/f_game_l_top"
-                layout="@layout/layout_game_top"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                layout="@layout/layout_game_top" />
 
             <include
-                android:id="@+id/f_game_l_score"
-                layout="@layout/layout_game_score"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_layout_offset"
-                android:layout_marginEnd="@dimen/margin_layout_offset" />
+                android:id="@+id/f_game_l_score_main"
+                layout="@layout/layout_game_score_main" />
 
-            <ScrollView
-                android:id="@+id/f_game_sv_break"
+            <include
+                app:setVisible="@{MATCHTOGGLES.INSTANCE.advancedStatistics}"
+                android:id="@+id/f_game_l_score_extra"
+                layout="@layout/layout_game_score_extra"/>
+
+            <include
+                android:id="@+id/f_game_l_score_breakdown"
                 android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/margin_xxsmall"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:layout_height="0dp">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/f_game_rv_break"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:bindBreakData="@{varGameVm.displayFrame.frameStack}"
-                    app:stackFromEnd="true"
-                    app:reverseLayout="true"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-            </ScrollView>
+                layout="@layout/layout_game_score_frame_breakdown"/>
 
             <include
                 android:id="@+id/f_game_l_actions"
-                layout="@layout/layout_game_actions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                layout="@layout/layout_game_actions" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

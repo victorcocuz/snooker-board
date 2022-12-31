@@ -9,8 +9,6 @@ import androidx.fragment.app.activityViewModels
 import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentNavSettingsBinding
-import com.quickpoint.snookerboard.utils.MatchToggle.MATCHTOGGLES
-import com.quickpoint.snookerboard.utils.vibrateOnce
 
 class NavSettingsFragment : androidx.fragment.app.Fragment() {
     private val mainVm: MainViewModel by activityViewModels()
@@ -23,19 +21,8 @@ class NavSettingsFragment : androidx.fragment.app.Fragment() {
 
 
         binding.apply {
-            fNavSettingsLToggleRules.apply {
-                lNavSettingsToggleTvTitle.text = getString(R.string.f_nav_settings_toggle_rules_advanced_title)
-                lNavSettingsToggleTvDescription.text = getString(R.string.f_nav_settings_toggle_rules_advanced_description)
-                lNavSettingsToggleScSlider.isChecked = mainVm.matchToggle.value!!.toggleAdvancedRulesOn()
-                mainVm.matchToggle.observe(viewLifecycleOwner) { toggle ->
-                    lNavSettingsToggleScSlider.isChecked = toggle.toggleAdvancedRulesOn()
-                }
-                lNavSettingsLlRulesAdvanced.setOnClickListener {
-                    MATCHTOGGLES.switchToggleAdvancedRules()
-                    context?.vibrateOnce()
-                    mainVm.updateMatchToggle()
-                }
-            }
+            lifecycleOwner = viewLifecycleOwner
+            varMainVm = mainVm
         }
         return binding.root
     }
