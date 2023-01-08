@@ -40,6 +40,7 @@ fun Fragment.navigate(directions: NavDirections, adMob: AdMob? = null) {
     findNavController().navigate(directions)
 }
 
+fun Context.toast(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 fun Fragment.toast(message: CharSequence) = Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 fun Activity.toast(message: CharSequence) = Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
 fun View.snackbar(matchAction: MatchAction) {
@@ -195,3 +196,12 @@ fun LinearLayout.colorTransition(isActivePlayer: Boolean, @ColorRes endColor: In
         }
     }
 }
+
+//fun MutableStateFlow<String>.setMessage(message: String) {
+//    Timber.e("first $message")
+//    this.buffer(5).onEach {
+//        Timber.e("message is $message")
+//        value = message
+//        Timber.e("message is $message")
+//    }
+//}

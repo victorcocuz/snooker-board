@@ -13,13 +13,14 @@ import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import com.android.billingclient.api.BillingClient
 import com.google.android.gms.ads.MobileAds
-import com.quickpoint.snookerboard.billing.Billing
 import com.quickpoint.snookerboard.databinding.ActivityMainBinding
 import com.quickpoint.snookerboard.utils.GenericViewModelFactory
 import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
-import com.quickpoint.snookerboard.utils.MatchState.*
+import com.quickpoint.snookerboard.utils.MatchState.GAME_IN_PROGRESS
+import com.quickpoint.snookerboard.utils.MatchState.GAME_SAVED
+import com.quickpoint.snookerboard.utils.MatchState.RULES_IDLE
+import com.quickpoint.snookerboard.utils.MatchState.RULES_PENDING
 import com.quickpoint.snookerboard.utils.removeFocusAndHideKeyboard
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -69,19 +70,6 @@ class MainActivity : AppCompatActivity() {
         MobileAds.initialize(this)
 
         // Billing
-        Billing.initBilling { billingResult, purchases ->
-            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
-                for (purchase in purchases) {
-                    lifecycleScope.launch {
-                        Billing.handlePurchase(purchase, this@MainActivity)
-                    }
-                }
-            } else if (billingResult.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
-                Timber.e("Billing cancelled by user")
-            } else {
-                Timber.e("Billing code ${billingResult.responseCode} could not be processed")
-            }
-        }
     }
 
     override fun onStart() {
@@ -91,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         lifecycleScope.launch {
-            Billing.queryPurchasesAsync(this@MainActivity)
+//            Billing.queryPurchasesAsync(this@MainActivity)
         }
         super.onResume()
     }
