@@ -5,20 +5,19 @@ import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.text.SpannableString
-import android.text.TextPaint
-import android.text.method.LinkMovementMethod
 import android.text.style.ForegroundColorSpan
-import android.text.style.URLSpan
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
@@ -119,21 +118,6 @@ fun Context.getFactoredDimen(factor: Int): Int {
     return width / factor
 }
 
-// Text
-fun TextView.setAsLink() {
-    movementMethod = LinkMovementMethod.getInstance()
-    val spannable = SpannableString(text)
-    for (u in spannable.getSpans(0, spannable.length, URLSpan::class.java)) {
-        spannable.setSpan(object : URLSpan(u.url) {
-            override fun updateDrawState(ds: TextPaint) {
-                super.updateDrawState(ds)
-                ds.isUnderlineText = false
-            }
-        }, spannable.getSpanStart(u), spannable.getSpanEnd(u), 0)
-    }
-    text = spannable
-}
-
 // Context
 fun Context.lifecycleOwner(): LifecycleOwner? {
     var curContext = this
@@ -150,7 +134,6 @@ tailrec fun Context.activity(): Activity? = when (this) {
     else -> (this as? ContextWrapper)?.baseContext?.activity()
 }
 
-
 fun Context.vibrateOnce() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         val vibratorManager =  this.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
@@ -161,6 +144,17 @@ fun Context.vibrateOnce() {
         val vib  = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         vib.vibrate(50)
     }
+}
+
+fun Context.sendEmail(to: Array<String>, subject: String, body: String = "") {
+    val intent = Intent(Intent.ACTION_SENDTO).apply {
+        data = Uri.parse(EMAIL_BASE_URI)
+        putExtra(Intent.EXTRA_EMAIL, to)
+        putExtra(Intent.EXTRA_SUBJECT, subject)
+        putExtra(Intent.EXTRA_TEXT, body)
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+    }
+    if (intent.resolveActivity(packageManager) != null) startActivity(intent)
 }
 
 // Other
@@ -201,4 +195,3 @@ fun LinearLayout.colorTransition(isActivePlayer: Boolean, @ColorRes endColor: In
         }
     }
 }
-

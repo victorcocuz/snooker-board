@@ -1,8 +1,6 @@
 package com.quickpoint.snookerboard
 
 import android.app.Application
-import android.content.Intent
-import android.net.Uri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -12,10 +10,25 @@ import com.google.gson.Gson
 import com.quickpoint.snookerboard.database.asDomainFrame
 import com.quickpoint.snookerboard.domain.DomainFrame
 import com.quickpoint.snookerboard.repository.SnookerRepository
-import com.quickpoint.snookerboard.utils.*
+import com.quickpoint.snookerboard.utils.EMAIL_SUBJECT_LOGS
+import com.quickpoint.snookerboard.utils.Event
 import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
-import com.quickpoint.snookerboard.utils.MatchState.*
+import com.quickpoint.snookerboard.utils.MatchState
+import com.quickpoint.snookerboard.utils.MatchState.GAME_IN_PROGRESS
+import com.quickpoint.snookerboard.utils.MatchState.GAME_SAVED
+import com.quickpoint.snookerboard.utils.MatchState.NONE
+import com.quickpoint.snookerboard.utils.MatchState.RULES_IDLE
+import com.quickpoint.snookerboard.utils.MatchState.RULES_PENDING
+import com.quickpoint.snookerboard.utils.MatchState.SUMMARY
+import com.quickpoint.snookerboard.utils.MatchToggle
 import com.quickpoint.snookerboard.utils.MatchToggle.MATCHTOGGLES
+import com.quickpoint.snookerboard.utils.MatchToggleType
+import com.quickpoint.snookerboard.utils.loadPref
+import com.quickpoint.snookerboard.utils.savePref
+import com.quickpoint.snookerboard.utils.sendEmail
+import com.quickpoint.snookerboard.utils.sharedPref
+import com.quickpoint.snookerboard.utils.updateState
+import com.quickpoint.snookerboard.utils.vibrateOnce
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -93,14 +106,6 @@ class MainViewModel(
         val json = Gson().toJson(snookerRepository.getDebugFrameActionList())
         val body = "${SETTINGS.getAsText()} \n\n $json \n\n $logs"
         Timber.e(json)
-        val intent = Intent(Intent.ACTION_SENDTO).apply {
-            data = Uri.parse(EMAIL_URI)
-            putExtra(Intent.EXTRA_EMAIL, arrayOf(BuildConfig.ADMIN_EMAIL))
-            putExtra(Intent.EXTRA_SUBJECT, EMAIL_LOGS_SUBJECT)
-            putExtra(Intent.EXTRA_SUBJECT, EMAIL_LOGS_SUBJECT)
-            putExtra(Intent.EXTRA_TEXT, body)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
-        if (intent.resolveActivity(app.packageManager) != null) app.applicationContext.startActivity(intent)
+        app.sendEmail(arrayOf(BuildConfig.ADMIN_EMAIL), EMAIL_SUBJECT_LOGS, body)
     }
 }

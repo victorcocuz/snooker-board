@@ -14,8 +14,6 @@
     <color name="green">#2A652D</color>
     <color name="green_brighter">#5A9A5F</color>
     <color name="green_bright">#368139</color>
-<!--    <color name="green_bright">#2F7C32</color>-->
-<!--    <color name="green_brighter">#538C57</color>-->
     <color name="cream_bright_20">#33F5F4E2</color>
     <color name="cream_bright_40">#66F5F4E2</color>
     <color name="transparent">#00000000</color>
@@ -26,16 +24,19 @@
     <color name="ball_blue_normal">#4266af</color>
     <color name="ball_blue_pressed">#335082</color>
     <color name="ball_brown_normal">#8b603c</color>
+
     <color name="ball_brown_pressed">#4c3424</color>
     <color name="ball_free_normal">#868686</color>
     <color name="ball_free_pressed">#474748</color>
     <color name="ball_green_normal">#50ad48</color>
     <color name="ball_green_pressed">#30602f</color>
+
     <color name="ball_pink_normal">#ee98c0</color>
     <color name="ball_pink_pressed">#b27493</color>
     <color name="ball_red_normal">#ef3b35</color>
     <color name="ball_red_pressed">#9f232b</color>
     <color name="ball_white_normal">#f1e9de</color>
+
     <color name="ball_white_pressed">#cec6bb</color>
     <color name="ball_yellow_normal">#f9da3d</color>
     <color name="ball_yellow_pressed">#b19831</color>

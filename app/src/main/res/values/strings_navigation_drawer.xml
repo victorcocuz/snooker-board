@@ -28,10 +28,10 @@
     <string name="f_nav_improve_tv_description">Hi, \n\nThanks for trying out my app! I am an amateur app developer with a life long passion for snooker. I wanted to do something for this sport so I set out to create this app in my spare time. My dream is to improve this app constantly and make it useful to the snooker community, by implementing a login to save all previous matches, showing career statistics and adding many new features.\n\nUnfortunately my time and coding skills are not at par with my wishes, so if you feel inspired to help I\'d be glad to share in my efforts.</string>
     <string name="f_nav_improve_tv_survey_header">Survey</string>
     <string name="f_nav_improve_tv_survey_body">I would be very grateful if you were able to take a few minutes to complete the survey below.</string>
-    <string name="f_nav_improve_tv_survey_link"><a href="https://forms.gle/VgsbELD5HxDxkHmZ7">Snooker Board User Survey</a></string>
+    <string name="f_nav_improve_tv_survey_link">Snooker Board User Survey</string>
     <string name="f_nav_improve_tv_contact_header">Contact me</string>
     <string name="f_nav_improve_tv_contact_body">If you wish to get in touch or report an issue please feel free to send me an e-mail:</string>
-    <string name="f_nav_improve_tv_contact_email"><a href="mailto:victor.cocuz@yahoo.com">E-mail me</a></string>
+    <string name="f_nav_improve_tv_contact_email">E-mail me</string>
 
     <!--Fragment Donate-->
     <string name="f_nav_donate_tv_description">Hey there, I hope you enjoy my app :). If you would like to see new features and feel like helping out, you can buy me a coffee, beer or lunch to keep me working. Cheers :D</string>
@@ -66,12 +66,21 @@
     <string name="f_nav_about_tv_version_1_0_x_08">• </string>
 
     <string name="f_nav_about_tv_version_1_0_11">Version 1.0.11</string>
-    <string name="f_nav_about_tv_version_1_0_11_01">• Added Remove reds and free ball functionality too the foul screen</string>
+    <string name="f_nav_about_tv_version_1_0_11_01">• Added remove reds and free ball functionality too the foul screen</string>
     <string name="f_nav_about_tv_version_1_0_11_02">• Added options to keep statistics on long shots and rest shots</string>
     <string name="f_nav_about_tv_version_1_0_11_03">• Added statistics for points without return</string>
     <string name="f_nav_about_tv_version_1_0_11_04">• Designed icons for long shots, rest shots and free ball toggles</string>
     <string name="f_nav_about_tv_version_1_0_11_05">• Added settings toggles to show/hide advanced statistics and advanced breaks</string>
     <string name="f_nav_about_tv_version_1_0_11_06">• Implemented logic for an edge rule of finishing the match when fouling on the last black</string>
+    <string-array name="f_nav_about_tv_version_1_0_11_list">
+        <item>Version 1.0.11</item>
+        <item>• Added remove reds and free ball functionality too the foul screen</item>
+        <item>• Added options to keep statistics on long shots and rest shots</item>
+        <item>• Added statistics for points without return</item>
+        <item>• Designed icons for long shots, rest shots and free ball toggles</item>
+        <item>• Added settings toggles to show/hide advanced statistics and advanced breaks</item>
+        <item>• Implemented logic for an edge rule of finishing the match when fouling on the last black</item>
+    </string-array>
 
     <string name="f_nav_about_tv_version_1_0_10">Version 1.0.10</string>
     <string name="f_nav_about_tv_version_1_0_10_01">• Added new features: Force retake option, check for game forfeiting at 3 consecutive fouls, frame handicap, match handicap</string>
@@ -80,6 +89,15 @@
     <string name="f_nav_about_tv_version_1_0_10_04">• Fixed minor game logic glitches for conceding match</string>
     <string name="f_nav_about_tv_version_1_0_10_05">• Fixed glitch for remembering game rules selection when leaving app before starting new game</string>
     <string name="f_nav_about_tv_version_1_0_10_06">• Minor UI fixes for foul dialog, switch player animation, balls remaining, ad showing, splash screen, etc.</string>
+    <string-array name="f_nav_about_tv_version_1_0_10_list">
+        <item>Version 1.0.10</item>
+        <item>• Added new features: Force retake option, check for game forfeiting at 3 consecutive fouls, frame handicap, match handicap</item>
+        <item>• Added a new screen for settings</item>
+        <item>• Implemented a toggle button in the settings screen to show/hide advanced game rules for match setting up</item>
+        <item>• Fixed minor game logic glitches for conceding match</item>
+        <item>• Fixed glitch for remembering game rules selection when leaving app before starting new game</item>
+        <item>• Minor UI fixes for foul dialog, switch player animation, balls remaining, ad showing, splash screen, etc.</item>
+    </string-array>
 
     <string name="f_nav_about_tv_version_1_0_9">Version 1.0.9</string>
     <string name="f_nav_about_tv_version_1_0_9_01">• Fixed dialogs malfunctions on screen rotation</string>
@@ -90,6 +108,17 @@
     <string name="f_nav_about_tv_version_1_0_9_06">• Fixed game glitches for foul modifier and highest score</string>
     <string name="f_nav_about_tv_version_1_0_9_07">• Removed legacy code and standardized naming</string>
     <string name="f_nav_about_tv_version_1_0_9_08">• Fixed minor UI glitches for balls list, splash screen, text appearance, etc</string>
+    <string-array name="f_nav_about_tv_version_1_0_9_list">
+        <item>Version 1.0.9</item>
+        <item>• Fixed dialogs malfunctions on screen rotation</item>
+        <item>• Simplified background logic for better tracking of game actions</item>
+        <item>• Fixed database access overlaps</item>
+        <item>• Added factor variable to show ads only a percentage of the time</item>
+        <item>• Added buttons fade-in animation</item>
+        <item>• Fixed game glitches for foul modifier and highest score</item>
+        <item>• Removed legacy code and standardized naming</item>
+        <item>• Fixed minor UI glitches for balls list, splash screen, text appearance, etc</item>
+    </string-array>
 
     <string name="f_nav_about_tv_version_1_0_8">Version 1.0.8</string>
     <string name="f_nav_about_tv_version_1_0_8_01">• Added new features: Remove color, Safe miss and Snooker</string>
@@ -100,6 +129,17 @@
     <string name="f_nav_about_tv_version_1_0_8_06">• Refactored game classes and util classes</string>
     <string name="f_nav_about_tv_version_1_0_8_07">• Added fragment animation to fade in and out on transition</string>
     <string name="f_nav_about_tv_version_1_0_8_08">• Removed legacy unused fragments</string>
+    <string-array name="f_nav_about_tv_version_1_0_8_list">
+        <item>Version 1.0.8</item>
+        <item>• Added new features: Remove color, Safe miss and Snooker</item>
+        <item>• Implemented tests to check game logic</item>
+        <item>• Fixed UI and logic glitches: score bar, dialogs, ball view and others</item>
+        <item>• Added a log button to submit issues by e-mail</item>
+        <item>• Refactored database to save each shot in real time</item>
+        <item>• Refactored game classes and util classes</item>
+        <item>• Added fragment animation to fade in and out on transition</item>
+        <item>• Removed legacy unused fragments</item>
+    </string-array>
 
     <string name="f_nav_about_tv_version_1_0_7">Version 1.0.7</string>
     <string name="f_nav_about_tv_version_1_0_7_01">• Add interstitial ads</string>
@@ -108,16 +148,37 @@
     <string name="f_nav_about_tv_version_1_0_7_04">• Add new button for missed shots in line with the rest of the balls</string>
     <string name="f_nav_about_tv_version_1_0_7_05">• Fix UI glitches, add selection color change for fouls</string>
     <string name="f_nav_about_tv_version_1_0_7_06">• Have all actions show in the frame breakdown</string>
+    <string-array name="f_nav_about_tv_version_1_0_7_list">
+        <item>Version 1.0.7</item>
+        <item>• Add interstitial ads</item>
+        <item>• Fix app support price issues</item>
+        <item>• Add buttons for two new match tracking features: safe miss and snooker</item>
+        <item>• Add new button for missed shots in line with the rest of the balls</item>
+        <item>• Fix UI glitches, add selection color change for fouls</item>
+        <item>• Have all actions show in the frame breakdown</item>
+    </string-array>
 
     <string name="f_nav_about_tv_version_1_0_6">Version 1.0.6</string>
     <string name="f_nav_about_tv_version_1_0_6_01">• Implement billing for in app purchases to enable financial support</string>
     <string name="f_nav_about_tv_version_1_0_6_02">• Fix player switching glitch</string>
+    <string-array name="f_nav_about_tv_version_1_0_6_list">
+        <item>Version 1.0.6</item>
+        <item>• Implement billing for in app purchases to enable financial support</item>
+        <item>• Fix player switching glitch</item>
+    </string-array>
 
     <string name="f_nav_about_tv_version_1_0_5">Version 1.0.5</string>
     <string name="f_nav_about_tv_version_1_0_5_01">• Fix UI screens overlapping</string>
     <string name="f_nav_about_tv_version_1_0_5_02">• Fix DB saving glitches</string>
     <string name="f_nav_about_tv_version_1_0_5_03">• Replace toasts with snackbars on main screen</string>
     <string name="f_nav_about_tv_version_1_0_5_04">• Add new ball colour for no ball</string>
+    <string-array name="f_nav_about_tv_version_1_0_5_list">
+        <item>Version 1.0.5</item>
+        <item>• Fix UI screens overlapping</item>
+        <item>• Fix DB saving glitches</item>
+        <item>• Replace toasts with snackbars on main screen</item>
+        <item>• Add new ball colour for no ball</item>
+    </string-array>
 
     <string name="f_nav_about_tv_version_1_0_4">Version 1.0.4</string>
     <string name="f_nav_about_tv_version_1_0_4_01">• Added readMe file</string>
@@ -125,6 +186,14 @@
     <string name="f_nav_about_tv_version_1_0_4_03">• Changed about screen to show all previous versions</string>
     <string name="f_nav_about_tv_version_1_0_4_04">• Added user survey link</string>
     <string name="f_nav_about_tv_version_1_0_4_05">• Fixed match saving and loading glitches and minor UI glitches</string>
+    <string-array name="f_nav_about_tv_version_1_0_4_list">
+        <item>Version 1.0.4</item>
+        <item>• Added readMe file</item>
+        <item>• Added Improve screen and a dummy Support the app screen</item>
+        <item>• Changed about screen to show all previous versions</item>
+        <item>• Added user survey link</item>
+        <item>• Fixed match saving and loading glitches and minor UI glitches</item>
+    </string-array>
 
     <string name="f_nav_about_tv_version_1_0_3">Version 1.0.3</string>
     <string name="f_nav_about_tv_version_1_0_3_01">• Added splash screen</string>
@@ -134,17 +203,42 @@
     <string name="f_nav_about_tv_version_1_0_3_05">• Removed continue and cancel match screen</string>
     <string name="f_nav_about_tv_version_1_0_3_06">• Fixed match saving and loading glitches</string>
     <string name="f_nav_about_tv_version_1_0_3_07">• Fixed UI glitches such as scroll view</string>
+    <string-array name="f_nav_about_tv_version_1_0_3_list">
+        <item>Version 1.0.3</item>
+        <item>• Added splash screen</item>
+        <item>• Added navigation bar</item>
+        <item>• Added about and rules screens</item>
+        <item>• Added conditions for action and menu buttons to show snack bar explaining when not selected</item>
+        <item>• Removed continue and cancel match screen</item>
+        <item>• Fixed match saving and loading glitches</item>
+        <item>• Fixed UI glitches such as scroll view</item>
+    </string-array>
 
     <string name="f_nav_about_tv_version_1_0_2">Version 1.0.2</string>
     <string name="f_nav_about_tv_version_1_0_2_01">• Open app straight onto match statistics when needed</string>
     <string name="f_nav_about_tv_version_1_0_2_02">• Fixed undo glitches, match saving glitches and UI glitches</string>
+    <string-array name="f_nav_about_tv_version_1_0_2_list">
+        <item>• Open app straight onto match statistics when needed</item>
+        <item>• Fixed undo glitches, match saving glitches and UI glitches</item>
+    </string-array>
 
     <string name="f_nav_about_tv_version_1_0_1">Version 1.0.1</string>
     <string name="f_nav_about_tv_version_1_0_1_01">• Added freeball toggle and remove it from foul dialog</string>
     <string name="f_nav_about_tv_version_1_0_1_02">• Check for game in progress and load a continuing match directly rather than always starting with the match settings screen</string>
     <string name="f_nav_about_tv_version_1_0_1_03">• Fixed undo glitches</string>
     <string name="f_nav_about_tv_version_1_0_1_04">• Fixed match action glitches and add new dialogs for major actions</string>
+    <string-array name="f_nav_about_tv_version_1_0_1_list">
+        <item>Version 1.0.1</item>
+        <item>• Added freeball toggle and remove it from foul dialog</item>
+        <item>• Check for game in progress and load a continuing match directly rather than always starting with the match settings screen</item>
+        <item>• Fixed undo glitches</item>
+        <item>• Fixed match action glitches and add new dialogs for major actions</item>
+    </string-array>
 
     <string name="f_nav_about_tv_version_1_0_0">Version 1</string>
     <string name="f_nav_about_tv_version_1_0_0_01">• Initial Release</string>
+    <string-array name="f_nav_about_tv_version_1_0_0_list">
+        <item>Version 1</item>
+        <item>• Initial Release</item>
+    </string-array>
 </resources>

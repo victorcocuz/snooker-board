@@ -3,7 +3,6 @@ buildscript {
 
     ext {
         // Init
-//        version_kotlin = '1.6.21'
         version_core = '1.9.0'
         version_appcompat = '1.5.1'
         version_legacy_support = '1.0.0'
@@ -47,7 +46,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.3.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.20"
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.20'
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$version_navigation"
 
         // NOTE: Do not place your application dependencies here; they belong

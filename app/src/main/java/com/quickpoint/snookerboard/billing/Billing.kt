@@ -45,26 +45,23 @@ object Billing {
 
     suspend fun processPurchases(activity: Activity, binding: FragmentNavDonateBinding) {
         Timber.i("process Purchases")
-        val productList = listOf(
-            QueryProductDetailsParams.Product.newBuilder()
-                .setProductId(PRODUCT_COFFEE)
-                .setProductType(BillingClient.ProductType.INAPP)
-                .build(),
-            QueryProductDetailsParams.Product.newBuilder()
-                .setProductId(PRODUCT_BEER)
-                .setProductType(BillingClient.ProductType.INAPP)
-                .build(),
-            QueryProductDetailsParams.Product.newBuilder()
-                .setProductId(PRODUCT_LUNCH)
-                .setProductType(BillingClient.ProductType.INAPP)
-                .build())
+        val queryProductDetailsParams = QueryProductDetailsParams.newBuilder()
+            .setProductList(listOf(
+                QueryProductDetailsParams.Product.newBuilder()
+                    .setProductId(PRODUCT_COFFEE)
+                    .setProductType(BillingClient.ProductType.INAPP)
+                    .build(),
+                QueryProductDetailsParams.Product.newBuilder()
+                    .setProductId(PRODUCT_BEER)
+                    .setProductType(BillingClient.ProductType.INAPP)
+                    .build(),
+                QueryProductDetailsParams.Product.newBuilder()
+                    .setProductId(PRODUCT_LUNCH)
+                    .setProductType(BillingClient.ProductType.INAPP)
+                    .build()))
 
-        val params = QueryProductDetailsParams.newBuilder()
-        params.setProductList(productList)
-
-        // leverage queryProductDetails Kotlin extension function to get productDetailsResult
         val productDetailsResult = withContext(Dispatchers.IO) {
-            billingClient.queryProductDetails(params.build())
+            billingClient.queryProductDetails(queryProductDetailsParams.build())
         }
         productDetailsResult.productDetailsList?.let { processDetailsResult(activity, binding, it) }
     }
