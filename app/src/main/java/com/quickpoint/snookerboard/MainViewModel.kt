@@ -20,9 +20,14 @@ import com.quickpoint.snookerboard.utils.MatchState.NONE
 import com.quickpoint.snookerboard.utils.MatchState.RULES_IDLE
 import com.quickpoint.snookerboard.utils.MatchState.RULES_PENDING
 import com.quickpoint.snookerboard.utils.MatchState.SUMMARY
-import com.quickpoint.snookerboard.utils.MatchToggle
-import com.quickpoint.snookerboard.utils.MatchToggle.MATCHTOGGLES
 import com.quickpoint.snookerboard.utils.MatchToggleType
+import com.quickpoint.snookerboard.utils.MatchToggleType.ADVANCED_BREAKS
+import com.quickpoint.snookerboard.utils.MatchToggleType.ADVANCED_RULES
+import com.quickpoint.snookerboard.utils.MatchToggleType.ADVANCED_STATISTICS
+import com.quickpoint.snookerboard.utils.Toggle
+import com.quickpoint.snookerboard.utils.Toggle.AdvancedBreaks
+import com.quickpoint.snookerboard.utils.Toggle.AdvancedRules
+import com.quickpoint.snookerboard.utils.Toggle.AdvancedStatistics
 import com.quickpoint.snookerboard.utils.loadPref
 import com.quickpoint.snookerboard.utils.savePref
 import com.quickpoint.snookerboard.utils.sendEmail
@@ -51,12 +56,21 @@ class MainViewModel(
         Timber.i("transitionToFragment(): ${fragment.javaClass.simpleName}")
     }
 
-    private val _matchToggle = MutableLiveData<MatchToggle>()
-    val matchToggle : LiveData<MatchToggle> = _matchToggle
+    private val _matchToggle =  MutableLiveData(listOf(AdvancedRules, AdvancedStatistics, AdvancedBreaks))
+    val matchToggle : LiveData<List<Toggle>> = _matchToggle
+
     fun updateMatchToggle(matchToggleType: MatchToggleType?) {
+        Timber.e("updateToggle")
         app.applicationContext.vibrateOnce()
-        matchToggleType?.let { MATCHTOGGLES.toggle(it) }
-        _matchToggle.postValue(MATCHTOGGLES)
+        _matchToggle.value = listOf()
+        matchToggleType?.let {
+            when(it) {
+                ADVANCED_RULES -> AdvancedRules.toggleEnabled()
+                ADVANCED_STATISTICS -> AdvancedStatistics.toggleEnabled()
+                ADVANCED_BREAKS -> AdvancedBreaks.toggleEnabled()
+            }
+        }
+        _matchToggle.value = listOf(AdvancedRules, AdvancedStatistics, AdvancedBreaks)
         app.sharedPref().savePref()
     }
 

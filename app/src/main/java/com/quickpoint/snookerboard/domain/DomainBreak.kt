@@ -5,7 +5,7 @@ import com.quickpoint.snookerboard.domain.PotAction.CONTINUE
 import com.quickpoint.snookerboard.domain.PotAction.RETAKE
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
-import com.quickpoint.snookerboard.utils.MatchToggle.MATCHTOGGLES
+import com.quickpoint.snookerboard.utils.OldMatchToggle.MATCHTOGGLES
 
 // The DOMAIN Break class is a list of balls potted in one visit (consecutive balls by one player until the other player takes over or the frame ends)
 data class DomainBreak(

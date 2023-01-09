@@ -39,11 +39,6 @@ class NavDonateFragment : androidx.fragment.app.Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        // Billing
-//        lifecycleScope.launch {
-//            Billing.processPurchases(requireActivity(), binding)
-//        }
-
         return ComposeView(requireContext()).apply {
             setContent {
                 SnookerBoardTheme {

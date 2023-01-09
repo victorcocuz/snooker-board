@@ -7,7 +7,6 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
@@ -22,7 +21,6 @@ import com.quickpoint.snookerboard.utils.MatchState.GAME_SAVED
 import com.quickpoint.snookerboard.utils.MatchState.RULES_IDLE
 import com.quickpoint.snookerboard.utils.MatchState.RULES_PENDING
 import com.quickpoint.snookerboard.utils.removeFocusAndHideKeyboard
-import kotlinx.coroutines.launch
 import timber.log.Timber
 
 
@@ -68,20 +66,11 @@ class MainActivity : AppCompatActivity() {
 
         // AdMob
         MobileAds.initialize(this)
-
-        // Billing
     }
 
     override fun onStart() {
         super.onStart()
         mainVm.loadMatchIfSaved()
-    }
-
-    override fun onResume() {
-        lifecycleScope.launch {
-//            Billing.queryPurchasesAsync(this@MainActivity)
-        }
-        super.onResume()
     }
 
     override fun onSaveInstanceState(outState: Bundle) { // Save state and shared preferences on pause rather than onSaveInstanceState so that db save can complete

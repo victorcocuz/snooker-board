@@ -196,12 +196,3 @@ fun LinearLayout.colorTransition(isActivePlayer: Boolean, @ColorRes endColor: In
         }
     }
 }
-
-//fun MutableStateFlow<String>.setMessage(message: String) {
-//    Timber.e("first $message")
-//    this.buffer(5).onEach {
-//        Timber.e("message is $message")
-//        value = message
-//        Timber.e("message is $message")
-//    }
-//}

@@ -6,7 +6,7 @@
         <variable
             name="varGameVm"
             type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
-        <import type="com.quickpoint.snookerboard.utils.MatchToggle.MATCHTOGGLES"/>
+        <import type="com.quickpoint.snookerboard.utils.OldMatchToggle.MATCHTOGGLES"/>
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

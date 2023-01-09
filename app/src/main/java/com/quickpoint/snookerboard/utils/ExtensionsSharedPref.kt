@@ -14,7 +14,7 @@ import com.quickpoint.snookerboard.domain.DomainPlayer.PLAYER01
 import com.quickpoint.snookerboard.domain.DomainPlayer.PLAYER02
 import com.quickpoint.snookerboard.utils.FrameToggles.FRAMETOGGLES
 import com.quickpoint.snookerboard.utils.MatchSettings.*
-import com.quickpoint.snookerboard.utils.MatchToggle.*
+import com.quickpoint.snookerboard.utils.OldMatchToggle.*
 import timber.log.Timber
 
 // Shared preferences
@@ -56,17 +56,19 @@ fun SharedPreferences.savePref() {
             putBoolean(getString(R.string.sp_match_toggle_rest), FRAMETOGGLES.isRestShot)
 
             // Match Toggles
-            putBoolean(getString(R.string.sp_toggle_advanced_rules), MATCHTOGGLES.isAdvancedRules)
-            putBoolean(getString(R.string.sp_toggle_advanced_statistics), MATCHTOGGLES.isAdvancedStatistics)
-            putBoolean(getString(R.string.sp_toggle_advanced_breaks), MATCHTOGGLES.isAdvancedBreaks)
+            putBoolean(getString(R.string.sp_toggle_advanced_rules), Toggle.AdvancedRules.isEnabled)
+            putBoolean(getString(R.string.sp_toggle_advanced_statistics), Toggle.AdvancedStatistics.isEnabled)
+            putBoolean(getString(R.string.sp_toggle_advanced_breaks), Toggle.AdvancedBreaks.isEnabled)
 
             apply()
         }
-        Timber.i("-----------------------------------------ADD TO SHARED PREF---------------------------------------------\n" +
-                "Player ${SETTINGS.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}\n" +
-                "${SETTINGS.getAsText()}\n" +
-                "${FRAMETOGGLES.getAsText()}\n" +
-                "${MATCHTOGGLES.getAsText()}\n")
+        Timber.i(
+            "-----------------------------------------ADD TO SHARED PREF---------------------------------------------\n" +
+                    "Player ${SETTINGS.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}\n" +
+                    "${SETTINGS.getAsText()}\n" +
+                    "${FRAMETOGGLES.getAsText()}\n" +
+                    "${MATCHTOGGLES.getAsText()}\n"
+        )
     }
 }
 
@@ -75,8 +77,8 @@ fun SharedPreferences.loadPref() {
         SETTINGS.getMatchStateFromOrdinal(getInt(getString(R.string.sp_match_state), 0))
         PLAYER01.firstName = getString(getString(R.string.sp_match_name_first_a), if (BuildConfig.DEBUG_TOGGLE) "Ronnie" else "")
         PLAYER01.lastName = getString(getString(R.string.sp_match_name_last_a), if (BuildConfig.DEBUG_TOGGLE) "O'Sullivan" else "")
-        PLAYER02.firstName = getString(getString(R.string.sp_match_name_first_b), if (BuildConfig.DEBUG_TOGGLE)  "John" else "")
-        PLAYER02.lastName = getString(getString(R.string.sp_match_name_last_b), if (BuildConfig.DEBUG_TOGGLE)  "Higgins" else "")
+        PLAYER02.firstName = getString(getString(R.string.sp_match_name_first_b), if (BuildConfig.DEBUG_TOGGLE) "John" else "")
+        PLAYER02.lastName = getString(getString(R.string.sp_match_name_last_b), if (BuildConfig.DEBUG_TOGGLE) "Higgins" else "")
 
         SETTINGS.assignRules(
             getLong(getString(R.string.sp_match_unique_id), -1),
@@ -99,16 +101,16 @@ fun SharedPreferences.loadPref() {
             getBoolean(getString(R.string.sp_match_toggle_rest), false),
         )
 
-        MATCHTOGGLES.assignMatchToggles(
-            getBoolean(getString(R.string.sp_toggle_advanced_rules), true),
-            getBoolean(getString(R.string.sp_toggle_advanced_statistics), true),
-            getBoolean(getString(R.string.sp_toggle_advanced_breaks), true)
-        )
+        Toggle.AdvancedRules.isEnabled = getBoolean(getString(R.string.sp_toggle_advanced_rules), true)
+        Toggle.AdvancedStatistics.isEnabled = getBoolean(getString(R.string.sp_toggle_advanced_statistics), true)
+        Toggle.AdvancedBreaks.isEnabled = getBoolean(getString(R.string.sp_toggle_advanced_breaks), true)
     }
-    Timber.i("----------------------------------------GET FROM SHARED PREF--------------------------------------------\n" +
-            "Player ${SETTINGS.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}\n" +
-            "${SETTINGS.getAsText()}\n" +
-            "${FRAMETOGGLES.getAsText()}\n" +
-            "${MATCHTOGGLES.getAsText()}\n")
+    Timber.i(
+        "----------------------------------------GET FROM SHARED PREF--------------------------------------------\n" +
+                "Player ${SETTINGS.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}\n" +
+                "${SETTINGS.getAsText()}\n" +
+                "${FRAMETOGGLES.getAsText()}\n" +
+                "${MATCHTOGGLES.getAsText()}\n"
+    )
 
 }

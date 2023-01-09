@@ -1,9 +1,14 @@
 package com.quickpoint.snookerboard.fragments.rules
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.ViewGroup
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.databinding.DataBindingUtil
@@ -16,9 +21,18 @@ import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentRulesBinding
 import com.quickpoint.snookerboard.utils.EventObserver
-import com.quickpoint.snookerboard.utils.MatchAction.*
+import com.quickpoint.snookerboard.utils.MatchAction.IGNORE
+import com.quickpoint.snookerboard.utils.MatchAction.INFO_FOUL_DIALOG
+import com.quickpoint.snookerboard.utils.MatchAction.MATCH_PLAY
+import com.quickpoint.snookerboard.utils.MatchAction.SNACK_HANDICAP_FRAME_LIMIT
+import com.quickpoint.snookerboard.utils.MatchAction.SNACK_HANDICAP_MATCH_LIMIT
+import com.quickpoint.snookerboard.utils.MatchAction.SNACK_NO_FIRST
+import com.quickpoint.snookerboard.utils.MatchAction.SNACK_NO_PLAYER
 import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
-import com.quickpoint.snookerboard.utils.MatchState.*
+import com.quickpoint.snookerboard.utils.MatchState.GAME_IN_PROGRESS
+import com.quickpoint.snookerboard.utils.MatchState.RULES_IDLE
+import com.quickpoint.snookerboard.utils.MatchState.SUMMARY
+import com.quickpoint.snookerboard.utils.Toggle.AdvancedRules
 import com.quickpoint.snookerboard.utils.hideKeyboard
 import com.quickpoint.snookerboard.utils.navigate
 import com.quickpoint.snookerboard.utils.snackbar
@@ -89,8 +103,8 @@ class RulesFragment : Fragment() {
             }
         })
 
-        mainVm.matchToggle.observe(viewLifecycleOwner) { toggle ->
-            binding.fRulesLExtra.root.visibility = if (toggle.isAdvancedRules) VISIBLE else GONE
+        mainVm.matchToggle.observe(viewLifecycleOwner) {
+            binding.fRulesLExtra.root.visibility = if (AdvancedRules.isEnabled) VISIBLE else GONE
         }
 
         // Add toolbar menu
