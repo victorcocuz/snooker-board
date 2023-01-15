@@ -22,17 +22,17 @@ sealed class DomainBall(
 ) {
 
     class NOBALL(ballId: Long = 0, points: Int = 0, foul: Int = 0) : DomainBall(ballId, TYPE_NOBALL, points, foul)
-    class WHITE(ballId: Long = 0, points: Int = 0, foul: Int = 4 + SETTINGS.foul) : DomainBall(ballId, TYPE_WHITE, points, foul)
-    class RED(ballId: Long = 0, points: Int = 1, foul: Int = 4 + SETTINGS.foul) : DomainBall(ballId, TYPE_RED, points, foul)
-    class YELLOW(ballId: Long = 0, points: Int = 2, foul: Int = 4 + SETTINGS.foul) : DomainBall(ballId, TYPE_YELLOW, points, foul)
-    class GREEN(ballId: Long = 0, points: Int = 3, foul: Int = 4 + SETTINGS.foul) : DomainBall(ballId, TYPE_GREEN, points, foul)
-    class BROWN(ballId: Long = 0, points: Int = 4, foul: Int = 4 + SETTINGS.foul) : DomainBall(ballId, TYPE_BROWN, points, foul)
-    class BLUE(ballId: Long = 0, points: Int = 5, foul: Int = 5 + SETTINGS.foul) : DomainBall(ballId, TYPE_BLUE, points, foul)
-    class PINK(ballId: Long = 0, points: Int = 6, foul: Int = 6 + SETTINGS.foul) : DomainBall(ballId, TYPE_PINK, points, foul)
-    class BLACK(ballId: Long = 0, points: Int = 7, foul: Int = 7 + SETTINGS.foul) : DomainBall(ballId, TYPE_BLACK, points, foul)
-    class COLOR(ballId: Long = 0, points: Int = 1, foul: Int = 4 + SETTINGS.foul) : DomainBall(ballId, TYPE_COLOR, points, foul)
-    class FREEBALL(ballId: Long = 0, points: Int = 1, foul: Int = 4 + SETTINGS.foul) : DomainBall(ballId, TYPE_FREEBALL, points, foul)
-    class FREEBALLAVAILABLE(ballId: Long = 0, points: Int = 1, foul: Int = 4 + SETTINGS.foul) :
+    class WHITE(ballId: Long = 0, points: Int = 0, foul: Int = 4 + SETTINGS.foulModifier) : DomainBall(ballId, TYPE_WHITE, points, foul)
+    class RED(ballId: Long = 0, points: Int = 1, foul: Int = 4 + SETTINGS.foulModifier) : DomainBall(ballId, TYPE_RED, points, foul)
+    class YELLOW(ballId: Long = 0, points: Int = 2, foul: Int = 4 + SETTINGS.foulModifier) : DomainBall(ballId, TYPE_YELLOW, points, foul)
+    class GREEN(ballId: Long = 0, points: Int = 3, foul: Int = 4 + SETTINGS.foulModifier) : DomainBall(ballId, TYPE_GREEN, points, foul)
+    class BROWN(ballId: Long = 0, points: Int = 4, foul: Int = 4 + SETTINGS.foulModifier) : DomainBall(ballId, TYPE_BROWN, points, foul)
+    class BLUE(ballId: Long = 0, points: Int = 5, foul: Int = 5 + SETTINGS.foulModifier) : DomainBall(ballId, TYPE_BLUE, points, foul)
+    class PINK(ballId: Long = 0, points: Int = 6, foul: Int = 6 + SETTINGS.foulModifier) : DomainBall(ballId, TYPE_PINK, points, foul)
+    class BLACK(ballId: Long = 0, points: Int = 7, foul: Int = 7 + SETTINGS.foulModifier) : DomainBall(ballId, TYPE_BLACK, points, foul)
+    class COLOR(ballId: Long = 0, points: Int = 1, foul: Int = 4 + SETTINGS.foulModifier) : DomainBall(ballId, TYPE_COLOR, points, foul)
+    class FREEBALL(ballId: Long = 0, points: Int = 1, foul: Int = 4 + SETTINGS.foulModifier) : DomainBall(ballId, TYPE_FREEBALL, points, foul)
+    class FREEBALLAVAILABLE(ballId: Long = 0, points: Int = 1, foul: Int = 4 + SETTINGS.foulModifier) :
         DomainBall(ballId, TYPE_FREEBALLAVAILABLE, points, foul)
 
     class FREEBALLTOGGLE(ballId: Long = 0, points: Int = 0, foul: Int = 0) : DomainBall(ballId, TYPE_FREEBALLTOGGLE, points, foul)
@@ -86,7 +86,7 @@ fun MutableList<DomainBall>?.availablePoints(): Int {
 // Frame methods
 fun MutableList<DomainBall>.resetBalls() {
     clear()
-    addNextBalls(SETTINGS.reds * 2 + 7)
+    addNextBalls(SETTINGS.availableReds * 2 + 7)
 }
 
 fun MutableList<DomainBall>.onPot(potType: PotType, potAction: PotAction) {

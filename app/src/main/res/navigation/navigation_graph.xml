@@ -119,7 +119,7 @@
     <fragment
         android:id="@+id/navDonateFragment"
         android:name="com.quickpoint.snookerboard.fragments.navdrawer.NavDonateFragment"
-        android:label="@string/menu_drawer_donate" />
+        android:label="@string/menu_drawer_support" />
     <fragment
         android:id="@+id/navAboutFragment"
         android:name="com.quickpoint.snookerboard.fragments.navdrawer.NavAboutFragment"

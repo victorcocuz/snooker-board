@@ -17,7 +17,7 @@
     <string name="l_rules_main_autofill_name_first">personGivenName</string>
     <string name="l_rules_main_autofill_name_last">personFamilyName</string>
 
-    <string name="l_rules_main_v_player_a_label">Player 1</string>
+    <string name="l_rules_main_tv_player_a_label">Player 1</string>
     <string name="l_rules_main_tv_player_b_label">Player 2</string>
     <string name="l_rules_main_tv_frames_label">Number of Frames</string>
     <string name="l_rules_main_tv_breaks_first_label">Player to Break</string>

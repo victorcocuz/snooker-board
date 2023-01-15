@@ -38,10 +38,10 @@ fun SharedPreferences.savePref() {
 
             // Settings
             putLong(getString(R.string.sp_match_unique_id), SETTINGS.uniqueId)
-            putInt(getString(R.string.sp_match_max_frames_available), SETTINGS.maxFramesAvailable)
-            putInt(getString(R.string.sp_match_reds), SETTINGS.reds)
-            putInt(getString(R.string.sp_match_foul), SETTINGS.foul)
-            putInt(getString(R.string.sp_match_first_player), SETTINGS.firstPlayer)
+            putInt(getString(R.string.sp_match_max_frames_available), SETTINGS.availableFrames)
+            putInt(getString(R.string.sp_match_reds), SETTINGS.availableReds)
+            putInt(getString(R.string.sp_match_foul), SETTINGS.foulModifier)
+            putInt(getString(R.string.sp_match_first_player), SETTINGS.startingPlayer)
             putInt(getString(R.string.sp_match_crt_player), SETTINGS.crtPlayer)
             putLong(getString(R.string.sp_match_crt_frame), SETTINGS.crtFrame)
             putInt(getString(R.string.sp_match_max_available_points), SETTINGS.maxAvailablePoints)

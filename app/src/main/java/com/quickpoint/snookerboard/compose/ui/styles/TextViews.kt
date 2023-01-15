@@ -1,4 +1,4 @@
-package com.quickpoint.snookerboard.ui.styles
+package com.quickpoint.snookerboard.compose.ui.styles
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.quickpoint.snookerboard.ui.theme.spacing
+import com.quickpoint.snookerboard.compose.ui.theme.spacing
 
 
 @Composable

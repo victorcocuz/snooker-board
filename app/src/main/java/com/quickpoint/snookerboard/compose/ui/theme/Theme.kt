@@ -1,4 +1,4 @@
-package com.quickpoint.snookerboard.ui.theme
+package com.quickpoint.snookerboard.compose.ui.theme
 
 import android.app.Activity
 import android.os.Build

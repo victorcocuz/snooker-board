@@ -1,4 +1,4 @@
-package com.quickpoint.snookerboard.ui.theme
+package com.quickpoint.snookerboard.compose.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Shapes

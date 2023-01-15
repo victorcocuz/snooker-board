@@ -56,7 +56,7 @@
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/l_rules_extra_tv_reds_label"
-                app:setSelected="@{varRulesVm.eventRules.reds == 6}" />
+                app:setSelected="@{varRulesVm.eventRules.availableReds == 6}" />
 
             <TextView
                 android:id="@+id/l_rules_extra_btn_reds_ten"
@@ -67,7 +67,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/l_rules_extra_btn_reds_fifteen"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/l_rules_extra_btn_reds_six"
-                app:setSelected="@{varRulesVm.eventRules.reds == 10}" />
+                app:setSelected="@{varRulesVm.eventRules.availableReds == 10}" />
 
             <TextView
                 android:id="@+id/l_rules_extra_btn_reds_fifteen"
@@ -78,7 +78,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/l_rules_extra_btn_reds_ten"
-                app:setSelected="@{varRulesVm.eventRules.reds == 15}" />
+                app:setSelected="@{varRulesVm.eventRules.availableReds == 15}" />
 
             <TextView
                 android:id="@+id/l_rules_extra_tv_foul_modifier_label"
@@ -113,7 +113,7 @@
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/l_rules_extra_tv_foul_modifier_label"
-                app:setSelected="@{varRulesVm.eventRules.foul == -3}" />
+                app:setSelected="@{varRulesVm.eventRules.foulModifier == -3}" />
 
             <TextView
                 android:id="@+id/l_rules_extra_btn_foul_two"
@@ -124,7 +124,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/l_rules_extra_btn_foul_three"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/l_rules_extra_btn_foul_one"
-                app:setSelected="@{varRulesVm.eventRules.foul == -2}" />
+                app:setSelected="@{varRulesVm.eventRules.foulModifier == -2}" />
 
             <TextView
                 android:id="@+id/l_rules_extra_btn_foul_three"
@@ -135,7 +135,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/l_rules_extra_btn_foul_four"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/l_rules_extra_btn_foul_two"
-                app:setSelected="@{varRulesVm.eventRules.foul == -1}" />
+                app:setSelected="@{varRulesVm.eventRules.foulModifier == -1}" />
 
             <TextView
                 android:id="@+id/l_rules_extra_btn_foul_four"
@@ -146,7 +146,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/l_rules_extra_btn_foul_three"
-                app:setSelected="@{varRulesVm.eventRules.foul == 0}" />
+                app:setSelected="@{varRulesVm.eventRules.foulModifier == 0}" />
 
             <TextView
                 android:id="@+id/l_rules_extra_tv_handicap_frame_label"

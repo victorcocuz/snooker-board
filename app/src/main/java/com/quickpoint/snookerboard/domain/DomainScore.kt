@@ -62,7 +62,7 @@ fun MutableList<DomainScore>.isFrameAndMatchEqual() = isFrameEqual() && isMatchE
 fun MutableList<DomainScore>.isNoFrameFinished() = this[0].matchPoints + this[1].matchPoints == 0
 fun MutableList<DomainScore>.frameWinner() = if (this[0].framePoints > this[1].framePoints) 0 else 1
 fun MutableList<DomainScore>.isFrameWinResultingMatchTie() = this[frameWinner()].matchPoints + 1 == this[1 - frameWinner()].matchPoints
-fun MutableList<DomainScore>.isMatchEnding() = this[frameWinner()].matchPoints + 1 == SETTINGS.maxFramesAvailable
+fun MutableList<DomainScore>.isMatchEnding() = this[frameWinner()].matchPoints + 1 == SETTINGS.availableFrames
 fun MutableList<DomainScore>.isMatchInProgress() = (this[0].cumulatedValues() + this[1].cumulatedValues()) > 0
 
 // Helper methods

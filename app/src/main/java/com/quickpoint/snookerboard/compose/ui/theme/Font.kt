@@ -1,4 +1,4 @@
-package com.quickpoint.snookerboard.ui.theme
+package com.quickpoint.snookerboard.compose.ui.theme
 
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily

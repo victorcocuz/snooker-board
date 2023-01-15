@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_header_above"
-                android:text="@string/l_rules_main_v_player_a_label"
+                android:text="@string/l_rules_main_tv_player_a_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="spread_inside" />
@@ -158,14 +158,14 @@
                 android:layout_marginTop="@dimen/margin_header_below"
                 android:layout_marginBottom="@dimen/margin_header_above"
                 android:onClick="@{() -> varRulesVm.updateFirstPlayer(0)}"
-                android:text="@string/l_rules_main_v_player_a_label"
+                android:text="@string/l_rules_main_tv_player_a_label"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/l_rules_main_btn_breaks_random"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/l_rules_extra_tv_breaks_first_label"
-                app:setSelected="@{varRulesVm.eventRules.firstPlayer == 0}" />
+                app:setSelected="@{varRulesVm.eventRules.startingPlayer == 0}" />
 
             <TextView
                 android:id="@+id/l_rules_main_btn_breaks_random"
@@ -188,7 +188,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/l_rules_main_btn_breaks_random"
-                app:setSelected="@{varRulesVm.eventRules.firstPlayer == 1}" />
+                app:setSelected="@{varRulesVm.eventRules.startingPlayer == 1}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

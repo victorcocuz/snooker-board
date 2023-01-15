@@ -1,9 +1,5 @@
 package com.quickpoint.snookerboard.fragments.navdrawer
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,47 +10,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.billing.PurchaseHelper
-import com.quickpoint.snookerboard.ui.styles.ButtonDonate
-import com.quickpoint.snookerboard.ui.styles.FragmentColumn
-import com.quickpoint.snookerboard.ui.styles.GenericSurface
-import com.quickpoint.snookerboard.ui.styles.TextNavHeadline
-import com.quickpoint.snookerboard.ui.styles.TextNavParagraph
-import com.quickpoint.snookerboard.ui.theme.SnookerBoardTheme
-import com.quickpoint.snookerboard.ui.theme.spacing
+import com.quickpoint.snookerboard.compose.ui.styles.ButtonDonate
+import com.quickpoint.snookerboard.compose.ui.styles.FragmentColumn
+import com.quickpoint.snookerboard.compose.ui.styles.TextNavHeadline
+import com.quickpoint.snookerboard.compose.ui.styles.TextNavParagraph
+import com.quickpoint.snookerboard.compose.ui.theme.spacing
 import com.quickpoint.snookerboard.utils.PRODUCT_BEER
 import com.quickpoint.snookerboard.utils.PRODUCT_COFFEE
 import com.quickpoint.snookerboard.utils.PRODUCT_LUNCH
-import com.quickpoint.snookerboard.utils.activity
 import timber.log.Timber
 
-class NavDonateFragment : androidx.fragment.app.Fragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        return ComposeView(requireContext()).apply {
-            setContent {
-                SnookerBoardTheme {
-                    GenericSurface {
-                        val purchaseHelper = PurchaseHelper(context.activity()!!)
-                        purchaseHelper.billingSetup()
-                        FragmentNavDonate(purchaseHelper)
-                    }
-                }
-            }
-        }
-    }
-}
-
 @Composable
-fun FragmentNavDonate(purchaseHelper: PurchaseHelper) {
+fun FragmentDrawerSupport(
+    navController: NavController,
+    purchaseHelper: PurchaseHelper
+) {
     val context = LocalContext.current.applicationContext
 
     val buyEnabled by purchaseHelper.buyEnabled.collectAsState(false)
@@ -64,7 +40,7 @@ fun FragmentNavDonate(purchaseHelper: PurchaseHelper) {
     val priceText by purchaseHelper.priceText.collectAsState(List(3){""})
 
     FragmentColumn {
-        TextNavHeadline(stringResource(R.string.menu_drawer_donate))
+        TextNavHeadline(stringResource(R.string.menu_drawer_support))
         TextNavParagraph(stringResource(R.string.f_nav_donate_tv_description))
         Spacer(Modifier.height(MaterialTheme.spacing.medium))
         Row(
@@ -87,6 +63,6 @@ fun FragmentNavDonate(purchaseHelper: PurchaseHelper) {
 
 //@Preview(showBackground = true)
 //@Composable
-//fun FragmentNavDonatePreview() {
-//    FragmentNavDonate(purchaseHelper)
+//fun FragmentDrawerSupportPreview() {
+//    FragmentDrawerSupport(purchaseHelper)
 //}

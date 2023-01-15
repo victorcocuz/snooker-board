@@ -1,43 +1,26 @@
 package com.quickpoint.snookerboard.fragments.navdrawer
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.ui.styles.FragmentColumn
-import com.quickpoint.snookerboard.ui.styles.GenericSurface
-import com.quickpoint.snookerboard.ui.styles.TextNavHeadline
-import com.quickpoint.snookerboard.ui.styles.TextNavParagraph
-import com.quickpoint.snookerboard.ui.styles.TextNavParagraphSubTitle
-import com.quickpoint.snookerboard.ui.styles.TextNavTitle
-import com.quickpoint.snookerboard.ui.theme.SnookerBoardTheme
-
-class NavAboutFragment : androidx.fragment.app.Fragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return ComposeView(requireContext()).apply {
-            setContent {
-                SnookerBoardTheme {
-                    GenericSurface {
-                        FragmentNavAbout()
-                    }
-                }
-            }
-        }
-    }
-}
+import com.quickpoint.snookerboard.compose.ui.styles.FragmentColumn
+import com.quickpoint.snookerboard.compose.ui.styles.TextNavHeadline
+import com.quickpoint.snookerboard.compose.ui.styles.TextNavParagraph
+import com.quickpoint.snookerboard.compose.ui.styles.TextNavParagraphSubTitle
+import com.quickpoint.snookerboard.compose.ui.styles.TextNavTitle
 
 @Composable
-fun FragmentNavAbout() {
+fun FragmentDrawerAbout(
+    navController: NavController
+) {
     FragmentColumn {
         val versions = listOf(
             stringArrayResource(R.array.f_nav_about_tv_version_1_0_11_list),
@@ -74,6 +57,6 @@ fun FragmentNavAbout() {
 
 @Preview(showBackground = true)
 @Composable
-fun FragmentNavAboutPreview() {
-    FragmentNavAbout()
+fun FragmentDrawerAboutPreview() {
+    FragmentDrawerAbout(rememberNavController())
 }

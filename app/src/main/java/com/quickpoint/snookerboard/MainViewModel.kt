@@ -7,8 +7,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.quickpoint.snookerboard.compose.navigation.Screen
 import com.quickpoint.snookerboard.database.asDomainFrame
 import com.quickpoint.snookerboard.domain.DomainFrame
+import com.quickpoint.snookerboard.domain.DomainPlayer
 import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.EMAIL_SUBJECT_LOGS
 import com.quickpoint.snookerboard.utils.Event
@@ -24,7 +26,6 @@ import com.quickpoint.snookerboard.utils.MatchToggleType
 import com.quickpoint.snookerboard.utils.MatchToggleType.ADVANCED_BREAKS
 import com.quickpoint.snookerboard.utils.MatchToggleType.ADVANCED_RULES
 import com.quickpoint.snookerboard.utils.MatchToggleType.ADVANCED_STATISTICS
-import com.quickpoint.snookerboard.utils.Toggle
 import com.quickpoint.snookerboard.utils.Toggle.AdvancedBreaks
 import com.quickpoint.snookerboard.utils.Toggle.AdvancedRules
 import com.quickpoint.snookerboard.utils.Toggle.AdvancedStatistics
@@ -35,7 +36,9 @@ import com.quickpoint.snookerboard.utils.sharedPref
 import com.quickpoint.snookerboard.utils.updateState
 import com.quickpoint.snookerboard.utils.vibrateOnce
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -45,6 +48,31 @@ class MainViewModel(
     private val app: Application,
     private val snookerRepository: SnookerRepository,
 ) : AndroidViewModel(app) {
+
+    private val _snackBarMessageFlow = MutableSharedFlow<String>()
+    val snackbarMessageFlow = _snackBarMessageFlow.asSharedFlow()
+    fun onNewSnackbar(message: String) = viewModelScope.launch {
+        _snackBarMessageFlow.emit(message)
+    }
+
+    private val _eventSharedFlow = MutableSharedFlow<ScreenEvents>()
+    val eventSharedFlow = _eventSharedFlow.asSharedFlow()
+
+    sealed class ScreenEvents {
+        data class ShowSnackbar(val message: String) : ScreenEvents()
+        data class Navigate(val route: String) : ScreenEvents()
+    }
+
+    fun startMatchQuery() = viewModelScope.launch {
+        _eventSharedFlow.emit(
+            when {
+                DomainPlayer.PLAYER01.hasNoName() || DomainPlayer.PLAYER02.hasNoName() -> ScreenEvents.ShowSnackbar("No Player")
+                (SETTINGS.startingPlayer < 0) -> ScreenEvents.ShowSnackbar("No First")
+                else -> ScreenEvents.Navigate(Screen.GameScreen.route)
+            }
+        )
+    }
+
 
     // Observables
     private val _keepSplashScreen = MutableStateFlow(true)
@@ -56,21 +84,20 @@ class MainViewModel(
         Timber.i("transitionToFragment(): ${fragment.javaClass.simpleName}")
     }
 
-    private val _matchToggle =  MutableLiveData(listOf(AdvancedRules, AdvancedStatistics, AdvancedBreaks))
-    val matchToggle : LiveData<List<Toggle>> = _matchToggle
+    private val _matchToggleEvent = MutableLiveData<Event<Unit>>()
+    val matchToggleEvent: LiveData<Event<Unit>> = _matchToggleEvent
 
     fun updateMatchToggle(matchToggleType: MatchToggleType?) {
         Timber.e("updateToggle")
         app.applicationContext.vibrateOnce()
-        _matchToggle.value = listOf()
         matchToggleType?.let {
-            when(it) {
+            when (it) {
                 ADVANCED_RULES -> AdvancedRules.toggleEnabled()
                 ADVANCED_STATISTICS -> AdvancedStatistics.toggleEnabled()
                 ADVANCED_BREAKS -> AdvancedBreaks.toggleEnabled()
             }
         }
-        _matchToggle.value = listOf(AdvancedRules, AdvancedStatistics, AdvancedBreaks)
+        _matchToggleEvent.value = Event(Unit)
         app.sharedPref().savePref()
     }
 
@@ -99,6 +126,7 @@ class MainViewModel(
                         updateState(if (SETTINGS.matchState == GAME_SAVED) GAME_IN_PROGRESS else SUMMARY)
                     }
                 }
+
                 RULES_IDLE, RULES_PENDING -> updateState(RULES_IDLE) // Idle helps reset the match when debug-reinstalling from android studio
                 else -> Timber.e("No implementation for state ${SETTINGS.matchState} at this point")
             }

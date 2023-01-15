@@ -2,7 +2,7 @@
     <!-- Menu Drawer-->
     <string name="menu_drawer_rules">Rules</string>
     <string name="menu_drawer_improve">Help improve the app</string>
-    <string name="menu_drawer_donate">Support the app</string>
+    <string name="menu_drawer_support">Support the app</string>
     <string name="menu_drawer_settings">Settings</string>
     <string name="menu_drawer_about">About</string>
 
