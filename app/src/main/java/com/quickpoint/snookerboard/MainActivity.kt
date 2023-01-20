@@ -41,7 +41,7 @@ import com.quickpoint.snookerboard.utils.GenericViewModelFactory
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
+// Test Comment
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainVm: MainViewModel
