@@ -8,12 +8,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.databinding.FragmentDialogFoulBinding
-import com.quickpoint.snookerboard.domain.objects.FrameToggles
+import com.quickpoint.snookerboard.domain.objects.Toggle
 import com.quickpoint.snookerboard.fragments.game.GameViewModel
 import com.quickpoint.snookerboard.utils.EventObserver
 import com.quickpoint.snookerboard.utils.MatchAction.*
@@ -58,7 +56,7 @@ class FoulDialogFragment : DialogFragment() {
                         if (foulIsValid()) {
                             repeat(eventDialogReds.value!!) {gameVm.onEventGameAction(FRAME_REMOVE_RED, true)}
                             gameVm.onEventGameAction(FOUL_CONFIRM, true)
-                            if (FrameToggles.FRAMETOGGLES.isFreeball) gameVm.onEventGameAction(FRAME_FREE_ACTIVE, true)
+                            if (Toggle.FreeBall.isEnabled) gameVm.onEventGameAction(FRAME_FREE_ACTIVE, true)
                             dismiss()
                         }
                         else toast(getString(R.string.toast_f_dialog_foul_invalid))

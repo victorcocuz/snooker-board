@@ -9,11 +9,7 @@ import android.content.SharedPreferences
 import androidx.fragment.app.Fragment
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.SnookerBoardApplication
-import com.quickpoint.snookerboard.domain.objects.DomainPlayer.Player01
-import com.quickpoint.snookerboard.domain.objects.DomainPlayer.Player02
-import com.quickpoint.snookerboard.domain.objects.FrameToggles
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.*
-import timber.log.Timber
 
 // Shared preferences
 fun Fragment.sharedPref(): SharedPreferences = requireActivity().sharedPref()
@@ -49,9 +45,9 @@ fun SharedPreferences.savePref() {
             putInt(getString(R.string.sp_match_ongoing_points_without_return), Settings.ongoingPointsWithoutReturn)
 
             // Frame Toggles
-            putBoolean(getString(R.string.sp_match_toggle_freeball), FrameToggles.FRAMETOGGLES.isFreeball)
-            putBoolean(getString(R.string.sp_match_toggle_long), FrameToggles.FRAMETOGGLES.isLongShot)
-            putBoolean(getString(R.string.sp_match_toggle_rest), FrameToggles.FRAMETOGGLES.isRestShot)
+//            putBoolean(getString(R.string.sp_match_toggle_freeball), FrameToggles.FRAMETOGGLES.isFreeball)
+//            putBoolean(getString(R.string.sp_match_toggle_long), FrameToggles.FRAMETOGGLES.isLongShot)
+//            putBoolean(getString(R.string.sp_match_toggle_rest), FrameToggles.FRAMETOGGLES.isRestShot)
 
             // Match Toggles
 //            putBoolean(getString(R.string.sp_toggle_advanced_rules), Toggle.AdvancedRules.isEnabled)
@@ -60,12 +56,12 @@ fun SharedPreferences.savePref() {
 
             apply()
         }
-        Timber.i(
-            "-----------------------------------------ADD TO SHARED PREF---------------------------------------------\n" +
-                    "Player ${Settings.matchState}, ${Player01.getPlayerText()} and ${Player02.getPlayerText()}\n" +
-                    "${Settings.getAsText()}\n" +
-                    "${FrameToggles.FRAMETOGGLES.getAsText()}\n"
-        )
+//        Timber.i(
+//            "-----------------------------------------ADD TO SHARED PREF---------------------------------------------\n" +
+//                    "Player ${Settings.matchState}, ${Player01.getPlayerText()} and ${Player02.getPlayerText()}\n" +
+//                    "${Settings.getAsText()}\n" +
+//                    "${FrameToggles.FRAMETOGGLES.getAsText()}\n"
+//        )
     }
 }
 
@@ -92,21 +88,21 @@ fun SharedPreferences.loadPref() {
             getInt(getString(R.string.sp_match_ongoing_points_without_return), 0),
         )
 
-        FrameToggles.FRAMETOGGLES.assignFrameToggles(
-            getBoolean(getString(R.string.sp_match_toggle_freeball), false),
-            getBoolean(getString(R.string.sp_match_toggle_long), false),
-            getBoolean(getString(R.string.sp_match_toggle_rest), false),
-        )
+//        FrameToggles.FRAMETOGGLES.assignFrameToggles(
+//            getBoolean(getString(R.string.sp_match_toggle_freeball), false),
+//            getBoolean(getString(R.string.sp_match_toggle_long), false),
+//            getBoolean(getString(R.string.sp_match_toggle_rest), false),
+//        )
 
 //        Toggle.AdvancedRules.isEnabled = getBoolean(getString(R.string.sp_toggle_advanced_rules), true)
 //        Toggle.AdvancedStatistics.isEnabled = getBoolean(getString(R.string.sp_toggle_advanced_statistics), true)
 //        Toggle.AdvancedBreaks.isEnabled = getBoolean(getString(R.string.sp_toggle_advanced_breaks), true)
     }
-    Timber.i(
-        "----------------------------------------GET FROM SHARED PREF--------------------------------------------\n" +
-                "Player ${Settings.matchState}, ${Player01.getPlayerText()} and ${Player02.getPlayerText()}\n" +
-                "${Settings.getAsText()}\n" +
-                "${FrameToggles.FRAMETOGGLES.getAsText()}\n"
-    )
+//    Timber.i(
+//        "----------------------------------------GET FROM SHARED PREF--------------------------------------------\n" +
+//                "Player ${Settings.matchState}, ${Player01.getPlayerText()} and ${Player02.getPlayerText()}\n" +
+//                "${Settings.getAsText()}\n" +
+//                "${FrameToggles.FRAMETOGGLES.getAsText()}\n"
+//    )
 
 }

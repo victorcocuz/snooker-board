@@ -21,9 +21,9 @@ import com.quickpoint.snookerboard.compose.ui.styles.TextNavParagraphSubTitle
 import com.quickpoint.snookerboard.compose.ui.theme.spacing
 import com.quickpoint.snookerboard.domain.objects.getToggleByKey
 import com.quickpoint.snookerboard.utils.Event
-import com.quickpoint.snookerboard.utils.K_INT_TOGGLE_ADVANCED_BREAKS
-import com.quickpoint.snookerboard.utils.K_INT_TOGGLE_ADVANCED_RULES
-import com.quickpoint.snookerboard.utils.K_INT_TOGGLE_ADVANCED_STATISTICS
+import com.quickpoint.snookerboard.utils.K_BOOL_TOGGLE_ADVANCED_BREAKS
+import com.quickpoint.snookerboard.utils.K_BOOL_TOGGLE_ADVANCED_RULES
+import com.quickpoint.snookerboard.utils.K_BOOL_TOGGLE_ADVANCED_STATISTICS
 
 @Composable
 fun FragmentDrawerSettings(
@@ -34,11 +34,11 @@ fun FragmentDrawerSettings(
     }
     FragmentColumn {
         Spacer(Modifier.height(MaterialTheme.spacing.large))
-        SettingsToggleHoist(K_INT_TOGGLE_ADVANCED_RULES, mainVm)
+        SettingsToggleHoist(K_BOOL_TOGGLE_ADVANCED_RULES, mainVm)
         Spacer(Modifier.height(MaterialTheme.spacing.large))
-        SettingsToggleHoist(K_INT_TOGGLE_ADVANCED_STATISTICS, mainVm)
+        SettingsToggleHoist(K_BOOL_TOGGLE_ADVANCED_STATISTICS, mainVm)
         Spacer(Modifier.height(MaterialTheme.spacing.large))
-        SettingsToggleHoist(K_INT_TOGGLE_ADVANCED_BREAKS, mainVm)
+        SettingsToggleHoist(K_BOOL_TOGGLE_ADVANCED_BREAKS, mainVm)
     }
 }
 
@@ -49,17 +49,17 @@ fun SettingsToggleHoist(key: String, mainVm: MainViewModel) {
     SettingsToggle(
         stringResource(
             when (key) {
-                K_INT_TOGGLE_ADVANCED_RULES -> R.string.f_nav_settings_toggle_advanced_rules_title
-                K_INT_TOGGLE_ADVANCED_STATISTICS -> R.string.f_nav_settings_toggle_advanced_statistics_title
-                K_INT_TOGGLE_ADVANCED_BREAKS -> R.string.f_nav_settings_toggle_advanced_breaks_title
+                K_BOOL_TOGGLE_ADVANCED_RULES -> R.string.f_nav_settings_toggle_advanced_rules_title
+                K_BOOL_TOGGLE_ADVANCED_STATISTICS -> R.string.f_nav_settings_toggle_advanced_statistics_title
+                K_BOOL_TOGGLE_ADVANCED_BREAKS -> R.string.f_nav_settings_toggle_advanced_breaks_title
                 else -> R.string.helper_not_implemented
             }
         ),
         stringResource(
             when (key) {
-                K_INT_TOGGLE_ADVANCED_RULES -> R.string.f_nav_settings_toggle_advanced_rules_description
-                K_INT_TOGGLE_ADVANCED_STATISTICS -> R.string.f_nav_settings_toggle_advanced_statistics_description
-                K_INT_TOGGLE_ADVANCED_BREAKS -> R.string.f_nav_settings_toggle_advanced_breaks_description
+                K_BOOL_TOGGLE_ADVANCED_RULES -> R.string.f_nav_settings_toggle_advanced_rules_description
+                K_BOOL_TOGGLE_ADVANCED_STATISTICS -> R.string.f_nav_settings_toggle_advanced_statistics_description
+                K_BOOL_TOGGLE_ADVANCED_BREAKS -> R.string.f_nav_settings_toggle_advanced_breaks_description
                 else -> R.string.helper_not_implemented
             }
         ),

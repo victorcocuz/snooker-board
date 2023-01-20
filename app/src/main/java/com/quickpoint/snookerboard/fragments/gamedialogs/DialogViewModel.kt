@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.quickpoint.snookerboard.domain.DomainBall
 import com.quickpoint.snookerboard.domain.PotAction
+import com.quickpoint.snookerboard.domain.objects.Toggle
 import com.quickpoint.snookerboard.utils.Event
-import com.quickpoint.snookerboard.domain.objects.FrameToggles.FRAMETOGGLES
 import com.quickpoint.snookerboard.utils.MatchAction
 
 class DialogViewModel : ViewModel() {
@@ -35,15 +35,15 @@ class DialogViewModel : ViewModel() {
     val actionClicked: LiveData<PotAction?> = _actionClicked
     fun onActionClicked(action: PotAction) {
         _actionClicked.value = action
-        FRAMETOGGLES.setFreeballInactive()
-        _toggles.postValue(FRAMETOGGLES)
+        Toggle.FreeBall.isEnabled = false
+//        _toggles.postValue(FrameToggles.FRAMETOGGLES)
     }
-
-    private val _toggles = MutableLiveData(FRAMETOGGLES)
-    val toggles: LiveData<FRAMETOGGLES> = _toggles
+//
+//    private val _toggles = MutableLiveData(FrameToggles.FRAMETOGGLES)
+//    val toggles: LiveData<FrameToggles.FRAMETOGGLES> = _toggles
     fun onToggleFreeballedClicked() {
-        FRAMETOGGLES.toggleFreeball()
-        _toggles.postValue(FRAMETOGGLES)
+    Toggle.FreeBall.toggleEnabled()
+//        _toggles.postValue(FrameToggles.FRAMETOGGLES)
     }
 
     fun foulIsValid() = _ballClicked.value != null && actionClicked.value != null
@@ -51,8 +51,8 @@ class DialogViewModel : ViewModel() {
         _ballClicked.value = null
         _eventDialogReds.value = 0
         _actionClicked.value = null
-        FRAMETOGGLES.setFreeballInactive()
-        _toggles.value = FRAMETOGGLES
+     Toggle.FreeBall.isEnabled = false
+//        _toggles.value = FrameToggles.FRAMETOGGLES
     }
 
 }

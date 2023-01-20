@@ -35,12 +35,12 @@ const val K_INT_MATCH_AVAILABLE_POINTS = "ds_key_match_available_points"
 const val K_INT_MATCH_COUNTER_RETAKE = "ds_key_match_counter_retake"
 const val K_INT_MATCH_POINTS_WITHOUT_RETURN = "ds_key_match_points_without_return"
 
-const val K_INT_TOGGLE_ADVANCED_RULES = "ds_key_toggle_advanced_rules"
-const val K_INT_TOGGLE_ADVANCED_STATISTICS = "ds_key_toggle_advanced_statistics"
-const val K_INT_TOGGLE_ADVANCED_BREAKS = "ds_key_toggle_advanced_breaks"
-const val K_INT_TOGGLE_FREEBALL = "ds_key_match_toggle_freeball"
-const val K_INT_TOGGLE_LONG = "ds_key_match_toggle_long"
-const val K_INT_TOGGLE_REST = "ds_key_match_toggle_rest"
+const val K_BOOL_TOGGLE_ADVANCED_RULES = "ds_key_toggle_advanced_rules"
+const val K_BOOL_TOGGLE_ADVANCED_STATISTICS = "ds_key_toggle_advanced_statistics"
+const val K_BOOL_TOGGLE_ADVANCED_BREAKS = "ds_key_toggle_advanced_breaks"
+const val K_BOOL_TOGGLE_FREEBALL = "ds_key_match_toggle_freeball"
+const val K_BOOL_TOGGLE_LONG_SHOT = "ds_key_match_toggle_long"
+const val K_BOOL_TOGGLE_REST_SHOT = "ds_key_match_toggle_rest"
 
 class DataStore(private val context: Context) {
     companion object {
@@ -52,9 +52,13 @@ class DataStore(private val context: Context) {
 
         Settings.getMatchStateFromOrdinal(preferences[intPreferencesKey(K_LONG_MATCH_STATE)] ?: 0)
 
-        Toggle.AdvancedRules.isEnabled = preferences[booleanPreferencesKey(K_INT_TOGGLE_ADVANCED_RULES)] ?: true
-        Toggle.AdvancedStatistics.isEnabled = preferences[booleanPreferencesKey(K_INT_TOGGLE_ADVANCED_STATISTICS)] ?: true
-        Toggle.AdvancedBreaks.isEnabled = preferences[booleanPreferencesKey(K_INT_TOGGLE_ADVANCED_BREAKS)] ?: true
+        Toggle.AdvancedRules.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_ADVANCED_RULES)] ?: true
+        Toggle.AdvancedStatistics.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_ADVANCED_STATISTICS)] ?: true
+        Toggle.AdvancedBreaks.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_ADVANCED_BREAKS)] ?: true
+        Toggle.FreeBall.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_FREEBALL)] ?: true
+        Toggle.LongShot.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_LONG_SHOT)] ?: true
+        Toggle.RestShot.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_REST_SHOT)] ?: true
+
 
         Player01.firstName = preferences[stringPreferencesKey(K_PLAYER01_FIRST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "Ronnie" else ""
         Player01.lastName = preferences[stringPreferencesKey(K_PLAYER01_LAST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "O'Sullivan" else ""
