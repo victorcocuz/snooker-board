@@ -42,7 +42,7 @@ class GenericViewModelFactory(private val dataStore: DataStore) : ViewModelProvi
             return GameViewModel(SnookerBoardApplication.application(), SnookerBoardApplication.getSnookerRepository()) as T
         }
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(SnookerBoardApplication.application(), SnookerBoardApplication.getSnookerRepository()) as T
+            return MainViewModel(SnookerBoardApplication.application(), SnookerBoardApplication.getSnookerRepository(), dataStore) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")    }
 }

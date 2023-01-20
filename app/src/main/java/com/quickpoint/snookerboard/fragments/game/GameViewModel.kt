@@ -5,66 +5,20 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.quickpoint.snookerboard.domain.DomainActionLog
-import com.quickpoint.snookerboard.domain.DomainBall
+import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.DomainBall.FREEBALL
 import com.quickpoint.snookerboard.domain.DomainBall.NOBALL
-import com.quickpoint.snookerboard.domain.DomainBreak
-import com.quickpoint.snookerboard.domain.DomainFrame
-import com.quickpoint.snookerboard.domain.DomainPot
 import com.quickpoint.snookerboard.domain.DomainPot.FOULATTEMPT
 import com.quickpoint.snookerboard.domain.DomainPot.FREE
-import com.quickpoint.snookerboard.domain.DomainScore
-import com.quickpoint.snookerboard.domain.PotAction
 import com.quickpoint.snookerboard.domain.PotAction.FIRST
-import com.quickpoint.snookerboard.domain.PotType
-import com.quickpoint.snookerboard.domain.PotType.TYPE_FOUL
-import com.quickpoint.snookerboard.domain.PotType.TYPE_FREE
-import com.quickpoint.snookerboard.domain.PotType.TYPE_FREE_ACTIVE
-import com.quickpoint.snookerboard.domain.PotType.TYPE_LAST_BLACK_FOULED
-import com.quickpoint.snookerboard.domain.PotType.TYPE_REMOVE_RED
-import com.quickpoint.snookerboard.domain.addLog
-import com.quickpoint.snookerboard.domain.availablePoints
-import com.quickpoint.snookerboard.domain.calculatePoints
-import com.quickpoint.snookerboard.domain.endFrame
-import com.quickpoint.snookerboard.domain.foulValue
-import com.quickpoint.snookerboard.domain.frameScoreDiff
-import com.quickpoint.snookerboard.domain.getPotFromType
-import com.quickpoint.snookerboard.domain.isFrameEqual
-import com.quickpoint.snookerboard.domain.isInColors
-import com.quickpoint.snookerboard.domain.isLastBall
-import com.quickpoint.snookerboard.domain.isLastBlack
-import com.quickpoint.snookerboard.domain.lastPotType
-import com.quickpoint.snookerboard.domain.listOfPotTypesForNoBallSnackbar
-import com.quickpoint.snookerboard.domain.onPot
-import com.quickpoint.snookerboard.domain.onUndo
-import com.quickpoint.snookerboard.domain.removeLastPotFromFrameStack
-import com.quickpoint.snookerboard.domain.resetBalls
-import com.quickpoint.snookerboard.domain.resetFrame
-import com.quickpoint.snookerboard.domain.resetMatch
+import com.quickpoint.snookerboard.domain.PotType.*
+import com.quickpoint.snookerboard.domain.objects.FrameToggles.FRAMETOGGLES
 import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.Event
-import com.quickpoint.snookerboard.utils.FrameToggles.FRAMETOGGLES
 import com.quickpoint.snookerboard.utils.JobQueue
 import com.quickpoint.snookerboard.utils.MatchAction
-import com.quickpoint.snookerboard.utils.MatchAction.FOUL_DIALOG
-import com.quickpoint.snookerboard.utils.MatchAction.FRAME_ENDED
-import com.quickpoint.snookerboard.utils.MatchAction.FRAME_ENDING_DIALOG
-import com.quickpoint.snookerboard.utils.MatchAction.FRAME_LAST_BLACK_FOULED_DIALOG
-import com.quickpoint.snookerboard.utils.MatchAction.FRAME_MISS_FORFEIT
-import com.quickpoint.snookerboard.utils.MatchAction.FRAME_MISS_FORFEIT_DIALOG
-import com.quickpoint.snookerboard.utils.MatchAction.FRAME_RESPOT_BLACK_DIALOG
-import com.quickpoint.snookerboard.utils.MatchAction.FRAME_START_NEW
-import com.quickpoint.snookerboard.utils.MatchAction.FRAME_TO_END
-import com.quickpoint.snookerboard.utils.MatchAction.FRAME_UNDO
-import com.quickpoint.snookerboard.utils.MatchAction.FRAME_UPDATED
-import com.quickpoint.snookerboard.utils.MatchAction.MATCH_ENDED
-import com.quickpoint.snookerboard.utils.MatchAction.MATCH_START_NEW
-import com.quickpoint.snookerboard.utils.MatchAction.MATCH_TO_END
-import com.quickpoint.snookerboard.utils.MatchAction.NAV_TO_POST_MATCH
-import com.quickpoint.snookerboard.utils.MatchAction.SNACK_NO_BALL
-import com.quickpoint.snookerboard.utils.MatchAction.TRANSITION_TO_FRAGMENT
-import com.quickpoint.snookerboard.utils.MatchSettings.Settings
+import com.quickpoint.snookerboard.utils.MatchAction.*
+import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
 import com.quickpoint.snookerboard.utils.livedata.ValueKeeperLiveData
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -110,7 +64,7 @@ class GameViewModel(
     private val _crtPlayer = MutableLiveData<Int>()
     val crtPlayer: LiveData<Int> = _crtPlayer
     private fun onEventFrameUpdated(actionLog: DomainActionLog) = jobQueue.submit {
-        _displayFrame.postValue(DomainFrame(Settings.crtFrame, ballStack, score, frameStack, actionLogs, Settings.maxAvailablePoints))
+        _displayFrame.postValue(DomainFrame(Settings.crtFrame, ballStack, score, frameStack, actionLogs, Settings.availablePoints))
         if (actionLogs.size > 0) snookerRepository.saveCurrentFrame(_displayFrame.value!!)
         actionLogs.addLog(actionLog)
         _crtPlayer.value = Settings.crtPlayer

@@ -21,7 +21,7 @@
     <string name="l_rules_main_tv_player_b_label">Player 2</string>
     <string name="l_rules_main_tv_frames_label">Number of Frames</string>
     <string name="l_rules_main_tv_breaks_first_label">Player to Break</string>
-    <string name="l_rules_main_btn_breaks_random">Coin toss</string>
+    <string name="l_rules_main_btn_breaks_coin_toss">Coin toss</string>
     <string name="l_rules_extra_tv_reds_label">Number of Reds</string>
     <string name="l_rules_extra_btn_reds_six">6</string>
     <string name="l_rules_extra_btn_reds_ten">10</string>

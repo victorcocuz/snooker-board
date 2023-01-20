@@ -24,12 +24,7 @@ import androidx.navigation.ui.NavigationUI
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.gms.ads.MobileAds
 import com.quickpoint.snookerboard.billing.PurchaseHelper
-import com.quickpoint.snookerboard.compose.navigation.AppBar
-import com.quickpoint.snookerboard.compose.navigation.DrawerBody
-import com.quickpoint.snookerboard.compose.navigation.DrawerHeader
-import com.quickpoint.snookerboard.compose.navigation.NavGraph
-import com.quickpoint.snookerboard.compose.navigation.Screen
-import com.quickpoint.snookerboard.compose.navigation.getMenuItems
+import com.quickpoint.snookerboard.compose.navigation.*
 import com.quickpoint.snookerboard.compose.ui.styles.DefaultSnackbar
 import com.quickpoint.snookerboard.compose.ui.styles.GenericSurface
 import com.quickpoint.snookerboard.compose.ui.theme.Green
@@ -38,10 +33,10 @@ import com.quickpoint.snookerboard.compose.ui.theme.Transparent
 import com.quickpoint.snookerboard.databinding.ActivityMainBinding
 import com.quickpoint.snookerboard.utils.DataStore
 import com.quickpoint.snookerboard.utils.GenericViewModelFactory
+import com.quickpoint.snookerboard.utils.MatchAction
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-// Test Comment
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainVm: MainViewModel
@@ -190,5 +185,17 @@ fun SnookerBoardApp(activity: MainActivity) {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun FragmentMain(
+    navController: NavController,
+    mainVm: MainViewModel,
+    dataStore: DataStore
+) {
+    LaunchedEffect(key1 = true) {
+        dataStore.loadPreferences()
+        mainVm.onEmit(MatchAction.NAV_TO_PLAY)
     }
 }

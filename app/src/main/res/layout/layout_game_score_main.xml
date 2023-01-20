@@ -6,7 +6,7 @@
     <data>
         <import type="com.quickpoint.snookerboard.domain.DomainScoreKt"/>
         <import type="com.quickpoint.snookerboard.domain.DomainBallKt" />
-        <import type="com.quickpoint.snookerboard.utils.MatchSettings.Settings"/>
+        <import type="com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings"/>
         <variable
             name="varGameVm"
             type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />

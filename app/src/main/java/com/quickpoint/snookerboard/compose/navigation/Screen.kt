@@ -2,8 +2,6 @@ package com.quickpoint.snookerboard.compose.navigation
 
 sealed class Screen(val route: String) {
     object MainScreen: Screen("main_screen")
-    object DetailScreen: Screen("detail_screen")
-
     object RulesScreen: Screen("rules_screen")
     object GameScreen: Screen("game_screen")
     object SummaryScreen: Screen("summary_screen")

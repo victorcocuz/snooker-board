@@ -3,10 +3,10 @@ package com.quickpoint.snookerboard.domain
 import com.quickpoint.snookerboard.domain.BallType.TYPE_WHITE
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.domain.ShotType.*
-import com.quickpoint.snookerboard.utils.FrameToggles.FRAMETOGGLES
+import com.quickpoint.snookerboard.domain.objects.FrameToggles
 import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.MatchAction.FRAME_RERACK
-import com.quickpoint.snookerboard.utils.MatchSettings.Settings
+import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -112,12 +112,12 @@ fun MutableList<DomainScore>.calculatePoints(pot: DomainPot, pol: Int, lastFoulS
         TYPE_HIT, TYPE_FREE, TYPE_SAFE, TYPE_SNOOKER -> {
             if (pot.shotType in listOf(LONG_AND_REST, LONG)) this[Settings.crtPlayer].longShotsSuccess += pol
             if (pot.shotType in listOf(LONG_AND_REST, REST)) this[Settings.crtPlayer].restShotsSuccess += pol
-            FRAMETOGGLES.resetToggleLongAndRest()
+            FrameToggles.FRAMETOGGLES.resetToggleLongAndRest()
         }
         TYPE_FOUL, TYPE_MISS, TYPE_SAFE_MISS -> {
             if (pot.shotType in listOf(LONG_AND_REST, LONG)) this[Settings.crtPlayer].longShotsMissed += pol
             if (pot.shotType in listOf(LONG_AND_REST, REST)) this[Settings.crtPlayer].restShotsMissed += pol
-            FRAMETOGGLES.resetToggleLongAndRest()
+            FrameToggles.FRAMETOGGLES.resetToggleLongAndRest()
         }
         else -> {}
     }

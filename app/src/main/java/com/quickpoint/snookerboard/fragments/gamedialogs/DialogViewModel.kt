@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.quickpoint.snookerboard.domain.DomainBall
 import com.quickpoint.snookerboard.domain.PotAction
 import com.quickpoint.snookerboard.utils.Event
-import com.quickpoint.snookerboard.utils.FrameToggles.FRAMETOGGLES
+import com.quickpoint.snookerboard.domain.objects.FrameToggles.FRAMETOGGLES
 import com.quickpoint.snookerboard.utils.MatchAction
 
 class DialogViewModel : ViewModel() {

@@ -25,27 +25,20 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.ScreenEvents
-import com.quickpoint.snookerboard.compose.ui.styles.AppTextField
-import com.quickpoint.snookerboard.compose.ui.styles.ButtonStandardHoist
-import com.quickpoint.snookerboard.compose.ui.styles.FragmentColumn
-import com.quickpoint.snookerboard.compose.ui.styles.NumberPickerHoist
-import com.quickpoint.snookerboard.compose.ui.styles.RuleSelectionItem
-import com.quickpoint.snookerboard.compose.ui.styles.RulesHandicapLabel
-import com.quickpoint.snookerboard.compose.ui.styles.TextNavParagraphSubTitle
+import com.quickpoint.snookerboard.compose.ui.styles.*
 import com.quickpoint.snookerboard.compose.ui.theme.spacing
+import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
+import com.quickpoint.snookerboard.domain.objects.MatchState.*
+import com.quickpoint.snookerboard.domain.objects.Toggle
 import com.quickpoint.snookerboard.utils.*
-import com.quickpoint.snookerboard.utils.MatchSettings.Settings
-import com.quickpoint.snookerboard.utils.MatchState.*
 import timber.log.Timber
 
 class RulesFragment : Fragment() {
@@ -104,7 +97,6 @@ class RulesFragment : Fragment() {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FragmentRules(
-    navController: NavController,
     mainVm: MainViewModel,
     dataStore: DataStore,
 ) {
@@ -113,8 +105,6 @@ fun FragmentRules(
     val keyboardController = LocalSoftwareKeyboardController.current
     val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = true) {
-        rulesVm.updatePlayerNames(dataStore.readAllNames())
-        rulesVm.updateRules(dataStore.readAllRules())
         rulesVm.eventSharedFlow.collect { event ->
             when (event) {
                 is ScreenEvents.SnookerEvent -> {
@@ -134,19 +124,15 @@ fun FragmentRules(
                     .padding(end = MaterialTheme.spacing.smallMedium)
             ) {
                 TextNavParagraphSubTitle(stringResource(R.string.l_rules_main_tv_player_a_label))
-                AppTextField(
-                    text = rulesVm.players[USER_PLAYER01_FIRST_NAME_KEY]?.value ?: "",
-                    placeholder = stringResource(R.string.l_rules_main_hint_name_first),
-                    onChange = { rulesVm.updatePlayerNames(mapOf(USER_PLAYER01_FIRST_NAME_KEY to it)) },
-                    imeAction = ImeAction.Next,
-                    keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) })
+                AppTextFieldHoist(
+                    rulesVm = rulesVm,
+                    key = K_PLAYER01_FIRST_NAME,
+                    keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
                 )
-                AppTextField(
-                    text = rulesVm.players[USER_PLAYER01_LAST_NAME_KEY]?.value ?: "",
-                    placeholder = stringResource(R.string.l_rules_main_hint_name_last),
-                    onChange = { rulesVm.updatePlayerNames(mapOf(USER_PLAYER01_LAST_NAME_KEY to it)) },
-                    imeAction = ImeAction.Next,
-                    keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) })
+                AppTextFieldHoist(
+                    rulesVm = rulesVm,
+                    key = K_PLAYER01_LAST_NAME,
+                    keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
                 )
             }
             Column(
@@ -155,47 +141,26 @@ fun FragmentRules(
                     .padding(start = MaterialTheme.spacing.smallMedium)
             ) {
                 TextNavParagraphSubTitle(stringResource(R.string.l_rules_main_tv_player_b_label))
-                AppTextField(
-                    text = rulesVm.players[USER_PLAYER02_FIRST_NAME_KEY]?.value ?: "",
-                    placeholder = stringResource(R.string.l_rules_main_hint_name_first),
-                    onChange = { rulesVm.updatePlayerNames(mapOf(USER_PLAYER02_FIRST_NAME_KEY to it)) },
-                    imeAction = ImeAction.Next,
-                    keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) })
+                AppTextFieldHoist(
+                    rulesVm = rulesVm,
+                    key = K_PLAYER02_FIRST_NAME,
+                    keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
                 )
-                AppTextField(
-                    text = rulesVm.players[USER_PLAYER02_LAST_NAME_KEY]?.value ?: "",
-                    placeholder = stringResource(R.string.l_rules_main_hint_name_last),
-                    onChange = { rulesVm.updatePlayerNames(mapOf(USER_PLAYER02_LAST_NAME_KEY to it)) },
-                    imeAction = ImeAction.Done,
-                    keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
+                AppTextFieldHoist(
+                    rulesVm = rulesVm,
+                    key = K_PLAYER02_LAST_NAME,
+                    keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }),
                 )
             }
         }
         TextNavParagraphSubTitle(stringResource(R.string.l_rules_main_hint_name_last))
         NumberPickerHoist(rulesVm = rulesVm)
         RuleSelectionItem(stringResource(R.string.l_rules_main_tv_breaks_first_label)) {
-            ButtonStandardHoist(
-                text = stringResource(R.string.l_rules_main_tv_player_a_label),
-                rulesVm = rulesVm,
-                key = KEY_INT_MATCH_STARTING_PLAYER,
-                value = 0
-            )
-            ButtonStandardHoist(
-                text = stringResource(R.string.l_rules_main_btn_breaks_random),
-                rulesVm = rulesVm,
-                key = KEY_INT_MATCH_STARTING_PLAYER,
-                value = 2
-            )
-            ButtonStandardHoist(
-                text = stringResource(R.string.l_rules_main_tv_player_a_label),
-                rulesVm = rulesVm,
-                key = KEY_INT_MATCH_STARTING_PLAYER,
-                value = 1
-            )
+            ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_STARTING_PLAYER, value = 0)
+            ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_STARTING_PLAYER, value = 2)
+            ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_STARTING_PLAYER, value = 1)
         }
-        if (MatchToggleType.ADVANCED_RULES.getToggle().isEnabled) {
-            ToggleAdvancedRulesColumn(rulesVm)
-        }
+        if (Toggle.AdvancedRules.isEnabled) ToggleAdvancedRulesColumn(rulesVm)
         Button(
             shape = RoundedCornerShape(50.dp),
             onClick = {
@@ -210,79 +175,24 @@ fun FragmentRules(
 @Composable
 fun ToggleAdvancedRulesColumn(rulesVm: RulesViewModel) = Column {
     RuleSelectionItem(stringResource(R.string.l_rules_extra_tv_reds_label)) {
-        ButtonStandardHoist(
-            text = stringResource(R.string.l_rules_extra_btn_reds_six),
-            rulesVm = rulesVm,
-            key = KEY_INT_MATCH_AVAILABLE_REDS,
-            value = 6,
-        )
-        ButtonStandardHoist(
-            text = stringResource(R.string.l_rules_extra_btn_reds_ten),
-            rulesVm = rulesVm,
-            key = KEY_INT_MATCH_AVAILABLE_REDS,
-            value = 10
-        )
-        ButtonStandardHoist(
-            text = stringResource(R.string.l_rules_extra_btn_reds_fifteen),
-            rulesVm = rulesVm,
-            key = KEY_INT_MATCH_AVAILABLE_REDS,
-            value = 15
-        )
+        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_AVAILABLE_REDS, value = 6,)
+        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_AVAILABLE_REDS, value = 10)
+        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_AVAILABLE_REDS, value = 15)
     }
     RuleSelectionItem(stringResource(R.string.l_rules_extra_tv_foul_modifier_label)) {
-        ButtonStandardHoist(
-            text = stringResource(R.string.l_rules_extra_btn_foul_one),
-            rulesVm = rulesVm,
-            key = KEY_INT_MATCH_FOUL_MODIFIER,
-            value = -3,
-        )
-        ButtonStandardHoist(
-            text = stringResource(R.string.l_rules_extra_btn_foul_two),
-            rulesVm = rulesVm,
-            key = KEY_INT_MATCH_FOUL_MODIFIER,
-            value = -2
-        )
-        ButtonStandardHoist(
-            text = stringResource(R.string.l_rules_extra_btn_foul_three),
-            rulesVm = rulesVm,
-            key = KEY_INT_MATCH_FOUL_MODIFIER,
-            value = -1
-        )
-        ButtonStandardHoist(
-            text = stringResource(R.string.l_rules_extra_btn_foul_four),
-            rulesVm = rulesVm,
-            key = KEY_INT_MATCH_FOUL_MODIFIER,
-            value = 0
-        )
+        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_FOUL_MODIFIER, value = -3,)
+        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_FOUL_MODIFIER, value = -2)
+        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_FOUL_MODIFIER, value = -1)
+        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_FOUL_MODIFIER, value = 0)
     }
     RuleSelectionItem(stringResource(R.string.l_rules_extra_tv_handicap_frame_label)) {
-        ButtonStandardHoist(
-            text = stringResource(R.string.l_rules_extra_btn_handicap_frame_less),
-            rulesVm = rulesVm,
-            key = KEY_INT_MATCH_HANDICAP_FRAME,
-            value = -10,
-        )
-        RulesHandicapLabel(rulesVm = rulesVm, key = KEY_INT_MATCH_HANDICAP_FRAME)
-        ButtonStandardHoist(
-            text = stringResource(R.string.l_rules_extra_btn_handicap_frame_more),
-            rulesVm = rulesVm,
-            key = KEY_INT_MATCH_HANDICAP_FRAME,
-            value = 10
-        )
+        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_HANDICAP_FRAME, value = -10)
+        RulesHandicapLabel(rulesVm = rulesVm, key = K_INT_MATCH_HANDICAP_FRAME)
+        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_HANDICAP_FRAME, value = 10)
     }
     RuleSelectionItem(stringResource(R.string.l_rules_extra_tv_handicap_match_label)) {
-        ButtonStandardHoist(
-            text = stringResource(R.string.l_rules_extra_btn_handicap_match_less),
-            rulesVm = rulesVm,
-            key = KEY_INT_MATCH_HANDICAP_MATCH,
-            value = -1,
-        )
-        RulesHandicapLabel(rulesVm = rulesVm, key = KEY_INT_MATCH_HANDICAP_MATCH)
-        ButtonStandardHoist(
-            text = stringResource(R.string.l_rules_extra_btn_handicap_match_more),
-            rulesVm = rulesVm,
-            key = KEY_INT_MATCH_HANDICAP_MATCH,
-            value = 1
-        )
+        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_HANDICAP_MATCH, value = -1)
+        RulesHandicapLabel(rulesVm = rulesVm, key = K_INT_MATCH_HANDICAP_MATCH)
+        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_HANDICAP_MATCH, value = 1)
     }
 }

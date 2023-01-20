@@ -4,8 +4,8 @@ import com.quickpoint.snookerboard.database.DbPot
 import com.quickpoint.snookerboard.domain.PotAction.CONTINUE
 import com.quickpoint.snookerboard.domain.PotAction.RETAKE
 import com.quickpoint.snookerboard.domain.PotType.*
-import com.quickpoint.snookerboard.utils.MatchSettings.Settings
-import com.quickpoint.snookerboard.utils.OldMatchToggle.MATCHTOGGLES
+import com.quickpoint.snookerboard.domain.objects.Toggle
+import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
 
 // The DOMAIN Break class is a list of balls potted in one visit (consecutive balls by one player until the other player takes over or the frame ends)
 data class DomainBreak(
@@ -66,7 +66,7 @@ fun MutableList<DomainBreak>.findMaxBreak(): Int {
 fun MutableList<DomainBreak>.displayShots(): MutableList<DomainBreak> {
     val list = mutableListOf<DomainBreak>() // Create a list of pots show within the break rv (SAFE, MISS, REMOVERED are not shown)
     forEach {
-        val listOfPotTypes: List<PotType> = if (MATCHTOGGLES.isAdvancedBreaks) listOfAdvancedShowablePotTypes else listOfStandardShowablePotTypes
+        val listOfPotTypes: List<PotType> = if (Toggle.AdvancedBreaks.isEnabled) listOfAdvancedShowablePotTypes else listOfStandardShowablePotTypes
         if (it.pots.last().potType in listOfPotTypes) list.add(it.copy())
     }
     return list

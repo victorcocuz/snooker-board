@@ -19,7 +19,6 @@ import com.quickpoint.snookerboard.fragments.summary.SummaryAdapter
 import com.quickpoint.snookerboard.utils.BallAdapterType.*
 import com.quickpoint.snookerboard.utils.BallAdapterType.MATCH
 import com.quickpoint.snookerboard.utils.MatchAction.*
-import com.quickpoint.snookerboard.utils.MatchToggleType.*
 import com.quickpoint.snookerboard.utils.PlayerTagType.*
 
 // General

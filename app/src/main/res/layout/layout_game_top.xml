@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="com.quickpoint.snookerboard.domain.DomainPlayer"/>
+        <import type="com.quickpoint.snookerboard.domain.objects.DomainPlayer"/>
         <variable
             name="varPlayerTagType"
             type="com.quickpoint.snookerboard.utils.PlayerTagType" />
@@ -38,12 +38,12 @@
                 android:id="@+id/l_game_top_tv_player_a_name_first"
                 style="@style/TextCaption"
                 android:layout_marginBottom="@dimen/subtitle_offset"
-                android:text="@={DomainPlayer.PLAYER01.INSTANCE.firstName}"/>
+                android:text="@={DomainPlayer.Player01.INSTANCE.firstName}"/>
 
             <TextView
                 android:id="@+id/l_game_top_tv_player_a_name_last"
                 style="@style/TextSubtitle"
-                android:text="@={DomainPlayer.PLAYER01.INSTANCE.lastName}"/>
+                android:text="@={DomainPlayer.Player01.INSTANCE.lastName}"/>
         </LinearLayout>
 
         <LinearLayout
@@ -59,12 +59,12 @@
                 android:id="@+id/l_game_top_tv_player_b_name_first"
                 style="@style/TextCaption"
                 android:layout_marginBottom="@dimen/subtitle_offset"
-                android:text="@={DomainPlayer.PLAYER02.INSTANCE.firstName}"/>
+                android:text="@={DomainPlayer.Player02.INSTANCE.firstName}"/>
 
             <TextView
                 android:id="@+id/l_game_top_tv_player_b_name_last"
                 style="@style/TextSubtitle"
-                android:text="@={DomainPlayer.PLAYER02.INSTANCE.lastName}"/>
+                android:text="@={DomainPlayer.Player02.INSTANCE.lastName}"/>
         </LinearLayout>
 
 

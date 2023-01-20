@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.quickpoint.snookerboard.utils.MatchSettings.Settings"/>
+        <import type="com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings"/>
 
         <variable
             name="varSummaryVm"

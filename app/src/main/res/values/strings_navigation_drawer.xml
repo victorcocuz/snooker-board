@@ -50,7 +50,7 @@
     <string name="f_nav_settings_toggle_advanced_statistics_description">Show detailed score statistics during the match</string>
     <string name="f_nav_settings_toggle_advanced_breaks_title">Advanced Breaks</string>
     <string name="f_nav_settings_toggle_advanced_breaks_description">Show all the shots during the match, not only the ones that add to the score</string>
-
+<string name="helper_not_implemented">Not Implemented</string>
     <!--Fragment About-->
     <string name="f_nav_about_tv_description">Snooker Board is a simple snooker score keeping app that focuses on recording one full match at a time, with care to encompass all rules from the WPBSA (World Professional Billiards and Snooker Association) Official Rules of the Games of Snooker and Billiards</string>
     <string name="f_nav_about_tv_version_title">Releases</string>

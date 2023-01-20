@@ -12,7 +12,7 @@ import com.quickpoint.snookerboard.domain.DomainBall.*
 import com.quickpoint.snookerboard.domain.DomainPot.*
 import com.quickpoint.snookerboard.domain.PotAction.*
 import com.quickpoint.snookerboard.repository.SnookerRepository
-import com.quickpoint.snookerboard.utils.MatchSettings.*
+import com.quickpoint.snookerboard.domain.objects.MatchSettings.*
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test

@@ -5,55 +5,33 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.quickpoint.snookerboard.compose.ui.theme.Beige
-import com.quickpoint.snookerboard.compose.ui.theme.Black
-import com.quickpoint.snookerboard.compose.ui.theme.CreamBright
-import com.quickpoint.snookerboard.compose.ui.theme.Green
-import com.quickpoint.snookerboard.compose.ui.theme.White
-import com.quickpoint.snookerboard.compose.ui.theme.spacing
+import com.quickpoint.snookerboard.compose.ui.theme.*
+import com.quickpoint.snookerboard.domain.objects.MatchSettings.*
+import com.quickpoint.snookerboard.domain.objects.getPlaceholderStringIdByKey
+import com.quickpoint.snookerboard.domain.objects.getPlayerNameByKey
+import com.quickpoint.snookerboard.domain.objects.getSettingsTextIdByKeyAndValue
+import com.quickpoint.snookerboard.domain.objects.isSettingsButtonSelected
 import com.quickpoint.snookerboard.fragments.rules.RulesViewModel
 import com.quickpoint.snookerboard.fragments.rules.RulesViewModel.*
-import com.quickpoint.snookerboard.utils.Event
-import com.quickpoint.snookerboard.utils.KEY_INT_MATCH_AVAILABLE_FRAMES
-import com.quickpoint.snookerboard.utils.KEY_INT_MATCH_AVAILABLE_REDS
-import com.quickpoint.snookerboard.utils.KEY_INT_MATCH_FOUL_MODIFIER
-import com.quickpoint.snookerboard.utils.KEY_INT_MATCH_HANDICAP_FRAME
-import com.quickpoint.snookerboard.utils.KEY_INT_MATCH_STARTING_PLAYER
-import com.quickpoint.snookerboard.utils.MatchSettings.*
+import com.quickpoint.snookerboard.utils.*
 import com.shawnlin.numberpicker.NumberPicker
 
 
@@ -88,11 +66,11 @@ fun RulesHandicapLabel(
     rulesVm: RulesViewModel,
     key: String,
 ) {
-    val rulesUpdateAction: Event<Unit> by rulesVm.eventRulesUpdated.observeAsState(Event(Unit))
+    val rulesUpdateAction: Event<Unit> by rulesVm.eventMatchSettingsChange.observeAsState(Event(Unit))
     var handicap by remember { mutableStateOf(0) }
     LaunchedEffect(key1 = rulesUpdateAction) {
         handicap = when (key) {
-            KEY_INT_MATCH_HANDICAP_FRAME -> Settings.handicapFrame
+            K_INT_MATCH_HANDICAP_FRAME -> Settings.handicapFrame
             else -> Settings.handicapMatch
         }
     }
@@ -108,7 +86,7 @@ fun NumberPickerHoist(
     modifier: Modifier = Modifier,
     rulesVm: RulesViewModel,
 ) {
-    val rulesUpdateAction: Event<Unit> by rulesVm.eventRulesUpdated.observeAsState(Event(Unit))
+    val rulesUpdateAction: Event<Unit> by rulesVm.eventMatchSettingsChange.observeAsState(Event(Unit))
     LaunchedEffect(key1 = rulesUpdateAction, block = {}) // Used to refresh composition when rules change
     NumberPicker(modifier, rulesVm, Settings.availableFrames)
 }
@@ -136,7 +114,7 @@ fun NumberPicker(
                 value = newValue
                 displayedValues = (minValue until maxValue * 2).filter { it % 2 != 0 }.map { it.toString() }.toTypedArray()
                 setOnValueChangedListener { _, _, newVal ->
-                    rulesVm.updateAction(KEY_INT_MATCH_AVAILABLE_FRAMES, newVal)
+                    rulesVm.onMatchSettingsChange(K_INT_MATCH_AVAILABLE_FRAMES, newVal)
                 }
             }
         },
@@ -147,23 +125,16 @@ fun NumberPicker(
 
 @Composable
 fun ButtonStandardHoist(
-    text: String,
     rulesVm: RulesViewModel,
     key: String,
     value: Int = -2,
 ) {
-    val rulesUpdateAction: Event<Unit> by rulesVm.eventRulesUpdated.observeAsState(Event(Unit))
+    val rulesUpdateAction: Event<Unit> by rulesVm.eventMatchSettingsChange.observeAsState(Event(Unit))
     LaunchedEffect(key1 = rulesUpdateAction, block = {}) // Used to refresh composition when rules change
     ButtonStandard(
-        text = text,
-        onClick = { rulesVm.updateAction(key, value) },
-        isSelected = value == when (key) {
-            KEY_INT_MATCH_STARTING_PLAYER -> Settings.startingPlayer
-            KEY_INT_MATCH_AVAILABLE_FRAMES -> Settings.availableFrames
-            KEY_INT_MATCH_AVAILABLE_REDS -> Settings.availableReds
-            KEY_INT_MATCH_FOUL_MODIFIER -> Settings.foulModifier
-            else -> -1000
-        }
+        text = stringResource(getSettingsTextIdByKeyAndValue(key, value)),
+        isSelected = isSettingsButtonSelected(key, value),
+        onClick = { rulesVm.onMatchSettingsChange(key, value) }
     )
 }
 
@@ -192,17 +163,33 @@ fun ButtonStandard(
     }
 }
 
+@Composable
+fun AppTextFieldHoist(
+    modifier: Modifier = Modifier,
+    rulesVm: RulesViewModel,
+    key: String,
+    keyboardActions: KeyboardActions = KeyboardActions(),
+) {
+    val nameChangeEvent: Event<Unit> by rulesVm.eventPlayerNameChange.observeAsState(Event(Unit))
+    nameChangeEvent.getContentIfNotHandled() // Simply used to call the observer, only to trigger composition
+    AppTextField(
+        modifier = modifier,
+        text = getPlayerNameByKey(key),
+        placeholder = stringResource(getPlaceholderStringIdByKey(key)),
+        imeAction = if (key == K_PLAYER02_LAST_NAME) ImeAction.Done else ImeAction.Next,
+        keyboardActions = keyboardActions,
+        onChange = { rulesVm.onPlayerNameChange(key, it) }
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppTextField(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     text: String,
-    leadingIcon: @Composable (() -> Unit)? = null,
-    imeAction: ImeAction = ImeAction.Next,
-    keyboardType: KeyboardType = KeyboardType.Text,
-    keyboardActions: KeyboardActions = KeyboardActions(),
-    isEnabled: Boolean = true,
     placeholder: String,
+    imeAction: ImeAction = ImeAction.Next,
+    keyboardActions: KeyboardActions = KeyboardActions(),
     onChange: (String) -> Unit = {},
 ) {
     OutlinedTextField(
@@ -218,14 +205,12 @@ fun AppTextField(
             .fillMaxWidth()
             .padding(0.dp, MaterialTheme.spacing.extraSmall),
         value = text,
-        leadingIcon = leadingIcon,
         keyboardOptions = KeyboardOptions(
             imeAction = imeAction,
-            keyboardType = keyboardType,
+            keyboardType = KeyboardType.Text,
             capitalization = KeyboardCapitalization.Sentences
         ),
         keyboardActions = keyboardActions,
-        enabled = isEnabled,
         placeholder = { Text(text = placeholder, style = MaterialTheme.typography.titleMedium.copy(color = Color.LightGray)) },
         onValueChange = onChange,
     )

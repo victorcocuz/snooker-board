@@ -2,15 +2,10 @@ package com.quickpoint.snookerboard.fragments.navdrawer
 
 import androidx.appcompat.widget.SwitchCompat
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -18,53 +13,58 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.NavController
 import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.compose.ui.styles.FragmentColumn
 import com.quickpoint.snookerboard.compose.ui.styles.TextNavParagraph
 import com.quickpoint.snookerboard.compose.ui.styles.TextNavParagraphSubTitle
 import com.quickpoint.snookerboard.compose.ui.theme.spacing
+import com.quickpoint.snookerboard.domain.objects.getToggleByKey
 import com.quickpoint.snookerboard.utils.Event
-import com.quickpoint.snookerboard.utils.MatchToggleType
-import com.quickpoint.snookerboard.utils.getToggle
+import com.quickpoint.snookerboard.utils.K_INT_TOGGLE_ADVANCED_BREAKS
+import com.quickpoint.snookerboard.utils.K_INT_TOGGLE_ADVANCED_RULES
+import com.quickpoint.snookerboard.utils.K_INT_TOGGLE_ADVANCED_STATISTICS
 
 @Composable
 fun FragmentDrawerSettings(
-    navController: NavController,
     mainVm: MainViewModel
 ) {
+    LaunchedEffect(key1 = true) {
+
+    }
     FragmentColumn {
         Spacer(Modifier.height(MaterialTheme.spacing.large))
-        SettingsToggleHoist(MatchToggleType.ADVANCED_RULES, mainVm)
+        SettingsToggleHoist(K_INT_TOGGLE_ADVANCED_RULES, mainVm)
         Spacer(Modifier.height(MaterialTheme.spacing.large))
-        SettingsToggleHoist(MatchToggleType.ADVANCED_STATISTICS, mainVm)
+        SettingsToggleHoist(K_INT_TOGGLE_ADVANCED_STATISTICS, mainVm)
         Spacer(Modifier.height(MaterialTheme.spacing.large))
-        SettingsToggleHoist(MatchToggleType.ADVANCED_BREAKS, mainVm)
+        SettingsToggleHoist(K_INT_TOGGLE_ADVANCED_BREAKS, mainVm)
     }
 }
 
 @Composable
-fun SettingsToggleHoist(matchToggleType: MatchToggleType, mainVm: MainViewModel) {
-    val togglesEvent: Event<Unit> by mainVm.matchToggleEvent.observeAsState(Event(Unit))
+fun SettingsToggleHoist(key: String, mainVm: MainViewModel) {
+    val togglesEvent: Event<Unit> by mainVm.eventToggleChange.observeAsState(Event(Unit))
     togglesEvent.getContentIfNotHandled() // Simply used to call the observer, only to trigger composition
     SettingsToggle(
         stringResource(
-            when (matchToggleType) {
-                MatchToggleType.ADVANCED_RULES -> R.string.f_nav_settings_toggle_advanced_rules_title
-                MatchToggleType.ADVANCED_STATISTICS -> R.string.f_nav_settings_toggle_advanced_statistics_title
-                MatchToggleType.ADVANCED_BREAKS -> R.string.f_nav_settings_toggle_advanced_breaks_title
+            when (key) {
+                K_INT_TOGGLE_ADVANCED_RULES -> R.string.f_nav_settings_toggle_advanced_rules_title
+                K_INT_TOGGLE_ADVANCED_STATISTICS -> R.string.f_nav_settings_toggle_advanced_statistics_title
+                K_INT_TOGGLE_ADVANCED_BREAKS -> R.string.f_nav_settings_toggle_advanced_breaks_title
+                else -> R.string.helper_not_implemented
             }
         ),
         stringResource(
-            when (matchToggleType) {
-                MatchToggleType.ADVANCED_RULES -> R.string.f_nav_settings_toggle_advanced_rules_description
-                MatchToggleType.ADVANCED_STATISTICS -> R.string.f_nav_settings_toggle_advanced_statistics_description
-                MatchToggleType.ADVANCED_BREAKS -> R.string.f_nav_settings_toggle_advanced_breaks_description
+            when (key) {
+                K_INT_TOGGLE_ADVANCED_RULES -> R.string.f_nav_settings_toggle_advanced_rules_description
+                K_INT_TOGGLE_ADVANCED_STATISTICS -> R.string.f_nav_settings_toggle_advanced_statistics_description
+                K_INT_TOGGLE_ADVANCED_BREAKS -> R.string.f_nav_settings_toggle_advanced_breaks_description
+                else -> R.string.helper_not_implemented
             }
         ),
-        matchToggleType.getToggle().isEnabled
-    ) { mainVm.updateMatchToggle(matchToggleType) }
+        getToggleByKey(key)?.isEnabled ?: true
+    ) { mainVm.onToggleChange(key) }
 }
 
 @Composable

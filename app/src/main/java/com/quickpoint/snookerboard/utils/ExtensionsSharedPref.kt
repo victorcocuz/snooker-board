@@ -9,11 +9,10 @@ import android.content.SharedPreferences
 import androidx.fragment.app.Fragment
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.SnookerBoardApplication
-import com.quickpoint.snookerboard.domain.DomainPlayer.PLAYER01
-import com.quickpoint.snookerboard.domain.DomainPlayer.PLAYER02
-import com.quickpoint.snookerboard.utils.FrameToggles.FRAMETOGGLES
-import com.quickpoint.snookerboard.utils.MatchSettings.*
-import com.quickpoint.snookerboard.utils.OldMatchToggle.*
+import com.quickpoint.snookerboard.domain.objects.DomainPlayer.Player01
+import com.quickpoint.snookerboard.domain.objects.DomainPlayer.Player02
+import com.quickpoint.snookerboard.domain.objects.FrameToggles
+import com.quickpoint.snookerboard.domain.objects.MatchSettings.*
 import timber.log.Timber
 
 // Shared preferences
@@ -43,30 +42,29 @@ fun SharedPreferences.savePref() {
 //            putInt(getString(R.string.sp_match_first_player), Settings.startingPlayer)
             putInt(getString(R.string.sp_match_crt_player), Settings.crtPlayer)
             putLong(getString(R.string.sp_match_crt_frame), Settings.crtFrame)
-            putInt(getString(R.string.sp_match_max_available_points), Settings.maxAvailablePoints)
+            putInt(getString(R.string.sp_match_max_available_points), Settings.availablePoints)
             putInt(getString(R.string.sp_match_max_counter_retake), Settings.counterRetake)
 //            putInt(getString(R.string.sp_match_handicap_frame), Settings.handicapFrame)
 //            putInt(getString(R.string.sp_match_handicap_match), Settings.handicapMatch)
             putInt(getString(R.string.sp_match_ongoing_points_without_return), Settings.ongoingPointsWithoutReturn)
 
             // Frame Toggles
-            putBoolean(getString(R.string.sp_match_toggle_freeball), FRAMETOGGLES.isFreeball)
-            putBoolean(getString(R.string.sp_match_toggle_long), FRAMETOGGLES.isLongShot)
-            putBoolean(getString(R.string.sp_match_toggle_rest), FRAMETOGGLES.isRestShot)
+            putBoolean(getString(R.string.sp_match_toggle_freeball), FrameToggles.FRAMETOGGLES.isFreeball)
+            putBoolean(getString(R.string.sp_match_toggle_long), FrameToggles.FRAMETOGGLES.isLongShot)
+            putBoolean(getString(R.string.sp_match_toggle_rest), FrameToggles.FRAMETOGGLES.isRestShot)
 
             // Match Toggles
-            putBoolean(getString(R.string.sp_toggle_advanced_rules), Toggle.AdvancedRules.isEnabled)
-            putBoolean(getString(R.string.sp_toggle_advanced_statistics), Toggle.AdvancedStatistics.isEnabled)
-            putBoolean(getString(R.string.sp_toggle_advanced_breaks), Toggle.AdvancedBreaks.isEnabled)
+//            putBoolean(getString(R.string.sp_toggle_advanced_rules), Toggle.AdvancedRules.isEnabled)
+//            putBoolean(getString(R.string.sp_toggle_advanced_statistics), Toggle.AdvancedStatistics.isEnabled)
+//            putBoolean(getString(R.string.sp_toggle_advanced_breaks), Toggle.AdvancedBreaks.isEnabled)
 
             apply()
         }
         Timber.i(
             "-----------------------------------------ADD TO SHARED PREF---------------------------------------------\n" +
-                    "Player ${Settings.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}\n" +
+                    "Player ${Settings.matchState}, ${Player01.getPlayerText()} and ${Player02.getPlayerText()}\n" +
                     "${Settings.getAsText()}\n" +
-                    "${FRAMETOGGLES.getAsText()}\n" +
-                    "${MATCHTOGGLES.getAsText()}\n"
+                    "${FrameToggles.FRAMETOGGLES.getAsText()}\n"
         )
     }
 }
@@ -94,22 +92,21 @@ fun SharedPreferences.loadPref() {
             getInt(getString(R.string.sp_match_ongoing_points_without_return), 0),
         )
 
-        FRAMETOGGLES.assignFrameToggles(
+        FrameToggles.FRAMETOGGLES.assignFrameToggles(
             getBoolean(getString(R.string.sp_match_toggle_freeball), false),
             getBoolean(getString(R.string.sp_match_toggle_long), false),
             getBoolean(getString(R.string.sp_match_toggle_rest), false),
         )
 
-        Toggle.AdvancedRules.isEnabled = getBoolean(getString(R.string.sp_toggle_advanced_rules), true)
-        Toggle.AdvancedStatistics.isEnabled = getBoolean(getString(R.string.sp_toggle_advanced_statistics), true)
-        Toggle.AdvancedBreaks.isEnabled = getBoolean(getString(R.string.sp_toggle_advanced_breaks), true)
+//        Toggle.AdvancedRules.isEnabled = getBoolean(getString(R.string.sp_toggle_advanced_rules), true)
+//        Toggle.AdvancedStatistics.isEnabled = getBoolean(getString(R.string.sp_toggle_advanced_statistics), true)
+//        Toggle.AdvancedBreaks.isEnabled = getBoolean(getString(R.string.sp_toggle_advanced_breaks), true)
     }
     Timber.i(
         "----------------------------------------GET FROM SHARED PREF--------------------------------------------\n" +
-                "Player ${Settings.matchState}, ${PLAYER01.getPlayerText()} and ${PLAYER02.getPlayerText()}\n" +
+                "Player ${Settings.matchState}, ${Player01.getPlayerText()} and ${Player02.getPlayerText()}\n" +
                 "${Settings.getAsText()}\n" +
-                "${FRAMETOGGLES.getAsText()}\n" +
-                "${MATCHTOGGLES.getAsText()}\n"
+                "${FrameToggles.FRAMETOGGLES.getAsText()}\n"
     )
 
 }

@@ -9,7 +9,7 @@ import com.quickpoint.snookerboard.database.asDomainFrameScoreList
 import com.quickpoint.snookerboard.domain.DomainActionLog
 import com.quickpoint.snookerboard.domain.DomainFrame
 import com.quickpoint.snookerboard.domain.DomainScore
-import com.quickpoint.snookerboard.utils.MatchSettings
+import com.quickpoint.snookerboard.domain.objects.MatchSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber

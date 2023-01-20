@@ -6,9 +6,9 @@
     <data>
         <import type="com.quickpoint.snookerboard.utils.MatchAction" />
 
-        <import type="com.quickpoint.snookerboard.domain.DomainPlayer" />
+        <import type="com.quickpoint.snookerboard.domain.objects.DomainPlayer" />
 
-        <import type="com.quickpoint.snookerboard.utils.MatchSettings.Settings" />
+        <import type="com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings" />
 
         <variable
             name="varRulesVm"
