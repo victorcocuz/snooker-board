@@ -49,9 +49,9 @@ internal class GameViewModelTest {
     @Test
     fun handle_and_undo_pot_general() {
         gameVm.apply {
-            SETTINGS.assignRules(0, 1, 15, 4, 1, 0, 1, 0, 0, 0,0)
+            Settings.assignRules(0, 1, 15, 4, 1, 0, 1, 0, 0, 0,0)
             resetMatch()
-            assertThat(ballStack.size).isEqualTo(7 + SETTINGS.availableReds * 2)
+            assertThat(ballStack.size).isEqualTo(7 + Settings.availableReds * 2)
 
             val actionLogs: Array<DomainActionLog> = Gson().fromJson(jsonLogsNew, object : TypeToken<Array<DomainActionLog>>() {}.type)
             actionLogs.forEachIndexed{index, actionLog ->
@@ -65,7 +65,7 @@ internal class GameViewModelTest {
             }
 
             repeat(actionLogs.size) { assignPot(null) } // Undo until no balls left
-            assertThat(ballStack.size).isEqualTo(SETTINGS.availableReds * 2 + 7)
+            assertThat(ballStack.size).isEqualTo(Settings.availableReds * 2 + 7)
             assertThat(frameStack.size).isEqualTo(0)
             assertThat(score[0].framePoints).isEqualTo(0)
             assertThat(score[1].framePoints).isEqualTo(0)

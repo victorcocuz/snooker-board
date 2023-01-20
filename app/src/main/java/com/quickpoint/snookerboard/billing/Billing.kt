@@ -52,7 +52,7 @@ data class PurchaseHelper(val activity: Activity) {
     val priceText = _priceText.asStateFlow()
 
     fun billingSetup() {
-        Timber.e("billingSetup()")
+        Timber.i("billingSetup()")
         billingClient = BillingClient.newBuilder(activity)
             .setListener(purchasesUpdatedListener)
             .enablePendingPurchases()
@@ -61,7 +61,7 @@ data class PurchaseHelper(val activity: Activity) {
     }
 
     private fun connectToGooglePlay() {
-        Timber.e("connectToGooglePlay()")
+        Timber.i("connectToGooglePlay()")
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {

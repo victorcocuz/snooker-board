@@ -3,8 +3,46 @@ package com.quickpoint.snookerboard.utils
 import android.content.Context
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.domain.PotType
-import com.quickpoint.snookerboard.domain.PotType.*
-import com.quickpoint.snookerboard.utils.MatchAction.*
+import com.quickpoint.snookerboard.domain.PotType.TYPE_FOUL
+import com.quickpoint.snookerboard.domain.PotType.TYPE_FREE_ACTIVE
+import com.quickpoint.snookerboard.domain.PotType.TYPE_LAST_BLACK_FOULED
+import com.quickpoint.snookerboard.domain.PotType.TYPE_REMOVE_RED
+import com.quickpoint.snookerboard.domain.PotType.TYPE_RESPOT_BLACK
+import com.quickpoint.snookerboard.utils.MatchAction.CLOSE_DIALOG
+import com.quickpoint.snookerboard.utils.MatchAction.FOUL_CONFIRM
+import com.quickpoint.snookerboard.utils.MatchAction.FRAME_ENDED
+import com.quickpoint.snookerboard.utils.MatchAction.FRAME_ENDING_DIALOG
+import com.quickpoint.snookerboard.utils.MatchAction.FRAME_FREE_ACTIVE
+import com.quickpoint.snookerboard.utils.MatchAction.FRAME_LAST_BLACK_FOULED
+import com.quickpoint.snookerboard.utils.MatchAction.FRAME_LAST_BLACK_FOULED_DIALOG
+import com.quickpoint.snookerboard.utils.MatchAction.FRAME_LOG_ACTIONS
+import com.quickpoint.snookerboard.utils.MatchAction.FRAME_LOG_ACTIONS_DIALOG
+import com.quickpoint.snookerboard.utils.MatchAction.FRAME_MISS_FORFEIT
+import com.quickpoint.snookerboard.utils.MatchAction.FRAME_MISS_FORFEIT_DIALOG
+import com.quickpoint.snookerboard.utils.MatchAction.FRAME_REMOVE_RED
+import com.quickpoint.snookerboard.utils.MatchAction.FRAME_RERACK
+import com.quickpoint.snookerboard.utils.MatchAction.FRAME_RERACK_DIALOG
+import com.quickpoint.snookerboard.utils.MatchAction.FRAME_RESPOT_BLACK
+import com.quickpoint.snookerboard.utils.MatchAction.FRAME_RESPOT_BLACK_DIALOG
+import com.quickpoint.snookerboard.utils.MatchAction.FRAME_TO_END
+import com.quickpoint.snookerboard.utils.MatchAction.IGNORE
+import com.quickpoint.snookerboard.utils.MatchAction.MATCH_CANCEL
+import com.quickpoint.snookerboard.utils.MatchAction.MATCH_CANCEL_DIALOG
+import com.quickpoint.snookerboard.utils.MatchAction.MATCH_ENDED
+import com.quickpoint.snookerboard.utils.MatchAction.MATCH_ENDED_DISCARD_FRAME
+import com.quickpoint.snookerboard.utils.MatchAction.MATCH_ENDING_DIALOG
+import com.quickpoint.snookerboard.utils.MatchAction.MATCH_TO_END
+import com.quickpoint.snookerboard.utils.MatchAction.SNACK_ADD_RED
+import com.quickpoint.snookerboard.utils.MatchAction.SNACK_FRAME_ENDING_DIALOG
+import com.quickpoint.snookerboard.utils.MatchAction.SNACK_FRAME_RERACK_DIALOG
+import com.quickpoint.snookerboard.utils.MatchAction.SNACK_HANDICAP_FRAME_LIMIT
+import com.quickpoint.snookerboard.utils.MatchAction.SNACK_HANDICAP_MATCH_LIMIT
+import com.quickpoint.snookerboard.utils.MatchAction.SNACK_MATCH_ENDING_DIALOG
+import com.quickpoint.snookerboard.utils.MatchAction.SNACK_NO_BALL
+import com.quickpoint.snookerboard.utils.MatchAction.SNACK_NO_STARTING_PLAYER
+import com.quickpoint.snookerboard.utils.MatchAction.SNACK_PLAYER_NAME_INCOMPLETE
+import com.quickpoint.snookerboard.utils.MatchAction.SNACK_REMOVE_COLOR
+import com.quickpoint.snookerboard.utils.MatchAction.SNACK_UNDO
 import timber.log.Timber
 
 enum class MatchAction {
@@ -17,8 +55,8 @@ enum class MatchAction {
     MATCH_PLAY, // When actioned from the play fragment
     INFO_FOUL_DIALOG, // On clicking the info foul button on the rules screen, it will open a generic dialog
 
-    SNACK_NO_PLAYER, // Assign snackbar when player names are not fully completed
-    SNACK_NO_FIRST, // Assign snackbar when no first player is selected
+    SNACK_PLAYER_NAME_INCOMPLETE, // Assign snackbar when player names are not fully completed
+    SNACK_NO_STARTING_PLAYER, // Assign snackbar when no first player is selected
     SNACK_HANDICAP_FRAME_LIMIT,
     SNACK_HANDICAP_MATCH_LIMIT,
 
@@ -64,6 +102,7 @@ enum class MatchAction {
 
     // Summary Fragment Actions
     NAV_TO_PLAY, // Go to main menu
+    NAV_TO_GAME, // Go to game fragment
 
     // Redundant Actions
     CLOSE_DIALOG, // Used when the action is to continue current state
@@ -117,8 +156,8 @@ fun MatchAction.getPotType(): PotType? = when (this) {
 
 fun MatchAction.getSnackText(context: Context) = context.getString(
     when (this) {
-        SNACK_NO_PLAYER -> R.string.snack_f_rules_no_player
-        SNACK_NO_FIRST -> R.string.snack_f_rules_select_no_first
+        SNACK_PLAYER_NAME_INCOMPLETE -> R.string.snack_f_rules_no_player
+        SNACK_NO_STARTING_PLAYER -> R.string.snack_f_rules_select_no_first
         SNACK_HANDICAP_FRAME_LIMIT -> R.string.snack_f_rules_handicap_frame_limit
         SNACK_HANDICAP_MATCH_LIMIT -> R.string.snack_f_rules_handicap_match_limit
         SNACK_UNDO -> R.string.snack_f_game_undo

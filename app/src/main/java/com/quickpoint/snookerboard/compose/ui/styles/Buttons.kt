@@ -1,5 +1,6 @@
 package com.quickpoint.snookerboard.compose.ui.styles
 
+import android.widget.LinearLayout
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -37,6 +38,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import com.quickpoint.snookerboard.compose.ui.theme.Beige
 import com.quickpoint.snookerboard.compose.ui.theme.Black
 import com.quickpoint.snookerboard.compose.ui.theme.CreamBright
@@ -45,9 +47,14 @@ import com.quickpoint.snookerboard.compose.ui.theme.White
 import com.quickpoint.snookerboard.compose.ui.theme.spacing
 import com.quickpoint.snookerboard.fragments.rules.RulesViewModel
 import com.quickpoint.snookerboard.fragments.rules.RulesViewModel.*
-import com.quickpoint.snookerboard.fragments.rules.RulesViewModel.RulesUpdateAction.*
 import com.quickpoint.snookerboard.utils.Event
+import com.quickpoint.snookerboard.utils.KEY_INT_MATCH_AVAILABLE_FRAMES
+import com.quickpoint.snookerboard.utils.KEY_INT_MATCH_AVAILABLE_REDS
+import com.quickpoint.snookerboard.utils.KEY_INT_MATCH_FOUL_MODIFIER
+import com.quickpoint.snookerboard.utils.KEY_INT_MATCH_HANDICAP_FRAME
+import com.quickpoint.snookerboard.utils.KEY_INT_MATCH_STARTING_PLAYER
 import com.quickpoint.snookerboard.utils.MatchSettings.*
+import com.shawnlin.numberpicker.NumberPicker
 
 
 @Composable
@@ -79,39 +86,82 @@ fun ButtonDonate(text: String, price: String, image: Painter, onClick: () -> Uni
 @Composable
 fun RulesHandicapLabel(
     rulesVm: RulesViewModel,
-    action: RulesUpdateAction,
-    ) {
+    key: String,
+) {
     val rulesUpdateAction: Event<Unit> by rulesVm.eventRulesUpdated.observeAsState(Event(Unit))
-    var handicap by remember { mutableStateOf(0)}
+    var handicap by remember { mutableStateOf(0) }
     LaunchedEffect(key1 = rulesUpdateAction) {
-        handicap = when (action) {
-            RULES_HANDICAP_FRAME -> SETTINGS.handicapFrame
-            else -> SETTINGS.handicapMatch
+        handicap = when (key) {
+            KEY_INT_MATCH_HANDICAP_FRAME -> Settings.handicapFrame
+            else -> Settings.handicapMatch
         }
     }
     Text(
         modifier = Modifier.width(60.dp),
         textAlign = TextAlign.Center,
-        text = "${SETTINGS.getHandicap(handicap, -1)} - ${SETTINGS.getHandicap(handicap, 1)}")
+        text = "${Settings.getHandicap(handicap, -1)} - ${Settings.getHandicap(handicap, 1)}"
+    )
+}
+
+@Composable
+fun NumberPickerHoist(
+    modifier: Modifier = Modifier,
+    rulesVm: RulesViewModel,
+) {
+    val rulesUpdateAction: Event<Unit> by rulesVm.eventRulesUpdated.observeAsState(Event(Unit))
+    LaunchedEffect(key1 = rulesUpdateAction, block = {}) // Used to refresh composition when rules change
+    NumberPicker(modifier, rulesVm, Settings.availableFrames)
+}
+
+@Composable
+fun NumberPicker(
+    modifier: Modifier,
+    rulesVm: RulesViewModel,
+    newValue: Int
+) {
+    AndroidView( // Number Picker
+        modifier = modifier
+            .height(40.dp)
+            .fillMaxWidth()
+            .padding(MaterialTheme.spacing.medium, MaterialTheme.spacing.small, 0.dp, 0.dp),
+        factory = { context ->
+            NumberPicker(context).apply {
+                dividerColor = android.graphics.Color.WHITE
+                setDividerDistance(360)
+                orientation = LinearLayout.HORIZONTAL
+                selectedTextColor = android.graphics.Color.WHITE
+                textColor = android.graphics.Color.WHITE
+                minValue = 1
+                maxValue = 19
+                value = newValue
+                displayedValues = (minValue until maxValue * 2).filter { it % 2 != 0 }.map { it.toString() }.toTypedArray()
+                setOnValueChangedListener { _, _, newVal ->
+                    rulesVm.updateAction(KEY_INT_MATCH_AVAILABLE_FRAMES, newVal)
+                }
+            }
+        },
+        update = {
+            it.value = newValue
+        })
 }
 
 @Composable
 fun ButtonStandardHoist(
     text: String,
     rulesVm: RulesViewModel,
-    action: RulesUpdateAction,
+    key: String,
     value: Int = -2,
 ) {
     val rulesUpdateAction: Event<Unit> by rulesVm.eventRulesUpdated.observeAsState(Event(Unit))
     LaunchedEffect(key1 = rulesUpdateAction, block = {}) // Used to refresh composition when rules change
     ButtonStandard(
         text = text,
-        onClick = { rulesVm.updateAction(action, value) },
-        isSelected = value == when (action) {
-            RULES_STARTING_PLAYER -> SETTINGS.startingPlayer
-            RULES_AVAILABLE_FRAMES -> SETTINGS.availableFrames
-            RULES_AVAILABLE_REDS -> SETTINGS.availableReds
-            RULES_FOUL_MODIFIER -> SETTINGS.foulModifier
+        onClick = { rulesVm.updateAction(key, value) },
+        isSelected = value == when (key) {
+            KEY_INT_MATCH_STARTING_PLAYER -> Settings.startingPlayer
+            KEY_INT_MATCH_AVAILABLE_FRAMES -> Settings.availableFrames
+            KEY_INT_MATCH_AVAILABLE_REDS -> Settings.availableReds
+            KEY_INT_MATCH_FOUL_MODIFIER -> Settings.foulModifier
             else -> -1000
         }
     )
@@ -150,7 +200,7 @@ fun AppTextField(
     leadingIcon: @Composable (() -> Unit)? = null,
     imeAction: ImeAction = ImeAction.Next,
     keyboardType: KeyboardType = KeyboardType.Text,
-    keyBoardActions: KeyboardActions = KeyboardActions(),
+    keyboardActions: KeyboardActions = KeyboardActions(),
     isEnabled: Boolean = true,
     placeholder: String,
     onChange: (String) -> Unit = {},
@@ -174,7 +224,7 @@ fun AppTextField(
             keyboardType = keyboardType,
             capitalization = KeyboardCapitalization.Sentences
         ),
-        keyboardActions = keyBoardActions,
+        keyboardActions = keyboardActions,
         enabled = isEnabled,
         placeholder = { Text(text = placeholder, style = MaterialTheme.typography.titleMedium.copy(color = Color.LightGray)) },
         onValueChange = onChange,

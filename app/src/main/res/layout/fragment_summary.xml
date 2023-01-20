@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS"/>
+        <import type="com.quickpoint.snookerboard.utils.MatchSettings.Settings"/>
 
         <variable
             name="varSummaryVm"
@@ -58,7 +58,7 @@
             app:layout_constraintEnd_toEndOf="@+id/f_summary_gd_vert_mid"
             app:layout_constraintStart_toStartOf="@+id/f_summary_gd_vert_mid"
             app:layout_constraintTop_toTopOf="@+id/f_summary_tv_score_frames_a"
-            android:text="@{String.valueOf(SETTINGS.INSTANCE.getDisplayFrames())}" />
+            android:text="@{String.valueOf(Settings.INSTANCE.getDisplayFrames())}" />
 
         <TextView
             android:id="@+id/f_summary_tv_score_frames_b"

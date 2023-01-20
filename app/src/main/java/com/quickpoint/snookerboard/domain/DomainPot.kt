@@ -5,7 +5,7 @@ import com.quickpoint.snookerboard.domain.DomainPot.*
 import com.quickpoint.snookerboard.domain.PotAction.*
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.domain.ShotType.STANDARD
-import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
+import com.quickpoint.snookerboard.utils.MatchSettings.Settings
 
 // Classes and variables that define all pot types and pot actions
 enum class PotType { TYPE_HIT, TYPE_FOUL, TYPE_FREE, TYPE_FOUL_ATTEMPT, TYPE_SNOOKER, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_MISS, TYPE_FREE_ACTIVE, TYPE_REMOVE_RED, TYPE_REMOVE_COLOR, TYPE_ADDRED, TYPE_LAST_BLACK_FOULED, TYPE_RESPOT_BLACK }
@@ -51,28 +51,28 @@ sealed class DomainPot(
             ballType = ball.ballType,
             ballPoints = ball.points,
             potAction = potAction,
-            player = SETTINGS.crtPlayer,
+            player = Settings.crtPlayer,
             breakCount = size,
             ballStackLast = lastBall,
-            frameCount = SETTINGS.crtFrame
+            frameCount = Settings.crtFrame
         )
     }
 }
 
 fun PotType.getPotFromType(ball: DomainBall = NOBALL(), action: PotAction = CONTINUE, shotType: ShotType) = when (this) {
-    TYPE_HIT -> HIT((SETTINGS.assignUniqueId()), ball, shotType)
-    TYPE_FOUL -> FOUL((SETTINGS.assignUniqueId()), ball, action, shotType)
-    TYPE_FREE -> FREE(SETTINGS.assignUniqueId(), ball, shotType)
-    TYPE_FOUL_ATTEMPT -> FOULATTEMPT(SETTINGS.assignUniqueId(), shotType)
-    TYPE_SNOOKER -> SNOOKER(SETTINGS.assignUniqueId(), shotType)
-    TYPE_SAFE -> SAFE(SETTINGS.assignUniqueId(), shotType)
-    TYPE_SAFE_MISS -> SAFEMISS(SETTINGS.assignUniqueId(), shotType)
-    TYPE_MISS -> MISS(SETTINGS.assignUniqueId(), shotType)
-    TYPE_FREE_ACTIVE -> FREEACTIVE(SETTINGS.assignUniqueId())
-    TYPE_REMOVE_RED -> REMOVERED(SETTINGS.assignUniqueId())
-    TYPE_REMOVE_COLOR -> REMOVECOLOR(SETTINGS.assignUniqueId())
-    TYPE_ADDRED -> ADDRED(SETTINGS.assignUniqueId())
-    TYPE_LAST_BLACK_FOULED -> LASTBLACKFOULED(SETTINGS.assignUniqueId())
-    TYPE_RESPOT_BLACK -> RESPOTBLACK(SETTINGS.assignUniqueId())
+    TYPE_HIT -> HIT((Settings.assignUniqueId()), ball, shotType)
+    TYPE_FOUL -> FOUL((Settings.assignUniqueId()), ball, action, shotType)
+    TYPE_FREE -> FREE(Settings.assignUniqueId(), ball, shotType)
+    TYPE_FOUL_ATTEMPT -> FOULATTEMPT(Settings.assignUniqueId(), shotType)
+    TYPE_SNOOKER -> SNOOKER(Settings.assignUniqueId(), shotType)
+    TYPE_SAFE -> SAFE(Settings.assignUniqueId(), shotType)
+    TYPE_SAFE_MISS -> SAFEMISS(Settings.assignUniqueId(), shotType)
+    TYPE_MISS -> MISS(Settings.assignUniqueId(), shotType)
+    TYPE_FREE_ACTIVE -> FREEACTIVE(Settings.assignUniqueId())
+    TYPE_REMOVE_RED -> REMOVERED(Settings.assignUniqueId())
+    TYPE_REMOVE_COLOR -> REMOVECOLOR(Settings.assignUniqueId())
+    TYPE_ADDRED -> ADDRED(Settings.assignUniqueId())
+    TYPE_LAST_BLACK_FOULED -> LASTBLACKFOULED(Settings.assignUniqueId())
+    TYPE_RESPOT_BLACK -> RESPOTBLACK(Settings.assignUniqueId())
 }
 

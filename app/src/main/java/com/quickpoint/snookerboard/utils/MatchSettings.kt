@@ -32,7 +32,7 @@ sealed class MatchSettings(
     var handicapMatch: Int,
     var ongoingPointsWithoutReturn: Int
 ) {
-    object SETTINGS : MatchSettings(NONE, 0, 2, 15, 0, -1, -1, 0, 0, 0, 0, 0,0) {
+    object Settings : MatchSettings(NONE, 0, 2, 15, 0, -1, -1, 0, 0, 0, 0, 0,0) {
 
         // Assign methods
         fun setMatchState(state: MatchState): Int {
@@ -61,29 +61,29 @@ sealed class MatchSettings(
 
         fun assignRules(
             uniqueId: Long,
-            availableFrames: Int,
-            availableReds: Int,
-            foulModifier: Int,
-            startingPlayer: Int,
+//            availableFrames: Int,
+//            availableReds: Int,
+//            foulModifier: Int,
+//            startingPlayer: Int,
             crtPlayer: Int,
             crtFrame: Long,
             maxAvailablePoints: Int,
             retakeCounter: Int,
-            handicapFrame: Int,
-            handicapMatch: Int,
+//            handicapFrame: Int,
+//            handicapMatch: Int,
             ongoingPointsWithoutReturn: Int
         ) {
             this.uniqueId = uniqueId
-            this.availableFrames = availableFrames
-            this.availableReds = availableReds
-            this.foulModifier = foulModifier
-            this.startingPlayer = startingPlayer
+//            this.availableFrames = availableFrames
+//            this.availableReds = availableReds
+//            this.foulModifier = foulModifier
+//            this.startingPlayer = startingPlayer
             this.crtPlayer = crtPlayer
             this.crtFrame = crtFrame
             this.maxAvailablePoints = maxAvailablePoints
             this.counterRetake = retakeCounter
-            this.handicapFrame = handicapFrame
-            this.handicapMatch = handicapMatch
+//            this.handicapFrame = handicapFrame
+//            this.handicapMatch = handicapMatch
             this.ongoingPointsWithoutReturn = ongoingPointsWithoutReturn
             Timber.i("assignRules(): ${getAsText()}")
         }
@@ -103,6 +103,19 @@ sealed class MatchSettings(
         fun assignUniqueId(): Long {
             uniqueId++
             return uniqueId
+        }
+
+        // Setter methods
+        fun setValue(map: Map<String, Any>, dataStore: DataStore) = map.forEach {
+            when (it.key) {
+                KEY_INT_MATCH_STARTING_PLAYER -> startingPlayer = it.value as Int
+                KEY_INT_MATCH_AVAILABLE_FRAMES -> availableFrames = it.value as Int
+                KEY_INT_MATCH_AVAILABLE_REDS -> availableReds = it.value as Int
+                KEY_INT_MATCH_FOUL_MODIFIER -> foulModifier = it.value as Int
+                KEY_INT_MATCH_HANDICAP_FRAME -> handicapFrame = if (it.value as Int == 0) 0 else handicapFrame + it.value as Int
+                KEY_INT_MATCH_HANDICAP_MATCH -> handicapMatch = if (it.value as Int == 0) 0 else handicapMatch + it.value as Int
+            }
+            dataStore.save(mapOf(it.key to it.value))
         }
 
         // Helper methods

@@ -48,7 +48,7 @@ class SnookerRepository constructor(database: SnookerDatabase) {
     suspend fun getCrtFrame(): DbFrameWithScoreAndBreakWithPotsAndBallStack? {
         return withContext(Dispatchers.IO) {
             val crtFrame = snookerDbDao.getCrtFrame()
-            Timber.i("getCrtFrame(): State is: ${MatchSettings.SETTINGS.matchState}, CrtFrame is: ${crtFrame?.frame?.frameId}, frameCount is: ${MatchSettings.SETTINGS.crtFrame}")
+            Timber.i("getCrtFrame(): State is: ${MatchSettings.Settings.matchState}, CrtFrame is: ${crtFrame?.frame?.frameId}, frameCount is: ${MatchSettings.Settings.crtFrame}")
             return@withContext crtFrame
         }
     }

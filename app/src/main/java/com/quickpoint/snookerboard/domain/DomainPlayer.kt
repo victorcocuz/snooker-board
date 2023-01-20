@@ -1,8 +1,8 @@
 package com.quickpoint.snookerboard.domain
 
 sealed class DomainPlayer(
-    var firstName: String?,
-    var lastName: String?
+    var firstName: String,
+    var lastName: String
 ) {
     object PLAYER01 : DomainPlayer("", "")
     object PLAYER02 : DomainPlayer("", "")

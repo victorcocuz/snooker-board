@@ -1,11 +1,7 @@
 package com.quickpoint.snookerboard.utils
 
-import android.os.Bundle
-import androidx.lifecycle.AbstractSavedStateViewModelFactory
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.savedstate.SavedStateRegistryOwner
 import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.SnookerBoardApplication
 import com.quickpoint.snookerboard.fragments.game.GameViewModel
@@ -33,11 +29,11 @@ import com.quickpoint.snookerboard.fragments.summary.SummaryViewModel
 //        throw IllegalArgumentException("Unknown ViewModel class")    }
 //}
 
-class GenericViewModelFactory : ViewModelProvider.Factory {
+class GenericViewModelFactory(private val dataStore: DataStore) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(RulesViewModel::class.java)) {
-            return RulesViewModel() as T
+            return RulesViewModel(SnookerBoardApplication.application(), dataStore) as T
         }
         if (modelClass.isAssignableFrom(SummaryViewModel::class.java)) {
             return SummaryViewModel(SnookerBoardApplication.application(), SnookerBoardApplication.getSnookerRepository()) as T

@@ -28,11 +28,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.admob.AdMob
-import com.quickpoint.snookerboard.databinding.FragmentGameBinding
-import com.quickpoint.snookerboard.databinding.FragmentRulesBinding
 
 
 // General
@@ -40,16 +37,7 @@ fun Fragment.navigate(directions: NavDirections, adMob: AdMob? = null) {
     findNavController().navigate(directions)
 }
 
-fun Context.toast(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 fun Fragment.toast(message: CharSequence) = Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-fun Activity.toast(message: CharSequence) = Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
-fun View.snackbar(matchAction: MatchAction) {
-    val snackbar = Snackbar.make(this, matchAction.getSnackText(context), Snackbar.LENGTH_LONG)
-    snackbar.isGestureInsetBottomIgnored = true
-    snackbar.show()
-}
-fun FragmentGameBinding.snackbar(matchAction: MatchAction) = fGameCdl.snackbar(matchAction)
-fun FragmentRulesBinding.snackbar(matchAction: MatchAction) = fRulesCdl.snackbar(matchAction)
 
 fun Any.asText() = toString()
     .replace("DomainActionLog(description=", "")
@@ -103,13 +91,6 @@ fun DialogFragment.setLayoutSizeByFactor(factor: Float) {
 }
 
 // Scrolling
-fun ScrollView.assignScrollHeight(scrollHeight: Int, ghostHeight: Int) {
-    val params = layoutParams
-    if (scrollHeight > ghostHeight) {
-        params.height = ghostHeight
-    }
-}
-
 fun Context.getFactoredDimen(factor: Int): Int {
     val width = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
         resources.displayMetrics.widthPixels

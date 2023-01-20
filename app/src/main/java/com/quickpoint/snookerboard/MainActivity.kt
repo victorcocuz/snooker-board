@@ -2,28 +2,19 @@ package com.quickpoint.snookerboard
 
 import android.os.Build
 import android.os.Bundle
-import android.view.MotionEvent
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Snackbar
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -39,20 +30,16 @@ import com.quickpoint.snookerboard.compose.navigation.DrawerHeader
 import com.quickpoint.snookerboard.compose.navigation.NavGraph
 import com.quickpoint.snookerboard.compose.navigation.Screen
 import com.quickpoint.snookerboard.compose.navigation.getMenuItems
+import com.quickpoint.snookerboard.compose.ui.styles.DefaultSnackbar
 import com.quickpoint.snookerboard.compose.ui.styles.GenericSurface
 import com.quickpoint.snookerboard.compose.ui.theme.Green
 import com.quickpoint.snookerboard.compose.ui.theme.SnookerBoardTheme
 import com.quickpoint.snookerboard.compose.ui.theme.Transparent
 import com.quickpoint.snookerboard.databinding.ActivityMainBinding
+import com.quickpoint.snookerboard.utils.DataStore
 import com.quickpoint.snookerboard.utils.GenericViewModelFactory
-import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
-import com.quickpoint.snookerboard.utils.MatchState.GAME_IN_PROGRESS
-import com.quickpoint.snookerboard.utils.MatchState.GAME_SAVED
-import com.quickpoint.snookerboard.utils.MatchState.RULES_IDLE
-import com.quickpoint.snookerboard.utils.MatchState.RULES_PENDING
-import com.quickpoint.snookerboard.utils.removeFocusAndHideKeyboard
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 class MainActivity : AppCompatActivity() {
@@ -60,13 +47,22 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainVm: MainViewModel
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navController: NavController
+//    private const val PREFERENCES_NAME_USER =  "sample_datastore_prefs"
+//
+//    private val Context.prefsDataStore by preferencesDataStore(
+//        name = PREFERENCES_NAME_USER
+//    )
+//    suspend fun saveUserLoggedInState(state: Boolean) {
+//        prefsDataStore.edit { preferences ->
+//            preferences[PreferenceKeys.IS_USER_LOGGED_IN] = state
+//        }
+//    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen() // Keep splash screen on until match loading check is complete
 //        splashScreen.setKeepOnScreenCondition { mainVm.keepSplashScreen.value }
         super.onCreate(savedInstanceState) // Create view after installing splash screen
-
 ////         Initiate mainVm from the start to be readily accessed from all fragments when needed; pass in application and repository
 //        mainVm = ViewModelProvider(this, GenericViewModelFactory(this, null))[MainViewModel::class.java]
 //
@@ -110,35 +106,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) { // Save state and shared preferences on pause rather than onSaveInstanceState so that db save can complete
-        mainVm.updateState(
-            when (SETTINGS.matchState) {
-                RULES_IDLE -> RULES_PENDING
-                GAME_IN_PROGRESS -> GAME_SAVED
-                else -> SETTINGS.matchState
-            }
-        )
-        Timber.i(getString(R.string.helper_save_match))
+//        mainVm.updateState(
+//            when (SETTINGS.matchState) {
+//                RULES_IDLE -> RULES_PENDING
+//                GAME_IN_PROGRESS -> GAME_SAVED
+//                else -> SETTINGS.matchState
+//            }
+//        )
+//        Timber.i(getString(R.string.helper_save_match))
         super.onSaveInstanceState(outState)
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp()
     }
-
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean { // Remove focus from edit text on outside click
-        currentFocus?.removeFocusAndHideKeyboard(this, event)
-        return super.dispatchTouchEvent(event)
-    }
 }
 
 @Composable
 fun SnookerBoardApp(activity: MainActivity) {
-    val mainVm: MainViewModel = viewModel(factory = GenericViewModelFactory())
+    val context = LocalContext.current
+    val dataStore = DataStore(context)
+    val mainVm: MainViewModel = viewModel(factory = GenericViewModelFactory(dataStore))
     val systemUiController = rememberSystemUiController()
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
     val navController = rememberNavController()
-
     val purchaseHelper = PurchaseHelper(activity)
     purchaseHelper.billingSetup()
 
@@ -168,6 +160,7 @@ fun SnookerBoardApp(activity: MainActivity) {
                             }
                         )
                         coroutineScope.launch {
+                            delay(300)
                             scaffoldState.drawerState.close()
                         }
                     })
@@ -175,7 +168,7 @@ fun SnookerBoardApp(activity: MainActivity) {
                 backgroundColor = Transparent,
             drawerBackgroundColor = Green) { paddingValues ->
                 Box(modifier = Modifier.padding(paddingValues)) {
-                    NavGraph(navController, mainVm, purchaseHelper)
+                    NavGraph(navController, mainVm, dataStore, purchaseHelper)
                     DefaultSnackbar(
                         snackbarHostState = scaffoldState.snackbarHostState,
                         onDismiss = { scaffoldState.snackbarHostState.currentSnackbarData?.dismiss() },
@@ -184,12 +177,13 @@ fun SnookerBoardApp(activity: MainActivity) {
                     LaunchedEffect(key1 = true) {
                         mainVm.eventSharedFlow.collect { event ->
                             when(event) {
-                                is MainViewModel.ScreenEvents.ShowSnackbar -> {
+                                is ScreenEvents.ShowSnackbar -> {
                                     scaffoldState.snackbarHostState.showSnackbar(event.message)
                                 }
-                                is MainViewModel.ScreenEvents.Navigate -> {
+                                is ScreenEvents.Navigate -> {
                                     navController.navigate(event.route)
                                 }
+                                else -> {} // Not Implemented
                             }
                         }
                     }

@@ -6,7 +6,7 @@ import com.quickpoint.snookerboard.domain.ShotType.*
 import com.quickpoint.snookerboard.utils.FrameToggles.FRAMETOGGLES
 import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.MatchAction.FRAME_RERACK
-import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
+import com.quickpoint.snookerboard.utils.MatchSettings.Settings
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -34,9 +34,9 @@ data class DomainScore(
         framePoints + matchPoints + successShots + missedShots + safetyMissedShots + safetyMissedShots + snookers + fouls + highestBreak
 
     fun resetFrame(index: Int, matchAction: MatchAction) {
-        if (matchAction != FRAME_RERACK) scoreId = SETTINGS.assignUniqueId()
+        if (matchAction != FRAME_RERACK) scoreId = Settings.assignUniqueId()
         playerId = index
-        framePoints = SETTINGS.getHandicap(SETTINGS.handicapFrame, if (index == 0) -1 else 1)
+        framePoints = Settings.getHandicap(Settings.handicapFrame, if (index == 0) -1 else 1)
         successShots = 0
         missedShots = 0
         safetySuccessShots = 0
@@ -62,7 +62,7 @@ fun MutableList<DomainScore>.isFrameAndMatchEqual() = isFrameEqual() && isMatchE
 fun MutableList<DomainScore>.isNoFrameFinished() = this[0].matchPoints + this[1].matchPoints == 0
 fun MutableList<DomainScore>.frameWinner() = if (this[0].framePoints > this[1].framePoints) 0 else 1
 fun MutableList<DomainScore>.isFrameWinResultingMatchTie() = this[frameWinner()].matchPoints + 1 == this[1 - frameWinner()].matchPoints
-fun MutableList<DomainScore>.isMatchEnding() = this[frameWinner()].matchPoints + 1 == SETTINGS.availableFrames
+fun MutableList<DomainScore>.isMatchEnding() = this[frameWinner()].matchPoints + 1 == Settings.availableFrames
 fun MutableList<DomainScore>.isMatchInProgress() = (this[0].cumulatedValues() + this[1].cumulatedValues()) > 0
 
 // Helper methods
@@ -73,15 +73,15 @@ fun MutableList<DomainScore>.resetFrame(matchAction: MatchAction) {
 fun MutableList<DomainScore>.resetMatch() {
     this.clear()
     (0 until 2).forEach {
-        this.add(DomainScore(0, 0, 0, 0, SETTINGS.getHandicap(SETTINGS.handicapMatch, if (it == 0) -1 else 1), 0, 0, 0, 0, 0, 0, 0,0,0,0,0, 0))
+        this.add(DomainScore(0, 0, 0, 0, Settings.getHandicap(Settings.handicapMatch, if (it == 0) -1 else 1), 0, 0, 0, 0, 0, 0, 0,0,0,0,0, 0))
     }
 }
 
 fun MutableList<DomainScore>.endFrame() {
-    if (SETTINGS.counterRetake == 3) this[1 - SETTINGS.crtPlayer].matchPoints += 1 // If a non-snooker shot was retaken 3 times game is lost by the crt player
+    if (Settings.counterRetake == 3) this[1 - Settings.crtPlayer].matchPoints += 1 // If a non-snooker shot was retaken 3 times game is lost by the crt player
     else this[frameWinner()].matchPoints += 1
-    for (score in this) score.frameId = SETTINGS.crtFrame // TEMP - Assign a frameId to later use to add frame info to DATABASE
-    SETTINGS.ongoingPointsWithoutReturn =
+    for (score in this) score.frameId = Settings.crtFrame // TEMP - Assign a frameId to later use to add frame info to DATABASE
+    Settings.ongoingPointsWithoutReturn =
         if (this[0].pointsWithoutReturn > 0) this[0].pointsWithoutReturn * -1
         else this[1].pointsWithoutReturn
 }
@@ -91,32 +91,32 @@ fun MutableList<DomainScore>.calculatePoints(pot: DomainPot, pol: Int, lastFoulS
     when (pot.potType) { // General shots score
         TYPE_HIT, TYPE_FREE, TYPE_ADDRED -> {
             points = pot.ball.points
-            this[SETTINGS.crtPlayer].framePoints += pol * points // Polarity is used to reverse score on undo
+            this[Settings.crtPlayer].framePoints += pol * points // Polarity is used to reverse score on undo
             pot.ball.points = points
-            this[SETTINGS.crtPlayer].successShots += pol
+            this[Settings.crtPlayer].successShots += pol
         }
         TYPE_FOUL -> {
             points = if (pot.ball.ballType == TYPE_WHITE) max(lastFoulSize, 4) else pot.ball.foul
             pot.ball.foul = points
-            this[SETTINGS.getOtherPlayer()].framePoints += pol * points
-            this[SETTINGS.crtPlayer].missedShots += pol
-            this[SETTINGS.crtPlayer].fouls += pol
+            this[Settings.getOtherPlayer()].framePoints += pol * points
+            this[Settings.crtPlayer].missedShots += pol
+            this[Settings.crtPlayer].fouls += pol
         }
-        TYPE_MISS -> this[SETTINGS.crtPlayer].missedShots += pol
-        TYPE_SAFE -> this[SETTINGS.crtPlayer].safetySuccessShots += pol
-        TYPE_SAFE_MISS -> this[SETTINGS.crtPlayer].safetyMissedShots += pol
-        TYPE_SNOOKER -> this[SETTINGS.crtPlayer].snookers += pol
+        TYPE_MISS -> this[Settings.crtPlayer].missedShots += pol
+        TYPE_SAFE -> this[Settings.crtPlayer].safetySuccessShots += pol
+        TYPE_SAFE_MISS -> this[Settings.crtPlayer].safetyMissedShots += pol
+        TYPE_SNOOKER -> this[Settings.crtPlayer].snookers += pol
         else -> {}
     }
     when (pot.potType) { // Long shots and rest shots score
         TYPE_HIT, TYPE_FREE, TYPE_SAFE, TYPE_SNOOKER -> {
-            if (pot.shotType in listOf(LONG_AND_REST, LONG)) this[SETTINGS.crtPlayer].longShotsSuccess += pol
-            if (pot.shotType in listOf(LONG_AND_REST, REST)) this[SETTINGS.crtPlayer].restShotsSuccess += pol
+            if (pot.shotType in listOf(LONG_AND_REST, LONG)) this[Settings.crtPlayer].longShotsSuccess += pol
+            if (pot.shotType in listOf(LONG_AND_REST, REST)) this[Settings.crtPlayer].restShotsSuccess += pol
             FRAMETOGGLES.resetToggleLongAndRest()
         }
         TYPE_FOUL, TYPE_MISS, TYPE_SAFE_MISS -> {
-            if (pot.shotType in listOf(LONG_AND_REST, LONG)) this[SETTINGS.crtPlayer].longShotsMissed += pol
-            if (pot.shotType in listOf(LONG_AND_REST, REST)) this[SETTINGS.crtPlayer].restShotsMissed += pol
+            if (pot.shotType in listOf(LONG_AND_REST, LONG)) this[Settings.crtPlayer].longShotsMissed += pol
+            if (pot.shotType in listOf(LONG_AND_REST, REST)) this[Settings.crtPlayer].restShotsMissed += pol
             FRAMETOGGLES.resetToggleLongAndRest()
         }
         else -> {}

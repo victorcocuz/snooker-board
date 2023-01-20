@@ -10,11 +10,16 @@ import com.google.gson.Gson
 import com.quickpoint.snookerboard.compose.navigation.Screen
 import com.quickpoint.snookerboard.database.asDomainFrame
 import com.quickpoint.snookerboard.domain.DomainFrame
-import com.quickpoint.snookerboard.domain.DomainPlayer
 import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.EMAIL_SUBJECT_LOGS
 import com.quickpoint.snookerboard.utils.Event
-import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
+import com.quickpoint.snookerboard.utils.MatchAction
+import com.quickpoint.snookerboard.utils.MatchAction.NAV_TO_GAME
+import com.quickpoint.snookerboard.utils.MatchAction.SNACK_HANDICAP_FRAME_LIMIT
+import com.quickpoint.snookerboard.utils.MatchAction.SNACK_HANDICAP_MATCH_LIMIT
+import com.quickpoint.snookerboard.utils.MatchAction.SNACK_NO_STARTING_PLAYER
+import com.quickpoint.snookerboard.utils.MatchAction.SNACK_PLAYER_NAME_INCOMPLETE
+import com.quickpoint.snookerboard.utils.MatchSettings.Settings
 import com.quickpoint.snookerboard.utils.MatchState
 import com.quickpoint.snookerboard.utils.MatchState.GAME_IN_PROGRESS
 import com.quickpoint.snookerboard.utils.MatchState.GAME_SAVED
@@ -49,30 +54,21 @@ class MainViewModel(
     private val snookerRepository: SnookerRepository,
 ) : AndroidViewModel(app) {
 
-    private val _snackBarMessageFlow = MutableSharedFlow<String>()
-    val snackbarMessageFlow = _snackBarMessageFlow.asSharedFlow()
-    fun onNewSnackbar(message: String) = viewModelScope.launch {
-        _snackBarMessageFlow.emit(message)
-    }
-
     private val _eventSharedFlow = MutableSharedFlow<ScreenEvents>()
     val eventSharedFlow = _eventSharedFlow.asSharedFlow()
-
-    sealed class ScreenEvents {
-        data class ShowSnackbar(val message: String) : ScreenEvents()
-        data class Navigate(val route: String) : ScreenEvents()
-    }
-
-    fun startMatchQuery() = viewModelScope.launch {
-        _eventSharedFlow.emit(
-            when {
-                DomainPlayer.PLAYER01.hasNoName() || DomainPlayer.PLAYER02.hasNoName() -> ScreenEvents.ShowSnackbar("No Player")
-                (SETTINGS.startingPlayer < 0) -> ScreenEvents.ShowSnackbar("No First")
-                else -> ScreenEvents.Navigate(Screen.GameScreen.route)
+    fun onEmit(action: MatchAction) = viewModelScope.launch {
+        _eventSharedFlow.emit(when(action) {
+            SNACK_HANDICAP_FRAME_LIMIT -> ScreenEvents.ShowSnackbar(app.getString(R.string.snack_f_rules_handicap_frame_limit))
+            SNACK_HANDICAP_MATCH_LIMIT -> ScreenEvents.ShowSnackbar(app.getString(R.string.snack_f_rules_handicap_match_limit))
+            SNACK_PLAYER_NAME_INCOMPLETE -> ScreenEvents.ShowSnackbar(app.getString(R.string.snack_f_rules_no_player))
+            SNACK_NO_STARTING_PLAYER -> ScreenEvents.ShowSnackbar(app.getString(R.string.snack_f_rules_select_no_first))
+            NAV_TO_GAME -> {
+                Timber.i(Settings.getAsText())
+                ScreenEvents.Navigate(Screen.GameScreen.route)
             }
-        )
+            else -> ScreenEvents.ShowSnackbar("")
+        })
     }
-
 
     // Observables
     private val _keepSplashScreen = MutableStateFlow(true)
@@ -104,9 +100,9 @@ class MainViewModel(
     private val _matchState = MutableLiveData<Event<MatchState>>()
     val matchState: LiveData<Event<MatchState>> = _matchState
     fun updateState(matchState: MatchState) = app.sharedPref().apply {
-        if (matchState == NONE) loadPref() else SETTINGS.setMatchState(matchState)
+        if (matchState == NONE) loadPref() else Settings.setMatchState(matchState)
         if (matchState in listOf(RULES_PENDING, GAME_SAVED)) savePref() else updateState()
-        if (matchState != NONE) _matchState.value = Event(SETTINGS.matchState)
+        if (matchState != NONE) _matchState.value = Event(Settings.matchState)
     }
 
     // Separate threads
@@ -117,36 +113,36 @@ class MainViewModel(
         updateState(NONE) // Load shared preferences
         updateMatchToggle(null)
         snookerRepository.getCrtFrame().let { crtFrame ->
-            when (SETTINGS.matchState) {
+            when (Settings.matchState) {
                 GAME_IN_PROGRESS -> deleteMatchFromDb() // Helps reset the match when debug-reinstalling from android studio
                 GAME_SAVED, SUMMARY -> {
                     if (crtFrame == null) updateState(RULES_IDLE) // Helps reset the app when something went wrong after previous reinstall
                     else {
                         _storedFrame.value = Event(crtFrame.asDomainFrame())
-                        updateState(if (SETTINGS.matchState == GAME_SAVED) GAME_IN_PROGRESS else SUMMARY)
+                        updateState(if (Settings.matchState == GAME_SAVED) GAME_IN_PROGRESS else SUMMARY)
                     }
                 }
 
                 RULES_IDLE, RULES_PENDING -> updateState(RULES_IDLE) // Idle helps reset the match when debug-reinstalling from android studio
-                else -> Timber.e("No implementation for state ${SETTINGS.matchState} at this point")
+                else -> Timber.e("No implementation for state ${Settings.matchState} at this point")
             }
         }
     }
 
     fun deleteCrtFrameFromDb() = viewModelScope.launch {
-        snookerRepository.deleteCurrentFrame(SETTINGS.crtFrame)
+        snookerRepository.deleteCurrentFrame(Settings.crtFrame)
     }
 
     fun deleteMatchFromDb() = viewModelScope.launch { // When starting a new match or cancelling an existing match
         updateState(RULES_IDLE)
-        SETTINGS.resetRules()
+        Settings.resetRules()
         snookerRepository.deleteCurrentMatch()
     }
 
     fun emailLogs() = viewModelScope.launch {
         val logs = snookerRepository.getDebugFrameActionList().toString()
         val json = Gson().toJson(snookerRepository.getDebugFrameActionList())
-        val body = "${SETTINGS.getAsText()} \n\n $json \n\n $logs"
+        val body = "${Settings.getAsText()} \n\n $json \n\n $logs"
         Timber.e(json)
         app.sendEmail(arrayOf(BuildConfig.ADMIN_EMAIL), EMAIL_SUBJECT_LOGS, body)
     }

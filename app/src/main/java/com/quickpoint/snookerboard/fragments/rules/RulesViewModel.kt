@@ -1,138 +1,108 @@
 package com.quickpoint.snookerboard.fragments.rules
 
-import androidx.compose.runtime.getValue
+import android.app.Application
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.quickpoint.snookerboard.domain.DomainPlayer
-import com.quickpoint.snookerboard.domain.DomainPlayer.PLAYER01
-import com.quickpoint.snookerboard.domain.DomainPlayer.PLAYER02
-import com.quickpoint.snookerboard.fragments.rules.RulesViewModel.RulesUpdateAction.RULES_AVAILABLE_FRAMES
-import com.quickpoint.snookerboard.fragments.rules.RulesViewModel.RulesUpdateAction.RULES_AVAILABLE_REDS
-import com.quickpoint.snookerboard.fragments.rules.RulesViewModel.RulesUpdateAction.RULES_FOUL_MODIFIER
-import com.quickpoint.snookerboard.fragments.rules.RulesViewModel.RulesUpdateAction.RULES_HANDICAP_FRAME
-import com.quickpoint.snookerboard.fragments.rules.RulesViewModel.RulesUpdateAction.RULES_HANDICAP_MATCH
-import com.quickpoint.snookerboard.fragments.rules.RulesViewModel.RulesUpdateAction.RULES_STARTING_PLAYER
+import androidx.lifecycle.viewModelScope
+import com.quickpoint.snookerboard.ScreenEvents
+import com.quickpoint.snookerboard.utils.DataStore
 import com.quickpoint.snookerboard.utils.Event
+import com.quickpoint.snookerboard.utils.KEY_INT_MATCH_AVAILABLE_FRAMES
+import com.quickpoint.snookerboard.utils.KEY_INT_MATCH_AVAILABLE_REDS
+import com.quickpoint.snookerboard.utils.KEY_INT_MATCH_FOUL_MODIFIER
+import com.quickpoint.snookerboard.utils.KEY_INT_MATCH_HANDICAP_FRAME
+import com.quickpoint.snookerboard.utils.KEY_INT_MATCH_HANDICAP_MATCH
+import com.quickpoint.snookerboard.utils.KEY_INT_MATCH_STARTING_PLAYER
 import com.quickpoint.snookerboard.utils.MatchAction
-import com.quickpoint.snookerboard.utils.MatchAction.MATCH_PLAY
+import com.quickpoint.snookerboard.utils.MatchAction.NAV_TO_GAME
 import com.quickpoint.snookerboard.utils.MatchAction.SNACK_HANDICAP_FRAME_LIMIT
 import com.quickpoint.snookerboard.utils.MatchAction.SNACK_HANDICAP_MATCH_LIMIT
-import com.quickpoint.snookerboard.utils.MatchAction.SNACK_NO_FIRST
-import com.quickpoint.snookerboard.utils.MatchAction.SNACK_NO_PLAYER
-import com.quickpoint.snookerboard.utils.MatchSettings.SETTINGS
+import com.quickpoint.snookerboard.utils.MatchAction.SNACK_NO_STARTING_PLAYER
+import com.quickpoint.snookerboard.utils.MatchSettings.Settings
+import com.quickpoint.snookerboard.utils.USER_PLAYER01_FIRST_NAME_KEY
+import com.quickpoint.snookerboard.utils.USER_PLAYER01_LAST_NAME_KEY
+import com.quickpoint.snookerboard.utils.USER_PLAYER02_FIRST_NAME_KEY
+import com.quickpoint.snookerboard.utils.USER_PLAYER02_LAST_NAME_KEY
+import com.quickpoint.snookerboard.utils.isNameIncomplete
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
-class RulesViewModel : ViewModel() {
+class RulesViewModel(
+    private val app: Application,
+    private val dataStore: DataStore
+) : AndroidViewModel(app) {
     // Observables
     private val _eventRulesAction = MutableLiveData<Event<MatchAction>>()
     val eventRulesAction: LiveData<Event<MatchAction>> = _eventRulesAction
-    fun onEventRulesAction(matchAction: MatchAction) { // Such as cancelling a match, ending a frame, etc.
-        _eventRulesAction.value = Event(matchAction)
+
+    private val _eventSharedFlow = MutableSharedFlow<ScreenEvents>()
+    val eventSharedFlow = _eventSharedFlow.asSharedFlow()
+    private fun onEmit(matchAction: MatchAction) = viewModelScope.launch {
+        _eventSharedFlow.emit(ScreenEvents.SnookerEvent(matchAction))
     }
 
-    var player01FirstName by mutableStateOf("")
-    var player01LastName by mutableStateOf("")
-    var player02FirstName by mutableStateOf("")
-    var player02LastName by mutableStateOf("")
+    fun startMatchQuery() = onEmit(
+        when {
+            players.isNameIncomplete() -> MatchAction.SNACK_PLAYER_NAME_INCOMPLETE
+            (Settings.startingPlayer < 0) -> SNACK_NO_STARTING_PLAYER
+            else -> NAV_TO_GAME
+        }
+    )
 
-    private val _eventPlayer01 = MutableLiveData<DomainPlayer>()
-    val eventPlayer01: LiveData<DomainPlayer> = _eventPlayer01
-    private val _eventPlayer02 = MutableLiveData<DomainPlayer>()
-    val eventPlayer02: LiveData<DomainPlayer> = _eventPlayer02
-    fun updatePlayer() {
-        _eventPlayer01.value = PLAYER01
-        _eventPlayer02.value = PLAYER02
+    var players = mapOf(
+        USER_PLAYER01_FIRST_NAME_KEY to mutableStateOf(""),
+        USER_PLAYER01_LAST_NAME_KEY to mutableStateOf(""),
+        USER_PLAYER02_FIRST_NAME_KEY to mutableStateOf(""),
+        USER_PLAYER02_LAST_NAME_KEY to mutableStateOf("")
+    )
+
+    fun updatePlayerNames(settings: Map<String, String>) = settings.forEach {
+        players[it.key]?.value = it.value
+        dataStore.save(settings)
     }
 
-    private val _eventRules = MutableLiveData<SETTINGS>()
-    val eventRules: LiveData<SETTINGS> = _eventRules
+    fun updateRules(settings: Map<String, Any>) = settings.forEach{
+        when(it.key) {
+            KEY_INT_MATCH_AVAILABLE_FRAMES -> Settings.availableFrames = it.value as Int
+            KEY_INT_MATCH_AVAILABLE_REDS -> Settings.availableReds = it.value as Int
+            KEY_INT_MATCH_FOUL_MODIFIER -> Settings.foulModifier = it.value as Int
+            KEY_INT_MATCH_STARTING_PLAYER -> Settings.startingPlayer = it.value as Int
+            KEY_INT_MATCH_HANDICAP_FRAME -> Settings.handicapFrame = it.value as Int
+            KEY_INT_MATCH_HANDICAP_MATCH -> Settings.handicapMatch = it.value as Int
+        }
+    }
 
     private val _eventRulesUpdated = MutableLiveData<Event<Unit>>()
     val eventRulesUpdated: LiveData<Event<Unit>> = _eventRulesUpdated
 
-    fun updateRules() {
-        _eventRules.value = SETTINGS
-    }
-
-    enum class RulesUpdateAction { RULES_STARTING_PLAYER, RULES_AVAILABLE_FRAMES, RULES_AVAILABLE_REDS, RULES_FOUL_MODIFIER, RULES_HANDICAP_FRAME, RULES_HANDICAP_MATCH, RULES_VOID }
-
-    fun updateAction(rulesUpdateAction: RulesUpdateAction, newValue: Int) {
-        when (rulesUpdateAction) {
-            RULES_STARTING_PLAYER -> SETTINGS.startingPlayer = if (newValue == 2) (0..1).random() else newValue
-            RULES_AVAILABLE_FRAMES -> {
-                SETTINGS.availableFrames = newValue
-                SETTINGS.handicapMatch = 0
+    fun updateAction(key: String, newValue: Int) = Settings.apply{
+        when (key) {
+            KEY_INT_MATCH_STARTING_PLAYER -> setValue(mapOf(key to if (newValue == 2) (0..1).random() else newValue), dataStore)
+            KEY_INT_MATCH_AVAILABLE_FRAMES -> setValue(mapOf(
+                key to newValue,
+                    KEY_INT_MATCH_HANDICAP_MATCH to 0
+                ), dataStore)
+            KEY_INT_MATCH_AVAILABLE_REDS -> setValue(mapOf(
+                key to newValue,
+                KEY_INT_MATCH_HANDICAP_FRAME to 0
+            ), dataStore)
+            KEY_INT_MATCH_FOUL_MODIFIER -> setValue(mapOf(key to newValue), dataStore)
+            KEY_INT_MATCH_HANDICAP_FRAME -> {
+                if ((handicapFrame + newValue).absoluteValue >= Settings.availableReds * 8 + 27)
+                    onEmit(SNACK_HANDICAP_FRAME_LIMIT)
+                else setValue(mapOf(key to newValue), dataStore)
             }
-
-            RULES_AVAILABLE_REDS -> {
-                SETTINGS.availableReds = newValue
-                SETTINGS.handicapFrame = 0
-
+            KEY_INT_MATCH_HANDICAP_MATCH -> {
+                if ((handicapMatch + newValue).absoluteValue == Settings.availableFrames)
+                    onEmit(SNACK_HANDICAP_MATCH_LIMIT)
+                else setValue(mapOf(key to newValue), dataStore)
             }
-
-            RULES_FOUL_MODIFIER -> SETTINGS.foulModifier = newValue
-            RULES_HANDICAP_FRAME -> {
-                if ((SETTINGS.handicapFrame + newValue).absoluteValue >= SETTINGS.availableReds * 8 + 27)
-                    onEventRulesAction(SNACK_HANDICAP_FRAME_LIMIT)
-                else SETTINGS.handicapFrame += newValue
-            }
-
-            RULES_HANDICAP_MATCH -> {
-                if ((SETTINGS.handicapMatch + newValue).absoluteValue == SETTINGS.availableFrames)
-                    onEventRulesAction(SNACK_HANDICAP_MATCH_LIMIT)
-                else SETTINGS.handicapMatch += newValue
-            }
-
-            RulesUpdateAction.RULES_VOID -> {}
+            else -> {} // Not Implemented
         }
         _eventRulesUpdated.value = Event(Unit)
-    }
-
-    // Helpers
-    fun updateFirstPlayer(value: Int) {
-        SETTINGS.startingPlayer = if (value == 2) (0..1).random() else value
-        updateRules()
-    }
-
-    fun updateMaxFramesAvailable(value: Int) {
-        SETTINGS.availableFrames = value
-        SETTINGS.handicapMatch = 0
-        updateRules()
-    }
-
-    fun updateReds(value: Int) {
-        SETTINGS.availableReds = value
-        SETTINGS.handicapFrame = 0
-        updateRules()
-    }
-
-    fun updateFoul(value: Int) {
-        SETTINGS.foulModifier = value
-        updateRules()
-    }
-
-    fun updateHandicapFrame(value: Int) {
-        if ((SETTINGS.handicapFrame + value).absoluteValue >= SETTINGS.availableReds * 8 + 27) onEventRulesAction(SNACK_HANDICAP_FRAME_LIMIT)
-        else SETTINGS.handicapFrame += value
-        updateRules()
-    }
-
-    fun updateHandicapMatch(value: Int) {
-        if ((SETTINGS.handicapMatch + value).absoluteValue == SETTINGS.availableFrames) onEventRulesAction(SNACK_HANDICAP_MATCH_LIMIT)
-        else SETTINGS.handicapMatch += value
-        updateRules()
-    }
-
-    fun startMatchQuery() {
-        onEventRulesAction(
-            when {
-                PLAYER01.hasNoName() || PLAYER02.hasNoName() -> SNACK_NO_PLAYER
-                (SETTINGS.startingPlayer < 0) -> SNACK_NO_FIRST
-                else -> MATCH_PLAY
-            }
-        )
     }
 }

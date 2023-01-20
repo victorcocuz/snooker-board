@@ -33,16 +33,18 @@ import com.quickpoint.snookerboard.fragments.navdrawer.FragmentDrawerSettings
 import com.quickpoint.snookerboard.fragments.navdrawer.FragmentDrawerSupport
 import com.quickpoint.snookerboard.fragments.rules.FragmentRules
 import com.quickpoint.snookerboard.fragments.summary.FragmentSummary
+import com.quickpoint.snookerboard.utils.DataStore
 
 @Composable
 fun NavGraph(
     navController: NavHostController,
     mainVm: MainViewModel,
+    dataStore: DataStore,
     purchaseHelper: PurchaseHelper
 ) {
     NavHost(navController = navController, startDestination = Screen.RulesScreen.route) {
         composable(route = Screen.RulesScreen.route) {
-            FragmentRules(navController = navController, mainVm = mainVm)
+            FragmentRules(navController = navController, mainVm = mainVm, dataStore = dataStore)
         }
         composable(route = Screen.GameScreen.route) {
             FragmentGame(navController = navController, mainVm = mainVm)
@@ -65,22 +67,6 @@ fun NavGraph(
         composable(route = Screen.DrawerSupportScreen.route) {
             FragmentDrawerSupport(navController = navController, purchaseHelper = purchaseHelper)
         }
-//        composable(route = Screen.MainScreen.route) {
-//            MainScreen(navController = navController)
-//        }
-//        composable(
-//            route = Screen.DetailScreen.route + "/{name}",
-//            arguments = listOf(
-//                navArgument("name") {
-//                    type = NavType.StringType
-//                    defaultValue = "Victor"
-//                    nullable = true
-//                }
-//            )
-//        ) { navBackStackEntry ->
-//            DetailScreen(name = navBackStackEntry.arguments?.getString("name"))
-//        }
-
     }
 }
 
