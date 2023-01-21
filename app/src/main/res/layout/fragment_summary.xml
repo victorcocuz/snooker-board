@@ -51,14 +51,14 @@
             app:layout_constraintTop_toBottomOf="@+id/f_summary_l_top"
             tools:text="13" />
 
-        <TextView
-            android:id="@+id/f_summary_tv_score_total"
-            style="@style/TextSubtitle"
-            app:layout_constraintBottom_toBottomOf="@+id/f_summary_tv_score_frames_a"
-            app:layout_constraintEnd_toEndOf="@+id/f_summary_gd_vert_mid"
-            app:layout_constraintStart_toStartOf="@+id/f_summary_gd_vert_mid"
-            app:layout_constraintTop_toTopOf="@+id/f_summary_tv_score_frames_a"
-            android:text="@{String.valueOf(Settings.INSTANCE.getDisplayFrames())}" />
+<!--        <TextView-->
+<!--            android:id="@+id/f_summary_tv_score_total"-->
+<!--            style="@style/TextSubtitle"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/f_summary_tv_score_frames_a"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/f_summary_gd_vert_mid"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/f_summary_gd_vert_mid"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/f_summary_tv_score_frames_a"-->
+<!--            android:text="@{String.valueOf(Settings.INSTANCE.getDisplayFrames())}" />-->
 
         <TextView
             android:id="@+id/f_summary_tv_score_frames_b"

@@ -14,6 +14,7 @@ import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
 import com.quickpoint.snookerboard.domain.objects.MatchState
 import com.quickpoint.snookerboard.domain.objects.MatchState.*
 import com.quickpoint.snookerboard.domain.objects.Toggle
+import com.quickpoint.snookerboard.domain.objects.getAsText
 import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.*
@@ -75,7 +76,7 @@ class MainViewModel(
     private val _matchState = MutableLiveData<Event<MatchState>>()
     val matchState: LiveData<Event<MatchState>> = _matchState
     fun updateState(matchState: MatchState) = app.sharedPref().apply {
-        if (matchState == NONE) loadPref() else Settings.setMatchState(matchState)
+        if (matchState == NONE) loadPref() else Settings.matchState = matchState
         if (matchState in listOf(RULES_PENDING, GAME_SAVED)) savePref() else updateState()
         if (matchState != NONE) _matchState.value = Event(Settings.matchState)
     }

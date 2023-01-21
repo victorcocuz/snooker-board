@@ -9,6 +9,7 @@ import com.quickpoint.snookerboard.domain.objects.DomainPlayer.Player01
 import com.quickpoint.snookerboard.domain.objects.DomainPlayer.Player02
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
 import com.quickpoint.snookerboard.domain.objects.Toggle
+import com.quickpoint.snookerboard.domain.objects.getMatchStateFromOrdinal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -47,10 +48,21 @@ class DataStore(private val context: Context) {
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("UserEmail")
     }
 
+    fun savePreferences(key: String, value: Any) = CoroutineScope(Dispatchers.IO).launch {
+        context.dataStore.edit { preferences ->
+            Timber.i("Saved: key $key, value $value")
+            when (value::class.simpleName) {
+                "String" -> preferences[stringPreferencesKey(key)] = value as String
+                "Int" -> preferences[intPreferencesKey(key)] = value as Int
+                "Long" -> preferences[longPreferencesKey(key)] = value as Long
+                "Boolean" -> preferences[booleanPreferencesKey(key)] = value as Boolean
+                else -> Timber.e("DataStore saving functionality for class ${value::class.simpleName} not implemented")
+            }
+        }
+    }
+
     suspend fun loadPreferences() {
         val preferences = context.dataStore.data.first()
-
-        Settings.getMatchStateFromOrdinal(preferences[intPreferencesKey(K_LONG_MATCH_STATE)] ?: 0)
 
         Toggle.AdvancedRules.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_ADVANCED_RULES)] ?: true
         Toggle.AdvancedStatistics.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_ADVANCED_STATISTICS)] ?: true
@@ -59,37 +71,29 @@ class DataStore(private val context: Context) {
         Toggle.LongShot.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_LONG_SHOT)] ?: true
         Toggle.RestShot.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_REST_SHOT)] ?: true
 
+        Player01.loadPreferences(
+            firstName = preferences[stringPreferencesKey(K_PLAYER01_FIRST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "Ronnie" else "",
+            lastName = preferences[stringPreferencesKey(K_PLAYER01_LAST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "O'Sullivan" else ""
+        )
+        Player02.loadPreferences(
+            firstName = preferences[stringPreferencesKey(K_PLAYER02_FIRST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "John" else "",
+            lastName = preferences[stringPreferencesKey(K_PLAYER02_LAST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "Higgins" else ""
+        )
 
-        Player01.firstName = preferences[stringPreferencesKey(K_PLAYER01_FIRST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "Ronnie" else ""
-        Player01.lastName = preferences[stringPreferencesKey(K_PLAYER01_LAST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "O'Sullivan" else ""
-        Player02.firstName = preferences[stringPreferencesKey(K_PLAYER02_FIRST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "John" else ""
-        Player02.lastName = preferences[stringPreferencesKey(K_PLAYER02_LAST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "Higgins" else ""
-
-        Settings.uniqueId = preferences[longPreferencesKey(K_INT_MATCH_UNIQUE_ID)] ?: 0
-        Settings.availableFrames = preferences[intPreferencesKey(K_INT_MATCH_AVAILABLE_FRAMES)] ?: 0
-        Settings.availableReds = preferences[intPreferencesKey(K_INT_MATCH_AVAILABLE_REDS)] ?: 0
-        Settings.foulModifier = preferences[intPreferencesKey(K_INT_MATCH_FOUL_MODIFIER)] ?: 0
-        Settings.startingPlayer = preferences[intPreferencesKey(K_INT_MATCH_STARTING_PLAYER)] ?: 0
-        Settings.handicapFrame = preferences[intPreferencesKey(K_INT_MATCH_HANDICAP_FRAME)] ?: 0
-        Settings.handicapMatch = preferences[intPreferencesKey(K_INT_MATCH_HANDICAP_MATCH)] ?: 0
-
-        Settings.crtPlayer = preferences[intPreferencesKey(K_INT_MATCH_CRT_PLAYER)] ?: 0
-        Settings.crtFrame = preferences[longPreferencesKey(K_LONG_MATCH_CRT_FRAME)] ?: 0
-        Settings.availablePoints = preferences[intPreferencesKey(K_INT_MATCH_AVAILABLE_POINTS)] ?: 0
-        Settings.counterRetake = preferences[intPreferencesKey(K_INT_MATCH_COUNTER_RETAKE)] ?: 0
-        Settings.ongoingPointsWithoutReturn = preferences[intPreferencesKey(K_INT_MATCH_POINTS_WITHOUT_RETURN)] ?: 0
-    }
-
-    fun savePreferences(key: String, value: Any) = CoroutineScope(Dispatchers.IO).launch {
-        context.dataStore.edit { preferences ->
-            Timber.e("key $key, value $value")
-                when (value::class.simpleName) {
-                    "String" -> preferences[stringPreferencesKey(key)] = value as String
-                    "Int" -> preferences[intPreferencesKey(key)] = value as Int
-                    "Long" -> preferences[longPreferencesKey(key)] = value as Long
-                    "Boolean" -> preferences[booleanPreferencesKey(key)] = value as Boolean
-                    else -> Timber.e("DataStore saving functionality for class ${value::class.simpleName} not implemented")
-                }
-            }
+        Settings.loadPreferences(
+            matchState = getMatchStateFromOrdinal(preferences[intPreferencesKey(K_LONG_MATCH_STATE)] ?: 0),
+            uniqueId = preferences[longPreferencesKey(K_INT_MATCH_UNIQUE_ID)] ?: 0,
+            availableFrames = preferences[intPreferencesKey(K_INT_MATCH_AVAILABLE_FRAMES)] ?: 0,
+            availableReds = preferences[intPreferencesKey(K_INT_MATCH_AVAILABLE_REDS)] ?: 0,
+            foulModifier = preferences[intPreferencesKey(K_INT_MATCH_FOUL_MODIFIER)] ?: 0,
+            startingPlayer = preferences[intPreferencesKey(K_INT_MATCH_STARTING_PLAYER)] ?: 0,
+            handicapFrame = preferences[intPreferencesKey(K_INT_MATCH_HANDICAP_FRAME)] ?: 0,
+            handicapMatch = preferences[intPreferencesKey(K_INT_MATCH_HANDICAP_MATCH)] ?: 0,
+            crtFrame = preferences[longPreferencesKey(K_LONG_MATCH_CRT_FRAME)] ?: 0,
+            crtPlayer = preferences[intPreferencesKey(K_INT_MATCH_CRT_PLAYER)] ?: 0,
+            availablePoints = preferences[intPreferencesKey(K_INT_MATCH_AVAILABLE_POINTS)] ?: 0,
+            counterRetake = preferences[intPreferencesKey(K_INT_MATCH_COUNTER_RETAKE)] ?: 0,
+            pointsWithoutReturn = preferences[intPreferencesKey(K_INT_MATCH_POINTS_WITHOUT_RETURN)] ?: 0
+        )
     }
 }

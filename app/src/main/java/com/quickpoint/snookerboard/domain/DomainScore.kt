@@ -4,6 +4,8 @@ import com.quickpoint.snookerboard.domain.BallType.TYPE_WHITE
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.domain.ShotType.*
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
+import com.quickpoint.snookerboard.domain.objects.getHandicap
+import com.quickpoint.snookerboard.domain.objects.getOtherPlayer
 import com.quickpoint.snookerboard.domain.objects.resetToggleLongAndRest
 import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.MatchAction.FRAME_RERACK
@@ -36,7 +38,7 @@ data class DomainScore(
     fun resetFrame(index: Int, matchAction: MatchAction) {
         if (matchAction != FRAME_RERACK) scoreId = Settings.assignUniqueId()
         playerId = index
-        framePoints = Settings.getHandicap(Settings.handicapFrame, if (index == 0) -1 else 1)
+        framePoints = getHandicap(Settings.handicapFrame, if (index == 0) -1 else 1)
         successShots = 0
         missedShots = 0
         safetySuccessShots = 0
@@ -73,15 +75,15 @@ fun MutableList<DomainScore>.resetFrame(matchAction: MatchAction) {
 fun MutableList<DomainScore>.resetMatch() {
     this.clear()
     (0 until 2).forEach {
-        this.add(DomainScore(0, 0, 0, 0, Settings.getHandicap(Settings.handicapMatch, if (it == 0) -1 else 1), 0, 0, 0, 0, 0, 0, 0,0,0,0,0, 0))
+        this.add(DomainScore(0, 0, 0, 0, getHandicap(Settings.handicapMatch, if (it == 0) -1 else 1), 0, 0, 0, 0, 0, 0, 0,0,0,0,0, 0))
     }
 }
 
 fun MutableList<DomainScore>.endFrame() {
-    if (Settings.counterRetake == 3) this[1 - Settings.crtPlayer].matchPoints += 1 // If a non-snooker shot was retaken 3 times game is lost by the crt player
+    if (Settings.counterRetake == 3) this[Settings.getOtherPlayer()].matchPoints += 1 // If a non-snooker shot was retaken 3 times game is lost by the crt player
     else this[frameWinner()].matchPoints += 1
     for (score in this) score.frameId = Settings.crtFrame // TEMP - Assign a frameId to later use to add frame info to DATABASE
-    Settings.ongoingPointsWithoutReturn =
+    Settings.pointsWithoutReturn =
         if (this[0].pointsWithoutReturn > 0) this[0].pointsWithoutReturn * -1
         else this[1].pointsWithoutReturn
 }

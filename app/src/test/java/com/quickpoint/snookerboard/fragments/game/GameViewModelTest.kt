@@ -49,7 +49,7 @@ internal class GameViewModelTest {
     @Test
     fun handle_and_undo_pot_general() {
         gameVm.apply {
-            Settings.assignRules(0, 1, 15, 4, 1, 0, 1, 0, 0, 0,0)
+            Settings.loadPreferences(0, 1, 15, 4, 1, 0, 1, 0, 0, 0,0)
             resetMatch()
             assertThat(ballStack.size).isEqualTo(7 + Settings.availableReds * 2)
 

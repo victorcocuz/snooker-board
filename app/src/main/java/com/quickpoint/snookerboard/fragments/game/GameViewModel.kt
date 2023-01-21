@@ -12,11 +12,8 @@ import com.quickpoint.snookerboard.domain.DomainPot.FOULATTEMPT
 import com.quickpoint.snookerboard.domain.DomainPot.FREE
 import com.quickpoint.snookerboard.domain.PotAction.FIRST
 import com.quickpoint.snookerboard.domain.PotType.*
+import com.quickpoint.snookerboard.domain.objects.*
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
-import com.quickpoint.snookerboard.domain.objects.Toggle
-import com.quickpoint.snookerboard.domain.objects.getShotType
-import com.quickpoint.snookerboard.domain.objects.handlePotFreeballToggle
-import com.quickpoint.snookerboard.domain.objects.handleUndoFreeballToggle
 import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.Event
 import com.quickpoint.snookerboard.utils.JobQueue
@@ -142,7 +139,7 @@ class GameViewModel(
         frameStack.onPot(pot, score[Settings.crtPlayer].pointsWithoutReturn, score)
         score.calculatePoints(pot, 1, ballStack.foulValue())
         val actionLog = pot.getActionLog("handlePot()", ballStack.lastOrNull()?.ballType, frameStack.size)
-        Settings.setNextPlayerFromPotAction(pot.potAction)
+        Settings.crtPlayer = Settings.getCrtPlayerFromPotAction(pot.potAction)
         onEventFrameUpdated(actionLog)
     }
 

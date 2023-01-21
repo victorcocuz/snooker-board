@@ -1,6 +1,5 @@
 package com.quickpoint.snookerboard.domain
 
-import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.annotations.VisibleForTesting
 import com.quickpoint.snookerboard.domain.BallType.*
 import com.quickpoint.snookerboard.domain.DomainBall.*
 import com.quickpoint.snookerboard.domain.PotAction.RETAKE
@@ -128,7 +127,6 @@ fun MutableList<DomainBall>.onUndo(potType: PotType, potAction: PotAction, frame
 }
 
 // Private methods for adding balls
-@VisibleForTesting
 internal fun MutableList<DomainBall>.addNextBalls(number: Int) = repeat(number) {
     if (size >= 37) return
     add(when (size) {
@@ -147,7 +145,6 @@ internal fun MutableList<DomainBall>.addNextBalls(number: Int) = repeat(number) 
     last().ballId = Settings.assignUniqueId()
 }
 
-@VisibleForTesting
 internal fun MutableList<DomainBall>.addBalls(vararg balls: DomainBall): Int {
     val points = when {
         isInColors() -> last().points
@@ -161,7 +158,6 @@ internal fun MutableList<DomainBall>.addBalls(vararg balls: DomainBall): Int {
     return points
 }
 
-@VisibleForTesting
 internal fun MutableList<DomainBall>.addFreeBall(pol: Int) {
     Settings.availablePoints += if (isInColors() || !wasPreviousBallColor()) {
         addBalls(FREEBALL(points = last().points)) * pol
@@ -171,7 +167,6 @@ internal fun MutableList<DomainBall>.addFreeBall(pol: Int) {
 }
 
 // Private methods for removing balls
-@VisibleForTesting
 internal fun MutableList<DomainBall>.removeBalls(times: Int): Int = if (times == 1) {
     removeLast().points * (-1)
 } else {

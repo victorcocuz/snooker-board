@@ -31,6 +31,8 @@ import com.quickpoint.snookerboard.compose.ui.theme.Green
 import com.quickpoint.snookerboard.compose.ui.theme.SnookerBoardTheme
 import com.quickpoint.snookerboard.compose.ui.theme.Transparent
 import com.quickpoint.snookerboard.databinding.ActivityMainBinding
+import com.quickpoint.snookerboard.domain.objects.DomainPlayer
+import com.quickpoint.snookerboard.domain.objects.MatchSettings
 import com.quickpoint.snookerboard.utils.DataStore
 import com.quickpoint.snookerboard.utils.GenericViewModelFactory
 import com.quickpoint.snookerboard.utils.MatchAction
@@ -195,6 +197,9 @@ fun FragmentMain(
     dataStore: DataStore
 ) {
     LaunchedEffect(key1 = true) {
+        DomainPlayer.Player01.assignDataStore(dataStore)
+        DomainPlayer.Player02.assignDataStore(dataStore)
+        MatchSettings.Settings.dataStore = dataStore
         dataStore.loadPreferences()
         mainVm.onEmit(MatchAction.NAV_TO_PLAY)
     }

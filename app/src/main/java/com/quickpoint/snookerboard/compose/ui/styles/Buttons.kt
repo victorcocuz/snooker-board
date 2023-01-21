@@ -24,11 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.quickpoint.snookerboard.compose.ui.theme.*
+import com.quickpoint.snookerboard.domain.objects.*
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.*
-import com.quickpoint.snookerboard.domain.objects.getPlaceholderStringIdByKey
-import com.quickpoint.snookerboard.domain.objects.getPlayerNameByKey
-import com.quickpoint.snookerboard.domain.objects.getSettingsTextIdByKeyAndValue
-import com.quickpoint.snookerboard.domain.objects.isSettingsButtonSelected
 import com.quickpoint.snookerboard.fragments.rules.RulesViewModel
 import com.quickpoint.snookerboard.fragments.rules.RulesViewModel.*
 import com.quickpoint.snookerboard.utils.*
@@ -77,7 +74,7 @@ fun RulesHandicapLabel(
     Text(
         modifier = Modifier.width(60.dp),
         textAlign = TextAlign.Center,
-        text = "${Settings.getHandicap(handicap, -1)} - ${Settings.getHandicap(handicap, 1)}"
+        text = "${getHandicap(handicap, -1)} - ${getHandicap(handicap, 1)}"
     )
 }
 

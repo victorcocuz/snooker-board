@@ -33,7 +33,7 @@ class GenericViewModelFactory(private val dataStore: DataStore) : ViewModelProvi
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(RulesViewModel::class.java)) {
-            return RulesViewModel(SnookerBoardApplication.application(), dataStore) as T
+            return RulesViewModel(SnookerBoardApplication.application()) as T
         }
         if (modelClass.isAssignableFrom(SummaryViewModel::class.java)) {
             return SummaryViewModel(SnookerBoardApplication.application(), SnookerBoardApplication.getSnookerRepository()) as T

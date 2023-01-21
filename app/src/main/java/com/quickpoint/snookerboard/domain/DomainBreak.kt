@@ -4,8 +4,9 @@ import com.quickpoint.snookerboard.database.DbPot
 import com.quickpoint.snookerboard.domain.PotAction.CONTINUE
 import com.quickpoint.snookerboard.domain.PotAction.RETAKE
 import com.quickpoint.snookerboard.domain.PotType.*
-import com.quickpoint.snookerboard.domain.objects.Toggle
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
+import com.quickpoint.snookerboard.domain.objects.Toggle
+import com.quickpoint.snookerboard.domain.objects.getOtherPlayer
 
 // The DOMAIN Break class is a list of balls potted in one visit (consecutive balls by one player until the other player takes over or the frame ends)
 data class DomainBreak(
@@ -112,8 +113,8 @@ fun MutableList<DomainBreak>.removeLastPotFromFrameStack(score: MutableList<Doma
     while (size > 0 && last().pots.size == 0) removeLast() // Remove all empty breaks, except initial one
 
     if (size == 0) { // Update points without return after removing empty pots and breaks
-        if (Settings.ongoingPointsWithoutReturn < 0) score[0].pointsWithoutReturn = Settings.ongoingPointsWithoutReturn * -1
-        else score[1].pointsWithoutReturn = Settings.ongoingPointsWithoutReturn
+        if (Settings.pointsWithoutReturn < 0) score[0].pointsWithoutReturn = Settings.pointsWithoutReturn * -1
+        else score[1].pointsWithoutReturn = Settings.pointsWithoutReturn
     } else if (score[Settings.crtPlayer].pointsWithoutReturn == 0)
         score[Settings.getOtherPlayer()].pointsWithoutReturn = last().pointsWithoutReturn
     return pot
