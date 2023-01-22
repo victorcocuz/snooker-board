@@ -8,6 +8,7 @@ import com.quickpoint.snookerboard.FragmentMain
 import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.billing.PurchaseHelper
 import com.quickpoint.snookerboard.fragments.game.FragmentGame
+import com.quickpoint.snookerboard.fragments.gamedialogs.FragmentDialogFoul
 import com.quickpoint.snookerboard.fragments.navdrawer.*
 import com.quickpoint.snookerboard.fragments.rules.FragmentRules
 import com.quickpoint.snookerboard.fragments.summary.FragmentSummary
@@ -20,33 +21,45 @@ fun NavGraph(
     dataStore: DataStore,
     purchaseHelper: PurchaseHelper
 ) {
-    NavHost(navController = navController, startDestination = Screen.MainScreen.route) {
-        composable(route = Screen.MainScreen.route) {
+    NavHost(navController = navController, startDestination = Screen.Main.route) {
+        composable(route = Screen.Main.route) {
             FragmentMain(navController = navController, mainVm = mainVm, dataStore = dataStore)
         }
-        composable(route = Screen.RulesScreen.route) {
-            FragmentRules(mainVm = mainVm, dataStore = dataStore)
+
+        // Main Fragments
+        composable(route = Screen.Rules.route) {
+            FragmentRules(navController = navController, mainVm = mainVm, dataStore = dataStore)
         }
-        composable(route = Screen.GameScreen.route) {
+        composable(route = Screen.Game.route) {
             FragmentGame(navController = navController, mainVm = mainVm)
         }
-        composable(route = Screen.SummaryScreen.route) {
+        composable(route = Screen.Summary.route) {
             FragmentSummary(navController = navController, mainVm = mainVm)
         }
-        composable(route = Screen.DrawerAboutScreen.route) {
+
+        // Drawer Fragments
+        composable(route = Screen.DrawerAbout.route) {
             FragmentDrawerAbout(navController = navController)
         }
-        composable(route = Screen.DrawerImproveScreen.route) {
+        composable(route = Screen.DrawerImprove.route) {
             FragmentDrawerImprove(navController = navController)
         }
-        composable(route = Screen.DrawerRulesScreen.route) {
+        composable(route = Screen.DrawerRules.route) {
             FragmentDrawerRules(navController = navController)
         }
-        composable(route = Screen.DrawerSettingsScreen.route) {
+        composable(route = Screen.DrawerSettings.route) {
             FragmentDrawerSettings(mainVm = mainVm)
         }
-        composable(route = Screen.DrawerSupportScreen.route) {
+        composable(route = Screen.DrawerSupport.route) {
             FragmentDrawerSupport(navController = navController, purchaseHelper = purchaseHelper)
+        }
+
+        // Dialog Fragments
+//        composable(route = Screen.DialogGeneric.route) {
+//            FragmentDialogGeneric(navController = navController)
+//        }
+        composable(route = Screen.DialogFoul.route) {
+            FragmentDialogFoul(navController = navController)
         }
     }
 }

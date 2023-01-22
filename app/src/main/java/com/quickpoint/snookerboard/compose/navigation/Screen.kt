@@ -1,15 +1,23 @@
 package com.quickpoint.snookerboard.compose.navigation
 
 sealed class Screen(val route: String) {
-    object MainScreen: Screen("main_screen")
-    object RulesScreen: Screen("rules_screen")
-    object GameScreen: Screen("game_screen")
-    object SummaryScreen: Screen("summary_screen")
-    object DrawerAboutScreen: Screen("drawer_about_screen")
-    object DrawerImproveScreen: Screen("drawer_improve_screen")
-    object DrawerRulesScreen: Screen("drawer_rules_screen")
-    object DrawerSettingsScreen: Screen("drawer_settings_screen")
-    object DrawerSupportScreen: Screen("drawer_support_screen")
+    object Main: Screen("main_screen")
+
+    // Main Fragments
+    object Rules: Screen("screen_rules")
+    object Game: Screen("screen_fragment_game")
+    object Summary: Screen("screen_fragment_summary")
+
+    // Drawer Fragments
+    object DrawerAbout: Screen("screen_drawer_about")
+    object DrawerImprove: Screen("screen_drawer_improve")
+    object DrawerRules: Screen("screen_drawer_rules")
+    object DrawerSettings: Screen("screen_drawer_settings")
+    object DrawerSupport: Screen("screen_drawer_support")
+
+    // Dialog Fragments
+    object DialogGeneric: Screen ("screen_dialog_generic")
+    object DialogFoul: Screen("screen_dialog_foul")
 
     fun withArgs(vararg args: String): String {
         return buildString {
@@ -22,9 +30,9 @@ sealed class Screen(val route: String) {
 }
 
 fun String?.isDrawerRoute() = this in listOf(
-    Screen.DrawerAboutScreen.route,
-    Screen.DrawerImproveScreen.route,
-    Screen.DrawerRulesScreen.route,
-    Screen.DrawerSettingsScreen.route,
-    Screen.DrawerSupportScreen.route
+    Screen.DrawerAbout.route,
+    Screen.DrawerImprove.route,
+    Screen.DrawerRules.route,
+    Screen.DrawerSettings.route,
+    Screen.DrawerSupport.route
 )

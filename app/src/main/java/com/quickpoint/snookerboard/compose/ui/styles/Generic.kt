@@ -1,17 +1,8 @@
 package com.quickpoint.snookerboard.compose.ui.styles
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Snackbar
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
@@ -54,15 +45,34 @@ fun FragmentColumn(modifier: Modifier = Modifier, content: @Composable ColumnSco
     content()
     Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
 }
+@Composable
+fun DialogFragmentColumn(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) = Column(
+    modifier = modifier
+        .fillMaxSize(0.8f)
+        .padding(MaterialTheme.spacing.medium, 0.dp, MaterialTheme.spacing.medium, MaterialTheme.spacing.large)
+) {
+    content()
+    Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+}
 
 @Composable
 fun RuleSelectionItem(
     title: String,
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit,
+    contentIcon: (@Composable () -> Unit)? = null,
+    onIconClick: (() -> Unit)? = null
 ) {
     Column {
-        TextNavParagraphSubTitle(title)
+        Row(
+            modifier = modifier.fillMaxWidth()
+            .clickable { onIconClick?.let { onIconClick() } },
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically) {
+            TextNavParagraphSubTitle(title)
+            Spacer(modifier = Modifier.width(16.dp))
+            contentIcon?.let { contentIcon() }
+        }
         Row(
             modifier = modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly,

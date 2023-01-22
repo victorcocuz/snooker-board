@@ -41,11 +41,12 @@ class MainViewModel(
             SNACK_HANDICAP_MATCH_LIMIT -> ScreenEvents.ShowSnackbar(app.getString(R.string.snack_f_rules_handicap_match_limit))
             SNACK_PLAYER_NAME_INCOMPLETE -> ScreenEvents.ShowSnackbar(app.getString(R.string.snack_f_rules_no_player))
             SNACK_NO_STARTING_PLAYER -> ScreenEvents.ShowSnackbar(app.getString(R.string.snack_f_rules_select_no_first))
-            NAV_TO_PLAY -> ScreenEvents.Navigate(Screen.RulesScreen.route)
+            NAV_TO_PLAY -> ScreenEvents.Navigate(Screen.Rules.route)
             NAV_TO_GAME -> {
                 Timber.i(Settings.getAsText())
-                ScreenEvents.Navigate(Screen.GameScreen.route)
+                ScreenEvents.Navigate(Screen.Game.route)
             }
+            NAV_TO_DIALOG_GENERIC -> ScreenEvents.Navigate(Screen.DialogGeneric.route)
             else -> ScreenEvents.ShowSnackbar("")
         })
     }

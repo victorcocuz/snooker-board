@@ -8,7 +8,6 @@ import com.quickpoint.snookerboard.utils.*
 enum class MatchState { RULES_IDLE, RULES_PENDING, GAME_IN_PROGRESS, GAME_SAVED, SUMMARY, NONE }
 
 fun getHandicap(value: Int, pol: Int) = if (pol * value > 0) pol * value else 0
-
 fun getMatchStateFromOrdinal(ordinal: Int): MatchState = when (ordinal) {
     0 -> RULES_IDLE
     1 -> RULES_PENDING

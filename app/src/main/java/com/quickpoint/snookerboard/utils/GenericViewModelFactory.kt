@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.SnookerBoardApplication
 import com.quickpoint.snookerboard.fragments.game.GameViewModel
+import com.quickpoint.snookerboard.fragments.gamedialogs.DialogViewModel
 import com.quickpoint.snookerboard.fragments.rules.RulesViewModel
 import com.quickpoint.snookerboard.fragments.summary.SummaryViewModel
 
@@ -29,7 +30,7 @@ import com.quickpoint.snookerboard.fragments.summary.SummaryViewModel
 //        throw IllegalArgumentException("Unknown ViewModel class")    }
 //}
 
-class GenericViewModelFactory(private val dataStore: DataStore) : ViewModelProvider.Factory {
+class GenericViewModelFactory(private val dataStore: DataStore? = null) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(RulesViewModel::class.java)) {
@@ -42,7 +43,10 @@ class GenericViewModelFactory(private val dataStore: DataStore) : ViewModelProvi
             return GameViewModel(SnookerBoardApplication.application(), SnookerBoardApplication.getSnookerRepository()) as T
         }
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(SnookerBoardApplication.application(), SnookerBoardApplication.getSnookerRepository(), dataStore) as T
+            return MainViewModel(SnookerBoardApplication.application(), SnookerBoardApplication.getSnookerRepository(), dataStore!!) as T
+        }
+        if (modelClass.isAssignableFrom(DialogViewModel::class.java)) {
+            return DialogViewModel() as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")    }
 }

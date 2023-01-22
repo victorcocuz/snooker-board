@@ -37,7 +37,7 @@ fun AppBar(
                         contentDescription = "Back"
                     )
                 }
-            } else if (currentRoute == Screen.RulesScreen.route) {
+            } else if (currentRoute == Screen.Rules.route) {
                 IconButton(onClick = onNavigationIconClick) {
                     Icon(
                         imageVector = Icons.Default.Menu,

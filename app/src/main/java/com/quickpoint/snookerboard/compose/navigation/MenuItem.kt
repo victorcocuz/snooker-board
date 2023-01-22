@@ -1,6 +1,5 @@
 package com.quickpoint.snookerboard.compose.navigation
 
-import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
@@ -11,7 +10,7 @@ class MenuItem(
     val id: String,
     val title: String,
     val contentDescription: String,
-    val icon: Painter,
+    val icon: Painter
 )
 
 @Composable
@@ -47,7 +46,3 @@ fun getMenuItems() = listOf(
         icon = painterResource(id = R.drawable.ic_temp_menu_nav_about)
     )
 )
-
-@Composable
-fun Whatever() =
-    Icon(painter = painterResource(id = R.drawable.ic_temp_menu_nav_rules), contentDescription = null)

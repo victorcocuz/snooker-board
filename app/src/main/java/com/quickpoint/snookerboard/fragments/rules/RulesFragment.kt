@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -24,12 +25,14 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.ScreenEvents
@@ -38,6 +41,8 @@ import com.quickpoint.snookerboard.compose.ui.theme.spacing
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
 import com.quickpoint.snookerboard.domain.objects.MatchState.*
 import com.quickpoint.snookerboard.domain.objects.Toggle
+import com.quickpoint.snookerboard.fragments.gamedialogs.DialogViewModel
+import com.quickpoint.snookerboard.fragments.gamedialogs.FragmentDialogGeneric
 import com.quickpoint.snookerboard.utils.*
 import timber.log.Timber
 
@@ -97,11 +102,13 @@ class RulesFragment : Fragment() {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FragmentRules(
+    navController: NavController,
     mainVm: MainViewModel,
     dataStore: DataStore,
 ) {
     val focusManager = LocalFocusManager.current
     val rulesVm: RulesViewModel = viewModel(factory = GenericViewModelFactory(dataStore))
+    val dialogVm: DialogViewModel = viewModel(factory = GenericViewModelFactory())
     val keyboardController = LocalSoftwareKeyboardController.current
     val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = true) {
@@ -155,12 +162,14 @@ fun FragmentRules(
         }
         TextNavParagraphSubTitle(stringResource(R.string.l_rules_main_hint_name_last))
         NumberPickerHoist(rulesVm = rulesVm)
-        RuleSelectionItem(stringResource(R.string.l_rules_main_tv_breaks_first_label)) {
-            ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_STARTING_PLAYER, value = 0)
-            ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_STARTING_PLAYER, value = 2)
-            ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_STARTING_PLAYER, value = 1)
-        }
-        if (Toggle.AdvancedRules.isEnabled) ToggleAdvancedRulesColumn(rulesVm)
+        RuleSelectionItem(
+            title = stringResource(R.string.l_rules_main_tv_breaks_first_label),
+            content = {
+                ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_STARTING_PLAYER, value = 0)
+                ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_STARTING_PLAYER, value = 2)
+                ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_STARTING_PLAYER, value = 1)
+            })
+        if (Toggle.AdvancedRules.isEnabled) ToggleAdvancedRulesColumn(navController, mainVm, rulesVm, dialogVm)
         Button(
             shape = RoundedCornerShape(50.dp),
             onClick = {
@@ -173,26 +182,50 @@ fun FragmentRules(
 }
 
 @Composable
-fun ToggleAdvancedRulesColumn(rulesVm: RulesViewModel) = Column {
-    RuleSelectionItem(stringResource(R.string.l_rules_extra_tv_reds_label)) {
-        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_AVAILABLE_REDS, value = 6,)
-        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_AVAILABLE_REDS, value = 10)
-        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_AVAILABLE_REDS, value = 15)
+fun ToggleAdvancedRulesColumn(navController: NavController, mainVm: MainViewModel, rulesVm: RulesViewModel, dialogVm: DialogViewModel) =
+    Column {
+        RuleSelectionItem(
+            title = stringResource(R.string.l_rules_extra_tv_reds_label),
+            content = {
+                ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_AVAILABLE_REDS, value = 6)
+                ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_AVAILABLE_REDS, value = 10)
+                ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_AVAILABLE_REDS, value = 15)
+            })
+        RuleSelectionItem(
+            title = stringResource(R.string.l_rules_extra_tv_foul_modifier_label),
+            content = {
+                ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_FOUL_MODIFIER, value = -3)
+                ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_FOUL_MODIFIER, value = -2)
+                ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_FOUL_MODIFIER, value = -1)
+                ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_FOUL_MODIFIER, value = 0)
+            },
+            contentIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_temp_info),
+                    contentDescription = null
+                )
+            },
+            onIconClick = { dialogVm.onOpenDialog() }
+        )
+        RuleSelectionItem(
+            title = stringResource(R.string.l_rules_extra_tv_handicap_frame_label),
+            content = {
+                ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_HANDICAP_FRAME, value = -10)
+                RulesHandicapLabel(rulesVm = rulesVm, key = K_INT_MATCH_HANDICAP_FRAME)
+                ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_HANDICAP_FRAME, value = 10)
+            })
+        RuleSelectionItem(
+            title = stringResource(R.string.l_rules_extra_tv_handicap_match_label),
+            content = {
+                ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_HANDICAP_MATCH, value = -1)
+                RulesHandicapLabel(rulesVm = rulesVm, key = K_INT_MATCH_HANDICAP_MATCH)
+                ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_HANDICAP_MATCH, value = 1)
+            })
+        if (dialogVm.isGenericDialogShown) {
+            FragmentDialogGeneric(
+                matchActions = listOf(MatchAction.IGNORE, MatchAction.IGNORE, MatchAction.INFO_FOUL_DIALOG),
+                onDismiss = { dialogVm.onDismissDialog() },
+                onConfirm = { dialogVm.onEventDialogAction(it) }
+            )
+        }
     }
-    RuleSelectionItem(stringResource(R.string.l_rules_extra_tv_foul_modifier_label)) {
-        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_FOUL_MODIFIER, value = -3,)
-        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_FOUL_MODIFIER, value = -2)
-        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_FOUL_MODIFIER, value = -1)
-        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_FOUL_MODIFIER, value = 0)
-    }
-    RuleSelectionItem(stringResource(R.string.l_rules_extra_tv_handicap_frame_label)) {
-        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_HANDICAP_FRAME, value = -10)
-        RulesHandicapLabel(rulesVm = rulesVm, key = K_INT_MATCH_HANDICAP_FRAME)
-        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_HANDICAP_FRAME, value = 10)
-    }
-    RuleSelectionItem(stringResource(R.string.l_rules_extra_tv_handicap_match_label)) {
-        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_HANDICAP_MATCH, value = -1)
-        RulesHandicapLabel(rulesVm = rulesVm, key = K_INT_MATCH_HANDICAP_MATCH)
-        ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_HANDICAP_MATCH, value = 1)
-    }
-}

@@ -1,11 +1,13 @@
 package com.quickpoint.snookerboard.domain.objects
 
 import com.quickpoint.snookerboard.domain.PotAction
+import com.quickpoint.snookerboard.domain.PotAction.*
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
 import com.quickpoint.snookerboard.domain.objects.MatchState.NONE
 import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.FRAME_START_NEW
 import timber.log.Timber
+import kotlin.math.absoluteValue
 
 sealed class MatchSettings(
     var dataStore: DataStore?,
@@ -178,12 +180,13 @@ sealed class MatchSettings(
 
 // Helper methods
 fun Settings.getOtherPlayer() = 1 - crtPlayer
-fun Settings.getCrtPlayerFromPotAction(potAction: PotAction) =
-    when (potAction) {
-        PotAction.SWITCH -> getOtherPlayer()
-        PotAction.FIRST -> startingPlayer
-        PotAction.CONTINUE, PotAction.RETAKE -> crtPlayer
-    }
+fun Settings.handicapFrameExceedsLimit(key: String, value: Int) = key == K_INT_MATCH_HANDICAP_FRAME && (handicapFrame + value).absoluteValue >= availableReds * 8 + 27
+fun Settings.handicapMatchExceedsLimit(key: String, value: Int) = key == K_INT_MATCH_HANDICAP_MATCH && (handicapMatch + value).absoluteValue == availableFrames
+fun Settings.getCrtPlayerFromPotAction(potAction: PotAction) = when (potAction) {
+        SWITCH -> getOtherPlayer()
+        FIRST -> startingPlayer
+        CONTINUE, RETAKE -> crtPlayer
+}
 
 fun Settings.getDisplayFrames() = "(" + (availableFrames * 2 - 1).toString() + ")"
 fun Settings.getAsText() =

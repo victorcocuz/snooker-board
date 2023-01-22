@@ -148,12 +148,12 @@ fun SnookerBoardApp(activity: MainActivity) {
                     DrawerBody(items = getMenuItems(), onItemClick = {
                         navController.navigate(
                             when (it.id) {
-                                "id_drawer_rules" -> Screen.DrawerRulesScreen.route
-                                "id_drawer_improve" -> Screen.DrawerImproveScreen.route
-                                "id_drawer_support" -> Screen.DrawerSupportScreen.route
-                                "id_drawer_settings" -> Screen.DrawerSettingsScreen.route
-                                "id_drawer_about" -> Screen.DrawerAboutScreen.route
-                                else -> Screen.RulesScreen.route // Unused
+                                "id_drawer_rules" -> Screen.DrawerRules.route
+                                "id_drawer_improve" -> Screen.DrawerImprove.route
+                                "id_drawer_support" -> Screen.DrawerSupport.route
+                                "id_drawer_settings" -> Screen.DrawerSettings.route
+                                "id_drawer_about" -> Screen.DrawerAbout.route
+                                else -> Screen.Rules.route // Unused
                             }
                         )
                         coroutineScope.launch {

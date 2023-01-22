@@ -5,11 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.quickpoint.snookerboard.R
+import com.quickpoint.snookerboard.compose.ui.styles.FragmentColumn
+import com.quickpoint.snookerboard.compose.ui.styles.TextNavHeadline
 import com.quickpoint.snookerboard.databinding.FragmentDialogFoulBinding
 import com.quickpoint.snookerboard.domain.objects.Toggle
 import com.quickpoint.snookerboard.fragments.game.GameViewModel
@@ -54,12 +60,11 @@ class FoulDialogFragment : DialogFragment() {
                 when (action) {
                     FOUL_ATTEMPT ->
                         if (foulIsValid()) {
-                            repeat(eventDialogReds.value!!) {gameVm.onEventGameAction(FRAME_REMOVE_RED, true)}
+                            repeat(eventDialogReds.value!!) { gameVm.onEventGameAction(FRAME_REMOVE_RED, true) }
                             gameVm.onEventGameAction(FOUL_CONFIRM, true)
                             if (Toggle.FreeBall.isEnabled) gameVm.onEventGameAction(FRAME_FREE_ACTIVE, true)
                             dismiss()
-                        }
-                        else toast(getString(R.string.toast_f_dialog_foul_invalid))
+                        } else toast(getString(R.string.toast_f_dialog_foul_invalid))
                     else -> {
                         dialogVm.resetFoul()
                         dismiss()
@@ -74,4 +79,19 @@ class FoulDialogFragment : DialogFragment() {
         dialogVm.resetFoul()
         super.onCancel(dialog)
     }
+}
+
+@Composable
+fun FragmentDialogFoul(
+    navController: NavController,
+) {
+    FragmentColumn() {
+        TextNavHeadline("Dialog Foul")
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FragmentDialogFoulPreview() {
+    FragmentDialogFoul(rememberNavController())
 }
