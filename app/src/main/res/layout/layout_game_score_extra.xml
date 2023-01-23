@@ -92,7 +92,7 @@
             android:id="@+id/l_game_score_tv_percentage_label"
             style="@style/TextHeader"
             android:layout_marginTop="@dimen/margin_xxxsmall"
-            android:text="@string/l_game_score_tv_percentage_label"
+            android:text="@string/l_game_score_tv_success_percentage_label"
             app:layout_constraintEnd_toStartOf="@+id/l_game_score_extra_gd_vert_mid"
             app:layout_constraintStart_toStartOf="@+id/l_game_score_extra_gd_vert_mid"
             app:layout_constraintTop_toBottomOf="@+id/l_game_score_tv_break_label" />

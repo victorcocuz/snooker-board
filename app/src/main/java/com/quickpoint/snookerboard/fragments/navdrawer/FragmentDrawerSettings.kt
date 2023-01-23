@@ -16,8 +16,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.compose.ui.styles.FragmentColumn
-import com.quickpoint.snookerboard.compose.ui.styles.TextNavParagraph
-import com.quickpoint.snookerboard.compose.ui.styles.TextNavParagraphSubTitle
+import com.quickpoint.snookerboard.compose.ui.styles.TextParagraph
+import com.quickpoint.snookerboard.compose.ui.styles.TextParagraphSubTitle
 import com.quickpoint.snookerboard.compose.ui.theme.spacing
 import com.quickpoint.snookerboard.domain.objects.getToggleByKey
 import com.quickpoint.snookerboard.utils.Event
@@ -79,8 +79,8 @@ fun SettingsToggle(title: String, description: String, isChecked: Boolean, onCli
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.Top
         ) {
-            TextNavParagraphSubTitle(title)
-            TextNavParagraph(description)
+            TextParagraphSubTitle(title)
+            TextParagraph(description)
         }
 
         AndroidView(

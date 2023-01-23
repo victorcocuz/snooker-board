@@ -24,8 +24,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.compose.ui.styles.ButtonStandard
 import com.quickpoint.snookerboard.compose.ui.styles.RuleSelectionItem
-import com.quickpoint.snookerboard.compose.ui.styles.TextNavParagraph
-import com.quickpoint.snookerboard.compose.ui.styles.TextNavParagraphSubTitle
+import com.quickpoint.snookerboard.compose.ui.styles.TextParagraph
+import com.quickpoint.snookerboard.compose.ui.styles.TextParagraphSubTitle
 import com.quickpoint.snookerboard.databinding.FragmentDialogGenBinding
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.fragments.game.GameFragment
@@ -106,10 +106,10 @@ fun FragmentDialogGeneric(
                     .padding(15.dp),
                 verticalArrangement = Arrangement.spacedBy(25.dp)
             ) {
-                TextNavParagraphSubTitle(getGenericDialogTitleText(matchActions[1], matchActions[2]))
-                TextNavParagraphSubTitle(getGenericDialogQuestionText(matchActions[1], matchActions[2]))
+                TextParagraphSubTitle(getGenericDialogTitleText(matchActions[1], matchActions[2]))
+                TextParagraphSubTitle(getGenericDialogQuestionText(matchActions[1], matchActions[2]))
                 if (matchActions[1] in listOf(MATCH_ENDED_DISCARD_FRAME, FRAME_MISS_FORFEIT))
-                    TextNavParagraph(getDialogGameNote(matchActions[1], score))
+                    TextParagraph(getDialogGameNote(matchActions[1], score))
                 Divider()
                 RuleSelectionItem(
                     title = "Actions",
@@ -127,15 +127,8 @@ fun FragmentDialogGeneric(
 }
 
 @Composable
-fun ButtonGenericDialogHoist(
-    text: String,
-    onAction: () -> Unit,
-) {
-    ButtonStandard(
-        text = text,
-        isSelected = false,
-        onClick = { onAction() }
-    )
+fun ButtonGenericDialogHoist(text: String, onAction: () -> Unit, ) {
+    ButtonStandard(text = text, onClick = { onAction() })
 }
 
 fun getGenericDialogTitleText(matchActionB: MatchAction, matchActionC: MatchAction): String = when {

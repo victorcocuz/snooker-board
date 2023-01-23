@@ -77,14 +77,15 @@
             app:layout_constraintEnd_toStartOf="@+id/l_game_score_tv_total"
             tools:text="13" />
 
-<!--        <TextView-->
-<!--            android:id="@+id/l_game_score_tv_total"-->
-<!--            style="@style/TextSubtitle"-->
-<!--            app:layout_constraintTop_toTopOf="@+id/l_game_score_tv_frame_a"-->
-<!--            app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_frame_a"-->
-<!--            app:layout_constraintEnd_toStartOf="@+id/l_game_score_extra_gd_vert_mid"-->
-<!--            app:layout_constraintStart_toStartOf="@+id/l_game_score_extra_gd_vert_mid"-->
-<!--            android:text="@{String.valueOf(Settings.INSTANCE.getDisplayFrames())}" />-->
+        <TextView
+            android:id="@+id/l_game_score_tv_total"
+            style="@style/TextSubtitle"
+            app:layout_constraintTop_toTopOf="@+id/l_game_score_tv_frame_a"
+            app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_frame_a"
+            app:layout_constraintEnd_toStartOf="@+id/l_game_score_extra_gd_vert_mid"
+            app:layout_constraintStart_toStartOf="@+id/l_game_score_extra_gd_vert_mid"
+            />
+<!--         android:text="@{String.valueOf(Settings.INSTANCE.getDisplayFrames())}"-->
 
         <TextView
             android:id="@+id/l_game_score_tv_match_b"

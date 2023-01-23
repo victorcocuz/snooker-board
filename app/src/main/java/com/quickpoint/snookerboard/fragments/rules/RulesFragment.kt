@@ -130,7 +130,7 @@ fun FragmentRules(
                     .weight(1f)
                     .padding(end = MaterialTheme.spacing.smallMedium)
             ) {
-                TextNavParagraphSubTitle(stringResource(R.string.l_rules_main_tv_player_a_label))
+                TextParagraphSubTitle(stringResource(R.string.l_rules_main_tv_player_a_label))
                 AppTextFieldHoist(
                     rulesVm = rulesVm,
                     key = K_PLAYER01_FIRST_NAME,
@@ -147,7 +147,7 @@ fun FragmentRules(
                     .weight(1f)
                     .padding(start = MaterialTheme.spacing.smallMedium)
             ) {
-                TextNavParagraphSubTitle(stringResource(R.string.l_rules_main_tv_player_b_label))
+                TextParagraphSubTitle(stringResource(R.string.l_rules_main_tv_player_b_label))
                 AppTextFieldHoist(
                     rulesVm = rulesVm,
                     key = K_PLAYER02_FIRST_NAME,
@@ -160,7 +160,7 @@ fun FragmentRules(
                 )
             }
         }
-        TextNavParagraphSubTitle(stringResource(R.string.l_rules_main_hint_name_last))
+        TextParagraphSubTitle(stringResource(R.string.l_rules_main_hint_name_last))
         NumberPickerHoist(rulesVm = rulesVm)
         RuleSelectionItem(
             title = stringResource(R.string.l_rules_main_tv_breaks_first_label),
@@ -169,7 +169,7 @@ fun FragmentRules(
                 ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_STARTING_PLAYER, value = 2)
                 ButtonStandardHoist(rulesVm = rulesVm, key = K_INT_MATCH_STARTING_PLAYER, value = 1)
             })
-        if (Toggle.AdvancedRules.isEnabled) ToggleAdvancedRulesColumn(navController, mainVm, rulesVm, dialogVm)
+        if (Toggle.AdvancedRules.isEnabled) ToggleAdvancedRulesColumn(rulesVm, dialogVm)
         Button(
             shape = RoundedCornerShape(50.dp),
             onClick = {
@@ -182,7 +182,7 @@ fun FragmentRules(
 }
 
 @Composable
-fun ToggleAdvancedRulesColumn(navController: NavController, mainVm: MainViewModel, rulesVm: RulesViewModel, dialogVm: DialogViewModel) =
+fun ToggleAdvancedRulesColumn(rulesVm: RulesViewModel, dialogVm: DialogViewModel) =
     Column {
         RuleSelectionItem(
             title = stringResource(R.string.l_rules_extra_tv_reds_label),

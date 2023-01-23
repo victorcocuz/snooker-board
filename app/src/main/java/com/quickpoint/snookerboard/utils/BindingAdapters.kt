@@ -20,6 +20,7 @@ import com.quickpoint.snookerboard.utils.BallAdapterType.*
 import com.quickpoint.snookerboard.utils.BallAdapterType.MATCH
 import com.quickpoint.snookerboard.utils.MatchAction.*
 import com.quickpoint.snookerboard.utils.PlayerTagType.*
+import timber.log.Timber
 
 // General
 @BindingAdapter("setSelected")
@@ -71,6 +72,29 @@ fun ImageView.setBallImage(item: DomainBall?, ballAdapterType: BallAdapterType) 
             is BROWN -> if (ripple) R.drawable.ic_ball_brown else R.drawable.ic_ball_brown_normal
             is BLUE -> if (ripple) R.drawable.ic_ball_blue else R.drawable.ic_ball_blue_normal
             is PINK -> if (ripple) R.drawable.ic_ball_pink else R.drawable.ic_ball_pink_normal
+            is BLACK -> if (ripple) R.drawable.ic_ball_black else R.drawable.ic_ball_black_normal
+            is FREEBALL -> if (ripple) R.drawable.ic_ball_free else R.drawable.ic_ball_free_normal
+            is NOBALL -> if (ripple) R.drawable.ic_ball_miss else R.drawable.ic_ball_miss_normal
+            else -> if (ripple) R.drawable.ic_ball_white else R.drawable.ic_ball_white_normal
+        })
+    }
+}
+
+fun ImageView.setBallBackground(item: DomainBall?, ballAdapterType: BallAdapterType) {
+    Timber.e("Ball $item")
+    item?.let {
+//        if (ballAdapterType == MATCH) startAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_in_short))
+        val ripple = ballAdapterType != BREAK
+        setBackgroundResource(when (item) {
+            is RED -> if (ripple) R.drawable.ic_ball_red else R.drawable.ic_ball_red_normal
+            is YELLOW -> if (ripple) R.drawable.ic_ball_yellow else R.drawable.ic_ball_yellow_normal
+            is GREEN -> if (ripple) R.drawable.ic_ball_green else R.drawable.ic_ball_green_normal
+            is BROWN -> if (ripple) R.drawable.ic_ball_brown else R.drawable.ic_ball_brown_normal
+            is BLUE -> if (ripple) R.drawable.ic_ball_blue else R.drawable.ic_ball_blue_normal
+            is PINK -> {
+                Timber.e("ripple $ripple")
+                if (ripple) R.drawable.ic_ball_pink else R.drawable.ic_ball_pink_normal
+            }
             is BLACK -> if (ripple) R.drawable.ic_ball_black else R.drawable.ic_ball_black_normal
             is FREEBALL -> if (ripple) R.drawable.ic_ball_free else R.drawable.ic_ball_free_normal
             is NOBALL -> if (ripple) R.drawable.ic_ball_miss else R.drawable.ic_ball_miss_normal

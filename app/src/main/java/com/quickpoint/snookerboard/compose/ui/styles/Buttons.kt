@@ -52,9 +52,9 @@ fun ButtonDonate(text: String, price: String, image: Painter, onClick: () -> Uni
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        TextNavParagraphSubTitle(text)
+        TextParagraphSubTitle(text)
         Image(image, text)
-        TextNavParagraph(price)
+        TextParagraph(price)
     }
 }
 
@@ -139,13 +139,11 @@ fun ButtonStandardHoist(
 fun ButtonStandard(
     modifier: Modifier = Modifier,
     text: String,
-    isSelected: Boolean = true,
+    isSelected: Boolean = false,
     onClick: () -> Unit,
 ) {
     OutlinedButton(
-        modifier = modifier
-            .padding(top = 6.dp, bottom = 8.dp)
-            .height(40.dp),
+        modifier = modifier.height(40.dp),
         shape = RoundedCornerShape(MaterialTheme.spacing.extraSmall),
         border = BorderStroke(1.dp, if (isSelected) Beige else Black),
         onClick = onClick,
@@ -157,6 +155,31 @@ fun ButtonStandard(
             text = text,
             style = MaterialTheme.typography.labelLarge.copy(color = if (isSelected) White else Black)
         )
+    }
+}
+
+@Composable
+fun ToggleButton(
+    modifier: Modifier = Modifier,
+    text: String,
+    isSelected: Boolean = false,
+    painter: Painter,
+    onClick: () -> Unit,
+) {
+    OutlinedButton(
+        modifier = modifier,
+        shape = RoundedCornerShape(MaterialTheme.spacing.extraSmall),
+        border = BorderStroke(1.dp, if (isSelected) Beige else Black),
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = if (isSelected) Green else CreamBright
+        )
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelSmall.copy(color = if (isSelected) White else Black)
+        )
+        Icon(painter = painter, contentDescription = null)
     }
 }
 

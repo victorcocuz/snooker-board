@@ -31,7 +31,7 @@ fun NavGraph(
             FragmentRules(navController = navController, mainVm = mainVm, dataStore = dataStore)
         }
         composable(route = Screen.Game.route) {
-            FragmentGame(navController = navController, mainVm = mainVm)
+            FragmentGame(navController = navController, mainVm = mainVm, dataStore = dataStore)
         }
         composable(route = Screen.Summary.route) {
             FragmentSummary(navController = navController, mainVm = mainVm)

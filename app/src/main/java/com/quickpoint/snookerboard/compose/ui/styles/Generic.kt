@@ -45,6 +45,7 @@ fun FragmentColumn(modifier: Modifier = Modifier, content: @Composable ColumnSco
     content()
     Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
 }
+
 @Composable
 fun DialogFragmentColumn(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) = Column(
     modifier = modifier
@@ -61,15 +62,17 @@ fun RuleSelectionItem(
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit,
     contentIcon: (@Composable () -> Unit)? = null,
-    onIconClick: (() -> Unit)? = null
+    onIconClick: (() -> Unit)? = null,
 ) {
     Column {
         Row(
-            modifier = modifier.fillMaxWidth()
-            .clickable { onIconClick?.let { onIconClick() } },
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically) {
-            TextNavParagraphSubTitle(title)
+            modifier = modifier
+                .fillMaxWidth()
+                .clickable { onIconClick?.let { onIconClick() } },
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            TextParagraphSubTitle(title)
             Spacer(modifier = Modifier.width(16.dp))
             contentIcon?.let { contentIcon() }
         }
@@ -110,3 +113,12 @@ fun DefaultSnackbar(
             .wrapContentHeight(Alignment.Bottom)
     )
 }
+
+@Composable
+fun StandardRow(
+    modifier: Modifier = Modifier,
+    content: @Composable RowScope.() -> Unit,
+) = Row(modifier.fillMaxWidth(),
+    horizontalArrangement = Arrangement.SpaceEvenly,
+    verticalAlignment = Alignment.CenterVertically,
+) { content() }

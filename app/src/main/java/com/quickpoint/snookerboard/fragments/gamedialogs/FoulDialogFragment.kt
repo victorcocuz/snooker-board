@@ -15,7 +15,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.compose.ui.styles.FragmentColumn
-import com.quickpoint.snookerboard.compose.ui.styles.TextNavHeadline
+import com.quickpoint.snookerboard.compose.ui.styles.TextHeadline
 import com.quickpoint.snookerboard.databinding.FragmentDialogFoulBinding
 import com.quickpoint.snookerboard.domain.objects.Toggle
 import com.quickpoint.snookerboard.fragments.game.GameViewModel
@@ -86,7 +86,7 @@ fun FragmentDialogFoul(
     navController: NavController,
 ) {
     FragmentColumn() {
-        TextNavHeadline("Dialog Foul")
+        TextHeadline("Dialog Foul")
     }
 }
 

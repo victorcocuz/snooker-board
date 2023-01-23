@@ -18,8 +18,8 @@ import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.billing.PurchaseHelper
 import com.quickpoint.snookerboard.compose.ui.styles.ButtonDonate
 import com.quickpoint.snookerboard.compose.ui.styles.FragmentColumn
-import com.quickpoint.snookerboard.compose.ui.styles.TextNavHeadline
-import com.quickpoint.snookerboard.compose.ui.styles.TextNavParagraph
+import com.quickpoint.snookerboard.compose.ui.styles.TextHeadline
+import com.quickpoint.snookerboard.compose.ui.styles.TextParagraph
 import com.quickpoint.snookerboard.compose.ui.theme.spacing
 import com.quickpoint.snookerboard.utils.PRODUCT_BEER
 import com.quickpoint.snookerboard.utils.PRODUCT_COFFEE
@@ -40,8 +40,8 @@ fun FragmentDrawerSupport(
     val priceText by purchaseHelper.priceText.collectAsState(List(3){""})
 
     FragmentColumn {
-        TextNavHeadline(stringResource(R.string.menu_drawer_support))
-        TextNavParagraph(stringResource(R.string.f_nav_donate_tv_description))
+        TextHeadline(stringResource(R.string.menu_drawer_support))
+        TextParagraph(stringResource(R.string.f_nav_donate_tv_description))
         Spacer(Modifier.height(MaterialTheme.spacing.medium))
         Row(
             modifier = Modifier.fillMaxWidth(1f),

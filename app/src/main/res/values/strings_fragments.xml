@@ -54,7 +54,7 @@
     <string name="l_game_score_tv_long_shots_label">Percentage of Long Shots</string>
     <string name="l_game_score_tv_rest_shots_label">Percentage of Rest Shots</string>
     <string name="l_game_score_tv_points_with_no_return_label">Points without return</string>
-    <string name="l_game_score_tv_percentage_label">Pot Success</string>
+    <string name="l_game_score_tv_success_percentage_label">Pot Success</string>
     <string name="l_game_score_tv_safety_percentage_label">Safety Success</string>
     <string name="l_game_score_tv_break_label">Highest Break</string>
     <string name="l_game_score_ll_line_chapter_score">Frame Score</string>

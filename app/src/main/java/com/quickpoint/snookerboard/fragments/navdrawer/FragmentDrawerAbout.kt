@@ -12,10 +12,10 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.compose.ui.styles.FragmentColumn
-import com.quickpoint.snookerboard.compose.ui.styles.TextNavHeadline
-import com.quickpoint.snookerboard.compose.ui.styles.TextNavParagraph
-import com.quickpoint.snookerboard.compose.ui.styles.TextNavParagraphSubTitle
-import com.quickpoint.snookerboard.compose.ui.styles.TextNavTitle
+import com.quickpoint.snookerboard.compose.ui.styles.TextHeadline
+import com.quickpoint.snookerboard.compose.ui.styles.TextParagraph
+import com.quickpoint.snookerboard.compose.ui.styles.TextParagraphSubTitle
+import com.quickpoint.snookerboard.compose.ui.styles.TextTitle
 
 @Composable
 fun FragmentDrawerAbout(
@@ -39,15 +39,15 @@ fun FragmentDrawerAbout(
 
         LazyColumn(modifier = Modifier.weight(1f)) {
             item {
-                TextNavHeadline(stringResource(R.string.menu_drawer_about))
-                TextNavParagraph(stringResource(R.string.f_nav_about_tv_description))
-                TextNavTitle(stringResource(R.string.f_nav_about_tv_version_title))
+                TextHeadline(stringResource(R.string.menu_drawer_about))
+                TextParagraph(stringResource(R.string.f_nav_about_tv_description))
+                TextTitle(stringResource(R.string.f_nav_about_tv_version_title))
             }
             itemsIndexed(versions) { index, version ->
                 Column {
                     version.forEachIndexed { index, s ->
-                        if (index == 0) TextNavParagraphSubTitle(s)
-                        else TextNavParagraph(s)
+                        if (index == 0) TextParagraphSubTitle(s)
+                        else TextParagraph(s)
                     }
                 }
             }

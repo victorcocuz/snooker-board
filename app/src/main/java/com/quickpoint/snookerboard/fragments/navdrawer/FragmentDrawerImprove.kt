@@ -14,9 +14,9 @@ import com.quickpoint.snookerboard.BuildConfig
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.compose.ui.styles.ClickableText
 import com.quickpoint.snookerboard.compose.ui.styles.FragmentColumn
-import com.quickpoint.snookerboard.compose.ui.styles.TextNavHeadline
-import com.quickpoint.snookerboard.compose.ui.styles.TextNavParagraph
-import com.quickpoint.snookerboard.compose.ui.styles.TextNavParagraphSubTitle
+import com.quickpoint.snookerboard.compose.ui.styles.TextHeadline
+import com.quickpoint.snookerboard.compose.ui.styles.TextParagraph
+import com.quickpoint.snookerboard.compose.ui.styles.TextParagraphSubTitle
 import com.quickpoint.snookerboard.utils.EMAIL_SUBJECT_IMPROVE
 import com.quickpoint.snookerboard.utils.GOOGLE_FORM_URI
 import com.quickpoint.snookerboard.utils.sendEmail
@@ -26,17 +26,17 @@ fun FragmentDrawerImprove(
     navController: NavController
 ) {
     FragmentColumn(Modifier.verticalScroll(rememberScrollState())) {
-        TextNavHeadline(stringResource(R.string.menu_drawer_improve))
-        TextNavParagraph(stringResource(R.string.f_nav_improve_tv_description))
-        TextNavParagraphSubTitle(stringResource(R.string.f_nav_improve_tv_survey_header))
-        TextNavParagraph(stringResource(R.string.f_nav_improve_tv_survey_body))
+        TextHeadline(stringResource(R.string.menu_drawer_improve))
+        TextParagraph(stringResource(R.string.f_nav_improve_tv_description))
+        TextParagraphSubTitle(stringResource(R.string.f_nav_improve_tv_survey_header))
+        TextParagraph(stringResource(R.string.f_nav_improve_tv_survey_body))
         val context = LocalContext.current.applicationContext
         val uriHandler = LocalUriHandler.current
         ClickableText(stringResource(R.string.f_nav_improve_tv_survey_link)) {
             uriHandler.openUri(GOOGLE_FORM_URI)
         }
-        TextNavParagraphSubTitle(stringResource(R.string.f_nav_improve_tv_contact_header))
-        TextNavParagraph(stringResource(R.string.f_nav_improve_tv_contact_body))
+        TextParagraphSubTitle(stringResource(R.string.f_nav_improve_tv_contact_header))
+        TextParagraph(stringResource(R.string.f_nav_improve_tv_contact_body))
         ClickableText(stringResource(R.string.f_nav_improve_tv_contact_email)) {
             context.sendEmail(arrayOf(BuildConfig.ADMIN_EMAIL), EMAIL_SUBJECT_IMPROVE)
         }

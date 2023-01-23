@@ -13,32 +13,32 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.compose.ui.styles.FragmentColumn
-import com.quickpoint.snookerboard.compose.ui.styles.TextNavHeadline
-import com.quickpoint.snookerboard.compose.ui.styles.TextNavParagraph
-import com.quickpoint.snookerboard.compose.ui.styles.TextNavParagraphSubTitle
+import com.quickpoint.snookerboard.compose.ui.styles.TextHeadline
+import com.quickpoint.snookerboard.compose.ui.styles.TextParagraph
+import com.quickpoint.snookerboard.compose.ui.styles.TextParagraphSubTitle
 
 @Composable
 fun FragmentDrawerRules(
     navController: NavController,
 ) {
     FragmentColumn(Modifier.verticalScroll(rememberScrollState())) {
-        TextNavHeadline(stringResource(R.string.menu_drawer_rules))
-        TextNavParagraphSubTitle(stringResource(R.string.f_nav_rules_tv_heading_01_ball_terminology))
-        TextNavParagraph(stringResource(R.string.f_nav_rules_tv_body_01_ball_terminology))
-        TextNavParagraphSubTitle(stringResource(R.string.f_nav_rules_tv_heading_02_ball_values))
-        TextNavParagraph(stringResource(R.string.f_nav_rules_tv_body_02_ball_values))
-        TextNavParagraphSubTitle(stringResource(R.string.f_nav_rules_tv_heading_03_snooker_terminology))
-        TextNavParagraph(stringResource(R.string.f_nav_rules_tv_body_03_snooker_terminology))
-        TextNavParagraphSubTitle(stringResource(R.string.f_nav_rules_tv_heading_04_fundamentals))
-        TextNavParagraph(stringResource(R.string.f_nav_rules_tv_body_04_fundamentals))
-        TextNavParagraphSubTitle(stringResource(R.string.f_nav_rules_tv_heading_05_foul_rules))
-        TextNavParagraph(stringResource(R.string.f_nav_rules_tv_body_05_foul_rules))
-        TextNavParagraphSubTitle(stringResource(R.string.f_nav_rules_tv_heading_06_game_end))
-        TextNavParagraph(stringResource(R.string.f_nav_rules_tv_body_06_game_end))
-        TextNavParagraphSubTitle(stringResource(R.string.f_nav_rules_tv_heading_07_winner))
-        TextNavParagraph(stringResource(R.string.f_nav_rules_tv_body_07_winner))
-        TextNavParagraphSubTitle(stringResource(R.string.f_nav_rules_tv_heading_08_more_info))
-        TextNavParagraph(stringResource(R.string.f_nav_rules_tv_body_08_more_info))
+        TextHeadline(stringResource(R.string.menu_drawer_rules))
+        TextParagraphSubTitle(stringResource(R.string.f_nav_rules_tv_heading_01_ball_terminology))
+        TextParagraph(stringResource(R.string.f_nav_rules_tv_body_01_ball_terminology))
+        TextParagraphSubTitle(stringResource(R.string.f_nav_rules_tv_heading_02_ball_values))
+        TextParagraph(stringResource(R.string.f_nav_rules_tv_body_02_ball_values))
+        TextParagraphSubTitle(stringResource(R.string.f_nav_rules_tv_heading_03_snooker_terminology))
+        TextParagraph(stringResource(R.string.f_nav_rules_tv_body_03_snooker_terminology))
+        TextParagraphSubTitle(stringResource(R.string.f_nav_rules_tv_heading_04_fundamentals))
+        TextParagraph(stringResource(R.string.f_nav_rules_tv_body_04_fundamentals))
+        TextParagraphSubTitle(stringResource(R.string.f_nav_rules_tv_heading_05_foul_rules))
+        TextParagraph(stringResource(R.string.f_nav_rules_tv_body_05_foul_rules))
+        TextParagraphSubTitle(stringResource(R.string.f_nav_rules_tv_heading_06_game_end))
+        TextParagraph(stringResource(R.string.f_nav_rules_tv_body_06_game_end))
+        TextParagraphSubTitle(stringResource(R.string.f_nav_rules_tv_heading_07_winner))
+        TextParagraph(stringResource(R.string.f_nav_rules_tv_body_07_winner))
+        TextParagraphSubTitle(stringResource(R.string.f_nav_rules_tv_heading_08_more_info))
+        TextParagraph(stringResource(R.string.f_nav_rules_tv_body_08_more_info))
     }
 }
 

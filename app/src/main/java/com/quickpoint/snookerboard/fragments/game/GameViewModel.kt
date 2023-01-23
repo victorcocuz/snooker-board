@@ -49,17 +49,17 @@ class GameViewModel(
     private val _displayFrame = MutableLiveData<DomainFrame>()
     val displayFrame: LiveData<DomainFrame> = _displayFrame
 
-//    private val _toggles = MutableLiveData(FRAMETOGGLES)
-//    val toggles: LiveData<FRAMETOGGLES> = _toggles
-//    fun onToggleLongClicked() {
-//        FRAMETOGGLES.toggleLongShot()
-//        _toggles.postValue(FRAMETOGGLES)
-//    }
+    private val _toggles = MutableLiveData(Toggle.AdvancedStatistics)
+    val toggles: LiveData<Toggle.AdvancedStatistics> = _toggles
+    fun onToggleLongClicked() {
+        Toggle.LongShot.toggleEnabled()
+        _toggles.postValue(Toggle.AdvancedStatistics)
+    }
 
-//    fun onToggleRestClicked() {
-//        FRAMETOGGLES.toggleRestShot()
-//        _toggles.postValue(FRAMETOGGLES)
-//    }
+    fun onToggleRestClicked() {
+        Toggle.RestShot.toggleEnabled()
+        _toggles.postValue(Toggle.AdvancedStatistics)
+    }
 
     private val _crtPlayer = MutableLiveData<Int>()
     val crtPlayer: LiveData<Int> = _crtPlayer
@@ -68,7 +68,7 @@ class GameViewModel(
         if (actionLogs.size > 0) snookerRepository.saveCurrentFrame(_displayFrame.value!!)
         actionLogs.addLog(actionLog)
         _crtPlayer.value = Settings.crtPlayer
-//        _toggles.postValue(FRAMETOGGLES)
+        _toggles.postValue(Toggle.AdvancedStatistics)
         onEventGameAction(FRAME_UPDATED)
     }
 
