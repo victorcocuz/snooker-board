@@ -28,7 +28,7 @@ class SummaryFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         postponeEnterTransition()
-        mainVm.transitionToFragment(this, 200)
+        mainVm.turnOffSplashScreen(200)
 
         // Bind view elements
         val binding: FragmentSummaryBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_summary, container, false)

@@ -50,7 +50,7 @@ class DataStore(private val context: Context) {
 
     fun savePreferences(key: String, value: Any) = CoroutineScope(Dispatchers.IO).launch {
         context.dataStore.edit { preferences ->
-            Timber.i("Saved: key $key, value $value")
+            Timber.i("Saved: $key = $value")
             when (value::class.simpleName) {
                 "String" -> preferences[stringPreferencesKey(key)] = value as String
                 "Int" -> preferences[intPreferencesKey(key)] = value as Int
@@ -61,7 +61,7 @@ class DataStore(private val context: Context) {
         }
     }
 
-    suspend fun loadPreferences() {
+    fun loadPreferences() = CoroutineScope(Dispatchers.IO).launch {
         val preferences = context.dataStore.data.first()
 
         Toggle.AdvancedRules.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_ADVANCED_RULES)] ?: true

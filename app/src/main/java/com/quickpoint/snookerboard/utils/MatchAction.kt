@@ -66,6 +66,7 @@ enum class MatchAction {
     NAV_TO_PLAY, // Go to main menu
     NAV_TO_GAME, // Go to game fragment
     NAV_TO_DIALOG_GENERIC, // Go to generic dialog
+    NAV_TO_SUMMARY,
 
     // Redundant Actions
     CLOSE_DIALOG, // Used when the action is to continue current state

@@ -2,8 +2,6 @@ package com.quickpoint.snookerboard.fragments.rules
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.quickpoint.snookerboard.ScreenEvents
 import com.quickpoint.snookerboard.domain.objects.DomainPlayer.Player01
@@ -23,15 +21,12 @@ import kotlinx.coroutines.launch
 class RulesViewModel(
     private val app: Application,
 ) : AndroidViewModel(app) {
-    // Observables
-    private val _eventRulesAction = MutableLiveData<Event<MatchAction>>()
-    val eventRulesAction: LiveData<Event<MatchAction>> = _eventRulesAction
 
-    private val _eventSharedFlow = MutableSharedFlow<ScreenEvents>()
-    val eventSharedFlow = _eventSharedFlow.asSharedFlow()
     private fun onEmit(matchAction: MatchAction) = viewModelScope.launch {
         _eventSharedFlow.emit(ScreenEvents.SnookerEvent(matchAction))
     }
+    private val _eventSharedFlow = MutableSharedFlow<ScreenEvents>()
+    val eventSharedFlow = _eventSharedFlow.asSharedFlow()
 
     fun startMatchQuery() = onEmit(
         when {
@@ -41,24 +36,23 @@ class RulesViewModel(
         }
     )
 
-    // Update players names, save changes in DataStore and notify the composable to recompose
-    private val _eventPlayerNameChange = MutableLiveData<Event<Unit>>()
-    val eventPlayerNameChange: LiveData<Event<Unit>> = _eventPlayerNameChange
-    fun onPlayerNameChange(key: String, value: String) {
+    // Update settings, save changes in DataStore and notify the composable to recompose
+    fun onPlayerNameChange(key: String, value: String) = viewModelScope.launch{ // Update players names, save changes in DataStore and notify the composable to recompose
         Player01.setPlayerName(key, value)
         Player02.setPlayerName(key, value)
-        _eventPlayerNameChange.value = Event(Unit)
+        _eventPlayerNameChange.emit(Event(Unit))
     }
+    private val _eventPlayerNameChange = MutableSharedFlow<Event<Unit>>()
+    val eventPlayerNameChange = _eventPlayerNameChange.asSharedFlow()
 
-    // Update match settings, save changes in DataStore and notify the composable to recompose
-    private val _eventMatchSettingsChange = MutableLiveData<Event<Unit>>()
-    val eventMatchSettingsChange: LiveData<Event<Unit>> = _eventMatchSettingsChange
-    fun onMatchSettingsChange(key: String, value: Int) {
+    fun onMatchSettingsChange(key: String, value: Int) = viewModelScope.launch {
         when {
             Settings.handicapFrameExceedsLimit(key, value) -> onEmit(SNACK_HANDICAP_FRAME_LIMIT)
             Settings.handicapMatchExceedsLimit(key, value) -> onEmit(SNACK_HANDICAP_MATCH_LIMIT)
             else -> updateSettings(key, value)
         }
-        _eventMatchSettingsChange.value = Event(Unit)
+        _eventMatchSettingsChange.emit(Event(Unit))
     }
+    private val _eventMatchSettingsChange = MutableSharedFlow<Event<Unit>>()
+    val eventMatchSettingsChange = _eventMatchSettingsChange.asSharedFlow()
 }

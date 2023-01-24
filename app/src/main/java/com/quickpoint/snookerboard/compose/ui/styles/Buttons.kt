@@ -11,7 +11,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -63,7 +62,7 @@ fun RulesHandicapLabel(
     rulesVm: RulesViewModel,
     key: String,
 ) {
-    val rulesUpdateAction: Event<Unit> by rulesVm.eventMatchSettingsChange.observeAsState(Event(Unit))
+    val rulesUpdateAction by rulesVm.eventMatchSettingsChange.collectAsState(Event(Unit))
     var handicap by remember { mutableStateOf(0) }
     LaunchedEffect(key1 = rulesUpdateAction) {
         handicap = when (key) {
@@ -83,7 +82,7 @@ fun NumberPickerHoist(
     modifier: Modifier = Modifier,
     rulesVm: RulesViewModel,
 ) {
-    val rulesUpdateAction: Event<Unit> by rulesVm.eventMatchSettingsChange.observeAsState(Event(Unit))
+    val rulesUpdateAction by rulesVm.eventMatchSettingsChange.collectAsState(Event(Unit))
     LaunchedEffect(key1 = rulesUpdateAction, block = {}) // Used to refresh composition when rules change
     NumberPicker(modifier, rulesVm, Settings.availableFrames)
 }
@@ -126,7 +125,7 @@ fun ButtonStandardHoist(
     key: String,
     value: Int = -2,
 ) {
-    val rulesUpdateAction: Event<Unit> by rulesVm.eventMatchSettingsChange.observeAsState(Event(Unit))
+    val rulesUpdateAction by rulesVm.eventMatchSettingsChange.collectAsState(Event(Unit))
     LaunchedEffect(key1 = rulesUpdateAction, block = {}) // Used to refresh composition when rules change
     ButtonStandard(
         text = stringResource(getSettingsTextIdByKeyAndValue(key, value)),
@@ -190,8 +189,8 @@ fun AppTextFieldHoist(
     key: String,
     keyboardActions: KeyboardActions = KeyboardActions(),
 ) {
-    val nameChangeEvent: Event<Unit> by rulesVm.eventPlayerNameChange.observeAsState(Event(Unit))
-    nameChangeEvent.getContentIfNotHandled() // Simply used to call the observer, only to trigger composition
+    val nameChangeEvent by rulesVm.eventPlayerNameChange.collectAsState(Event(Unit))
+//    nameChangeEvent.getContentIfNotHandled() // Simply used to call the observer, only to trigger composition
     AppTextField(
         modifier = modifier,
         text = getPlayerNameByKey(key),

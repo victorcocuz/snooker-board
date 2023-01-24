@@ -49,7 +49,7 @@ class GameFragment : Fragment() {
 //         Start new match or load existing match
         if (Settings.matchState == MatchState.RULES_IDLE) {
             gameVm.resetMatch()
-            mainVm.updateState(MatchState.GAME_IN_PROGRESS)
+            Settings.matchState = MatchState.GAME_IN_PROGRESS
         } else mainVm.storedFrame.observe(viewLifecycleOwner, EventObserver { storedFrame ->
             gameVm.loadMatch(storedFrame)
         })
@@ -109,7 +109,7 @@ class GameFragment : Fragment() {
                 Timber.i("Observed eventFrameAction: $action")
                 when (action) {
                     // Directly observed from gameVm
-                    TRANSITION_TO_FRAGMENT -> mainVm.transitionToFragment(this@GameFragment, 200)
+                    TRANSITION_TO_FRAGMENT -> mainVm.turnOffSplashScreen(200)
                     FRAME_UPDATED -> {
                         requireActivity().invalidateOptionsMenu() // Reset the menu every time the frame has been updated
                         Timber.i(getString(R.string.helper_update_frame_info))
@@ -150,7 +150,7 @@ class GameFragment : Fragment() {
                         gameVm.onEventGameAction(NAV_TO_POST_MATCH)
                     }
                     NAV_TO_POST_MATCH -> {
-                        mainVm.updateState(MatchState.SUMMARY)
+                        Settings.matchState = MatchState.SUMMARY
                         navigate(GameFragmentDirections.summaryFrag(), adMob)
                     }
                     MATCH_CANCEL -> {

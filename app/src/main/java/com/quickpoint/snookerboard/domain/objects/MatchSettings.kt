@@ -14,84 +14,21 @@ sealed class MatchSettings(
 ) {
     object Settings : MatchSettings(null) {
 
-        var matchState: MatchState = NONE
+        private var mMatchState: MatchState = NONE
+        var matchState: MatchState
+            get() = mMatchState
             set(value) {
-                field = value
+                mMatchState = value
                 dataStore?.savePreferences(K_LONG_MATCH_STATE, value.ordinal)
-                Timber.i("Match state updated: $field")
+                Timber.i("Match state updated: $mMatchState")
             }
 
-        var availableFrames: Int = 2
-            set(value) {
-                field = value
-                dataStore?.savePreferences(K_INT_MATCH_AVAILABLE_FRAMES, value)
-            }
-
-        var availableReds: Int = 15
-            set(value) {
-                field = value
-                dataStore?.savePreferences(K_INT_MATCH_AVAILABLE_REDS, value)
-            }
-
-        var foulModifier: Int = 0
-            set(value) {
-                field = value
-                dataStore?.savePreferences(K_INT_MATCH_FOUL_MODIFIER, value)
-            }
-
-        var startingPlayer: Int = -1
-            set(value) {
-                field = value
-                dataStore?.savePreferences(K_INT_MATCH_STARTING_PLAYER, value)
-            }
-
-        var handicapFrame: Int = 0
-            set(value) {
-                field = value
-                dataStore?.savePreferences(K_INT_MATCH_HANDICAP_FRAME, value)
-            }
-
-        var handicapMatch: Int = 0
-            set(value) {
-                field = value
-                dataStore?.savePreferences(K_INT_MATCH_HANDICAP_MATCH, value)
-            }
-
-        var crtFrame: Long = 0
-            set(value) {
-                field = value
-                dataStore?.savePreferences(K_LONG_MATCH_CRT_FRAME, value)
-            }
-
-        var crtPlayer: Int = -1
-            set(value) {
-                field = value
-                dataStore?.savePreferences(K_INT_MATCH_CRT_PLAYER, value)
-            }
-
-        var availablePoints: Int = 0
-            set(value) {
-                field = value
-                dataStore?.savePreferences(K_INT_MATCH_AVAILABLE_POINTS, value)
-            }
-
-        var counterRetake: Int = 0
-            set(value) {
-                field = value
-                dataStore?.savePreferences(K_INT_MATCH_COUNTER_RETAKE, value)
-            }
-
-        var pointsWithoutReturn: Int = 0
-            set(value) {
-                field = value
-                dataStore?.savePreferences(K_INT_MATCH_POINTS_WITHOUT_RETURN, value)
-            }
-
+        private var mUniqueId: Long = 0
         var uniqueId: Long = 0
             get() {
-                field += 1
-                dataStore?.savePreferences(K_INT_MATCH_UNIQUE_ID, field)
-                return field
+                mUniqueId += 1
+                dataStore?.savePreferences(K_INT_MATCH_UNIQUE_ID, mUniqueId)
+                return mUniqueId
             }
             private set
 
@@ -100,6 +37,94 @@ sealed class MatchSettings(
             dataStore?.savePreferences(K_INT_MATCH_UNIQUE_ID, uniqueId)
             return uniqueId
         }
+
+        private var mAvailableFrames: Int = 2
+        var availableFrames: Int
+            get() = mAvailableFrames
+            set(value) {
+                mAvailableFrames = value
+                dataStore?.savePreferences(K_INT_MATCH_AVAILABLE_FRAMES, value)
+            }
+
+        private var mAvailableReds: Int = 15
+        var availableReds: Int
+            get() = mAvailableReds
+            set(value) {
+                mAvailableReds = value
+                dataStore?.savePreferences(K_INT_MATCH_AVAILABLE_REDS, value)
+            }
+
+        private var mFoulModifier: Int = 0
+        var foulModifier: Int
+            get() = mFoulModifier
+            set(value) {
+                mFoulModifier = value
+                dataStore?.savePreferences(K_INT_MATCH_FOUL_MODIFIER, value)
+            }
+
+        private var mStartingPlayer: Int = -1
+        var startingPlayer: Int
+            get() = mStartingPlayer
+            set(value) {
+                mStartingPlayer = value
+                dataStore?.savePreferences(K_INT_MATCH_STARTING_PLAYER, value)
+            }
+
+        private var mHandicapFrame: Int = 0
+        var handicapFrame: Int
+            get() = mHandicapFrame
+            set(value) {
+                mHandicapFrame = value
+                dataStore?.savePreferences(K_INT_MATCH_HANDICAP_FRAME, value)
+            }
+
+        private var mHandicapMatch: Int = 0
+        var handicapMatch: Int
+            get() = mHandicapMatch
+            set(value) {
+                mHandicapMatch = value
+                dataStore?.savePreferences(K_INT_MATCH_HANDICAP_MATCH, value)
+            }
+
+        private var mCrtFrame: Long = 0
+        var crtFrame: Long
+            get() = mCrtFrame
+            set(value) {
+                mCrtFrame = value
+                dataStore?.savePreferences(K_LONG_MATCH_CRT_FRAME, value)
+            }
+
+        private var mCrtPlayer: Int = -1
+        var crtPlayer: Int
+            get() = mCrtPlayer
+            set(value) {
+                mCrtPlayer = value
+                dataStore?.savePreferences(K_INT_MATCH_CRT_PLAYER, value)
+            }
+
+        private var mAvailablePoints: Int = 0
+        var availablePoints: Int
+            get() = mAvailablePoints
+            set(value) {
+                mAvailablePoints = value
+                dataStore?.savePreferences(K_INT_MATCH_AVAILABLE_POINTS, value)
+            }
+
+        private var mCounterRetake: Int = 0
+        var counterRetake: Int
+            get() = mCounterRetake
+            set(value) {
+                mCounterRetake = value
+                dataStore?.savePreferences(K_INT_MATCH_COUNTER_RETAKE, value)
+            }
+
+        private var mPointsWithoutReturn: Int = 0
+        var pointsWithoutReturn: Int
+            get() = mPointsWithoutReturn
+            set(value) {
+                mPointsWithoutReturn = value
+                dataStore?.savePreferences(K_INT_MATCH_POINTS_WITHOUT_RETURN, value)
+            }
 
         fun resetRules(): Int {
             uniqueId = -1
@@ -132,20 +157,20 @@ sealed class MatchSettings(
             counterRetake: Int,
             pointsWithoutReturn: Int,
         ) {
-            this.matchState = matchState
-            this.uniqueId = uniqueId
-            this.availableFrames = availableFrames
-            this.availableReds = availableReds
-            this.foulModifier = foulModifier
-            this.startingPlayer = startingPlayer
-            this.handicapFrame = handicapFrame
-            this.handicapMatch = handicapMatch
-            this.crtFrame = crtFrame
-            this.crtPlayer = crtPlayer
-            this.availablePoints = availablePoints
-            this.counterRetake = counterRetake
-            this.pointsWithoutReturn = pointsWithoutReturn
-            Timber.i("assignRules(): ${getAsText()}")
+            this.mMatchState = matchState
+            this.mUniqueId = uniqueId
+            this.mAvailableFrames = availableFrames
+            this.mAvailableReds = availableReds
+            this.mFoulModifier = foulModifier
+            this.mStartingPlayer = startingPlayer
+            this.mHandicapFrame = handicapFrame
+            this.mHandicapMatch = handicapMatch
+            this.mCrtFrame = crtFrame
+            this.mCrtPlayer = crtPlayer
+            this.mAvailablePoints = availablePoints
+            this.mCounterRetake = counterRetake
+            this.mPointsWithoutReturn = pointsWithoutReturn
+            Timber.i("loadPreferences(): ${getAsText()}")
         }
 
         fun updateSettings(key: String, value: Int) {
@@ -190,7 +215,7 @@ fun Settings.getCrtPlayerFromPotAction(potAction: PotAction) = when (potAction) 
 
 fun Settings.getDisplayFrames() = "(" + (availableFrames * 2 - 1).toString() + ")"
 fun Settings.getAsText() =
-    "uniqueId: $uniqueId, availableFrames: $availableFrames, availableReds: $availableReds, foulModifier: $foulModifier, startingPlayer: $startingPlayer, " +
+    "matchState: $matchState, uniqueId: $uniqueId, availableFrames: $availableFrames, availableReds: $availableReds, foulModifier: $foulModifier, startingPlayer: $startingPlayer, " +
             "handicapFrame: $handicapFrame, handicapMatch: $handicapMatch, crtFrame: $crtFrame, crtPlayer: $crtPlayer, availablePoints: $availablePoints"
 
 
