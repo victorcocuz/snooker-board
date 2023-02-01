@@ -16,9 +16,9 @@ import com.android.billingclient.api.QueryPurchasesParams
 import com.android.billingclient.api.consumePurchase
 import com.android.billingclient.api.queryProductDetails
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.collect.ImmutableList
-import com.quickpoint.snookerboard.utils.PRODUCT_BEER
-import com.quickpoint.snookerboard.utils.PRODUCT_COFFEE
-import com.quickpoint.snookerboard.utils.PRODUCT_LUNCH
+import com.quickpoint.snookerboard.utils.Constants.PRODUCT_BEER
+import com.quickpoint.snookerboard.utils.Constants.PRODUCT_COFFEE
+import com.quickpoint.snookerboard.utils.Constants.PRODUCT_LUNCH
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

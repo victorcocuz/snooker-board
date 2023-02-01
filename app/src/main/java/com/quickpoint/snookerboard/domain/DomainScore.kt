@@ -55,15 +55,15 @@ data class DomainScore(
 }
 
 // Checker Methods
-fun MutableList<DomainScore>?.frameScoreDiff() =
+fun List<DomainScore>?.frameScoreDiff() =
     if (this == null || this.size == 0) 0 else abs((this[0].framePoints) - (this[1].framePoints))
 
-fun MutableList<DomainScore>.isFrameEqual() = this[0].framePoints == this[1].framePoints
-fun MutableList<DomainScore>.isMatchEqual() = this[0].matchPoints == this[1].matchPoints
+fun List<DomainScore>.isFrameEqual() = this[0].framePoints == this[1].framePoints
+fun List<DomainScore>.isMatchEqual() = this[0].matchPoints == this[1].matchPoints
 fun MutableList<DomainScore>.isFrameAndMatchEqual() = isFrameEqual() && isMatchEqual()
-fun MutableList<DomainScore>.isNoFrameFinished() = this[0].matchPoints + this[1].matchPoints == 0
-fun MutableList<DomainScore>.frameWinner() = if (this[0].framePoints > this[1].framePoints) 0 else 1
-fun MutableList<DomainScore>.isFrameWinResultingMatchTie() = this[frameWinner()].matchPoints + 1 == this[1 - frameWinner()].matchPoints
+fun List<DomainScore>.isNoFrameFinished() = this[0].matchPoints + this[1].matchPoints == 0
+fun List<DomainScore>.frameWinner() = if (this[0].framePoints > this[1].framePoints) 0 else 1
+fun List<DomainScore>.isFrameWinResultingMatchTie() = this[frameWinner()].matchPoints + 1 == this[1 - frameWinner()].matchPoints
 fun MutableList<DomainScore>.isMatchEnding() = this[frameWinner()].matchPoints + 1 == Settings.availableFrames
 fun MutableList<DomainScore>.isMatchInProgress() = (this[0].cumulatedValues() + this[1].cumulatedValues()) > 0
 

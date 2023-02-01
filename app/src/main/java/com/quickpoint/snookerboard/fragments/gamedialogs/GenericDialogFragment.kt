@@ -11,6 +11,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -81,7 +83,7 @@ fun FragmentDialogGeneric(
     onDismiss: () -> Unit,
     onConfirm: (MatchAction) -> Unit,
 ) {
-    val score = gameVm?.displayFrame?.value?.score
+    val domainFrame by gameVm?.frameState!!.collectAsState()
     val isCancelable = matchActions[2] !in listOfMatchActionsUncancelable
     Dialog(
         onDismissRequest = { onDismiss() },
@@ -109,7 +111,7 @@ fun FragmentDialogGeneric(
                 TextParagraphSubTitle(getGenericDialogTitleText(matchActions[1], matchActions[2]))
                 TextParagraphSubTitle(getGenericDialogQuestionText(matchActions[1], matchActions[2]))
                 if (matchActions[1] in listOf(MATCH_ENDED_DISCARD_FRAME, FRAME_MISS_FORFEIT))
-                    TextParagraph(getDialogGameNote(matchActions[1], score))
+                    TextParagraph(getDialogGameNote(matchActions[1], domainFrame.score))
                 Divider()
                 RuleSelectionItem(
                     title = "Actions",
@@ -118,7 +120,7 @@ fun FragmentDialogGeneric(
                             ButtonGenericDialogHoist(onAction = { onConfirm(matchActions[0]) }, text = "No")
                         if (matchActions[1] == MATCH_ENDED_DISCARD_FRAME)
                             ButtonGenericDialogHoist(onAction = { onConfirm(matchActions[1]) }, text = getDialogGameBText(matchActions[1]))
-                        if (!(matchActions[1] !in listOf(MATCH_ENDED_DISCARD_FRAME, IGNORE) && (score?.isFrameEqual() == true)))
+                        if (!(matchActions[1] !in listOf(MATCH_ENDED_DISCARD_FRAME, IGNORE) && domainFrame.score.isFrameEqual()))
                             ButtonGenericDialogHoist(onAction = { onConfirm(matchActions[2]) }, text = getDialogGameCText(matchActions[1], matchActions[2]))
                     })
             }
@@ -162,7 +164,7 @@ fun getGenericDialogQuestionText(matchActionB: MatchAction, matchActionC: MatchA
     else -> "$matchActionC not implemented"
 }
 
-fun getDialogGameNote(matchAction: MatchAction, score: MutableList<DomainScore>?): String = when {
+fun getDialogGameNote(matchAction: MatchAction, score: List<DomainScore>?): String = when {
     matchAction == FRAME_MISS_FORFEIT -> "NOTE: Please read carefully, this action cannot be undone"
     score == null -> ""
     score.isNoFrameFinished() -> ""

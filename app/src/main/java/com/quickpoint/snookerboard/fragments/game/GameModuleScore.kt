@@ -11,25 +11,33 @@ import com.quickpoint.snookerboard.compose.ui.styles.StandardRow
 import com.quickpoint.snookerboard.compose.ui.styles.TextParagraphSubTitle
 import com.quickpoint.snookerboard.compose.ui.styles.TextTitle
 import com.quickpoint.snookerboard.compose.ui.theme.Brown
+import com.quickpoint.snookerboard.domain.DomainFrame
+import com.quickpoint.snookerboard.domain.availablePoints
+import com.quickpoint.snookerboard.domain.frameScoreDiff
+import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
+import com.quickpoint.snookerboard.domain.objects.getDisplayFrames
 
 @Composable // Score Chapter
-fun GameModuleScore() {
-    StandardRow(modifier = Modifier.padding(bottom = 8.dp)) {
-        ScoreFrame("80")
-        ScoreMatch(text = "5-3")
-        ScoreFrame("75")
+fun GameModuleScore(domainFrame: DomainFrame) {
+    val score = domainFrame.score
+    if (score.size == 2) {
+        StandardRow(modifier = Modifier.padding(bottom = 8.dp)) {
+            ScoreFrameContainer("${score[0].framePoints}")
+            ScoreMatchContainer(text = "${score[0].matchPoints} ${Settings.getDisplayFrames()} ${score[1].matchPoints}")
+            ScoreFrameContainer("${score[1].framePoints}")
+        }
+        ScoreProgressBar(description = "Remaining", progress = domainFrame.ballStack.availablePoints().toFloat() / domainFrame.frameMax, value = "${domainFrame.ballStack.availablePoints()}")
+        ScoreProgressBar(description = "Difference", progress = domainFrame.score.frameScoreDiff().toFloat() / domainFrame.frameMax, value = "${domainFrame.score.frameScoreDiff()}")
     }
-    ScoreProgressBar(description = "Remaining", progress = 0.7f, value = "7")
-    ScoreProgressBar(description = "Difference", progress = 0.5f, value = "5")
 }
 
 @Composable
-fun ScoreFrame(text: String) {
+fun ScoreFrameContainer(text: String) {
     TextTitle(text)
 }
 
 @Composable
-fun ScoreMatch(text: String) {
+fun ScoreMatchContainer(text: String) {
     TextParagraphSubTitle(text)
 }
 

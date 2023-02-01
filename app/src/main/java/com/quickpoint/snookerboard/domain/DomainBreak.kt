@@ -64,7 +64,7 @@ fun MutableList<DomainBreak>.findMaxBreak(): Int {
 }
 
 
-fun MutableList<DomainBreak>.displayShots(): MutableList<DomainBreak> {
+fun List<DomainBreak>.displayShots(): MutableList<DomainBreak> {
     val list = mutableListOf<DomainBreak>() // Create a list of pots show within the break rv (SAFE, MISS, REMOVERED are not shown)
     forEach {
         val listOfPotTypes: List<PotType> = if (Toggle.AdvancedBreaks.isEnabled) listOfAdvancedShowablePotTypes else listOfStandardShowablePotTypes
@@ -118,4 +118,11 @@ fun MutableList<DomainBreak>.removeLastPotFromFrameStack(score: MutableList<Doma
     } else if (score[Settings.crtPlayer].pointsWithoutReturn == 0)
         score[Settings.getOtherPlayer()].pointsWithoutReturn = last().pointsWithoutReturn
     return pot
+}
+
+fun DomainBreak.ballsList(crtPlayer: Int): List<DomainBall> {
+    if (player != crtPlayer) return emptyList()
+    val balls = mutableListOf<DomainBall>()
+    pots.forEach { if (it.potType in listOfPotTypesPointGenerating) balls.add(it.ball) }
+    return balls
 }

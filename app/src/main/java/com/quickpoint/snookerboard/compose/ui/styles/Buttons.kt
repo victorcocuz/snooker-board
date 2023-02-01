@@ -1,5 +1,6 @@
 package com.quickpoint.snookerboard.compose.ui.styles
 
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -174,11 +175,13 @@ fun ToggleButton(
             containerColor = if (isSelected) Green else CreamBright
         )
     ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelSmall.copy(color = if (isSelected) White else Black)
-        )
-        Icon(painter = painter, contentDescription = null)
+        Column(verticalArrangement = Arrangement.Center) {
+            Icon(painter = painter, contentDescription = null)
+            Text(
+                text = text,
+                style = MaterialTheme.typography.labelSmall.copy(color = if (isSelected) White else Black)
+            )
+        }
     }
 }
 
@@ -233,4 +236,21 @@ fun AppTextField(
         placeholder = { Text(text = placeholder, style = MaterialTheme.typography.titleMedium.copy(color = Color.LightGray)) },
         onValueChange = onChange,
     )
+}
+
+@Composable
+fun BallView(
+    onClick: () -> Unit = {},
+    onContent: (ImageButton) -> Unit,
+) = AndroidView(
+    modifier = Modifier.width(60.dp).height(60.dp).aspectRatio(1f),
+    factory = { context ->
+        ImageButton(context).apply {
+            setOnClickListener {
+                onClick()
+            }
+        }
+    })
+{
+    onContent(it)
 }

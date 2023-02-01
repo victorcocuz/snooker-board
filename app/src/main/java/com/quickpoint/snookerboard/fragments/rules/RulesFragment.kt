@@ -29,13 +29,12 @@ import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.ScreenEvents
 import com.quickpoint.snookerboard.compose.ui.styles.*
 import com.quickpoint.snookerboard.compose.ui.theme.spacing
-import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
+import com.quickpoint.snookerboard.domain.objects.MatchSettings.*
 import com.quickpoint.snookerboard.domain.objects.MatchState.*
 import com.quickpoint.snookerboard.domain.objects.Toggle
 import com.quickpoint.snookerboard.fragments.gamedialogs.DialogViewModel
 import com.quickpoint.snookerboard.fragments.gamedialogs.FragmentDialogGeneric
 import com.quickpoint.snookerboard.utils.*
-import timber.log.Timber
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -50,7 +49,6 @@ fun FragmentRules(
     val keyboardController = LocalSoftwareKeyboardController.current
     val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = true) {
-        Timber.e("Rules here are ${Settings.matchState}")
         mainVm.turnOffSplashScreen()
         rulesVm.eventSharedFlow.collect { event ->
             when (event) {
@@ -63,7 +61,7 @@ fun FragmentRules(
         }
     }
 
-    FragmentColumn(Modifier.pointerInput(Unit) { detectTapGestures(onTap = { focusManager.clearFocus() }) }) {
+    FragmentContent(Modifier.pointerInput(Unit) { detectTapGestures(onTap = { focusManager.clearFocus() }) }) {
         Row {
             Column(
                 Modifier

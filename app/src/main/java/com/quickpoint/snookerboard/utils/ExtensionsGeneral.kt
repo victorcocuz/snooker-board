@@ -30,6 +30,7 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.admob.AdMob
+import com.quickpoint.snookerboard.utils.Constants.EMAIL_BASE_URI
 
 
 // General

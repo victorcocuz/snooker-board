@@ -121,7 +121,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                app:bindMatchBallsRv="@{varGameVm.displayFrame.ballStack}" />
+                 />
+<!--            app:bindMatchBallsRv="@{varGameVm.displayFrame.ballStack}"-->
         </LinearLayout>
 
         <FrameLayout
@@ -166,13 +167,14 @@
             style="@style/ButtonNarrow"
             android:layout_width="@dimen/btn_standard"
             android:layout_height="@dimen/btn_standard"
-            android:onClick="@{() -> varGameVm.onToggleLongClicked()}"
             android:layout_marginBottom="@dimen/margin_xsmall"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/l_game_actions_cl_btn_shot_type_rest"
             app:layout_constraintStart_toStartOf="parent"
            >
 <!--            app:setSelected="@{varGameVm.toggles.longShot}"-->
+<!--                        android:onClick="@{() -> varGameVm.onToggleLongClicked()}"
+-->
 
             <ImageView
                 android:id="@+id/l_game_actions_iv_btn_shot_type_long"
@@ -204,12 +206,13 @@
             style="@style/ButtonNarrow"
             android:layout_width="@dimen/btn_standard"
             android:layout_height="@dimen/btn_standard"
-            android:onClick="@{() -> varGameVm.onToggleRestClicked()}"
             app:layout_constraintBottom_toBottomOf="@id/l_game_actions_cl_btn_shot_type_long"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/l_game_actions_cl_btn_shot_type_long"
              >
 <!--            app:setSelected="@{varGameVm.toggles.restShot}"-->
+<!--                        android:onClick="@{() -> varGameVm.onToggleRestClicked()}"
+-->
 
             <ImageView
                 android:id="@+id/l_game_actions_iv_btn_shot_type_rest"

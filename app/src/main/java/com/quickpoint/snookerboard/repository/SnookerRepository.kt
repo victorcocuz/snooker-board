@@ -9,7 +9,7 @@ import com.quickpoint.snookerboard.database.asDomainFrameScoreList
 import com.quickpoint.snookerboard.domain.DomainActionLog
 import com.quickpoint.snookerboard.domain.DomainFrame
 import com.quickpoint.snookerboard.domain.DomainScore
-import com.quickpoint.snookerboard.domain.objects.MatchSettings
+import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -48,7 +48,7 @@ class SnookerRepository constructor(database: SnookerDatabase) {
     suspend fun getCrtFrame(): DbFrameWithScoreAndBreakWithPotsAndBallStack? {
         return withContext(Dispatchers.IO) {
             val crtFrame = snookerDbDao.getCrtFrame()
-            Timber.i("getCrtFrame(): State is: ${MatchSettings.Settings.matchState}, CrtFrame is: ${crtFrame?.frame?.frameId}, frameCount is: ${MatchSettings.Settings.crtFrame}")
+            Timber.i("getCrtFrame(): State is: ${Settings.matchState}, CrtFrame is: ${crtFrame?.frame?.frameId}, frameCount is: ${Settings.crtFrame}")
             return@withContext crtFrame
         }
     }

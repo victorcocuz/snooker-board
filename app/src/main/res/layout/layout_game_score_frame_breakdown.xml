@@ -30,7 +30,7 @@
 
             <TextView
                 style="@style/TextChapter"
-                android:text="@string/l_game_score_ll_line_chapter_breakdown" />
+                android:text="@string/l_game_score_ll_line_module_breaks" />
 
             <FrameLayout
                 style="@style/LineHorizontalChapter"
@@ -48,10 +48,11 @@
                 android:id="@+id/f_game_rv_break"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:bindBreakData="@{varGameVm.displayFrame.frameStack}"
                 app:stackFromEnd="true"
                 app:reverseLayout="true"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+<!--                            app:bindBreakData="@{varGameVm.displayFrame.frameStack}"
+-->
         </ScrollView>
 
     </androidx.appcompat.widget.LinearLayoutCompat>

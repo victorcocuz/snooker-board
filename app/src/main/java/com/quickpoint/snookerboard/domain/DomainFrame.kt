@@ -5,10 +5,10 @@ import com.quickpoint.snookerboard.database.*
 // The DOMAIN Frame is a class containing all frame information
 data class DomainFrame(
     val frameId: Long,
-    val ballStack: MutableList<DomainBall>, // Keep track of all DOMAIN Balls (i.e. a list of all balls potted, in order)
-    val score: MutableList<DomainScore>, // Two element array to keep track of DOMAIN Score (i.e. overrides latest score)
-    val frameStack: MutableList<DomainBreak>, // Keep track of all DOMAIN Breaks (i.e. a list of all breaks)
-    val actionLogs: MutableList<DomainActionLog>, // Keep track of all actions for debug purposes
+    val ballStack: List<DomainBall>, // Keep track of all DOMAIN Balls (i.e. a list of all balls potted, in order)
+    val score: List<DomainScore>, // Two element array to keep track of DOMAIN Score (i.e. overrides latest score)
+    val frameStack: List<DomainBreak>, // Keep track of all DOMAIN Breaks (i.e. a list of all breaks)
+    val actionLogs: List<DomainActionLog>, // Keep track of all actions for debug purposes
     val frameMax: Int, // Keep track of maximum remaining points
 ) {
 

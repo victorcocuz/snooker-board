@@ -1,10 +1,6 @@
 package com.quickpoint.snookerboard.fragments.navdrawer
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -17,14 +13,13 @@ import androidx.navigation.NavController
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.billing.PurchaseHelper
 import com.quickpoint.snookerboard.compose.ui.styles.ButtonDonate
-import com.quickpoint.snookerboard.compose.ui.styles.FragmentColumn
+import com.quickpoint.snookerboard.compose.ui.styles.FragmentContent
 import com.quickpoint.snookerboard.compose.ui.styles.TextHeadline
 import com.quickpoint.snookerboard.compose.ui.styles.TextParagraph
 import com.quickpoint.snookerboard.compose.ui.theme.spacing
-import com.quickpoint.snookerboard.utils.PRODUCT_BEER
-import com.quickpoint.snookerboard.utils.PRODUCT_COFFEE
-import com.quickpoint.snookerboard.utils.PRODUCT_LUNCH
-import timber.log.Timber
+import com.quickpoint.snookerboard.utils.Constants.PRODUCT_BEER
+import com.quickpoint.snookerboard.utils.Constants.PRODUCT_COFFEE
+import com.quickpoint.snookerboard.utils.Constants.PRODUCT_LUNCH
 
 @Composable
 fun FragmentDrawerSupport(
@@ -39,7 +34,7 @@ fun FragmentDrawerSupport(
     val statusText by purchaseHelper.statusText.collectAsState("")
     val priceText by purchaseHelper.priceText.collectAsState(List(3){""})
 
-    FragmentColumn {
+    FragmentContent {
         TextHeadline(stringResource(R.string.menu_drawer_support))
         TextParagraph(stringResource(R.string.f_nav_donate_tv_description))
         Spacer(Modifier.height(MaterialTheme.spacing.medium))
@@ -57,7 +52,6 @@ fun FragmentDrawerSupport(
                 purchaseHelper.makePurchase(PRODUCT_LUNCH)
             }
         }
-        Timber.e("message $statusText")
     }
 }
 

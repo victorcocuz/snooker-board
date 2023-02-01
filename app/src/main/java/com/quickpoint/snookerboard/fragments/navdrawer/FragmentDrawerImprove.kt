@@ -13,19 +13,19 @@ import androidx.navigation.compose.rememberNavController
 import com.quickpoint.snookerboard.BuildConfig
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.compose.ui.styles.ClickableText
-import com.quickpoint.snookerboard.compose.ui.styles.FragmentColumn
+import com.quickpoint.snookerboard.compose.ui.styles.FragmentContent
 import com.quickpoint.snookerboard.compose.ui.styles.TextHeadline
 import com.quickpoint.snookerboard.compose.ui.styles.TextParagraph
 import com.quickpoint.snookerboard.compose.ui.styles.TextParagraphSubTitle
-import com.quickpoint.snookerboard.utils.EMAIL_SUBJECT_IMPROVE
-import com.quickpoint.snookerboard.utils.GOOGLE_FORM_URI
+import com.quickpoint.snookerboard.utils.Constants.EMAIL_SUBJECT_IMPROVE
+import com.quickpoint.snookerboard.utils.Constants.GOOGLE_FORM_URI
 import com.quickpoint.snookerboard.utils.sendEmail
 
 @Composable
 fun FragmentDrawerImprove(
     navController: NavController
 ) {
-    FragmentColumn(Modifier.verticalScroll(rememberScrollState())) {
+    FragmentContent(Modifier.verticalScroll(rememberScrollState())) {
         TextHeadline(stringResource(R.string.menu_drawer_improve))
         TextParagraph(stringResource(R.string.f_nav_improve_tv_description))
         TextParagraphSubTitle(stringResource(R.string.f_nav_improve_tv_survey_header))

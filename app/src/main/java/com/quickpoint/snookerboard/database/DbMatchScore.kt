@@ -28,7 +28,7 @@ data class DbScore(
 )
 
 // CONVERTER method from list of DATABASE Break to list of DOMAIN Player Score
-fun List<DbScore>.asDomainScoreList(): MutableList<DomainScore> {
+fun List<DbScore>.asDomainScoreList(): List<DomainScore> {
     return map {
         DomainScore(
             scoreId = it.scoreId,

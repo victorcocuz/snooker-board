@@ -11,8 +11,9 @@ import com.quickpoint.snookerboard.domain.BallType.*
 import com.quickpoint.snookerboard.domain.DomainBall.*
 import com.quickpoint.snookerboard.domain.DomainPot.*
 import com.quickpoint.snookerboard.domain.PotAction.*
-import com.quickpoint.snookerboard.repository.SnookerRepository
+import com.quickpoint.snookerboard.domain.objects.MatchSettings
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.*
+import com.quickpoint.snookerboard.repository.SnookerRepository
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
@@ -57,7 +58,6 @@ internal class GameViewModelTest {
             actionLogs.forEachIndexed{index, actionLog ->
                 actionLog.apply {
                     assertThat(description).isEqualTo("handlePot()")
-                    Timber.e("index $index")
                     if (description == "handlePot()") {
                         assignPot(potType, ballType.getBallFromValues(ballPoints), potAction ?: CONTINUE)
                     }

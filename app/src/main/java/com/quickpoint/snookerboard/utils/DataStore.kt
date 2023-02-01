@@ -50,7 +50,7 @@ class DataStore(private val context: Context) {
 
     fun savePreferences(key: String, value: Any) = CoroutineScope(Dispatchers.IO).launch {
         context.dataStore.edit { preferences ->
-            Timber.i("Saved: $key = $value")
+//            Timber.i("Saved: $key = $value")
             when (value::class.simpleName) {
                 "String" -> preferences[stringPreferencesKey(key)] = value as String
                 "Int" -> preferences[intPreferencesKey(key)] = value as Int
@@ -67,9 +67,9 @@ class DataStore(private val context: Context) {
         Toggle.AdvancedRules.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_ADVANCED_RULES)] ?: true
         Toggle.AdvancedStatistics.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_ADVANCED_STATISTICS)] ?: true
         Toggle.AdvancedBreaks.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_ADVANCED_BREAKS)] ?: true
-        Toggle.FreeBall.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_FREEBALL)] ?: true
-        Toggle.LongShot.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_LONG_SHOT)] ?: true
-        Toggle.RestShot.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_REST_SHOT)] ?: true
+        Toggle.FreeBall.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_FREEBALL)] ?: false
+        Toggle.LongShot.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_LONG_SHOT)] ?: false
+        Toggle.RestShot.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_REST_SHOT)] ?: false
 
         Player01.loadPreferences(
             firstName = preferences[stringPreferencesKey(K_PLAYER01_FIRST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "Ronnie" else "",
@@ -91,7 +91,7 @@ class DataStore(private val context: Context) {
             handicapMatch = preferences[intPreferencesKey(K_INT_MATCH_HANDICAP_MATCH)] ?: 0,
             crtFrame = preferences[longPreferencesKey(K_LONG_MATCH_CRT_FRAME)] ?: 0,
             crtPlayer = preferences[intPreferencesKey(K_INT_MATCH_CRT_PLAYER)] ?: 0,
-            availablePoints = preferences[intPreferencesKey(K_INT_MATCH_AVAILABLE_POINTS)] ?: 0,
+            maxFramePoints = preferences[intPreferencesKey(K_INT_MATCH_AVAILABLE_POINTS)] ?: 0,
             counterRetake = preferences[intPreferencesKey(K_INT_MATCH_COUNTER_RETAKE)] ?: 0,
             pointsWithoutReturn = preferences[intPreferencesKey(K_INT_MATCH_POINTS_WITHOUT_RETURN)] ?: 0
         )

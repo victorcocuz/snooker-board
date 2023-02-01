@@ -21,6 +21,10 @@ import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.MatchAction.*
 import com.quickpoint.snookerboard.utils.livedata.ValueKeeperLiveData
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class GameViewModel(
@@ -46,38 +50,33 @@ class GameViewModel(
         return matchAction != null
     }
 
-    private val _displayFrame = MutableLiveData<DomainFrame>()
-    val displayFrame: LiveData<DomainFrame> = _displayFrame
-
-    private val _toggles = MutableLiveData(Toggle.AdvancedStatistics)
-    val toggles: LiveData<Toggle.AdvancedStatistics> = _toggles
-    fun onToggleLongClicked() {
-        Toggle.LongShot.toggleEnabled()
-        _toggles.postValue(Toggle.AdvancedStatistics)
-    }
-
-    fun onToggleRestClicked() {
-        Toggle.RestShot.toggleEnabled()
-        _toggles.postValue(Toggle.AdvancedStatistics)
-    }
+    private val _frameState: MutableStateFlow<DomainFrame> =
+        MutableStateFlow(DomainFrame(0, emptyList(), emptyList(), emptyList(), emptyList(), 0))
+    val frameState = _frameState.asStateFlow()
 
     private val _crtPlayer = MutableLiveData<Int>()
     val crtPlayer: LiveData<Int> = _crtPlayer
     private fun onEventFrameUpdated(actionLog: DomainActionLog) = jobQueue.submit {
-        _displayFrame.postValue(DomainFrame(Settings.crtFrame, ballStack, score, frameStack, actionLogs, Settings.availablePoints))
-        if (actionLogs.size > 0) snookerRepository.saveCurrentFrame(_displayFrame.value!!)
+        _frameState.value =
+            DomainFrame(Settings.crtFrame, ballStack, score, frameStack, actionLogs.toList(), Settings.maxFramePoints)
+        if (actionLogs.size > 0) snookerRepository.saveCurrentFrame(_frameState.value)
         actionLogs.addLog(actionLog)
         _crtPlayer.value = Settings.crtPlayer
-        _toggles.postValue(Toggle.AdvancedStatistics)
         onEventGameAction(FRAME_UPDATED)
+    }
+
+    private val _eventSettingsUpdated = MutableSharedFlow<Event<Unit>>()
+    val eventSettingsUpdated = _eventSettingsUpdated.asSharedFlow()
+    fun onEventSettingsUpdated() = viewModelScope.launch {
+        _eventSettingsUpdated.emit(Event(Unit))
     }
 
     // Match actions
     fun loadMatch(frame: DomainFrame?) = frame?.let { // Will load latest frame once observed from play fragment
         jobQueue = JobQueue()
-        score = it.score
-        ballStack = it.ballStack
-        frameStack = it.frameStack
+        score = it.score.toMutableList()
+        ballStack = it.ballStack.toMutableList()
+        frameStack = it.frameStack.toMutableList()
         onEventGameAction(TRANSITION_TO_FRAGMENT)
         onEventFrameUpdated(DomainActionLog("loadMatch(): ${it.getTextInfo()}"))
     }
@@ -117,8 +116,12 @@ class GameViewModel(
                     isUpdateInProgress = false
                     return
                 }
-                handlePot(if (pot.ball is FREEBALL) FREE(ball = FREEBALL(points = pot.ball.points),
-                    shotType = getShotType()) else pot)
+                handlePot(
+                    if (pot.ball is FREEBALL) FREE(
+                        ball = FREEBALL(points = pot.ball.points),
+                        shotType = getShotType()
+                    ) else pot
+                )
                 handlePotExceptionsPost(pot)
             }
             isUpdateInProgress = false
@@ -126,11 +129,13 @@ class GameViewModel(
     }
 
     // Handle Pot
-    private fun handlePotExceptionsBefore(pot: DomainPot): Boolean = onEventGameAction(when {
-        ballStack.isLastBall() && (pot.potType in listOfPotTypesForNoBallSnackbar) -> SNACK_NO_BALL
-        pot is FOULATTEMPT -> FOUL_DIALOG
-        else -> null
-    })
+    private fun handlePotExceptionsBefore(pot: DomainPot): Boolean = onEventGameAction(
+        when {
+            ballStack.isLastBall() && (pot.potType in listOfPotTypesForNoBallSnackbar) -> SNACK_NO_BALL
+            pot is FOULATTEMPT -> FOUL_DIALOG
+            else -> null
+        }
+    )
 
     private fun handlePot(pot: DomainPot) {
         pot.potId = Settings.assignUniqueId()
@@ -148,7 +153,10 @@ class GameViewModel(
             delay(200)
             onEventGameAction(FRAME_MISS_FORFEIT_DIALOG)
         }
-        if (pot.potType == TYPE_FOUL && ballStack.isLastBlack() && !score.isFrameEqual()) onEventGameAction(FRAME_LAST_BLACK_FOULED_DIALOG, true)
+        if (pot.potType == TYPE_FOUL && ballStack.isLastBlack() && !score.isFrameEqual()) onEventGameAction(
+            FRAME_LAST_BLACK_FOULED_DIALOG,
+            true
+        )
         if (ballStack.isLastBall()) onEventGameAction(if (score.isFrameEqual()) FRAME_RESPOT_BLACK_DIALOG else FRAME_ENDING_DIALOG)
     }
 
@@ -164,12 +172,14 @@ class GameViewModel(
         handleUndoExceptionsPost(pot)
     }
 
-    private fun handleUndoExceptionsPost(pot: DomainPot) = onEventGameAction(when (pot.potType) {
-        TYPE_LAST_BLACK_FOULED -> FRAME_UNDO
-        TYPE_FREE_ACTIVE -> FRAME_UNDO
-        TYPE_FOUL, TYPE_REMOVE_RED -> if (frameStack.lastPotType() == TYPE_REMOVE_RED) FRAME_UNDO else null
-        else -> null
-    }, pot.potType in listOf(TYPE_FOUL, TYPE_REMOVE_RED, TYPE_FREE_ACTIVE))
+    private fun handleUndoExceptionsPost(pot: DomainPot) = onEventGameAction(
+        when (pot.potType) {
+            TYPE_LAST_BLACK_FOULED -> FRAME_UNDO
+            TYPE_FREE_ACTIVE -> FRAME_UNDO
+            TYPE_FOUL, TYPE_REMOVE_RED -> if (frameStack.lastPotType() == TYPE_REMOVE_RED) FRAME_UNDO else null
+            else -> null
+        }, pot.potType in listOf(TYPE_FOUL, TYPE_REMOVE_RED, TYPE_FREE_ACTIVE)
+    )
 
     // Checker methods
     fun isFrameMathematicallyOver() = ballStack.availablePoints() < score.frameScoreDiff()

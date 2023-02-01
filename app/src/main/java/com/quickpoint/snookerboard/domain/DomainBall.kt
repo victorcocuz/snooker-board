@@ -6,6 +6,7 @@ import com.quickpoint.snookerboard.domain.PotAction.RETAKE
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
 import com.quickpoint.snookerboard.domain.objects.Toggle
+import timber.log.Timber
 
 // The DOMAIN Ball is the simplest game data unit. It stores ball information
 enum class BallType { TYPE_NOBALL, TYPE_WHITE, TYPE_RED, TYPE_YELLOW, TYPE_GREEN, TYPE_BROWN, TYPE_BLUE, TYPE_PINK, TYPE_BLACK, TYPE_COLOR, TYPE_FREEBALL, TYPE_FREEBALLTOGGLE, TYPE_FREEBALLAVAILABLE }
@@ -75,7 +76,7 @@ fun MutableList<DomainBall>.maxRemoveReds() = minOf(redsOnTheTable(), 3)
 
 // Helper methods
 fun MutableList<DomainBall>.foulValue() = if (size > 4) 4 else (7 - 2 * (size - 1))
-fun MutableList<DomainBall>?.availablePoints(): Int {
+fun List<DomainBall>?.availablePoints(): Int {
     if (this == null) return 0
     val freeSize = (if (Toggle.FreeBall.isEnabled) size - 1 else size)
     return if (freeSize <= 7) (-(8 - freeSize) * ((8 - freeSize) + 1) + 56) / 2 + (if (Toggle.FreeBall.isEnabled) (9 - freeSize) else 0)
@@ -85,6 +86,7 @@ fun MutableList<DomainBall>?.availablePoints(): Int {
 // Frame methods
 fun MutableList<DomainBall>.resetBalls() {
     clear()
+    Timber.e("availableReds ${Settings.availableReds}")
     addNextBalls(Settings.availableReds * 2 + 7)
 }
 
@@ -159,7 +161,7 @@ internal fun MutableList<DomainBall>.addBalls(vararg balls: DomainBall): Int {
 }
 
 internal fun MutableList<DomainBall>.addFreeBall(pol: Int) {
-    Settings.availablePoints += if (isInColors() || !wasPreviousBallColor()) {
+    Settings.maxFramePoints += if (isInColors() || !wasPreviousBallColor()) {
         addBalls(FREEBALL(points = last().points)) * pol
     } else {
         addBalls(COLOR(), FREEBALL()) * pol
@@ -175,7 +177,7 @@ internal fun MutableList<DomainBall>.removeBalls(times: Int): Int = if (times ==
 }
 
 fun MutableList<DomainBall>.removeFreeBall() {
-    Settings.availablePoints += removeBalls(if (isInColorsWithFreeBall()) 1 else 2)
+    Settings.maxFramePoints += removeBalls(if (isInColorsWithFreeBall()) 1 else 2)
 }
 
 // Converter methods

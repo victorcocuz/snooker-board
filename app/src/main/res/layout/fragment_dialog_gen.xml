@@ -70,10 +70,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_layout_offset"
             android:layout_marginTop="@dimen/margin_header_below"
-            app:dialogGameNote="@{varActionB}"
-            app:dialogGameNoteScore="@{varGameVm.displayFrame}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/f_dialog_gen_tv_question" />
+<!--                    app:dialogGameNote="@{varActionB}"-->
+<!--                    app:dialogGameNoteScore="@{varGameVm.displayFrame}"
+-->
 
         <TextView
             android:id="@+id/f_dialog_gen_btn_answer_a"
@@ -111,13 +112,14 @@
             android:layout_marginEnd="@dimen/margin_layout_offset"
             android:layout_marginBottom="@dimen/margin_layout_offset"
             android:onClick="@{() -> varDialogVm.onEventDialogAction(varActionC)}"
-            app:dialogGameGenCActionB="@{varActionB}"
-            app:dialogGameGenCScore="@{varGameVm.displayFrame}"
-            app:dialogGameGenCText="@{varActionC}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/f_dialog_gen_tv_note"
             app:setVisible="@{(varActionC != MatchAction.IGNORE)}" />
+<!--                    app:dialogGameGenCActionB="@{varActionB}"
+            app:dialogGameGenCText="@{varActionC}"-->
+<!--                    app:dialogGameGenCScore="@{varGameVm.displayFrame}"
+-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -9,6 +9,7 @@ import com.quickpoint.snookerboard.utils.MatchAction.FRAME_START_NEW
 import timber.log.Timber
 import kotlin.math.absoluteValue
 
+
 sealed class MatchSettings(
     var dataStore: DataStore?,
 ) {
@@ -102,11 +103,11 @@ sealed class MatchSettings(
                 dataStore?.savePreferences(K_INT_MATCH_CRT_PLAYER, value)
             }
 
-        private var mAvailablePoints: Int = 0
-        var availablePoints: Int
-            get() = mAvailablePoints
+        private var mMaxFramePoints: Int = 0
+        var maxFramePoints: Int
+            get() = mMaxFramePoints
             set(value) {
-                mAvailablePoints = value
+                mMaxFramePoints = value
                 dataStore?.savePreferences(K_INT_MATCH_AVAILABLE_POINTS, value)
             }
 
@@ -136,7 +137,7 @@ sealed class MatchSettings(
             handicapMatch = 0
             crtFrame = 1
             crtPlayer = -1
-            availablePoints = 0
+            maxFramePoints = 0
             counterRetake = 0
             pointsWithoutReturn = 0
             return -1
@@ -153,7 +154,7 @@ sealed class MatchSettings(
             handicapMatch: Int,
             crtFrame: Long,
             crtPlayer: Int,
-            availablePoints: Int,
+            maxFramePoints: Int,
             counterRetake: Int,
             pointsWithoutReturn: Int,
         ) {
@@ -167,7 +168,7 @@ sealed class MatchSettings(
             this.mHandicapMatch = handicapMatch
             this.mCrtFrame = crtFrame
             this.mCrtPlayer = crtPlayer
-            this.mAvailablePoints = availablePoints
+            this.mMaxFramePoints = maxFramePoints
             this.mCounterRetake = counterRetake
             this.mPointsWithoutReturn = pointsWithoutReturn
             Timber.i("loadPreferences(): ${getAsText()}")
@@ -196,26 +197,31 @@ sealed class MatchSettings(
                 crtFrame += 1
                 startingPlayer = 1 - startingPlayer
             }
-            availablePoints = availableReds * 8 + 27
+            maxFramePoints = availableReds * 8 + 27
             crtPlayer = startingPlayer
             counterRetake = 0
         }
     }
 }
 
+
 // Helper methods
 fun Settings.getOtherPlayer() = 1 - crtPlayer
-fun Settings.handicapFrameExceedsLimit(key: String, value: Int) = key == K_INT_MATCH_HANDICAP_FRAME && (handicapFrame + value).absoluteValue >= availableReds * 8 + 27
-fun Settings.handicapMatchExceedsLimit(key: String, value: Int) = key == K_INT_MATCH_HANDICAP_MATCH && (handicapMatch + value).absoluteValue == availableFrames
+fun Settings.handicapFrameExceedsLimit(key: String, value: Int) =
+    key == K_INT_MATCH_HANDICAP_FRAME && (handicapFrame + value).absoluteValue >= availableReds * 8 + 27
+
+fun Settings.handicapMatchExceedsLimit(key: String, value: Int) =
+    key == K_INT_MATCH_HANDICAP_MATCH && (handicapMatch + value).absoluteValue == availableFrames
+
 fun Settings.getCrtPlayerFromPotAction(potAction: PotAction) = when (potAction) {
-        SWITCH -> getOtherPlayer()
-        FIRST -> startingPlayer
-        CONTINUE, RETAKE -> crtPlayer
+    SWITCH -> getOtherPlayer()
+    FIRST -> startingPlayer
+    CONTINUE, RETAKE -> crtPlayer
 }
 
 fun Settings.getDisplayFrames() = "(" + (availableFrames * 2 - 1).toString() + ")"
 fun Settings.getAsText() =
     "matchState: $matchState, uniqueId: $uniqueId, availableFrames: $availableFrames, availableReds: $availableReds, foulModifier: $foulModifier, startingPlayer: $startingPlayer, " +
-            "handicapFrame: $handicapFrame, handicapMatch: $handicapMatch, crtFrame: $crtFrame, crtPlayer: $crtPlayer, availablePoints: $availablePoints"
+            "handicapFrame: $handicapFrame, handicapMatch: $handicapMatch, crtFrame: $crtFrame, crtPlayer: $crtPlayer, availablePoints: $maxFramePoints"
 
 

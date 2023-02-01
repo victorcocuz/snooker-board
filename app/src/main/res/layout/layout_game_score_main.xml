@@ -44,7 +44,7 @@
 
             <TextView
                 style="@style/TextChapter"
-                android:text="@string/l_game_score_ll_line_chapter_score" />
+                android:text="@string/l_game_score_ll_line_module_score" />
 
             <FrameLayout style="@style/LineHorizontalChapter"
                 android:layout_marginStart="@dimen/margin_layout_offset"/>
@@ -53,29 +53,32 @@
         <TextView
             android:id="@+id/l_game_score_tv_frame_a"
             style="@style/TextTitle"
-            android:text="@{String.valueOf(varGameVm.displayFrame.score[0].framePoints)}"
             app:layout_constraintEnd_toStartOf="@+id/l_game_score_tv_match_a"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/l_game_score_ll_line_chapter_score"
             tools:text="123" />
+<!--                    android:text="@{String.valueOf(varGameVm.displayFrame.score[0].framePoints)}"
+-->
 
         <TextView
             android:id="@+id/l_game_score_tv_frame_b"
             style="@style/TextTitle"
-            android:text="@{String.valueOf(varGameVm.displayFrame.score[1].framePoints)}"
             app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_frame_a"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/l_game_score_tv_match_b"
             tools:text="147" />
+<!--                    android:text="@{String.valueOf(varGameVm.displayFrame.score[1].framePoints)}"
+-->
 
         <TextView
             android:id="@+id/l_game_score_tv_match_a"
             style="@style/TextSubtitle"
             android:layout_marginEnd="@dimen/margin_layout_offset"
-            android:text="@{String.valueOf(varGameVm.displayFrame.score[0].matchPoints)}"
             app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_total"
             app:layout_constraintEnd_toStartOf="@+id/l_game_score_tv_total"
             tools:text="13" />
+<!--                    android:text="@{String.valueOf(varGameVm.displayFrame.score[0].matchPoints)}"
+-->
 
         <TextView
             android:id="@+id/l_game_score_tv_total"
@@ -91,10 +94,11 @@
             android:id="@+id/l_game_score_tv_match_b"
             style="@style/TextSubtitle"
             android:layout_marginStart="@dimen/margin_layout_offset"
-            android:text="@{String.valueOf(varGameVm.displayFrame.score[1].matchPoints)}"
             app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_total"
             app:layout_constraintStart_toEndOf="@+id/l_game_score_tv_total"
             tools:text="15" />
+<!--                    android:text="@{String.valueOf(varGameVm.displayFrame.score[1].matchPoints)}"
+-->
 
         <!-- Remaining bar -->
         <TextView
@@ -121,17 +125,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                app:setBarWeightScoreFirst="@{DomainBallKt.availablePoints(varGameVm.displayFrame.ballStack)}"
-                app:setBarWeightScoreSecond="@{varGameVm.displayFrame.frameMax}"
                 tools:layout_weight="0.7" />
+<!--                            app:setBarWeightScoreFirst="@{DomainBallKt.availablePoints(varGameVm.displayFrame.ballStack)}"
+-->
+<!--                            app:setBarWeightScoreSecond="@{varGameVm.displayFrame.frameMax}"
+-->
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="?attr/colorPrimaryVariant"
-                app:setBarWeightScoreFirst="@{varGameVm.displayFrame.frameMax - DomainBallKt.availablePoints(varGameVm.displayFrame.ballStack)}"
-                app:setBarWeightScoreSecond="@{varGameVm.displayFrame.frameMax}"
                 tools:layout_weight="0.3" />
+<!--                            app:setBarWeightScoreFirst="@{varGameVm.displayFrame.frameMax - DomainBallKt.availablePoints(varGameVm.displayFrame.ballStack)}"
+                app:setBarWeightScoreSecond="@{varGameVm.displayFrame.frameMax}"-->
         </LinearLayout>
 
         <!-- Difference bar -->
@@ -140,11 +146,12 @@
             style="@style/TextHeaderBold"
             android:layout_width="@dimen/text_width_icon_bar"
             android:gravity="end"
-            android:text="@{String.valueOf(DomainBallKt.availablePoints(varGameVm.displayFrame.ballStack))}"
             app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_remaining_label"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/l_game_score_tv_remaining_label"
             tools:text="147" />
+<!--                    android:text="@{String.valueOf(DomainBallKt.availablePoints(varGameVm.displayFrame.ballStack))}"
+-->
 
         <TextView
             android:id="@+id/l_game_score_tv_diff_label"
@@ -168,26 +175,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                app:setBarWeightScoreFirst="@{DomainScoreKt.frameScoreDiff(varGameVm.displayFrame.score)}"
-                app:setBarWeightScoreSecond="@{varGameVm.displayFrame.frameMax}"
+
                 tools:layout_weight="0.7" />
+<!--                            app:setBarWeightScoreFirst="@{DomainScoreKt.frameScoreDiff(varGameVm.displayFrame.score)}"
+                app:setBarWeightScoreSecond="@{varGameVm.displayFrame.frameMax}"-->
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="?attr/colorPrimaryVariant"
-                app:setBarWeightScoreFirst="@{varGameVm.displayFrame.frameMax - DomainScoreKt.frameScoreDiff(varGameVm.displayFrame.score)}"
-                app:setBarWeightScoreSecond="@{varGameVm.displayFrame.frameMax}"
+
                 tools:layout_weight="0.3" />
+<!--                            app:setBarWeightScoreFirst="@{varGameVm.displayFrame.frameMax - DomainScoreKt.frameScoreDiff(varGameVm.displayFrame.score)}"
+                app:setBarWeightScoreSecond="@{varGameVm.displayFrame.frameMax}"-->
         </LinearLayout>
 
         <TextView
             android:id="@+id/l_game_score_tv_diff"
             style="@style/TextHeaderBold"
-            android:text="@{String.valueOf(DomainScoreKt.frameScoreDiff(varGameVm.displayFrame.score))}"
             app:layout_constraintBottom_toBottomOf="@+id/l_game_score_tv_diff_label"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/l_game_score_tv_diff_label"
             tools:text="54" />
+<!--                    android:text="@{String.valueOf(DomainScoreKt.frameScoreDiff(varGameVm.displayFrame.score))}"
+-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

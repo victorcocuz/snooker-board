@@ -20,7 +20,6 @@ class SummaryViewModel(
     private val _eventSummaryAction = MutableLiveData<Event<MatchAction?>>()
     val eventSummaryAction: LiveData<Event<MatchAction?>> = _eventSummaryAction
     fun onEventSummaryAction(matchAction: MatchAction?) {
-        Timber.e("onEventSummaryAction $matchAction")
         _eventSummaryAction.value = Event(matchAction)
     }
 

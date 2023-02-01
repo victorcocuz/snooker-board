@@ -11,7 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.compose.ui.styles.FragmentColumn
+import com.quickpoint.snookerboard.compose.ui.styles.FragmentContent
 import com.quickpoint.snookerboard.compose.ui.styles.TextHeadline
 import com.quickpoint.snookerboard.compose.ui.styles.TextParagraph
 import com.quickpoint.snookerboard.compose.ui.styles.TextParagraphSubTitle
@@ -21,7 +21,7 @@ import com.quickpoint.snookerboard.compose.ui.styles.TextTitle
 fun FragmentDrawerAbout(
     navController: NavController
 ) {
-    FragmentColumn {
+    FragmentContent {
         val versions = listOf(
             stringArrayResource(R.array.f_nav_about_tv_version_1_0_11_list),
             stringArrayResource(R.array.f_nav_about_tv_version_1_0_10_list),

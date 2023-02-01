@@ -30,17 +30,18 @@ fun GenericSurface(content: @Composable () -> Unit) {
                         GreenBright, GreenBrighter
                     )
                 )
-            ), color = Color.Transparent
+            ),
+        color = Color.Transparent
     ) {
         content()
     }
 }
 
 @Composable
-fun FragmentColumn(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) = Column(
+fun FragmentContent(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) = Column(
     modifier = modifier
         .fillMaxSize()
-        .padding(MaterialTheme.spacing.medium, 0.dp, MaterialTheme.spacing.medium, MaterialTheme.spacing.large)
+        .padding(MaterialTheme.spacing.medium, 0.dp)
 ) {
     content()
     Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
@@ -118,7 +119,8 @@ fun DefaultSnackbar(
 fun StandardRow(
     modifier: Modifier = Modifier,
     content: @Composable RowScope.() -> Unit,
-) = Row(modifier.fillMaxWidth(),
+) = Row(
+    modifier.fillMaxWidth(),
     horizontalArrangement = Arrangement.SpaceEvenly,
     verticalAlignment = Alignment.CenterVertically,
 ) { content() }

@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.compose.ui.styles.FragmentColumn
+import com.quickpoint.snookerboard.compose.ui.styles.FragmentContent
 import com.quickpoint.snookerboard.compose.ui.styles.TextParagraph
 import com.quickpoint.snookerboard.compose.ui.styles.TextParagraphSubTitle
 import com.quickpoint.snookerboard.compose.ui.theme.spacing
@@ -32,7 +32,7 @@ fun FragmentDrawerSettings(
     LaunchedEffect(key1 = true) {
 
     }
-    FragmentColumn {
+    FragmentContent {
         Spacer(Modifier.height(MaterialTheme.spacing.large))
         SettingsToggleHoist(K_BOOL_TOGGLE_ADVANCED_RULES, mainVm)
         Spacer(Modifier.height(MaterialTheme.spacing.large))

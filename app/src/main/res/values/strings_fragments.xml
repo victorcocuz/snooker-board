@@ -57,9 +57,9 @@
     <string name="l_game_score_tv_success_percentage_label">Pot Success</string>
     <string name="l_game_score_tv_safety_percentage_label">Safety Success</string>
     <string name="l_game_score_tv_break_label">Highest Break</string>
-    <string name="l_game_score_ll_line_chapter_score">Frame Score</string>
-    <string name="l_game_score_ll_line_chapter_statistics">Frame Statistics</string>
-    <string name="l_game_score_ll_line_chapter_breakdown">Frame Breakdown</string>
+    <string name="l_game_score_ll_line_module_score">Frame Score</string>
+    <string name="l_game_score_ll_line_module_statistics">Frame Statistics</string>
+    <string name="l_game_score_ll_line_module_breaks">Frame Breakdown</string>
 
     <string name="toast_f_game_no_balls_left">There is no ball left on the table</string>
 

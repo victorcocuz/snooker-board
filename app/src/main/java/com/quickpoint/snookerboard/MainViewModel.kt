@@ -15,6 +15,7 @@ import com.quickpoint.snookerboard.domain.objects.Toggle
 import com.quickpoint.snookerboard.domain.objects.getAsText
 import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.*
+import com.quickpoint.snookerboard.utils.Constants.EMAIL_SUBJECT_LOGS
 import com.quickpoint.snookerboard.utils.MatchAction.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -39,10 +40,10 @@ class MainViewModel(
     val keepSplashScreen = _keepSplashScreen.asStateFlow()
 
     fun loadMatchIfSaved() = viewModelScope.launch { // If db is empty reset rules, otherwise load the most recent frame
-        dataStore.loadPreferences()
         snookerRepository.getCrtFrame().let { crtFrame ->
             if (crtFrame == null) Settings.matchState = RULES_IDLE // Helps reset the app when something went wrong after previous reinstall
-            else _storedFrame.value = Event(crtFrame.asDomainFrame())
+            else _eventStoredFrame.emit(Event(crtFrame.asDomainFrame()))
+            Settings.matchState = RULES_IDLE // Temp
             onEmit(when (Settings.matchState) {
                 RULES_IDLE, RULES_PENDING -> NAV_TO_PLAY
                 GAME_IN_PROGRESS, GAME_SAVED -> NAV_TO_GAME
@@ -51,8 +52,8 @@ class MainViewModel(
             )
         }
     }
-    private val _storedFrame = MutableLiveData<Event<DomainFrame>>()
-    val storedFrame: LiveData<Event<DomainFrame>> = _storedFrame
+    private val _eventStoredFrame = MutableSharedFlow<Event<DomainFrame>>()
+    val eventStoredFrame = _eventStoredFrame.asSharedFlow()
 
     fun onEmit(action: MatchAction) = viewModelScope.launch {
         _eventSharedFlow.emit(
@@ -61,19 +62,9 @@ class MainViewModel(
                 SNACK_HANDICAP_MATCH_LIMIT -> ScreenEvents.ShowSnackbar(app.getString(R.string.snack_f_rules_handicap_match_limit))
                 SNACK_PLAYER_NAME_INCOMPLETE -> ScreenEvents.ShowSnackbar(app.getString(R.string.snack_f_rules_no_player))
                 SNACK_NO_STARTING_PLAYER -> ScreenEvents.ShowSnackbar(app.getString(R.string.snack_f_rules_select_no_first))
-                NAV_TO_PLAY -> {
-                    Settings.matchState = RULES_IDLE
-                    ScreenEvents.Navigate(Screen.Rules.route)
-                }
-                NAV_TO_GAME -> {
-                    Settings.matchState = GAME_IN_PROGRESS
-                    Timber.i(Settings.getAsText())
-                    ScreenEvents.Navigate(Screen.Game.route)
-                }
-                NAV_TO_SUMMARY -> {
-                    Settings.matchState = SUMMARY
-                    ScreenEvents.Navigate(Screen.Summary.route)
-                }
+                NAV_TO_PLAY -> ScreenEvents.Navigate(Screen.Rules.route)
+                NAV_TO_GAME -> ScreenEvents.Navigate(Screen.Game.route)
+                NAV_TO_SUMMARY -> ScreenEvents.Navigate(Screen.Summary.route)
                 NAV_TO_DIALOG_GENERIC -> ScreenEvents.Navigate(Screen.DialogGeneric.route)
                 else -> ScreenEvents.ShowSnackbar("")
             }

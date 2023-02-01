@@ -13,7 +13,7 @@ import com.quickpoint.snookerboard.domain.DomainBall
 import com.quickpoint.snookerboard.domain.DomainFrame
 import com.quickpoint.snookerboard.fragments.game.BallAdapter.ViewHolder.Companion.singleItemSelectionPosition
 import com.quickpoint.snookerboard.utils.BallAdapterType
-import com.quickpoint.snookerboard.utils.FACTOR_BALL_MATCH
+import com.quickpoint.snookerboard.utils.Constants.FACTOR_BALL_MATCH
 import com.quickpoint.snookerboard.utils.getFactoredDimen
 
 class BallAdapter(

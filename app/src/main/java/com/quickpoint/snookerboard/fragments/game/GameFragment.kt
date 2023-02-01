@@ -6,13 +6,11 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.forEach
-import androidx.core.view.setPadding
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.admob.AdMob
@@ -46,59 +44,15 @@ class GameFragment : Fragment() {
         adMob.loadInterstitialAd()
         adMob.interstitialAdSetContentCallbacks()
 
-//         Start new match or load existing match
-        if (Settings.matchState == MatchState.RULES_IDLE) {
-            gameVm.resetMatch()
-            Settings.matchState = MatchState.GAME_IN_PROGRESS
-        } else mainVm.storedFrame.observe(viewLifecycleOwner, EventObserver { storedFrame ->
-            gameVm.loadMatch(storedFrame)
-        })
-
 //         Bind view elements
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false)
         binding.apply { // Bind all layouts
             lifecycleOwner = viewLifecycleOwner
-
-            // Bind included layouts
-            fGameLTop.apply {
-                varPlayerTagType = PlayerTagType.MATCH
-                varGameVm = gameVm
-            }
-            fGameLScoreMain.apply {
-                varGameVm = gameVm
-            }
-            fGameLScoreExtra.apply {
-                varGameVm = gameVm
-            }
             fGameLScoreBreakdown.apply {
                 varGameVm = gameVm
                 fGameRvBreak.apply {
                     adapter = BreakAdapter(requireActivity())
                     itemAnimator = null
-                }
-            }
-
-            // Bind buttons
-            fGameLActions.apply {
-                varGameVm = gameVm
-                lGameActionsLlBalls.layoutParams.height =
-                    requireContext().getFactoredDimen(FACTOR_BALL_MATCH) + resources.getDimension(R.dimen.margin_layout_offset).toInt() * 2
-                lGameActionsRvBalls.apply {
-                    layoutManager = object : LinearLayoutManager(activity, HORIZONTAL, false) {
-                        override fun canScrollHorizontally() = false
-                    }
-                    itemAnimator = null
-                    adapter = BallAdapter( // Create a ball adapter for the balls recycler view
-                        BallListener { ball -> // Add a listener to the adapter to handle clicking, which will check whether a ball/freeball was clicked
-                            requireActivity().invalidateOptionsMenu()
-                            gameVm.assignPot(PotType.TYPE_HIT, ball)
-                        }, gameVm.displayFrame, BallAdapterType.MATCH
-                    )
-                }
-                lGameActionsFlBallMiss.apply {
-                    layoutParams.width = context.getFactoredDimen(FACTOR_BALL_MATCH)
-                    layoutParams.height = context.getFactoredDimen(FACTOR_BALL_MATCH)
-                    setPadding(FACTOR_BALL_MATCH)
                 }
             }
         }

@@ -13,7 +13,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -27,8 +26,14 @@ import com.quickpoint.snookerboard.compose.ui.styles.GenericSurface
 import com.quickpoint.snookerboard.compose.ui.theme.Green
 import com.quickpoint.snookerboard.compose.ui.theme.SnookerBoardTheme
 import com.quickpoint.snookerboard.compose.ui.theme.Transparent
-import com.quickpoint.snookerboard.domain.objects.DomainPlayer
-import com.quickpoint.snookerboard.domain.objects.MatchSettings
+import com.quickpoint.snookerboard.domain.objects.DomainPlayer.Player01
+import com.quickpoint.snookerboard.domain.objects.DomainPlayer.Player02
+import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
+import com.quickpoint.snookerboard.utils.Constants.NAV_ID_DRAWER_ABOUT
+import com.quickpoint.snookerboard.utils.Constants.NAV_ID_DRAWER_IMPROVE
+import com.quickpoint.snookerboard.utils.Constants.NAV_ID_DRAWER_RULES
+import com.quickpoint.snookerboard.utils.Constants.NAV_ID_DRAWER_SETTINGS
+import com.quickpoint.snookerboard.utils.Constants.NAV_ID_DRAWER_SUPPORT
 import com.quickpoint.snookerboard.utils.DataStore
 import com.quickpoint.snookerboard.utils.GenericViewModelFactory
 import com.quickpoint.snookerboard.utils.MatchAction
@@ -46,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 }
 
 @Composable
-fun SnookerBoardApp(activity: MainActivity, splashScreen: SplashScreen) {
+fun SnookerBoardApp(activity: MainActivity, splashScreen: androidx.core.splashscreen.SplashScreen) {
     val context = LocalContext.current
     val dataStore = DataStore(context)
     val mainVm: MainViewModel = viewModel(factory = GenericViewModelFactory(dataStore))
@@ -58,7 +63,7 @@ fun SnookerBoardApp(activity: MainActivity, splashScreen: SplashScreen) {
     val purchaseHelper = PurchaseHelper(activity)
     purchaseHelper.billingSetup()
 
-    SnookerBoardTheme() {
+    SnookerBoardTheme {
         GenericSurface {
             Scaffold(
                 scaffoldState = scaffoldState,
@@ -75,11 +80,11 @@ fun SnookerBoardApp(activity: MainActivity, splashScreen: SplashScreen) {
                     DrawerBody(items = getMenuItems(), onItemClick = {
                         navController.navigate(
                             when (it.id) {
-                                "id_drawer_rules" -> Screen.DrawerRules.route
-                                "id_drawer_improve" -> Screen.DrawerImprove.route
-                                "id_drawer_support" -> Screen.DrawerSupport.route
-                                "id_drawer_settings" -> Screen.DrawerSettings.route
-                                "id_drawer_about" -> Screen.DrawerAbout.route
+                                NAV_ID_DRAWER_RULES -> Screen.DrawerRules.route
+                                NAV_ID_DRAWER_IMPROVE -> Screen.DrawerImprove.route
+                                NAV_ID_DRAWER_SUPPORT -> Screen.DrawerSupport.route
+                                NAV_ID_DRAWER_SETTINGS -> Screen.DrawerSettings.route
+                                NAV_ID_DRAWER_ABOUT -> Screen.DrawerAbout.route
                                 else -> Screen.Rules.route // Unused
                             }
                         )
@@ -126,11 +131,11 @@ fun FragmentMain(
     dataStore: DataStore,
 ) {
     LaunchedEffect(key1 = true) {
-        DomainPlayer.Player01.assignDataStore(dataStore)
-        DomainPlayer.Player02.assignDataStore(dataStore)
-        MatchSettings.Settings.dataStore = dataStore
+        dataStore.loadPreferences()
+        Player01.assignDataStore(dataStore)
+        Player02.assignDataStore(dataStore)
+        Settings.dataStore = dataStore
         mainVm.loadMatchIfSaved()
-
         mainVm.onEmit(MatchAction.NAV_TO_PLAY)
     }
 }

@@ -17,6 +17,7 @@ import com.quickpoint.snookerboard.domain.objects.Toggle
 import com.quickpoint.snookerboard.domain.objects.getAsText
 import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.*
+import com.quickpoint.snookerboard.utils.Constants.EMAIL_SUBJECT_LOGS
 import com.quickpoint.snookerboard.utils.MatchAction.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
