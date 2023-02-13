@@ -8,7 +8,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.fragment.app.Fragment
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.SnookerBoardApplication
+import com.quickpoint.snookerboard.SnookerApp
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.*
 
 // Shared preferences
@@ -17,7 +17,7 @@ fun Activity.sharedPref(): SharedPreferences = application.sharedPref()
 fun Application.sharedPref(): SharedPreferences = getSharedPreferences(getString(R.string.sp_file_key), Context.MODE_PRIVATE)
 
 fun SharedPreferences.updateState() =
-    edit().putInt(SnookerBoardApplication.application().getString(R.string.sp_match_state), Settings.matchState.ordinal).apply()
+    edit().putInt(SnookerApp.application().getString(R.string.sp_match_state), Settings.matchState.ordinal).apply()
 
 fun SharedPreferences.savePref() {
 //    edit().apply {

@@ -7,8 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.quickpoint.snookerboard.compose.navigation.Screen
-import com.quickpoint.snookerboard.database.asDomainFrame
+import com.quickpoint.snookerboard.ui.navigation.Screen
+import com.quickpoint.snookerboard.database.models.asDomain
 import com.quickpoint.snookerboard.domain.DomainFrame
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
 import com.quickpoint.snookerboard.domain.objects.MatchState
@@ -19,6 +19,7 @@ import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.Constants.EMAIL_SUBJECT_LOGS
 import com.quickpoint.snookerboard.utils.MatchAction.*
+import com.quickpoint.snookerboard.base.Event
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,7 +49,7 @@ class MainViewModelOld(
                 ScreenEvents.Navigate(Screen.Game.route)
             }
             NAV_TO_DIALOG_GENERIC -> ScreenEvents.Navigate(Screen.DialogGeneric.route)
-            else -> ScreenEvents.ShowSnackbar("")
+            else -> ScreenEvents.ShowSnackbar(Constants.EMPTY_STRING)
         })
     }
 
@@ -93,7 +94,7 @@ class MainViewModelOld(
                 GAME_SAVED, SUMMARY -> {
                     if (crtFrame == null) updateState(RULES_IDLE) // Helps reset the app when something went wrong after previous reinstall
                     else {
-                        _storedFrame.value = Event(crtFrame.asDomainFrame())
+                        _storedFrame.value = Event(crtFrame.asDomain())
                         updateState(if (Settings.matchState == GAME_SAVED) GAME_IN_PROGRESS else SUMMARY)
                     }
                 }
@@ -105,18 +106,18 @@ class MainViewModelOld(
     }
 
     fun deleteCrtFrameFromDb() = viewModelScope.launch {
-        snookerRepository.deleteCurrentFrame(Settings.crtFrame)
+        snookerRepository.deleteCrtFrame(Settings.crtFrame)
     }
 
     fun deleteMatchFromDb() = viewModelScope.launch { // When starting a new match or cancelling an existing match
         updateState(RULES_IDLE)
         Settings.resetRules()
-        snookerRepository.deleteCurrentMatch()
+        snookerRepository.deleteCrtMatch()
     }
 
     fun emailLogs() = viewModelScope.launch {
-        val logs = snookerRepository.getDebugFrameActionList().toString()
-        val json = Gson().toJson(snookerRepository.getDebugFrameActionList())
+        val logs = snookerRepository.getDomainActionLogs().toString()
+        val json = Gson().toJson(snookerRepository.getDomainActionLogs())
         val body = "${Settings.getAsText()} \n\n $json \n\n $logs"
         Timber.e(json)
         app.sendEmail(arrayOf(BuildConfig.ADMIN_EMAIL), EMAIL_SUBJECT_LOGS, body)

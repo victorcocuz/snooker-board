@@ -2,10 +2,10 @@ package com.quickpoint.snookerboard.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import com.quickpoint.snookerboard.database.DbFrameWithScoreAndBreakWithPotsAndBallStack
 import com.quickpoint.snookerboard.database.SnookerDatabase
-import com.quickpoint.snookerboard.database.asDomainActionLogs
-import com.quickpoint.snookerboard.database.asDomainFrameScoreList
+import com.quickpoint.snookerboard.database.models.DbFrameWithScoreAndBreakWithPotsAndBallStack
+import com.quickpoint.snookerboard.database.models.asDomain
+import com.quickpoint.snookerboard.database.models.asDomainPair
 import com.quickpoint.snookerboard.domain.DomainActionLog
 import com.quickpoint.snookerboard.domain.DomainFrame
 import com.quickpoint.snookerboard.domain.DomainScore
@@ -14,121 +14,114 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-// Used to connect database to domain packages
 class SnookerRepository constructor(database: SnookerDatabase) {
 
-    private val snookerDbDao = database.snookerDatabaseDao
+    private val daoDbActionLog = database.daoDbActionLog
+    private val daoDbBall = database.daoDbBall
+    private val daoDbBreak = database.daoDbBreak
+    private val daoDbFrame = database.daoDbFrame
+    private val daoDbPot = database.daoDbPot
+    private val daoDbScore = database.daoDbScore
 
-    // Return total score for end of game statistics
-    suspend fun getTotals(playerId: Int): DomainScore {
-        return withContext(Dispatchers.IO) {
-            return@withContext DomainScore(
-                -2,
-                -2,
-                playerId,
-                snookerDbDao.getSumOfFramePoints(playerId),
-                snookerDbDao.getMaxMatchPoints(playerId),
-                snookerDbDao.getSumOfSuccessShots(playerId),
-                snookerDbDao.getSumOfMissedShots(playerId),
-                snookerDbDao.getSumOfSafetySuccessShots(playerId),
-                snookerDbDao.getSumOfSafetyMissedShots(playerId),
-                snookerDbDao.getSumOfSnookers(playerId),
-                snookerDbDao.getSumOfFouls(playerId),
-                snookerDbDao.getMaxBreak(playerId),
-                snookerDbDao.getSumOfLongShotsSuccess(playerId),
-                snookerDbDao.getSumOfLongShotsMissed(playerId),
-                snookerDbDao.getSumOfRestShotsSuccess(playerId),
-                snookerDbDao.getSumOfRestShotsMissed(playerId),
-                snookerDbDao.getMaxPointsWithNoReturn(playerId)
-            )
-        }
+    suspend fun getTotals(playerId: Int) = withContext(Dispatchers.IO) {
+        DomainScore(
+            -2,
+            -2,
+            playerId,
+            daoDbScore.getSumOfFramePoints(playerId),
+            daoDbScore.getMaxMatchPoints(playerId),
+            daoDbScore.getSumOfSuccessShots(playerId),
+            daoDbScore.getSumOfMissedShots(playerId),
+            daoDbScore.getSumOfSafetySuccessShots(playerId),
+            daoDbScore.getSumOfSafetyMissedShots(playerId),
+            daoDbScore.getSumOfSnookers(playerId),
+            daoDbScore.getSumOfFouls(playerId),
+            daoDbScore.getMaxBreak(playerId),
+            daoDbScore.getSumOfLongShotsSuccess(playerId),
+            daoDbScore.getSumOfLongShotsMissed(playerId),
+            daoDbScore.getSumOfRestShotsSuccess(playerId),
+            daoDbScore.getSumOfRestShotsMissed(playerId),
+            daoDbScore.getMaxPointsWithNoReturn(playerId)
+        )
     }
 
-    // Get crt frame from database
     suspend fun getCrtFrame(): DbFrameWithScoreAndBreakWithPotsAndBallStack? {
         return withContext(Dispatchers.IO) {
-            val crtFrame = snookerDbDao.getCrtFrame()
+            val crtFrame = daoDbFrame.getCrtFrame()
             Timber.i("getCrtFrame(): State is: ${Settings.matchState}, CrtFrame is: ${crtFrame?.frame?.frameId}, frameCount is: ${Settings.crtFrame}")
-            return@withContext crtFrame
+            crtFrame
         }
     }
 
-    suspend fun saveCurrentFrame(frame: DomainFrame) = withContext(Dispatchers.IO) {
-        snookerDbDao.apply {
-            // Frame
-            insertOrUpdateMatchFrame(frame.asDbFrame())
+    suspend fun saveCrtFrame(frame: DomainFrame) = withContext(Dispatchers.IO) {
+        // Frame
+        daoDbFrame.insertOrUpdateMatchFrame(frame.asDbFrame())
 
-            // Score
-            for (dbScore in frame.asDbCrtScore()) insertOrUpdateMatchScore(dbScore)
+        // Score
+        for (dbScore in frame.asDbCrtScore()) daoDbScore.insertOrUpdateMatchScore(dbScore)
 
-            // Breaks - Only check breaks from current frame
-            val dbBreaks = frame.asDbBreaks()
-            dbBreaks.lastOrNull()?.let { insertOrUpdateMatchBreak(it) }
+        // Breaks - Only check breaks from crt frame
+        val dbBreaks = frame.asDbBreaks()
+        dbBreaks.lastOrNull()?.let { daoDbBreak.insertOrUpdateMatchBreak(it) }
 
-            for (dbBreakId in getCurrentFrameBreaks(frame.frameId).map { it.breakId }) { // If break exists in frameStack, but not in Db, remove from Db
-                if (!dbBreaks.map { it.breakId }.contains(dbBreakId)) deleteMatchBreak(dbBreakId)
-            }
-
-            // Pots - only check pots from current break
-            frame.frameStack.lastOrNull()?.apply {
-                val dbBreakPots = asDbPots(breakId)
-                dbBreakPots.lastOrNull()?.let { insertOrUpdateBreakPot(it) }
-                for (dbPotId in getCurrentBreakPots(breakId).map { it.potId }) { // If pot exists in break, but not in Db, remove from Db
-                    if (!dbBreakPots.map { it.potId }.contains(dbPotId)) deleteBreakPot(dbPotId)
-                }
-            }
-
-            // Ballstack - Only check balls for current frame
-            val dbBallStack = frame.asDbBallStack()
-            for (dbBall in dbBallStack) insertOrUpdateMatchBall(dbBall)
-            for (dbBallId in getMatchBalls().map { it.ballId }) { // If ball exists in ballStack, but not in Db, remove from Db
-                if (!dbBallStack.map { it.ballId }.contains(dbBallId)) deleteMatchBall(dbBallId)
-            }
-
-            // Debug Actions - Only check actions for current frame
-            frame.asDbDebugFrameActions().lastOrNull()?.let { insertOrUpdateDebugFrameActions(it) }
+        for (dbBreakId in daoDbBreak.getCrtFrameBreaks(frame.frameId)
+            .map { it.breakId }) { // If break exists in frameStack, but not in Db, remove from Db
+            if (!dbBreaks.map { it.breakId }.contains(dbBreakId)) daoDbBreak.deleteMatchBreak(dbBreakId)
         }
-        Timber.i("saveCurrentFrame(): id: ${frame.frameId} score: ${frame.score[0].framePoints} vs ${frame.score[1].framePoints} ")
-    }
 
-    // Delete the latest frame from the database
-    suspend fun deleteCurrentFrame(frameId: Long) = withContext(Dispatchers.IO) {
-        snookerDbDao.apply {
-            deleteCurrentFrame(frameId)
-            deleteCurrentFrameScore(frameId)
-            val currentBreaks = getCurrentFrameBreaks(frameId)
-            currentBreaks.forEach {
-                deleteCurrentBreakPots(it.breakId)
+        // Pots - only check pots from crt break
+        frame.frameStack.lastOrNull()?.apply {
+            val dbBreakPots = asDbPots(breakId)
+            dbBreakPots.lastOrNull()?.let { daoDbPot.insertOrUpdateBreakPot(it) }
+            for (dbPotId in daoDbPot.getCrtBreakPots(breakId)
+                .map { it.potId }) { // If pot exists in break, but not in Db, remove from Db
+                if (!dbBreakPots.map { it.potId }.contains(dbPotId)) daoDbPot.deleteBreakPot(dbPotId)
             }
-            deleteCurrentFrameBreaks(frameId)
-            deleteCurrentFrameBalls(frameId)
-            deleteCurrentDebugFrameActions(frameId)
         }
-        Timber.i("Delete current frame $frameId")
-    }
 
-    // Delete match from database
-    suspend fun deleteCurrentMatch() = withContext(Dispatchers.IO) {
-        snookerDbDao.apply {
-            deleteMatchScore()
-            deleteMatchBreaks()
-            deleteBreakPots()
-            deleteMatchBalls()
-            deleteMatchFrames()
-            deleteDebugFrameActions()
+        // Ballstack - Only check balls for crt frame
+        val dbBallStack = frame.asDbBallStack()
+        for (dbBall in dbBallStack) daoDbBall.insertOrUpdateMatchBall(dbBall)
+        for (dbBallId in daoDbBall.getMatchBalls().map { it.ballId }) { // If ball exists in ballStack, but not in Db, remove from Db
+            if (!dbBallStack.map { it.ballId }.contains(dbBallId)) daoDbBall.deleteMatchBall(dbBallId)
         }
-        Timber.i("deleteCurrentMatch()")
+
+        // Debug Actions - Only check actions for crt frameF
+        frame.asDbDebugFrameActions().lastOrNull()?.let { daoDbActionLog.insertOrUpdateDebugFrameActions(it) }
+        Timber.i("saveCrtFrame(): id: ${frame.frameId} score: ${frame.score[0].framePoints} vs ${frame.score[1].framePoints} ")
     }
 
-    // Get the current score from the database
-    val score: LiveData<ArrayList<Pair<DomainScore, DomainScore>>> = Transformations.map(snookerDbDao.getMatchScore()) {
-        it.asDomainFrameScoreList()
+    suspend fun deleteCrtFrame(frameId: Long) = withContext(Dispatchers.IO) {
+        daoDbFrame.deleteCrtFrame(frameId)
+        daoDbScore.deleteCrtFrameScore(frameId)
+        val crtBreaks = daoDbBreak.getCrtFrameBreaks(frameId)
+        crtBreaks.forEach {
+            daoDbPot.deleteCrtBreakPots(it.breakId)
+        }
+        daoDbBreak.deleteCrtFrameBreaks(frameId)
+        daoDbBall.deleteCrtFrameBalls(frameId)
+        daoDbActionLog.deleteCrtFrameActions(frameId)
+        Timber.i("Delete crt frame $frameId")
     }
 
-    // Get debug action list
-    suspend fun getDebugFrameActionList(): List<DomainActionLog> {
+    suspend fun deleteCrtMatch() = withContext(Dispatchers.IO) {
+        daoDbScore.clear()
+        daoDbBreak.clear()
+        daoDbPot.clear()
+        daoDbBall.clear()
+        daoDbFrame.clear()
+        daoDbActionLog.clear()
+        Timber.i("deleteCrtMatch()")
+    }
+
+    // Get the crt score from the database
+    val score: LiveData<ArrayList<Pair<DomainScore, DomainScore>>> = Transformations.map(daoDbScore.getMatchScore()) {
+        it.asDomainPair()
+    }
+
+    suspend fun getDomainActionLogs(): List<DomainActionLog> {
         return withContext(Dispatchers.IO) {
-            return@withContext snookerDbDao.getDebugFrameActions().asDomainActionLogs()
+            daoDbActionLog.getDebugFrameActions().asDomain()
         }
     }
 }

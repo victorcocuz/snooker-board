@@ -8,7 +8,7 @@
 
         <variable
             name="varGameVm"
-            type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
+            type="com.quickpoint.snookerboard.ui.fragments.game.GameViewModel" />
 
         <import type="com.quickpoint.snookerboard.domain.objects.Toggle.AdvancedStatistics"/>
     </data>

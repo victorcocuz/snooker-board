@@ -9,7 +9,7 @@
 
         <variable
             name="varGameVm"
-            type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
+            type="com.quickpoint.snookerboard.ui.fragments.game.GameViewModel" />
 
         <variable
             name="varActionA"
@@ -25,7 +25,7 @@
 
         <variable
             name="varDialogVm"
-            type="com.quickpoint.snookerboard.fragments.gamedialogs.DialogViewModel" />
+            type="com.quickpoint.snookerboard.ui.fragments.gamedialogs.DialogViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

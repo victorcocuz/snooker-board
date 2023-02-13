@@ -1,6 +1,6 @@
 package com.quickpoint.snookerboard.domain
 
-import com.quickpoint.snookerboard.database.DbPot
+import com.quickpoint.snookerboard.database.models.DbPot
 import com.quickpoint.snookerboard.domain.PotAction.CONTINUE
 import com.quickpoint.snookerboard.domain.PotAction.RETAKE
 import com.quickpoint.snookerboard.domain.PotType.*

@@ -1,132 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:startDestination="@id/RulesFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<!--    app:startDestination="@id/RulesFragment">-->
 
     <!-- Main Fragments -->
-    <fragment
-        android:id="@+id/RulesFragment"
-        android:name="com.quickpoint.snookerboard.fragments.rules.RulesFragment"
-        android:label="RulesFragment">
-        <action
-            android:id="@+id/game_frag"
-            app:destination="@id/gameFragment"
-            app:enterAnim="@anim/fade_in_short"
-            app:exitAnim="@anim/fade_out_short"
-            app:launchSingleTop="false"
-            app:popEnterAnim="@anim/fade_in_short"
-            app:popExitAnim="@anim/fade_out_short"
-            app:popUpTo="@id/RulesFragment" />
-        <action
-            android:id="@+id/gen_dialog_frag"
-            app:destination="@id/gameGenericDialogFragment"
-            app:enterAnim="@anim/fade_in_short"
-            app:exitAnim="@anim/fade_out_short"
-            app:popEnterAnim="@anim/fade_in_short"
-            app:popExitAnim="@anim/fade_out_short"
-            app:popUpToInclusive="false" />
-        <action
-            android:id="@+id/summary_frag"
-            app:destination="@id/summaryFragment"
-            app:enterAnim="@anim/fade_in_short"
-            app:exitAnim="@anim/fade_out_short"
-            app:popEnterAnim="@anim/fade_in_short"
-            app:popExitAnim="@anim/fade_out_short" />
-    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/RulesFragment"-->
+<!--        android:name="com.quickpoint.snookerboard.ui.fragments.rules.RulesFragment"-->
+<!--        android:label="RulesFragment">-->
+<!--        <action-->
+<!--            android:id="@+id/game_frag"-->
+<!--            app:destination="@id/gameFragment"-->
+<!--            app:enterAnim="@anim/fade_in_short"-->
+<!--            app:exitAnim="@anim/fade_out_short"-->
+<!--            app:launchSingleTop="false"-->
+<!--            app:popEnterAnim="@anim/fade_in_short"-->
+<!--            app:popExitAnim="@anim/fade_out_short"-->
+<!--            app:popUpTo="@id/RulesFragment" />-->
+<!--        <action-->
+<!--            android:id="@+id/gen_dialog_frag"-->
+<!--            app:destination="@id/gameGenericDialogFragment"-->
+<!--            app:enterAnim="@anim/fade_in_short"-->
+<!--            app:exitAnim="@anim/fade_out_short"-->
+<!--            app:popEnterAnim="@anim/fade_in_short"-->
+<!--            app:popExitAnim="@anim/fade_out_short"-->
+<!--            app:popUpToInclusive="false" />-->
+<!--        <action-->
+<!--            android:id="@+id/summary_frag"-->
+<!--            app:destination="@id/summaryFragment"-->
+<!--            app:enterAnim="@anim/fade_in_short"-->
+<!--            app:exitAnim="@anim/fade_out_short"-->
+<!--            app:popEnterAnim="@anim/fade_in_short"-->
+<!--            app:popExitAnim="@anim/fade_out_short" />-->
+<!--    </fragment>-->
 
-    <!-- Game Fragments -->
-    <fragment
-        android:id="@+id/gameFragment"
-        android:name="com.quickpoint.snookerboard.fragments.game.GameFragment"
-        android:label="GameFragment" >
-        <action
-            android:id="@+id/gen_dialog_frag"
-            app:destination="@id/gameGenericDialogFragment"
-            app:enterAnim="@anim/fade_in_short"
-            app:exitAnim="@anim/fade_out_short"
-            app:popEnterAnim="@anim/fade_in_short"
-            app:popExitAnim="@anim/fade_out_short" />
-        <action
-            android:id="@+id/foul_dialog_frag"
-            app:destination="@id/gameFoulDialogFragment"
-            app:enterAnim="@anim/fade_in_short"
-            app:exitAnim="@anim/fade_out_short"
-            app:popEnterAnim="@anim/fade_in_short"
-            app:popExitAnim="@anim/fade_out_short" />
-        <action
-            android:id="@+id/summary_frag"
-            app:destination="@id/summaryFragment"
-            app:enterAnim="@anim/fade_in_short"
-            app:exitAnim="@anim/fade_out_short"
-            app:launchSingleTop="true"
-            app:popEnterAnim="@anim/fade_in_short"
-            app:popExitAnim="@anim/fade_out_short"
-            app:popUpTo="@id/RulesFragment"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/rules_frag"
-            app:destination="@id/RulesFragment"
-            app:enterAnim="@anim/fade_in_short"
-            app:exitAnim="@anim/fade_out_short"
-            app:popEnterAnim="@anim/fade_in_short"
-            app:popExitAnim="@anim/fade_out_short"
-            app:popUpTo="@id/gameFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
-    <fragment
-        android:id="@+id/summaryFragment"
-        android:name="com.quickpoint.snookerboard.fragments.summary.SummaryFragment"
-        android:label="PostGameFragment" >
-        <action
-            android:id="@+id/rules_frag"
-            app:destination="@id/RulesFragment"
-            app:enterAnim="@anim/fade_in_short"
-            app:exitAnim="@anim/fade_out_short"
-            app:popEnterAnim="@anim/fade_in_short"
-            app:popExitAnim="@anim/fade_out_short"
-            app:popUpTo="@id/summaryFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
-    <dialog
-        android:id="@+id/gameGenericDialogFragment"
-        android:name="com.quickpoint.snookerboard.fragments.gamedialogs.GenericDialogFragment"
-        android:label="GameGenericDialogFragment" >
-        <argument
-            android:name="matchActionA"
-            app:argType="com.quickpoint.snookerboard.utils.MatchAction" />
-        <argument
-            android:name="matchActionB"
-            app:argType="com.quickpoint.snookerboard.utils.MatchAction" />
-        <argument
-            android:name="matchActionC"
-            app:argType="com.quickpoint.snookerboard.utils.MatchAction" />
-        <action
-            android:id="@+id/action_gameGenericDialogFragment_to_gameFragment"
-            app:destination="@id/gameFragment" />
-    </dialog>
-    <dialog
-        android:id="@+id/gameFoulDialogFragment"
-        android:name="com.quickpoint.snookerboard.fragments.gamedialogs.FoulDialogFragment"
-        android:label="GameFoulDialogFragment" />
-    <fragment
-        android:id="@+id/navImproveFragment"
-        android:name="com.quickpoint.snookerboard.fragments.navdrawer.NavImproveFragment"
-        android:label="@string/menu_drawer_improve" />
-    <fragment
-        android:id="@+id/navRulesFragment"
-        android:name="com.quickpoint.snookerboard.fragments.navdrawer.NavRulesFragment"
-        android:label="@string/menu_drawer_rules" />
-    <fragment
-        android:id="@+id/navDonateFragment"
-        android:name="com.quickpoint.snookerboard.fragments.navdrawer.NavDonateFragment"
-        android:label="@string/menu_drawer_support" />
-    <fragment
-        android:id="@+id/navAboutFragment"
-        android:name="com.quickpoint.snookerboard.fragments.navdrawer.NavAboutFragment"
-        android:label="@string/menu_drawer_about" />
-    <fragment
-        android:id="@+id/navSettingsFragment"
-        android:name="com.quickpoint.snookerboard.fragments.navdrawer.NavSettingsFragment"
-        android:label="@string/menu_drawer_settings" />
+<!--    &lt;!&ndash; Game Fragments &ndash;&gt;-->
+<!--    <fragment-->
+<!--        android:id="@+id/gameFragment"-->
+<!--        android:name="com.quickpoint.snookerboard.ui.fragments.game.GameFragment"-->
+<!--        android:label="GameFragment" >-->
+<!--        <action-->
+<!--            android:id="@+id/gen_dialog_frag"-->
+<!--            app:destination="@id/gameGenericDialogFragment"-->
+<!--            app:enterAnim="@anim/fade_in_short"-->
+<!--            app:exitAnim="@anim/fade_out_short"-->
+<!--            app:popEnterAnim="@anim/fade_in_short"-->
+<!--            app:popExitAnim="@anim/fade_out_short" />-->
+<!--        <action-->
+<!--            android:id="@+id/foul_dialog_frag"-->
+<!--            app:destination="@id/gameFoulDialogFragment"-->
+<!--            app:enterAnim="@anim/fade_in_short"-->
+<!--            app:exitAnim="@anim/fade_out_short"-->
+<!--            app:popEnterAnim="@anim/fade_in_short"-->
+<!--            app:popExitAnim="@anim/fade_out_short" />-->
+<!--        <action-->
+<!--            android:id="@+id/summary_frag"-->
+<!--            app:destination="@id/summaryFragment"-->
+<!--            app:enterAnim="@anim/fade_in_short"-->
+<!--            app:exitAnim="@anim/fade_out_short"-->
+<!--            app:launchSingleTop="true"-->
+<!--            app:popEnterAnim="@anim/fade_in_short"-->
+<!--            app:popExitAnim="@anim/fade_out_short"-->
+<!--            app:popUpTo="@id/RulesFragment"-->
+<!--            app:popUpToInclusive="true" />-->
+<!--        <action-->
+<!--            android:id="@+id/rules_frag"-->
+<!--            app:destination="@id/RulesFragment"-->
+<!--            app:enterAnim="@anim/fade_in_short"-->
+<!--            app:exitAnim="@anim/fade_out_short"-->
+<!--            app:popEnterAnim="@anim/fade_in_short"-->
+<!--            app:popExitAnim="@anim/fade_out_short"-->
+<!--            app:popUpTo="@id/gameFragment"-->
+<!--            app:popUpToInclusive="true" />-->
+<!--    </fragment>-->
+<!--    <fragment-->
+<!--        android:id="@+id/summaryFragment"-->
+<!--        android:name="com.quickpoint.snookerboard.ui.fragments.summary.SummaryFragment"-->
+<!--        android:label="PostGameFragment" >-->
+<!--        <action-->
+<!--            android:id="@+id/rules_frag"-->
+<!--            app:destination="@id/RulesFragment"-->
+<!--            app:enterAnim="@anim/fade_in_short"-->
+<!--            app:exitAnim="@anim/fade_out_short"-->
+<!--            app:popEnterAnim="@anim/fade_in_short"-->
+<!--            app:popExitAnim="@anim/fade_out_short"-->
+<!--            app:popUpTo="@id/summaryFragment"-->
+<!--            app:popUpToInclusive="true" />-->
+<!--    </fragment>-->
+<!--    <dialog-->
+<!--        android:id="@+id/gameGenericDialogFragment"-->
+<!--        android:name="com.quickpoint.snookerboard.ui.fragments.gamedialogs.GenericDialogFragment"-->
+<!--        android:label="GameGenericDialogFragment" >-->
+<!--        <argument-->
+<!--            android:name="matchActionA"-->
+<!--            app:argType="com.quickpoint.snookerboard.utils.MatchAction" />-->
+<!--        <argument-->
+<!--            android:name="matchActionB"-->
+<!--            app:argType="com.quickpoint.snookerboard.utils.MatchAction" />-->
+<!--        <argument-->
+<!--            android:name="matchActionC"-->
+<!--            app:argType="com.quickpoint.snookerboard.utils.MatchAction" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_gameGenericDialogFragment_to_gameFragment"-->
+<!--            app:destination="@id/gameFragment" />-->
+<!--    </dialog>-->
+<!--    <dialog-->
+<!--        android:id="@+id/gameFoulDialogFragment"-->
+<!--        android:name="com.quickpoint.snookerboard.ui.fragments.gamedialogs.FoulDialogFragment"-->
+<!--        android:label="GameFoulDialogFragment" />-->
+<!--    <fragment-->
+<!--        android:id="@+id/navImproveFragment"-->
+<!--        android:name="com.quickpoint.snookerboard.ui.fragments.navdrawer.NavImproveFragment"-->
+<!--        android:label="@string/menu_drawer_improve" />-->
+<!--    <fragment-->
+<!--        android:id="@+id/navRulesFragment"-->
+<!--        android:name="com.quickpoint.snookerboard.ui.fragments.navdrawer.NavRulesFragment"-->
+<!--        android:label="@string/menu_drawer_rules" />-->
+<!--    <fragment-->
+<!--        android:id="@+id/navDonateFragment"-->
+<!--        android:name="com.quickpoint.snookerboard.ui.fragments.navdrawer.NavDonateFragment"-->
+<!--        android:label="@string/menu_drawer_support" />-->
+<!--    <fragment-->
+<!--        android:id="@+id/navAboutFragment"-->
+<!--        android:name="com.quickpoint.snookerboard.ui.fragments.navdrawer.NavAboutFragment"-->
+<!--        android:label="@string/menu_drawer_about" />-->
+<!--    <fragment-->
+<!--        android:id="@+id/navSettingsFragment"-->
+<!--        android:name="com.quickpoint.snookerboard.ui.fragments.navdrawer.NavSettingsFragment"-->
+<!--        android:label="@string/menu_drawer_settings" />-->
 
 </navigation>

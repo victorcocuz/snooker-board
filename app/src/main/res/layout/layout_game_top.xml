@@ -9,7 +9,7 @@
             type="com.quickpoint.snookerboard.utils.PlayerTagType" />
         <variable
             name="varGameVm"
-            type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
+            type="com.quickpoint.snookerboard.ui.fragments.game.GameViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

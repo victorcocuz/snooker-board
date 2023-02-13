@@ -223,5 +223,3 @@ fun Settings.getDisplayFrames() = "(" + (availableFrames * 2 - 1).toString() + "
 fun Settings.getAsText() =
     "matchState: $matchState, uniqueId: $uniqueId, availableFrames: $availableFrames, availableReds: $availableReds, foulModifier: $foulModifier, startingPlayer: $startingPlayer, " +
             "handicapFrame: $handicapFrame, handicapMatch: $handicapMatch, crtFrame: $crtFrame, crtPlayer: $crtPlayer, availablePoints: $maxFramePoints"
-
-

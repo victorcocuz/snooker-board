@@ -1,6 +1,6 @@
 package com.quickpoint.snookerboard.domain
 
-import com.quickpoint.snookerboard.database.*
+import com.quickpoint.snookerboard.database.models.*
 
 // The DOMAIN Frame is a class containing all frame information
 data class DomainFrame(

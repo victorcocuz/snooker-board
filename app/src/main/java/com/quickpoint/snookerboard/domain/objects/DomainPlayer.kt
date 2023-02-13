@@ -3,18 +3,15 @@ package com.quickpoint.snookerboard.domain.objects
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.domain.objects.DomainPlayer.Player01
 import com.quickpoint.snookerboard.domain.objects.DomainPlayer.Player02
-import com.quickpoint.snookerboard.utils.DataStore
-import com.quickpoint.snookerboard.utils.K_PLAYER01_FIRST_NAME
-import com.quickpoint.snookerboard.utils.K_PLAYER01_LAST_NAME
-import com.quickpoint.snookerboard.utils.K_PLAYER02_FIRST_NAME
+import com.quickpoint.snookerboard.utils.*
 
 sealed class DomainPlayer(
     var dataStore: DataStore?,
     var firstName: String,
     var lastName: String,
 ) {
-    object Player01 : DomainPlayer(null, "", "")
-    object Player02 : DomainPlayer(null, "", "")
+    object Player01 : DomainPlayer(null, Constants.EMPTY_STRING, Constants.EMPTY_STRING)
+    object Player02 : DomainPlayer(null, Constants.EMPTY_STRING, Constants.EMPTY_STRING)
 
     fun assignDataStore(dataStore: DataStore) {
         this.dataStore = dataStore
@@ -25,14 +22,13 @@ sealed class DomainPlayer(
         this.lastName = lastName
     }
 
-    fun hasNoName() = firstName == "" || lastName == ""
-    fun getPlayerText() = "First Name: $firstName, Last Name: $lastName"
+    fun hasNoName() = firstName == Constants.EMPTY_STRING || lastName == Constants.EMPTY_STRING
 }
 
 fun Player01.setPlayerName(key: String, value: String) {
     when (key) {
         K_PLAYER01_FIRST_NAME -> firstName = value
-        else -> lastName = value // K_PLAYER01_LAST_NAME
+        K_PLAYER01_LAST_NAME -> lastName = value
     }
     dataStore?.savePreferences(key, value)
 }
@@ -40,7 +36,7 @@ fun Player01.setPlayerName(key: String, value: String) {
 fun Player02.setPlayerName(key: String, value: String) {
     when (key) {
         K_PLAYER02_FIRST_NAME -> Player02.firstName = value
-        else -> Player02.lastName = value // K_PLAYER02_LAST_NAME
+        K_PLAYER02_LAST_NAME -> Player02.lastName = value
     }
     dataStore?.savePreferences(key, value)
 }

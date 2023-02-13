@@ -14,12 +14,13 @@ import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.BallType.*
 import com.quickpoint.snookerboard.domain.DomainBall.*
 import com.quickpoint.snookerboard.domain.PotType.*
-import com.quickpoint.snookerboard.fragments.game.BallAdapter
-import com.quickpoint.snookerboard.fragments.summary.SummaryAdapter
+import com.quickpoint.snookerboard.ui.fragments.game.BallAdapter
+import com.quickpoint.snookerboard.ui.fragments.summary.SummaryAdapter
 import com.quickpoint.snookerboard.utils.BallAdapterType.*
 import com.quickpoint.snookerboard.utils.BallAdapterType.MATCH
 import com.quickpoint.snookerboard.utils.MatchAction.*
 import com.quickpoint.snookerboard.utils.PlayerTagType.*
+import timber.log.Timber
 
 // General
 @BindingAdapter("setSelected")
@@ -56,7 +57,7 @@ fun LinearLayout.setBarWeight(scoreFirst: Int, scoreSecond: Int) {
 @BindingAdapter("ballValue", "stackSize")
 fun TextView.setPointsValue(item: DomainBall?, stackSize: Int?) = stackSize?.let {
     val reds = (stackSize - 7) / 2
-    text = if (reds > 0 && item is RED) reds.toString() else ""
+    text = if (reds > 0 && item is RED) reds.toString() else Constants.EMPTY_STRING
 }
 
 @BindingAdapter("setBallImage", "ballAdapterType")
@@ -83,6 +84,7 @@ fun ImageView.setBallBackground(item: DomainBall?, ballAdapterType: BallAdapterT
     item?.let {
 //        if (ballAdapterType == MATCH) startAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_in_short))
         val ripple = ballAdapterType != BREAK
+        if (ballAdapterType == MATCH) Timber.e("onContent ${item.ballType}")
         setBackgroundResource(when (item) {
             is RED -> if (ripple) R.drawable.ic_ball_red else R.drawable.ic_ball_red_normal
             is YELLOW -> if (ripple) R.drawable.ic_ball_yellow else R.drawable.ic_ball_yellow_normal
@@ -105,7 +107,7 @@ fun RecyclerView.bindBallsRv(ballList: MutableList<DomainBall>?) {
     adapter.submitList(when (ballList?.lastOrNull()) {
         is COLOR -> listOfBallsColors
         is WHITE -> listOf(NOBALL())
-        null -> listOf()
+        null -> emptyList()
         else -> listOf(ballList.last())
     })
 }
@@ -114,7 +116,7 @@ fun RecyclerView.bindBallsRv(ballList: MutableList<DomainBall>?) {
 fun RecyclerView.bindFoulBalls(ballStack: MutableList<DomainBall>?) {
     val adapter = adapter as BallAdapter
     adapter.submitList(when (ballStack?.size) {
-        null -> listOf()
+        null -> emptyList()
         in (2..8) -> removeBallsForFoulDialog(ballStack)
         else -> listOfBallsPlayable
     })

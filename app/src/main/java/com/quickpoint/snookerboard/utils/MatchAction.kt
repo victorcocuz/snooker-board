@@ -90,7 +90,7 @@ fun MatchAction.getListOfDialogActions(isMatchEnding: Boolean, isNoFrameFinished
     MATCH_CANCEL_DIALOG -> listOf(CLOSE_DIALOG, IGNORE, MATCH_CANCEL)
     FRAME_LOG_ACTIONS_DIALOG -> listOf(CLOSE_DIALOG, IGNORE, FRAME_LOG_ACTIONS)
     FRAME_MISS_FORFEIT_DIALOG -> listOf(CLOSE_DIALOG, FRAME_MISS_FORFEIT, queryEndFrameOrMatch(isMatchEnding, isFrameMathematicallyOver))
-    else -> listOf()
+    else -> emptyList()
 }
 
 fun MatchAction.queryEndFrameOrMatch(

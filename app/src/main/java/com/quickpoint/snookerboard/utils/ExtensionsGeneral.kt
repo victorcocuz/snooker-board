@@ -41,7 +41,7 @@ fun Fragment.navigate(directions: NavDirections, adMob: AdMob? = null) {
 fun Fragment.toast(message: CharSequence) = Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
 fun Any.asText() = toString()
-    .replace("DomainActionLog(description=", "")
+    .replace("DomainActionLog(description=", Constants.EMPTY_STRING)
     .removeSuffix(")")
     .split(", ")
     .filter { !it.contains("=null") }
@@ -129,7 +129,7 @@ fun Context.vibrateOnce() {
     }
 }
 
-fun Context.sendEmail(to: Array<String>, subject: String, body: String = "") {
+fun Context.sendEmail(to: Array<String>, subject: String, body: String = Constants.EMPTY_STRING) {
     val intent = Intent(Intent.ACTION_SENDTO).apply {
         data = Uri.parse(EMAIL_BASE_URI)
         putExtra(Intent.EXTRA_EMAIL, to)

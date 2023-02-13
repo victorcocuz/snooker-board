@@ -212,3 +212,13 @@ fun removeBallsForFoulDialog(ballList: MutableList<DomainBall>): MutableList<Dom
         return asReversed()
     }
 }
+
+fun List<DomainBall>.getNextBallOptions() = when (lastOrNull()) {
+    is COLOR -> listOfBallsColors
+    is WHITE -> listOf(NOBALL())
+    null -> emptyList()
+    else -> {
+        Timber.e("last ${last()}")
+        listOf(last())
+    }
+}

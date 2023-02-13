@@ -6,7 +6,7 @@
     <data>
         <variable
             name="varGameVm"
-            type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
+            type="com.quickpoint.snookerboard.ui.fragments.game.GameViewModel" />
 
     </data>
 

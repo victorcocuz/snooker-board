@@ -72,12 +72,12 @@ class DataStore(private val context: Context) {
         Toggle.RestShot.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_REST_SHOT)] ?: false
 
         Player01.loadPreferences(
-            firstName = preferences[stringPreferencesKey(K_PLAYER01_FIRST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "Ronnie" else "",
-            lastName = preferences[stringPreferencesKey(K_PLAYER01_LAST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "O'Sullivan" else ""
+            firstName = preferences[stringPreferencesKey(K_PLAYER01_FIRST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "Ronnie" else Constants.EMPTY_STRING,
+            lastName = preferences[stringPreferencesKey(K_PLAYER01_LAST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "O'Sullivan" else Constants.EMPTY_STRING
         )
         Player02.loadPreferences(
-            firstName = preferences[stringPreferencesKey(K_PLAYER02_FIRST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "John" else "",
-            lastName = preferences[stringPreferencesKey(K_PLAYER02_LAST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "Higgins" else ""
+            firstName = preferences[stringPreferencesKey(K_PLAYER02_FIRST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "John" else Constants.EMPTY_STRING,
+            lastName = preferences[stringPreferencesKey(K_PLAYER02_LAST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "Higgins" else Constants.EMPTY_STRING
         )
 
         Settings.loadPreferences(

@@ -11,11 +11,11 @@
 
         <variable
             name="varDialogVm"
-            type="com.quickpoint.snookerboard.fragments.gamedialogs.DialogViewModel" />
+            type="com.quickpoint.snookerboard.ui.fragments.gamedialogs.DialogViewModel" />
 
         <variable
             name="varGameVm"
-            type="com.quickpoint.snookerboard.fragments.game.GameViewModel" />
+            type="com.quickpoint.snookerboard.ui.fragments.game.GameViewModel" />
 
 <!--        <import type="com.quickpoint.snookerboard.utils.OldMatchToggle.MATCHTOGGLES" />-->
     </data>

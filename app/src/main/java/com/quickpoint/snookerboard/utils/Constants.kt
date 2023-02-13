@@ -11,25 +11,21 @@ object Constants {
     const val EMAIL_SUBJECT_LOGS = "Action Logs"
     const val EMAIL_SUBJECT_IMPROVE = "App Improvement Suggestions"
 
-    // Navigation Drawer IDs
-    const val NAV_ID_DRAWER_RULES = "id_drawer_rules"
-    const val NAV_ID_DRAWER_IMPROVE = "id_drawer_improve"
-    const val NAV_ID_DRAWER_SUPPORT = "id_drawer_support"
-    const val NAV_ID_DRAWER_SETTINGS = "id_drawer_settings"
-    const val NAV_ID_DRAWER_ABOUT = "id_drawer_about"
-
     // Navigation Routes
-    const val ROUTE_SCREEN_MAIN = "screen_main"
-    const val ROUTE_SCREEN_RULES = "screen_rules"
-    const val ROUTE_SCREEN_GAME = "screen_fragment_game"
-    const val ROUTE_SCREEN_SUMMARY = "screen_fragment_summary"
-    const val ROUTE_SCREEN_ABOUT = "screen_drawer_about"
-    const val ROUTE_SCREEN_DRAWER_IMPROVE = "screen_drawer_improve"
-    const val ROUTE_SCREEN_DRAWER_RULES = "screen_drawer_rules"
-    const val ROUTE_SCREEN_DRAWER_SETTINGS = "screen_drawer_settings"
-    const val ROUTE_SCREEN_DRAWER_SUPPORT = "screen_drawer_support"
-    const val ROUTE_SCREEN_DIALOG_GENERIC = "screen_dialog_generic"
-    const val ROUTE_SCREEN_DIALOG_FOUL = "screen_dialog_foul"
+    const val ID_SCREEN_MAIN = "screen_main"
+    const val ID_SCREEN_RULES = "screen_rules"
+    const val ID_SCREEN_GAME = "screen_fragment_game"
+    const val ID_SCREEN_SUMMARY = "screen_fragment_summary"
+    const val ID_SCREEN_ABOUT = "screen_drawer_about"
+    const val ID_SCREEN_DRAWER_IMPROVE = "screen_drawer_improve"
+    const val ID_SCREEN_DRAWER_RULES = "screen_drawer_rules"
+    const val ID_SCREEN_DRAWER_SETTINGS = "screen_drawer_settings"
+    const val ID_SCREEN_DRAWER_SUPPORT = "screen_drawer_support"
+    const val ID_SCREEN_DIALOG_GENERIC = "screen_dialog_generic"
+    const val ID_SCREEN_DIALOG_FOUL = "screen_dialog_foul"
+
+    // Generic
+    const val EMPTY_STRING = ""
 }
 
 enum class BallAdapterType { MATCH, FOUL, BREAK }

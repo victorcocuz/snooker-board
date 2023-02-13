@@ -1,21 +1,10 @@
 package com.quickpoint.snookerboard.billing
 
 import android.app.Activity
-import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.BillingClientStateListener
-import com.android.billingclient.api.BillingFlowParams
-import com.android.billingclient.api.BillingResult
-import com.android.billingclient.api.ConsumeParams
-import com.android.billingclient.api.ProductDetails
-import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.*
 import com.android.billingclient.api.Purchase.PurchaseState
-import com.android.billingclient.api.PurchasesResponseListener
-import com.android.billingclient.api.PurchasesUpdatedListener
-import com.android.billingclient.api.QueryProductDetailsParams
-import com.android.billingclient.api.QueryPurchasesParams
-import com.android.billingclient.api.consumePurchase
-import com.android.billingclient.api.queryProductDetails
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.collect.ImmutableList
+import com.quickpoint.snookerboard.utils.Constants
 import com.quickpoint.snookerboard.utils.Constants.PRODUCT_BEER
 import com.quickpoint.snookerboard.utils.Constants.PRODUCT_COFFEE
 import com.quickpoint.snookerboard.utils.Constants.PRODUCT_LUNCH
@@ -48,7 +37,7 @@ data class PurchaseHelper(val activity: Activity) {
     private val _statusText = MutableStateFlow("Initializing...")
     val statusText = _statusText.asStateFlow()
 
-    private val _priceText = MutableStateFlow(List(3) { "" })
+    private val _priceText = MutableStateFlow(List(3) { Constants.EMPTY_STRING })
     val priceText = _priceText.asStateFlow()
 
     fun billingSetup() {
@@ -104,12 +93,12 @@ data class PurchaseHelper(val activity: Activity) {
         coroutineScope.launch {
             billingClient.queryProductDetails(queryProductDetailsParams).productDetailsList?.let { list ->
                 productDetailsList = list
-                val price = MutableList(3) {""}
+                val price = MutableList(3) {Constants.EMPTY_STRING}
                 list.forEach {
                     when (it.productId) {
-                        PRODUCT_COFFEE -> price[0] = it.oneTimePurchaseOfferDetails?.formattedPrice ?: ""
-                            PRODUCT_BEER -> price[1] = it.oneTimePurchaseOfferDetails?.formattedPrice ?: ""
-                        else -> price[2] = it.oneTimePurchaseOfferDetails?.formattedPrice ?: ""
+                        PRODUCT_COFFEE -> price[0] = it.oneTimePurchaseOfferDetails?.formattedPrice ?: Constants.EMPTY_STRING
+                            PRODUCT_BEER -> price[1] = it.oneTimePurchaseOfferDetails?.formattedPrice ?: Constants.EMPTY_STRING
+                        else -> price[2] = it.oneTimePurchaseOfferDetails?.formattedPrice ?: Constants.EMPTY_STRING
                     }
                 }
                 _priceText.value = price

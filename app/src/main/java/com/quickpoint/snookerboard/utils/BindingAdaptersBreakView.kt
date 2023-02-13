@@ -7,8 +7,8 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.PotType.*
-import com.quickpoint.snookerboard.fragments.game.BallAdapter
-import com.quickpoint.snookerboard.fragments.game.BreakAdapter
+import com.quickpoint.snookerboard.ui.fragments.game.BallAdapter
+import com.quickpoint.snookerboard.ui.fragments.game.BreakAdapter
 
 @BindingAdapter("setBreakVisibilityBreak", "setBreakVisibilityPlayer")
 fun LinearLayout.setBreakVisibility(crtBreak: DomainBreak, player: Int) {
@@ -29,9 +29,9 @@ fun TextView.setBreakInfo(crtBreak: DomainBreak, player: Int) {
         TYPE_REMOVE_RED -> "Remove red"
         TYPE_REMOVE_COLOR -> "Remove color"
         TYPE_FOUL -> "Foul"
-        else -> ""
-    } else ""
-    visibility = if (text != "") View.VISIBLE else View.GONE
+        else -> Constants.EMPTY_STRING
+    } else Constants.EMPTY_STRING
+    visibility = if (text != Constants.EMPTY_STRING) View.VISIBLE else View.GONE
 }
 
 @BindingAdapter("setBreakPoints", "setBreakPointsPlayer")
@@ -39,9 +39,9 @@ fun TextView.setBreakPoints(crtBreak: DomainBreak, player: Int) {
     text = when {
         crtBreak.player == player && crtBreak.breakSize != 0 -> crtBreak.breakSize.toString()
         crtBreak.player != player && crtBreak.lastPotType() == TYPE_FOUL -> crtBreak.lastBall()?.foul.toString()
-        else -> ""
+        else -> Constants.EMPTY_STRING
     }
-    visibility = if (text != "") View.VISIBLE else View.GONE
+    visibility = if (text != Constants.EMPTY_STRING) View.VISIBLE else View.GONE
 }
 
 @BindingAdapter("bindPots", "bindPotsPlayer")
@@ -49,7 +49,7 @@ fun RecyclerView.bindPotsRv(crtBreak: DomainBreak?, player: Int) {
     val adapter = this.adapter as BallAdapter
     val balls = mutableListOf<DomainBall>()
     crtBreak?.pots?.forEach { if (it.potType in listOfPotTypesPointGenerating) balls.add(it.ball) }
-    adapter.submitList(if (crtBreak?.player == player) balls else mutableListOf())
+    adapter.submitList(if (crtBreak?.player == player) balls else emptyList())
     visibility = if (adapter.itemCount > 0 || crtBreak?.pots?.lastOrNull()?.potType == TYPE_FOUL) View.VISIBLE else View.GONE
 }
 

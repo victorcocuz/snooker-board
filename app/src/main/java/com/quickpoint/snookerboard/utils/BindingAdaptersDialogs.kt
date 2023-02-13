@@ -55,7 +55,7 @@ fun TextView.setDialogGameAText(matchAction: MatchAction) {
 fun TextView.setDialogGameBText(matchAction: MatchAction) {
     text = when (matchAction) {
         MATCH_ENDED_DISCARD_FRAME -> "Yes & remove this frame"
-        else -> ""
+        else -> Constants.EMPTY_STRING
     }
 }
 
@@ -74,11 +74,11 @@ fun TextView.setDialogGameNote(matchAction: MatchAction, frame: DomainFrame?) {
     visibility = if (matchAction in listOf(MATCH_ENDED_DISCARD_FRAME, FRAME_MISS_FORFEIT)) VISIBLE else GONE
     text = when {
         matchAction == FRAME_MISS_FORFEIT -> "NOTE: Please read carefully, this action cannot be undone"
-        frame == null -> ""
-        frame.score.isNoFrameFinished() -> ""
+        frame == null -> Constants.EMPTY_STRING
+        frame.score.isNoFrameFinished() -> Constants.EMPTY_STRING
         frame.score.isFrameWinResultingMatchTie() -> "NOTE: Keeping the current frame will result in a draw"
         frame.score.isMatchEqual() -> "NOTE: Discarding the current frame will result in a draw"
-        else -> ""
+        else -> Constants.EMPTY_STRING
     }
 }
 

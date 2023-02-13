@@ -8,7 +8,7 @@
 
         <variable
             name="varSummaryVm"
-            type="com.quickpoint.snookerboard.fragments.summary.SummaryViewModel" />
+            type="com.quickpoint.snookerboard.ui.fragments.summary.SummaryViewModel" />
 
         <import type="com.quickpoint.snookerboard.utils.MatchAction" />
 

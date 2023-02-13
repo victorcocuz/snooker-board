@@ -12,10 +12,7 @@ buildscript {
         version_design = '27.1.1'
         version_navigation = '2.5.3'
         version_lifecycle = '2.5.1'
-        version_retrofit = "2.9.0"
-        version_moshi = '1.13.0'
         version_room = '2.5.0'
-        version_work = '2.7.1'
         version_billing = '5.1.0'
         version_ad_mob = '21.4.0'
 
@@ -49,15 +46,4 @@ buildscript {
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.20'
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$version_navigation"
     }
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }
