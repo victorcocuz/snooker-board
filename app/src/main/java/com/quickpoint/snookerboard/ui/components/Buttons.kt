@@ -14,16 +14,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.quickpoint.snookerboard.base.Event
+import com.quickpoint.snookerboard.domain.DomainBall
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
 import com.quickpoint.snookerboard.domain.objects.getHandicap
 import com.quickpoint.snookerboard.domain.objects.getSettingsTextIdByKeyAndValue
 import com.quickpoint.snookerboard.domain.objects.isSettingsButtonSelected
 import com.quickpoint.snookerboard.ui.fragments.rules.RulesViewModel
 import com.quickpoint.snookerboard.ui.theme.*
+import com.quickpoint.snookerboard.utils.BallAdapterType
 import com.quickpoint.snookerboard.utils.K_INT_MATCH_HANDICAP_FRAME
+import com.quickpoint.snookerboard.utils.setBallBackground
 
 
 @Composable
@@ -91,20 +95,23 @@ fun ButtonStandardHoist(
 fun ButtonStandard(
     modifier: Modifier = Modifier,
     text: String,
+    height: Dp = 40.dp,
     isSelected: Boolean = false,
+    isEnabled: Boolean = true,
     onClick: () -> Unit,
 ) {
     OutlinedButton(
-        modifier = modifier.height(40.dp),
+        modifier = modifier.height(height),
+        contentPadding = PaddingValues(20.dp, 8.dp),
         shape = RoundedCornerShape(MaterialTheme.spacing.extraSmall),
         border = BorderStroke(1.dp, if (isSelected) Beige else Black),
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSelected) Green else CreamBright
-        )
+        colors = ButtonDefaults.buttonColors(containerColor = if (isSelected) Green else CreamBright),
+        enabled = isEnabled
     ) {
         Text(
-            text = text,
+            text = text.uppercase(),
+            textAlign = TextAlign.Center,
             style = MaterialTheme.typography.labelLarge.copy(color = if (isSelected) White else Black)
         )
     }
@@ -114,23 +121,37 @@ fun ButtonStandard(
 fun ToggleButton(
     modifier: Modifier = Modifier,
     text: String,
-    isSelected: Boolean = false,
     painter: Painter,
+    isSelected: Boolean = false,
+    isEnabled: Boolean = true,
     onClick: () -> Unit,
 ) {
     OutlinedButton(
-        modifier = modifier,
+        modifier = modifier
+            .defaultMinSize(minWidth = 1.dp, minHeight = 1.dp)
+            .padding(0.dp)
+            .size(60.dp),
+        contentPadding = PaddingValues(0.dp),
         shape = RoundedCornerShape(MaterialTheme.spacing.extraSmall),
-        border = BorderStroke(1.dp, if (isSelected) Beige else Black),
+        border = BorderStroke(1.dp, if (isSelected && isEnabled) Beige else Black),
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSelected) Green else CreamBright
-        )
+            containerColor = if (isSelected && isEnabled) Green else CreamBright
+        ),
+        enabled = isEnabled
     ) {
-        Column(verticalArrangement = Arrangement.Center) {
-            Icon(painter = painter, contentDescription = null)
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                tint = if (isSelected) White else Black,
+                modifier = Modifier.size(32.dp),
+                painter = painter, contentDescription = null
+            )
             Text(
                 text = text,
+                textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.labelSmall.copy(color = if (isSelected) White else Black)
             )
         }
@@ -140,13 +161,20 @@ fun ToggleButton(
 @Composable
 fun BallView(
     modifier: Modifier = Modifier,
+    ball: DomainBall,
+    ballAdapterType: BallAdapterType,
     onClick: () -> Unit = {},
-    onContent: (ImageButton) -> Unit,
-) = AndroidView(
-    modifier = modifier.aspectRatio(1f),
-    factory = { context ->
-        ImageButton(context).apply { setOnClickListener { onClick() } }
-    })
-{
-    onContent(it)
+    isBallSelected: Boolean = false,
+) {
+    AndroidView(
+        modifier = modifier
+            .aspectRatio(1f)
+            .padding(2.dp),
+        factory = { context ->
+            ImageButton(context).apply {
+                setOnClickListener { onClick() }
+                isSelected = isBallSelected
+            }
+        })
+    { it.setBallBackground(ball, ballAdapterType, isBallSelected) }
 }

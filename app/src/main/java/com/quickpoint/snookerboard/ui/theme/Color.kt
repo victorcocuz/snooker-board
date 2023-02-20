@@ -8,6 +8,7 @@ val WhiteDisabled = Color(0xFF979797)
 
 val BrownInactive = Color(0xFF5A5652)
 val BrownDark = Color(0xFF4A2F18)
+val BrownMedium = Color(0xFF5F3D1F)
 val Brown = Color(0xFF7C5422)
 
 val Beige = Color(0xFFEBC881)

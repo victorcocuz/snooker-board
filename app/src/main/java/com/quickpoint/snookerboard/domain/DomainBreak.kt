@@ -53,6 +53,7 @@ fun MutableList<DomainBreak>.lastBallTypeBeforeRemoveBall(): BallType? {
     }
     return null
 }
+fun DomainBreak.isLastBallFoul() = this.pots.lastOrNull()?.potType == TYPE_FOUL
 
 // Helper methods
 fun MutableList<DomainBreak>.findMaxBreak(): Int {

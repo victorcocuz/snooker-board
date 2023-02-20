@@ -1,9 +1,5 @@
 package com.quickpoint.snookerboard.ui.fragments.gamedialogs
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,65 +14,56 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
-import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.base.EventObserver
-import com.quickpoint.snookerboard.databinding.FragmentDialogGenBinding
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.ui.components.ButtonStandard
 import com.quickpoint.snookerboard.ui.components.TextParagraph
 import com.quickpoint.snookerboard.ui.components.TextSubtitle
-import com.quickpoint.snookerboard.ui.fragments.game.GameFragment
 import com.quickpoint.snookerboard.ui.fragments.game.GameViewModel
 import com.quickpoint.snookerboard.ui.fragments.rules.RuleSelectionItem
 import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.*
 
-
-class GenericDialogFragment : DialogFragment() {
-    private val dialogVm: DialogViewModel by activityViewModels()
-    private var gameVm: GameViewModel? = null
-    private lateinit var matchAction: MatchAction
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        val binding: FragmentDialogGenBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_dialog_gen, container, false)
-
-        if (requireParentFragment().childFragmentManager.fragments[0] is GameFragment)
-            gameVm = ViewModelProvider(requireParentFragment().childFragmentManager.fragments[0])[GameViewModel::class.java]
-
-        // Observers
-        dialogVm.eventDialogAction.observe(viewLifecycleOwner, EventObserver { action ->
-            matchAction = action
-            dismiss() // Close dialog once a match action as been clicked on
-        })
-
-        return binding.root
-    }
-
-    override fun onDestroy() { // Pass action back here to avoid crash during navigation
-        super.onDestroy()
-        if (this::matchAction.isInitialized) gameVm?.onEventGameAction(
-            matchAction, when (matchAction) {
-                MATCH_CANCEL, FRAME_RERACK, FRAME_START_NEW -> true
-                else -> false
-            }
-        )
-    }
-}
+//class GenericDialogFragment : DialogFragment() {
+//    private val dialogVm: DialogViewModel by activityViewModels()
+//    private var gameVm: GameViewModel? = null
+//    private lateinit var matchAction: MatchAction
+//
+//    override fun onCreateView(
+//        inflater: LayoutInflater, container: ViewGroup?,
+//        savedInstanceState: Bundle?,
+//    ): View {
+//        val binding: FragmentDialogGenBinding =
+//            DataBindingUtil.inflate(inflater, R.layout.fragment_dialog_gen, container, false)
+//
+//        if (requireParentFragment().childFragmentManager.fragments[0] is GameFragment)
+//            gameVm = ViewModelProvider(requireParentFragment().childFragmentManager.fragments[0])[GameViewModel::class.java]
+//
+//        // Observers
+//        dialogVm.eventDialogAction.observe(viewLifecycleOwner, EventObserver { action ->
+//            matchAction = action
+//            dismiss() // Close dialog once a match action as been clicked on
+//        })
+//
+//        return binding.root
+//    }
+//
+//    override fun onDestroy() { // Pass action back here to avoid crash during navigation
+//        super.onDestroy()
+//        if (this::matchAction.isInitialized) gameVm?.onEventGameAction(
+//            matchAction, when (matchAction) {
+//                MATCH_CANCEL, FRAME_RERACK, FRAME_START_NEW -> true
+//                else -> false
+//            }
+//        )
+//    }
+//}
 
 @Composable
 fun DialogGeneric(dialogVm: DialogViewModel) {
     if (dialogVm.isGenericDialogShown) {
         FragmentDialogGeneric(
             matchActions = listOf(IGNORE, IGNORE, INFO_FOUL_DIALOG),
-            onDismiss = { dialogVm.onDismissDialog() },
+            onDismiss = { dialogVm.onDismissGenericDialog() },
             onConfirm = { dialogVm.onEventDialogAction(it) }
         )
     }
@@ -190,9 +177,3 @@ fun getDialogGameBText(matchActionB: MatchAction): String = when (matchActionB) 
     MATCH_ENDED_DISCARD_FRAME -> "Yes & remove this frame"
     else -> Constants.EMPTY_STRING
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun FragmentDialogGenericPreview() {
-//    FragmentDialogGeneric(rememberNavController())
-//}

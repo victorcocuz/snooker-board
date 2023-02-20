@@ -1,7 +1,7 @@
 package com.quickpoint.snookerboard.repository
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import com.quickpoint.snookerboard.database.SnookerDatabase
 import com.quickpoint.snookerboard.database.models.DbFrameWithScoreAndBreakWithPotsAndBallStack
 import com.quickpoint.snookerboard.database.models.asDomain
@@ -115,7 +115,7 @@ class SnookerRepository constructor(database: SnookerDatabase) {
     }
 
     // Get the crt score from the database
-    val score: LiveData<ArrayList<Pair<DomainScore, DomainScore>>> = Transformations.map(daoDbScore.getMatchScore()) {
+    val score: LiveData<ArrayList<Pair<DomainScore, DomainScore>>> = daoDbScore.getMatchScore().map {
         it.asDomainPair()
     }
 

@@ -10,7 +10,6 @@ import com.quickpoint.snookerboard.ui.components.TextSubtitle
 import com.quickpoint.snookerboard.ui.components.TextTitle
 import com.quickpoint.snookerboard.ui.theme.Brown
 import com.quickpoint.snookerboard.ui.theme.Transparent
-import timber.log.Timber
 
 @Composable
 fun GameModulePlayerNames(crtPlayer: Int) = Row(Modifier.fillMaxWidth()) {
@@ -39,6 +38,5 @@ fun RowScope.PlayerNameBox(
     verticalArrangement = Arrangement.Center
 ) {
     TextTitle(textTitle)
-    Timber.e("subtitle $textSubtitle")
     TextSubtitle(textSubtitle)
 }

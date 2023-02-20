@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import com.quickpoint.snookerboard.ui.theme.BrownDark
 
 @Composable
 fun TextParagraph(
@@ -20,6 +21,13 @@ fun TextParagraph(
         text = text, textAlign = textAlign, style = style
     )
 }
+
+@Composable
+fun TextBallInfo(text: String) = TextParagraph(
+    text = text,
+    textAlign = TextAlign.Center,
+    style = MaterialTheme.typography.bodyLarge.copy(color = BrownDark)
+)
 
 @Composable
 fun TextHeadline(text: String) = TextParagraph(

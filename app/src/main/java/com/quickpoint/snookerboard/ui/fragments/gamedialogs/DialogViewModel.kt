@@ -11,16 +11,19 @@ import com.quickpoint.snookerboard.domain.DomainBall
 import com.quickpoint.snookerboard.domain.PotAction
 import com.quickpoint.snookerboard.domain.objects.Toggle
 import com.quickpoint.snookerboard.utils.MatchAction
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class DialogViewModel : ViewModel() {
 
     // Dialog events must be observed separately to allow to close dialog window before taking action
     var isGenericDialogShown by mutableStateOf(false)
         private set
-    fun onOpenDialog() {
+
+    fun onOpenGenericDialog() {
         isGenericDialogShown = true
     }
-    fun onDismissDialog() {
+    fun onDismissGenericDialog() {
         isGenericDialogShown = false
     }
 
@@ -28,24 +31,31 @@ class DialogViewModel : ViewModel() {
     val eventDialogAction: LiveData<Event<MatchAction>> = _eventDialogAction
     fun onEventDialogAction(matchAction: MatchAction) {
         _eventDialogAction.value = Event(matchAction)
-        onDismissDialog()
+        onDismissGenericDialog()
     }
 
     // Foul Dialog observables and helpers
+    var isFoulDialogShown by mutableStateOf(false)
+        private set
+
+    fun onOpenFoulDialog() {
+        isFoulDialogShown = true
+    }
+
     private val _ballClicked = MutableLiveData<DomainBall?>(null) // Only local, not sure if needed
     val ballClicked = _ballClicked
     fun onBallClicked(ball: DomainBall) {
         _ballClicked.value = ball
     }
 
-    private val _eventDialogReds = MutableLiveData(0)
-    val eventDialogReds: LiveData<Int> = _eventDialogReds
-    val onDialogReds = fun(value: Int) {
-        _eventDialogReds.postValue(value)
+    private val _eventDialogReds = MutableStateFlow(0)
+    val eventDialogReds = _eventDialogReds.asStateFlow()
+    fun onDialogReds(value: Int) {
+        _eventDialogReds.value = value
     }
 
-    private val _actionClicked = MutableLiveData<PotAction?>(null)
-    val onActionClicked: LiveData<PotAction?> = _actionClicked
+    private val _actionClicked = MutableStateFlow(PotAction.SWITCH)
+    val actionClicked = _actionClicked.asStateFlow()
     fun onActionClicked(action: PotAction) {
         _actionClicked.value = action
         Toggle.FreeBall.isEnabled = false
@@ -60,12 +70,13 @@ class DialogViewModel : ViewModel() {
 //        _toggles.postValue(FrameToggles.FRAMETOGGLES)
     }
 
-    fun foulIsValid() = _ballClicked.value != null && onActionClicked.value != null
-    fun resetFoul() {
+    fun foulIsValid() = _ballClicked.value != null
+    fun onDismissFoulDialog() {
         _ballClicked.value = null
         _eventDialogReds.value = 0
-        _actionClicked.value = null
+        _actionClicked.value = PotAction.SWITCH
         Toggle.FreeBall.isEnabled = false
+        isFoulDialogShown = false
 //        _toggles.value = FrameToggles.FRAMETOGGLES
     }
 

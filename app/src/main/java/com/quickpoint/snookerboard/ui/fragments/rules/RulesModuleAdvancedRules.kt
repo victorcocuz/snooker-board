@@ -36,7 +36,7 @@ fun ColumnAdvancedRules(rulesVm: RulesViewModel, dialogVm: DialogViewModel, show
             },
             contentIcon = {
                 Icon(
-                    modifier = Modifier.clickable { dialogVm.onOpenDialog() },
+                    modifier = Modifier.clickable { dialogVm.onOpenGenericDialog() },
                     painter = painterResource(id = R.drawable.ic_temp_info),
                     contentDescription = null
                 )

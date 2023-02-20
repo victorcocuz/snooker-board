@@ -4,7 +4,7 @@ buildscript {
     ext {
         // Init
         version_core = '1.9.0'
-        version_appcompat = '1.6.0'
+        version_appcompat = '1.6.1'
         version_legacy_support = '1.0.0'
         version_material = '1.8.0-beta01'
         version_constraint_layout = '2.1.4'
@@ -14,13 +14,13 @@ buildscript {
         version_lifecycle = '2.5.1'
         version_room = '2.5.0'
         version_billing = '5.1.0'
-        version_ad_mob = '21.4.0'
+        version_ad_mob = '21.5.0'
 
         // Other
         version_timber = '5.0.1'
         version_number_picker = '2.4.13'
         version_gson = '2.9.1'
-        version_firebase_crashlytics = '2.9.2'
+        version_firebase_crashlytics = '2.9.4'
 
         // Test
         version_junit = '4.13.2'
@@ -42,8 +42,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.0'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.20'
+        classpath 'com.android.tools.build:gradle:7.4.1'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0'
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$version_navigation"
     }
 }

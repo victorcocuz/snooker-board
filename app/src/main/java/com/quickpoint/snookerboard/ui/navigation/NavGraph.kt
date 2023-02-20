@@ -8,7 +8,6 @@ import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.ScreenMain
 import com.quickpoint.snookerboard.billing.PurchaseHelper
 import com.quickpoint.snookerboard.ui.fragments.game.ScreenGame
-import com.quickpoint.snookerboard.ui.fragments.gamedialogs.FragmentDialogFoul
 import com.quickpoint.snookerboard.ui.fragments.navdrawer.*
 import com.quickpoint.snookerboard.ui.fragments.rules.ScreenRules
 import com.quickpoint.snookerboard.ui.fragments.summary.ScreenSummary
@@ -52,11 +51,6 @@ fun NavGraph(
         }
         composable(route = Screen.DrawerSupport.route) {
             ScreenDrawerSupport(navController = navController, purchaseHelper = purchaseHelper)
-        }
-
-        // Dialogs
-        composable(route = Screen.DialogFoul.route) {
-            FragmentDialogFoul(navController = navController)
         }
     }
 }

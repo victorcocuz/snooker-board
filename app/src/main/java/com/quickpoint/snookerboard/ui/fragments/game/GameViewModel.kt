@@ -47,10 +47,21 @@ class GameViewModel(
     // Observables
     private val _eventGameAction = ValueKeeperLiveData<Event<MatchAction?>>()
     val eventGameAction: ValueKeeperLiveData<Event<MatchAction?>> = _eventGameAction
+
+    private val _eventAction = MutableSharedFlow<MatchAction?>()
+    val eventAction = _eventAction.asSharedFlow()
     fun onEventGameAction(matchAction: MatchAction?, queue: Boolean = false): Boolean {
         if (queue) jobQueue.submit {
             _eventGameAction.postValue(Event(matchAction))
-        } else _eventGameAction.postValue(Event(matchAction))
+            viewModelScope.launch {
+                _eventAction.emit(matchAction)
+            }
+        } else {
+            _eventGameAction.postValue(Event(matchAction))
+            viewModelScope.launch {
+                _eventAction.emit(matchAction)
+            }
+        }
         return matchAction != null
     }
 

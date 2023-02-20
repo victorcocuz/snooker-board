@@ -1,6 +1,5 @@
 package com.quickpoint.snookerboard.ui.fragments.game
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -12,124 +11,121 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import com.quickpoint.snookerboard.domain.DomainBreak
-import com.quickpoint.snookerboard.domain.PotType
-import com.quickpoint.snookerboard.domain.ballsList
-import com.quickpoint.snookerboard.domain.displayShots
+import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.ui.components.BallView
 import com.quickpoint.snookerboard.ui.components.StandardRow
 import com.quickpoint.snookerboard.ui.components.TextParagraph
-import com.quickpoint.snookerboard.ui.theme.Beige
 import com.quickpoint.snookerboard.ui.theme.BrownDark
+import com.quickpoint.snookerboard.ui.theme.BrownMedium
 import com.quickpoint.snookerboard.ui.theme.spacing
 import com.quickpoint.snookerboard.utils.BallAdapterType
 import com.quickpoint.snookerboard.utils.Constants
-import com.quickpoint.snookerboard.utils.setBallBackground
 
 @Composable
 fun GameModuleBreaks(frameStack: List<DomainBreak>) {
-    val textWidth = 40.dp
-
-    StandardRow {
-        BreakColumn(frameStack, textWidth, 0) { domainBreak, ballHeight, player ->
-            BreakBalls(domainBreak, ballHeight, player)
-            BreakPoints(domainBreak, textWidth, player)
-            BreakInfo(domainBreak, player)
-        }
-        BreakColumn(frameStack, textWidth, 1) { domainBreak, ballHeight, player ->
-            BreakPoints(domainBreak, textWidth, player)
-            BreakBalls(domainBreak, ballHeight, player)
-            BreakInfo(domainBreak, player)
-        }
-    }
-}
-
-@Composable
-fun RowScope.BreakColumn(
-    frameStack: List<DomainBreak>,
-    textWidth: Dp,
-    player: Int,
-    content: @Composable RowScope.(DomainBreak, Dp, Int) -> Unit,
-) {
-    BoxWithConstraints(
-        Modifier
-            .weight(1f)
-            .fillMaxHeight()
-    ) {
-        val boxWidth = maxWidth
-        val ballHeight = (boxWidth - textWidth) / 6
-        LazyColumn {
+    BoxWithConstraints(Modifier.fillMaxSize()) {
+        val ballHeight = (maxWidth / 2 - MaterialTheme.spacing.breakTextInfo) / 6
+        LazyColumn(reverseLayout = true) {
             items(frameStack.displayShots()) { domainBreak ->
-                val isCrtPlayer = domainBreak.player == player
-                val factor = (domainBreak.pots.size - 1) / 6 + 1
-                StandardRow(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(MaterialTheme.spacing.extraSmall)
-                        .border(
-                            shape = RoundedCornerShape(MaterialTheme.spacing.extraSmall),
-                            border = BorderStroke(1.dp, if (isCrtPlayer) Beige else Color.Transparent)
-                        )
-                        .height(ballHeight * factor)
-                        .background(if (isCrtPlayer) BrownDark else Color.Transparent),
-                ) { if (isCrtPlayer) content(domainBreak, ballHeight, player) }
+                StandardRow(Modifier.height(ballHeight * ((domainBreak.pots.size - 1) / 6 + 1) + MaterialTheme.spacing.medium)) {
+                    BreakRow(domainBreak, 0) { domainBreak, player ->
+                        if (domainBreak.player == player || domainBreak.isLastBallFoul()) {
+                            BreakBalls(domainBreak, ballHeight, player)
+                            BreakInfo(domainBreak, player)
+                            BreakPoints(domainBreak, player)
+                        }
+                    }
+                    BreakRow(domainBreak, 1) { domainBreak, player ->
+                        if (domainBreak.player == player || domainBreak.isLastBallFoul()) {
+                            BreakPoints(domainBreak, player)
+                            BreakBalls(domainBreak, ballHeight, player)
+                            BreakInfo(domainBreak, player)
+                        }
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
+fun RowScope.BreakRow(
+    domainBreak: DomainBreak,
+    player: Int,
+    content: @Composable (DomainBreak, Int) -> Unit,
+) = StandardRow(
+    Modifier
+        .weight(1f)
+        .padding(MaterialTheme.spacing.extraSmall)
+        .fillMaxHeight()
+        .clip(RoundedCornerShape(MaterialTheme.spacing.extraSmall))
+        .background(if (domainBreak.player == player || domainBreak.isLastBallFoul()) BrownDark else Color.Transparent)
+        .border(
+            MaterialTheme.spacing.border,
+            if (domainBreak.player == player || domainBreak.isLastBallFoul()) BrownDark else Color.Transparent
+        )
+) {
+    content(domainBreak, player)
+}
+
+@Composable
 fun RowScope.BreakBalls(domainBreak: DomainBreak, ballHeight: Dp, player: Int) {
-    if (domainBreak.breakSize > 0 && domainBreak.player == player)
+    val ballsList = when {
+        (domainBreak.breakSize > 0) && domainBreak.player == player -> domainBreak.ballsList(player)
+        (domainBreak.isLastBallFoul()) && domainBreak.player != player -> domainBreak.ballsList(1 - player)
+        else -> emptyList()
+    }
+
+    if (ballsList.isNotEmpty())
         LazyVerticalGrid(
             modifier = Modifier
                 .fillMaxHeight()
-                .weight(1f),
+                .weight(1f)
+                .background(BrownMedium)
+                .padding(MaterialTheme.spacing.borderDouble, MaterialTheme.spacing.default),
+            verticalArrangement = Arrangement.Center,
             columns = GridCells.Fixed(6),
             content = {
-                items(domainBreak.ballsList(player)) { ball ->
-                    BallView(modifier = Modifier
-                        .size(ballHeight)
-                        .padding(2.dp),
-                        onContent = { it.setBallBackground(ball, BallAdapterType.BREAK) })
+                items(ballsList) { ball ->
+                    BallView(
+                        modifier = Modifier.size(ballHeight),
+                        ball, BallAdapterType.BREAK
+                    )
                 }
             })
 }
 
 @Composable
-fun BreakPoints(domainBreak: DomainBreak, textWidth: Dp, player: Int) {
-    val points = setBreakPoints(domainBreak, player)
-    if (points != Constants.EMPTY_STRING) TextParagraph(
-        modifier = Modifier.width(textWidth),
-        text = points,
+fun BreakPoints(domainBreak: DomainBreak, player: Int) {
+    TextParagraph(
+        modifier = Modifier.width(MaterialTheme.spacing.breakTextInfo),
+        text = setBreakPoints(domainBreak, player),
         textAlign = TextAlign.Center
     )
 }
 
 @Composable
-fun BreakInfo(domainBreak: DomainBreak, player: Int) {
-    val info = setBreakInfo(domainBreak, player)
-    if (info != Constants.EMPTY_STRING) TextParagraph(text = info)
+fun RowScope.BreakInfo(domainBreak: DomainBreak, player: Int) {
+    if (domainBreak.breakSize == 0 && domainBreak.player == player)
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(1f)
+                .background(BrownMedium),
+            contentAlignment = Alignment.Center,
+        ) { TextParagraph(setBreakInfo(domainBreak, player)) }
 }
-
-//fun RecyclerView.bindPotsRv(crtBreak: DomainBreak?, player: Int) {
-//    val adapter = this.adapter as BallAdapter
-//    val balls = mutableListOf<DomainBall>()
-//    crtBreak?.pots?.forEach { if (it.potType in listOfPotTypesPointGenerating) balls.add(it.ball) }
-//    adapter.submitList(if (crtBreak?.player == player) balls else mutableListOf())
-//    visibility = if (adapter.itemCount > 0 || crtBreak?.pots?.lastOrNull()?.potType == PotType.TYPE_FOUL) View.VISIBLE else View.GONE
-//}
-
 
 fun setBreakPoints(crtBreak: DomainBreak, player: Int) = when {
     crtBreak.player == player && crtBreak.breakSize != 0 -> crtBreak.breakSize.toString()
-    crtBreak.player != player && crtBreak.lastPotType() == PotType.TYPE_FOUL -> crtBreak.lastBall()?.foul.toString()
-    else -> Constants.EMPTY_STRING
+    crtBreak.player != player && crtBreak.isLastBallFoul() -> crtBreak.lastBall()?.foul.toString()
+    else -> "0"
 }
 
 fun setBreakInfo(crtBreak: DomainBreak, player: Int) = if (crtBreak.player == player) when (crtBreak.lastPotType()) {

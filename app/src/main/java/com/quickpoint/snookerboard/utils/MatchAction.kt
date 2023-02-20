@@ -61,6 +61,7 @@ enum class MatchAction {
     SNACK_FRAME_ENDING_DIALOG,
     SNACK_MATCH_ENDING_DIALOG,
     SNACK_NO_BALL, // Assign snackbar when there are no balls on the table instead handling pot
+    SNACK_INVALID_FOUL,
 
     // Summary Fragment Actions
     NAV_TO_PLAY, // Go to main menu
@@ -131,6 +132,7 @@ fun MatchAction.getSnackText(context: Context) = context.getString(
         SNACK_FRAME_ENDING_DIALOG -> R.string.snack_f_game_concede_frame
         SNACK_MATCH_ENDING_DIALOG -> R.string.snack_f_game_concede_match
         SNACK_NO_BALL -> R.string.toast_f_game_no_balls_left
+        SNACK_INVALID_FOUL -> R.string.toast_f_dialog_foul_invalid
         else -> R.string.empty
     }
 )

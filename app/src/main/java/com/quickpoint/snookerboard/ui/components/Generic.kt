@@ -1,13 +1,15 @@
 package com.quickpoint.snookerboard.ui.components
 
+import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Snackbar
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,6 +20,9 @@ import androidx.compose.ui.unit.dp
 import com.quickpoint.snookerboard.ui.theme.GreenBright
 import com.quickpoint.snookerboard.ui.theme.GreenBrighter
 import com.quickpoint.snookerboard.ui.theme.spacing
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.launch
 
 @Composable
 fun GenericSurface(content: @Composable () -> Unit) {
@@ -43,6 +48,7 @@ fun FragmentContent(
     paddingValues: PaddingValues = PaddingValues(MaterialTheme.spacing.medium, 0.dp),
     horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     verticalArrangement: Arrangement.Vertical = Arrangement.SpaceEvenly,
+    withBottomSpacer: Boolean = true,
     content: @Composable ColumnScope.() -> Unit,
 ) = Column(
     modifier = modifier
@@ -52,7 +58,7 @@ fun FragmentContent(
     verticalArrangement = verticalArrangement,
 ) {
     content()
-    Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+    if (withBottomSpacer) Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
 }
 
 @Composable
@@ -95,11 +101,11 @@ fun DefaultSnackbar(
 @Composable
 fun StandardRow(
     modifier: Modifier = Modifier,
-    horizontalArrangement: Arrangement.HorizontalOrVertical = Arrangement.SpaceEvenly,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceEvenly,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     content: @Composable RowScope.() -> Unit,
 ) = Row(
-    modifier.fillMaxWidth(),
+    modifier = modifier,
     horizontalArrangement = horizontalArrangement,
     verticalAlignment = verticalAlignment
 ) { content() }
@@ -147,3 +153,24 @@ fun VerticalGrid(
         }
     }
 }
+
+fun LazyListState.disableScrolling(scope: CoroutineScope) {
+    scope.launch {
+        scroll(scrollPriority = MutatePriority.PreventUserInput) {
+            // Await indefinitely, blocking scrolls
+            awaitCancellation()
+        }
+    }
+}
+
+@Composable
+fun DialogCard(
+    content: @Composable ColumnScope.() -> Unit,
+) = ElevatedCard(
+    elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+    shape = RoundedCornerShape(8.dp),
+    modifier = Modifier
+        .fillMaxWidth(0.95f)
+        .border(1.dp, color = Color.Red, shape = RoundedCornerShape(8.dp)),
+    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
+) { content() }

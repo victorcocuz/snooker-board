@@ -78,7 +78,7 @@ class GameFragment : Fragment() {
 //                    FOUL_DIALOG -> navigate(GameFragmentDirections.foulDialogFrag())
                     FOUL_CONFIRM -> {
                         gameVm.assignPot(PotType.TYPE_FOUL, dialogVm.ballClicked.value!!, PotAction.FIRST) // Temp Pot Action
-                        dialogVm.resetFoul()
+                        dialogVm.onDismissFoulDialog()
                     }
                     FRAME_LOG_ACTIONS_DIALOG, FRAME_LAST_BLACK_FOULED_DIALOG, FRAME_RESPOT_BLACK_DIALOG, FRAME_RERACK_DIALOG, FRAME_ENDING_DIALOG, MATCH_ENDING_DIALOG,
                     MATCH_CANCEL_DIALOG, FRAME_MISS_FORFEIT_DIALOG,

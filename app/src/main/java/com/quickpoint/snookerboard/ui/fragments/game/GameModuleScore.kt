@@ -21,7 +21,7 @@ import com.quickpoint.snookerboard.ui.theme.Brown
 fun GameModuleScore(domainFrame: DomainFrame) {
     val score = domainFrame.score
     if (score.size == 2) {
-        StandardRow(modifier = Modifier.padding(bottom = 8.dp)) {
+        StandardRow(modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
             ScoreFrameContainer("${score[0].framePoints}")
             ScoreMatchContainer(text = "${score[0].matchPoints} ${Settings.getDisplayFrames()} ${score[1].matchPoints}")
             ScoreFrameContainer("${score[1].framePoints}")

@@ -72,8 +72,8 @@ fun SettingsToggle(title: String, description: String, isChecked: Boolean, onCli
                     setChecked(isChecked)
                 }
             },
-            update = {
-                it.isChecked = isChecked
+            update = { switch ->
+                switch.isChecked = isChecked
             })
     }
 }

@@ -21,17 +21,37 @@ sealed class DomainBall(
     var foul: Int,
 ) {
 
-    class NOBALL(ballId: Long = 0, points: Int = 0, foul: Int = 0) : DomainBall(ballId, TYPE_NOBALL, points, foul)
-    class WHITE(ballId: Long = 0, points: Int = 0, foul: Int = 4 + Settings.foulModifier) : DomainBall(ballId, TYPE_WHITE, points, foul)
-    class RED(ballId: Long = 0, points: Int = 1, foul: Int = 4 + Settings.foulModifier) : DomainBall(ballId, TYPE_RED, points, foul)
-    class YELLOW(ballId: Long = 0, points: Int = 2, foul: Int = 4 + Settings.foulModifier) : DomainBall(ballId, TYPE_YELLOW, points, foul)
-    class GREEN(ballId: Long = 0, points: Int = 3, foul: Int = 4 + Settings.foulModifier) : DomainBall(ballId, TYPE_GREEN, points, foul)
-    class BROWN(ballId: Long = 0, points: Int = 4, foul: Int = 4 + Settings.foulModifier) : DomainBall(ballId, TYPE_BROWN, points, foul)
-    class BLUE(ballId: Long = 0, points: Int = 5, foul: Int = 5 + Settings.foulModifier) : DomainBall(ballId, TYPE_BLUE, points, foul)
-    class PINK(ballId: Long = 0, points: Int = 6, foul: Int = 6 + Settings.foulModifier) : DomainBall(ballId, TYPE_PINK, points, foul)
-    class BLACK(ballId: Long = 0, points: Int = 7, foul: Int = 7 + Settings.foulModifier) : DomainBall(ballId, TYPE_BLACK, points, foul)
-    class COLOR(ballId: Long = 0, points: Int = 1, foul: Int = 4 + Settings.foulModifier) : DomainBall(ballId, TYPE_COLOR, points, foul)
-    class FREEBALL(ballId: Long = 0, points: Int = 1, foul: Int = 4 + Settings.foulModifier) : DomainBall(ballId, TYPE_FREEBALL, points, foul)
+    class NOBALL(ballId: Long = Settings.assignUniqueId(), points: Int = 0, foul: Int = 0) : DomainBall(ballId, TYPE_NOBALL, points, foul)
+    class WHITE(ballId: Long = Settings.assignUniqueId(), points: Int = 0, foul: Int = 4 + Settings.foulModifier) :
+        DomainBall(ballId, TYPE_WHITE, points, foul)
+
+    class RED(ballId: Long = Settings.assignUniqueId(), points: Int = 1, foul: Int = 4 + Settings.foulModifier) :
+        DomainBall(ballId, TYPE_RED, points, foul)
+
+    class YELLOW(ballId: Long = Settings.assignUniqueId(), points: Int = 2, foul: Int = 4 + Settings.foulModifier) :
+        DomainBall(ballId, TYPE_YELLOW, points, foul)
+
+    class GREEN(ballId: Long = Settings.assignUniqueId(), points: Int = 3, foul: Int = 4 + Settings.foulModifier) :
+        DomainBall(ballId, TYPE_GREEN, points, foul)
+
+    class BROWN(ballId: Long = Settings.assignUniqueId(), points: Int = 4, foul: Int = 4 + Settings.foulModifier) :
+        DomainBall(ballId, TYPE_BROWN, points, foul)
+
+    class BLUE(ballId: Long = Settings.assignUniqueId(), points: Int = 5, foul: Int = 5 + Settings.foulModifier) :
+        DomainBall(ballId, TYPE_BLUE, points, foul)
+
+    class PINK(ballId: Long = Settings.assignUniqueId(), points: Int = 6, foul: Int = 6 + Settings.foulModifier) :
+        DomainBall(ballId, TYPE_PINK, points, foul)
+
+    class BLACK(ballId: Long = Settings.assignUniqueId(), points: Int = 7, foul: Int = 7 + Settings.foulModifier) :
+        DomainBall(ballId, TYPE_BLACK, points, foul)
+
+    class COLOR(ballId: Long = Settings.assignUniqueId(), points: Int = 1, foul: Int = 4 + Settings.foulModifier) :
+        DomainBall(ballId, TYPE_COLOR, points, foul)
+
+    class FREEBALL(ballId: Long = 0, points: Int = 1, foul: Int = 4 + Settings.foulModifier) :
+        DomainBall(ballId, TYPE_FREEBALL, points, foul)
+
     class FREEBALLAVAILABLE(ballId: Long = 0, points: Int = 1, foul: Int = 4 + Settings.foulModifier) :
         DomainBall(ballId, TYPE_FREEBALLAVAILABLE, points, foul)
 
@@ -62,9 +82,11 @@ fun MutableList<DomainBall>.isLastBlack() = size == 2
 fun MutableList<DomainBall>.isInColors() = size <= 7
 fun MutableList<DomainBall>.isInColorsWithFreeBall() = size <= 8
 fun MutableList<DomainBall>.wasPreviousBallColor() = size in (7..37).filter { it % 2 == 1 }
-fun MutableList<DomainBall>.isThisBallColorAndNotLast() = size in (10..38).filter { it % 2 == 0 }
-fun MutableList<DomainBall>.isAddRedAvailable() = isThisBallColorAndNotLast() && !Toggle.FreeBall.isEnabled
-fun MutableList<DomainBall>.redsOnTheTable(): Int {
+fun List<DomainBall>.isThisBallColorAndNotLast() = size in (10..38).filter { it % 2 == 0 }
+fun List<DomainBall>.isAddRedAvailable() = isThisBallColorAndNotLast() && !Toggle.FreeBall.isEnabled
+fun List<DomainBall>.redsRemaining() = (this.size - 7) / 2
+
+fun List<DomainBall>.redsOnTheTable(): Int {
     var counter = 0
     forEach {
         if (it.ballType == TYPE_RED) counter++
@@ -72,7 +94,7 @@ fun MutableList<DomainBall>.redsOnTheTable(): Int {
     return counter
 }
 
-fun MutableList<DomainBall>.maxRemoveReds() = minOf(redsOnTheTable(), 3)
+fun List<DomainBall>.maxRemoveReds() = minOf(redsOnTheTable(), 3)
 
 // Helper methods
 fun MutableList<DomainBall>.foulValue() = if (size > 4) 4 else (7 - 2 * (size - 1))
@@ -202,7 +224,7 @@ fun BallType?.getBallFromValues(ballPoints: Int?): DomainBall {
     return ball
 }
 
-fun removeBallsForFoulDialog(ballList: MutableList<DomainBall>): MutableList<DomainBall> {
+fun removeBallsForFoulDialog(ballList: List<DomainBall>): MutableList<DomainBall> {
     val foulStack = mutableListOf<DomainBall>()
     ballList.forEach { foulStack.add(it) }
     foulStack.apply {
@@ -213,12 +235,15 @@ fun removeBallsForFoulDialog(ballList: MutableList<DomainBall>): MutableList<Dom
     }
 }
 
-fun List<DomainBall>.getNextBallOptions() = when (lastOrNull()) {
+fun List<DomainBall>.bindBallOptions() = when (lastOrNull()) {
     is COLOR -> listOfBallsColors
     is WHITE -> listOf(NOBALL())
     null -> emptyList()
-    else -> {
-        Timber.e("last ${last()}")
-        listOf(last())
-    }
+    else -> listOf(last())
+}
+
+fun List<DomainBall>.bindFoulBalls() = when (size) {
+    0 -> emptyList()
+    in (2..8) -> removeBallsForFoulDialog(this)
+    else -> listOfBallsPlayable
 }

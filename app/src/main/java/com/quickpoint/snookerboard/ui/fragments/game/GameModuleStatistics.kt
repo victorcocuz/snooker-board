@@ -1,14 +1,15 @@
 package com.quickpoint.snookerboard.ui.fragments.game
 
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.ui.components.StandardRow
 import com.quickpoint.snookerboard.domain.DomainScore
+import com.quickpoint.snookerboard.ui.components.StandardRow
 import java.text.DecimalFormat
 
 @Composable
@@ -55,7 +56,7 @@ fun GameModuleStatistics(score: List<DomainScore>) {
 }
 
 @Composable
-fun SingleStatisticContainer(type: String, firstValue: String, secondValue: String) = StandardRow {
+fun SingleStatisticContainer(type: String, firstValue: String, secondValue: String) = StandardRow(Modifier.fillMaxWidth()) {
     StatisticsText(firstValue, 1f)
     StatisticsText(type, 2f)
     StatisticsText(secondValue, 1f)

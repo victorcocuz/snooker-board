@@ -25,6 +25,11 @@ sealed class Toggle(
         isEnabled = !isEnabled
         return isEnabled
     }
+
+    fun setDisabled(): Boolean {
+        isEnabled = false
+        return false
+    }
 }
 
 fun getToggleByKey(key: String): Toggle? = when (key) {
