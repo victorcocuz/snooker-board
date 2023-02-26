@@ -1,46 +1,105 @@
 package com.quickpoint.snookerboard.ui.navigation
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.quickpoint.snookerboard.R
+import com.quickpoint.snookerboard.ui.theme.Transparent
+import com.quickpoint.snookerboard.ui.theme.White
 
 @Composable
 fun AppBar(
     navController: NavController,
     onNavigationIconClick: () -> Unit,
+    onMenuItemClick: (MenuItem) -> Unit,
+    actionItems: List<MenuItem>,
+    actionItemsOverflow: List<MenuItem>
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    TopAppBar(
-        title = {
-            Text(text = stringResource(id = R.string.app_name))
-        },
-        backgroundColor = MaterialTheme.colors.primary,
-        contentColor = MaterialTheme.colors.onPrimary,
+    TopAppBar(title = { Text(text = stringResource(id = R.string.app_name), color = White) },
+        backgroundColor = Transparent,
+        contentColor = MaterialTheme.colorScheme.onBackground,
+        elevation = 0.dp,
         navigationIcon = {
             if (currentRoute.isDrawerRoute()) {
                 IconButton(onClick = { navController.navigateUp() }) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Back"
-                    )
+                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back", tint = White)
                 }
             } else if (currentRoute == Screen.Rules.route) {
                 IconButton(onClick = onNavigationIconClick) {
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = "Toggle drawer"
-                    )
+                    Icon(imageVector = Icons.Default.Menu, contentDescription = "Toggle drawer", tint = White)
                 }
             }
+        },
+        actions = {
+            if (currentRoute == Screen.Game.route) {
+                var showMenu by remember { mutableStateOf(false) }
+
+                ActionMenuBody(
+                    items = actionItems,
+                    onShowMenuClick = { showMenu = !showMenu },
+                    onItemClick = onMenuItemClick
+                )
+
+                DropdownMenu(
+                    modifier = Modifier.background(MaterialTheme.colorScheme.secondary),
+                    expanded = showMenu,
+                    onDismissRequest = { showMenu = false }) {
+                    ActionMenuOverflowBody(
+                        items = actionItemsOverflow,
+                        onItemClick = { item ->
+                            onMenuItemClick(item)
+                            showMenu = false
+                        })
+                }
+            }
+        })
+}
+
+@Composable
+fun ActionMenuBody(
+    items: List<MenuItem>,
+    onShowMenuClick: () -> Unit,
+    onItemClick: (MenuItem) -> Unit,
+) {
+    for (item in items) {
+        IconButton(
+            modifier = Modifier.alpha(if (item.isActive) 1f else 0.5f),
+            onClick = {
+                if (item.id == MenuItemIds.ID_MENU_ITEM_MORE) onShowMenuClick()
+                else onItemClick(item)
+            }) { Icon(imageVector = item.imageVector!!, contentDescription = item.contentDescription, tint = White) }
+    }
+}
+
+@Composable
+fun ActionMenuOverflowBody(
+    items: List<MenuItem>,
+    onItemClick: (MenuItem) -> Unit,
+) {
+    for (item in items) {
+        DropdownMenuItem(
+            modifier = Modifier.alpha(if (item.isActive) 1f else 0.5f),
+            onClick = { onItemClick(item) }) {
+            Icon(painter = item.icon!!, contentDescription = item.contentDescription, modifier = Modifier.size(24.dp), tint = White)
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = item.title, modifier = Modifier.weight(1f), color = White)
         }
-    )
+    }
 }

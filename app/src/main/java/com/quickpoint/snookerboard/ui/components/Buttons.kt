@@ -28,6 +28,8 @@ import com.quickpoint.snookerboard.ui.theme.*
 import com.quickpoint.snookerboard.utils.BallAdapterType
 import com.quickpoint.snookerboard.utils.K_INT_MATCH_HANDICAP_FRAME
 import com.quickpoint.snookerboard.utils.setBallBackground
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -118,7 +120,21 @@ fun ButtonStandard(
 }
 
 @Composable
-fun ToggleButton(
+fun RowScope.ButtonActionHoist(
+    text: String,
+    weight: Float = 1f,
+    height: Dp = 40.dp,
+    isSelected: Boolean = false,
+    isEnabled: Boolean = true,
+    onAction: () -> Unit,
+) {
+    ButtonStandard(
+        Modifier.weight(weight), text = text, height = height, onClick = onAction, isSelected = isSelected, isEnabled = isEnabled
+    )
+}
+
+@Composable
+fun IconButton(
     modifier: Modifier = Modifier,
     text: String,
     painter: Painter,
@@ -129,7 +145,7 @@ fun ToggleButton(
     OutlinedButton(
         modifier = modifier
             .defaultMinSize(minWidth = 1.dp, minHeight = 1.dp)
-            .padding(0.dp)
+            .padding(2.dp)
             .size(60.dp),
         contentPadding = PaddingValues(0.dp),
         shape = RoundedCornerShape(MaterialTheme.spacing.extraSmall),
@@ -149,6 +165,7 @@ fun ToggleButton(
                 modifier = Modifier.size(32.dp),
                 painter = painter, contentDescription = null
             )
+            Spacer(Modifier.height(2.dp))
             Text(
                 text = text,
                 textAlign = TextAlign.Center,
@@ -163,18 +180,28 @@ fun BallView(
     modifier: Modifier = Modifier,
     ball: DomainBall,
     ballAdapterType: BallAdapterType,
-    onClick: () -> Unit = {},
     isBallSelected: Boolean = false,
+    text: String = "",
+    onClick: () -> Unit = {},
 ) {
-    AndroidView(
-        modifier = modifier
-            .aspectRatio(1f)
-            .padding(2.dp),
-        factory = { context ->
-            ImageButton(context).apply {
-                setOnClickListener { onClick() }
-                isSelected = isBallSelected
-            }
-        })
-    { it.setBallBackground(ball, ballAdapterType, isBallSelected) }
+    val coroutineScope = rememberCoroutineScope()
+    Box(contentAlignment = Alignment.Center) {
+        AndroidView(
+            modifier = modifier
+                .aspectRatio(1f)
+                .padding(2.dp),
+            factory = { context ->
+                ImageButton(context).apply {
+                    setOnClickListener {
+                        coroutineScope.launch {
+                            delay(100)
+                            onClick()
+                        }
+                    }
+                    isSelected = isBallSelected
+                }
+            })
+        { it.setBallBackground(ball, ballAdapterType, isBallSelected) }
+        TextBallInfo(text)
+    }
 }

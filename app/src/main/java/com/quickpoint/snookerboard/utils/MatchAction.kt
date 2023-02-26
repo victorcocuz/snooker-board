@@ -79,7 +79,8 @@ val listOfMatchActionsUncancelable = listOf(MATCH_ENDED, FRAME_ENDED, FRAME_RESP
 
 
 // Helper functions
-fun MatchAction.getListOfDialogActions(isMatchEnding: Boolean, isNoFrameFinished: Boolean, isFrameMathematicallyOver: Boolean): List<MatchAction> = when (this) {
+fun MatchAction.getListOfDialogActions(isMatchEnding: Boolean = false, isNoFrameFinished: Boolean = false, isFrameMathematicallyOver: Boolean = false): List<MatchAction> = when (this) {
+    INFO_FOUL_DIALOG -> listOf(IGNORE, IGNORE, INFO_FOUL_DIALOG)
     FRAME_RESPOT_BLACK_DIALOG -> listOf(IGNORE, IGNORE, FRAME_RESPOT_BLACK)
     FRAME_LAST_BLACK_FOULED_DIALOG -> listOf(IGNORE, IGNORE, FRAME_LAST_BLACK_FOULED)
     FRAME_RERACK_DIALOG -> listOf(CLOSE_DIALOG, IGNORE, FRAME_RERACK)

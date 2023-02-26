@@ -26,6 +26,7 @@ import com.quickpoint.snookerboard.ui.theme.BrownMedium
 import com.quickpoint.snookerboard.ui.theme.spacing
 import com.quickpoint.snookerboard.utils.BallAdapterType
 import com.quickpoint.snookerboard.utils.Constants
+import timber.log.Timber
 
 @Composable
 fun GameModuleBreaks(frameStack: List<DomainBreak>) {
@@ -77,7 +78,10 @@ fun RowScope.BreakRow(
 @Composable
 fun RowScope.BreakBalls(domainBreak: DomainBreak, ballHeight: Dp, player: Int) {
     val ballsList = when {
-        (domainBreak.breakSize > 0) && domainBreak.player == player -> domainBreak.ballsList(player)
+        (domainBreak.breakSize > 0) && domainBreak.player == player -> {
+            Timber.e("balls are ${domainBreak.ballsList(player)}")
+            domainBreak.ballsList(player)
+        }
         (domainBreak.isLastBallFoul()) && domainBreak.player != player -> domainBreak.ballsList(1 - player)
         else -> emptyList()
     }
@@ -95,7 +99,8 @@ fun RowScope.BreakBalls(domainBreak: DomainBreak, ballHeight: Dp, player: Int) {
                 items(ballsList) { ball ->
                     BallView(
                         modifier = Modifier.size(ballHeight),
-                        ball, BallAdapterType.BREAK
+                        ball = ball,
+                        ballAdapterType = BallAdapterType.BREAK
                     )
                 }
             })

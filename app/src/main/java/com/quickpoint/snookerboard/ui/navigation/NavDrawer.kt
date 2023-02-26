@@ -56,7 +56,7 @@ fun DrawerBody(
                 .clickable { onItemClick(item) }
                 .padding(16.dp)) {
                 Icon(
-                    painter = item.icon,
+                    painter = item.icon!!,
                     contentDescription = item.contentDescription
                 )
                 Spacer(modifier = Modifier.width(16.dp))

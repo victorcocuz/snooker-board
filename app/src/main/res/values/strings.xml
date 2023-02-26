@@ -63,4 +63,6 @@
     <string name="_3">3</string>
     <string name="cd_shot_type_long_button">Long shot type button</string>
     <string name="cd_shot_type_rest_button">Rest shot type button</string>
+    <string name="ball_add_one">+1</string>
+    <string name="ball_remove_one">-1</string>
 </resources>

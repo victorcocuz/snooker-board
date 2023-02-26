@@ -91,7 +91,8 @@ fun ImageView.setBallBackground(item: DomainBall?, ballAdapterType: BallAdapterT
         val ripple = ballAdapterType != BREAK
         setBackgroundResource(
             when (item) {
-                is RED -> if (isBallSelected) R.drawable.ic_ball_red_pressed else if (ripple) R.drawable.ic_ball_red else R.drawable.ic_ball_red_normal
+                // COLOR is for potting extra red
+                is RED, is COLOR -> if (isBallSelected) R.drawable.ic_ball_red_pressed else if (ripple) R.drawable.ic_ball_red else R.drawable.ic_ball_red_normal
                 is YELLOW -> if (isBallSelected) R.drawable.ic_ball_yellow_pressed else if (ripple) R.drawable.ic_ball_yellow else R.drawable.ic_ball_yellow_normal
                 is GREEN -> if (isBallSelected) R.drawable.ic_ball_green_pressed else if (ripple) R.drawable.ic_ball_green else R.drawable.ic_ball_green_normal
                 is BROWN -> if (isBallSelected) R.drawable.ic_ball_brown_pressed else if (ripple) R.drawable.ic_ball_brown else R.drawable.ic_ball_brown_normal
@@ -100,7 +101,7 @@ fun ImageView.setBallBackground(item: DomainBall?, ballAdapterType: BallAdapterT
                 is BLACK -> if (isBallSelected) R.drawable.ic_ball_black_pressed else if (ripple) R.drawable.ic_ball_black else R.drawable.ic_ball_black_normal
                 is FREEBALL -> if (isBallSelected) R.drawable.ic_ball_free_pressed else if (ripple) R.drawable.ic_ball_free else R.drawable.ic_ball_free_normal
                 is NOBALL -> if (ripple) R.drawable.ic_ball_miss else R.drawable.ic_ball_miss_normal
-                else -> if (isBallSelected) R.drawable.ic_ball_red_pressed else if (ripple) R.drawable.ic_ball_white else R.drawable.ic_ball_white_normal
+                else -> if (isBallSelected) R.drawable.ic_ball_white_pressed else if (ripple) R.drawable.ic_ball_white else R.drawable.ic_ball_white_normal
             }
         )
     }

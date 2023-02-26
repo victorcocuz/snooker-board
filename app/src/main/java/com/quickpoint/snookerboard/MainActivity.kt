@@ -24,6 +24,7 @@ import com.quickpoint.snookerboard.domain.objects.DomainPlayer.Player02
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
 import com.quickpoint.snookerboard.ui.components.DefaultSnackbar
 import com.quickpoint.snookerboard.ui.components.GenericSurface
+import com.quickpoint.snookerboard.ui.fragments.game.GameViewModel
 import com.quickpoint.snookerboard.ui.navigation.*
 import com.quickpoint.snookerboard.ui.theme.Green
 import com.quickpoint.snookerboard.ui.theme.SnookerBoardTheme
@@ -51,6 +52,8 @@ fun SnookerBoardApp(activity: MainActivity, splashScreen: androidx.core.splashsc
     val dataStore = DataStore(context)
     val navController = rememberNavController()
     val mainVm: MainViewModel = viewModel(factory = GenericViewModelFactory(dataStore, navController))
+    val gameVm: GameViewModel = viewModel(factory = GenericViewModelFactory(dataStore))
+
     splashScreen.setKeepOnScreenCondition { mainVm.keepSplashScreen.value }
     val systemUiController = rememberSystemUiController()
     val scaffoldState = rememberScaffoldState()
@@ -64,11 +67,17 @@ fun SnookerBoardApp(activity: MainActivity, splashScreen: androidx.core.splashsc
                 scaffoldState = scaffoldState,
                 snackbarHost = { scaffoldState.snackbarHostState },
                 topBar = {
-                    AppBar(navController = navController, onNavigationIconClick = {
-                        coroutineScope.launch {
-                            scaffoldState.drawerState.open()
-                        }
-                    })
+                    AppBar(
+                        navController = navController,
+                        onNavigationIconClick = {
+                            coroutineScope.launch {
+                                scaffoldState.drawerState.open()
+                            }
+                        },
+                        onMenuItemClick = { gameVm.onMenuItemSelected(it)},
+                        getActionItems(),
+                        getActionItemsOverflow()
+                    )
                 },
                 drawerContent = {
                     DrawerHeader()
@@ -98,7 +107,7 @@ fun SnookerBoardApp(activity: MainActivity, splashScreen: androidx.core.splashsc
                             }
                         }
                     }
-                    NavGraph(navController, mainVm, dataStore, purchaseHelper)
+                    NavGraph(navController, mainVm, gameVm, dataStore, purchaseHelper)
                     DefaultSnackbar(
                         snackbarHostState = scaffoldState.snackbarHostState,
                         onDismiss = { scaffoldState.snackbarHostState.currentSnackbarData?.dismiss() },

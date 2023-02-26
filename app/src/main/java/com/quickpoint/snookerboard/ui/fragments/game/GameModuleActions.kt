@@ -2,11 +2,8 @@ package com.quickpoint.snookerboard.ui.fragments.game
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -14,29 +11,49 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.domain.*
+import com.quickpoint.snookerboard.domain.DomainBall.NOBALL
+import com.quickpoint.snookerboard.domain.DomainBall.RED
+import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.domain.objects.Toggle
 import com.quickpoint.snookerboard.ui.components.*
 import com.quickpoint.snookerboard.ui.theme.BrownDark
 import com.quickpoint.snookerboard.ui.theme.spacing
 import com.quickpoint.snookerboard.utils.BallAdapterType
-import timber.log.Timber
 
 @Composable
-fun GameModuleActions(gameVm: GameViewModel, balls: List<DomainBall>) {
+fun GameModuleActions(gameVm: GameViewModel, ballsList: List<DomainBall>) {
+    val domainFrame by gameVm.frameState.collectAsState()
+    var isLongSelected by remember { mutableStateOf(Toggle.LongShot.isEnabled) }
+    var isRestSelected by remember { mutableStateOf(Toggle.RestShot.isEnabled) }
+
+    LaunchedEffect(true) {
+        gameVm.eventSettingsUpdated.collect {
+            isLongSelected = Toggle.LongShot.isEnabled
+            isRestSelected = Toggle.RestShot.isEnabled
+        }
+    }
+
+    LaunchedEffect(domainFrame) {
+        isLongSelected = Toggle.LongShot.isEnabled
+        isRestSelected = Toggle.RestShot.isEnabled
+    }
+
     BoxWithConstraints(Modifier.background(BrownDark)) {
         val ballSize = 48.dp
-        Timber.e("ballSize $ballSize")
-        Column(horizontalAlignment = Alignment.End) {
+        Column {
             ActionButtonsContainer(Modifier.height(ballSize + MaterialTheme.spacing.medium)) {
-                ActionButtonsBalls(
-                    balls,
-                    BallAdapterType.MATCH,
-                    ballSize,
-                    onClick = { domainBall -> gameVm.assignPot(PotType.TYPE_HIT, domainBall) },
-                    onExtraRedClick = {gameVm.assignPot(PotType.TYPE_ADDRED)},
-                    onMissClick = { gameVm.assignPot(PotType.TYPE_MISS) })
+                ActionButtonsIcons(gameVm, isLongSelected, isRestSelected)
             }
-            ActionButtonsContainer { ActionButtonsSecondary(gameVm) }
+            ActionButtonsContainer(Modifier.height(ballSize + MaterialTheme.spacing.medium)) {
+                ActionButtonsBalls(ballsList, ballSize) { potType, domainBall ->
+                    gameVm.assignPot(potType, domainBall)
+                }
+                VerticalDivider(spacing = 8.dp)
+                ActionButtonsBallsExtra(ballsList, ballSize, gameVm.isRemoveColorAvailable()) { potType, domainBall ->
+                    gameVm.assignPot(potType, domainBall)
+                }
+            }
+            HorizontalDivider()
         }
     }
 }
@@ -46,7 +63,7 @@ fun ActionButtonsContainer(
     modifier: Modifier = Modifier,
     text: String = "",
     showDivider: Boolean = true,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.End,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
     content: @Composable RowScope.() -> Unit,
 ) = Column {
     if (showDivider) HorizontalDivider()
@@ -56,104 +73,84 @@ fun ActionButtonsContainer(
         Spacer(Modifier.height(8.dp))
     }
     StandardRow(
-        modifier,
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = horizontalArrangement
     ) { content() }
 }
 
 @Composable
-fun RowScope.ActionButtonsSecondary(gameVm: GameViewModel) {
-    ButtonActionHoist(text = stringResource(R.string.l_game_actions_btn_foul), 0.21f) { gameVm.assignPot(PotType.TYPE_FOUL_ATTEMPT) }
-    ButtonActionHoist(text = stringResource(R.string.l_game_actions_btn_safe), 0.21f) { gameVm.assignPot(PotType.TYPE_SAFE) }
-    ButtonActionHoist(text = stringResource(R.string.l_game_actions_btn_safe_miss), 0.3f) { gameVm.assignPot(PotType.TYPE_SAFE_MISS) }
-    ButtonActionHoist(text = stringResource(R.string.l_game_actions_btn_snooker), 0.28f) { gameVm.assignPot(PotType.TYPE_SNOOKER) }
+fun RowScope.ActionButtonsBalls(
+    ballsList: List<DomainBall>,
+    ballSize: Dp,
+    ballAdapterType: BallAdapterType = BallAdapterType.MATCH,
+    selectionPosition: Long = -1,
+    onClick: (PotType, DomainBall) -> Unit = { _: PotType, _: DomainBall -> },
+) = StandardLazyRow(
+    Modifier.weight(1f),
+    lazyItems = if (ballAdapterType == BallAdapterType.MATCH) ballsList.bindBallOptions() else ballsList.bindFoulBalls(),
+    key = { profile -> profile.ballId }
+) { profile ->
+    BallView(
+        modifier = Modifier.size(ballSize),
+        profile,
+        ballAdapterType,
+        isBallSelected = selectionPosition == profile.ballId,
+        text = if (ballAdapterType == BallAdapterType.MATCH && profile is RED) ballsList.redsRemaining().toString() else ""
+    ) { onClick(TYPE_HIT, profile) }
 }
 
 @Composable
-fun RowScope.ActionButtonsBalls(
-    ballList: List<DomainBall>,
-    ballAdapterType: BallAdapterType,
+fun ActionButtonsBallsExtra(
+    ballsList: List<DomainBall>,
     ballSize: Dp,
-    onClick: (DomainBall) -> Unit,
-    onExtraRedClick: () -> Unit = {},
-    onMissClick: () -> Unit = {},
-    selectionPosition: Long = -1,
-) {
-    LazyRow(
-        Modifier.weight(1f),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        items(
-            items = ballList.bindBallOptions(),
-            key = { profile -> profile.ballId }) { profile ->
-            Box(contentAlignment = Alignment.Center) {
-                BallView(
-                    modifier = Modifier.size(ballSize),
-                    profile,
-                    ballAdapterType,
-                    onClick = { onClick(profile) },
-                    isBallSelected = selectionPosition == profile.ballId
-                )
-                if (profile is DomainBall.RED) TextBallInfo(ballList.redsRemaining().toString())
-            }
-        }
-    }
-    if (ballAdapterType == BallAdapterType.MATCH) {
-        VerticalDivider(spacing = 8.dp)
-        if(ballList.isAddRedAvailable()) Box(contentAlignment = Alignment.Center) {
-            BallView(
-                modifier = Modifier.size(ballSize),
-                DomainBall.RED(),
-                ballAdapterType,
-                onClick = { onExtraRedClick() }
-            )
-            TextBallInfo("+1")
-        }
+    isRemoveColorAvailable: Boolean = false,
+    onClick: (PotType, DomainBall) -> Unit = { _: PotType, _: DomainBall -> },
+) = StandardRow {
+    BallView(modifier = Modifier.size(ballSize), NOBALL(), BallAdapterType.MATCH) { onClick(TYPE_MISS, NOBALL()) }
+    if (ballsList.isAddRedAvailable() || isRemoveColorAvailable) {
         BallView(
             modifier = Modifier.size(ballSize),
-            DomainBall.NOBALL(),
-            ballAdapterType,
-            onClick = { onMissClick() }
-        )
+            ball = ballsList.last(),
+            ballAdapterType = BallAdapterType.MATCH,
+            text = stringResource(if (ballsList.isAddRedAvailable()) R.string.ball_add_one else R.string.ball_remove_one)
+        ) { onClick(if (ballsList.isAddRedAvailable()) TYPE_ADDRED else TYPE_REMOVE_COLOR, NOBALL()) }
     }
 }
 
 @Composable
-fun ActionButtonsToggles(gameVm: GameViewModel, isLongSelected: Boolean, isRestSelected: Boolean) {
-    ToggleButton(
+fun ActionButtonsIcons(gameVm: GameViewModel, isLongSelected: Boolean, isRestSelected: Boolean) {
+    IconButton(
+        text = stringResource(R.string.l_game_actions_btn_foul),
+        painter = painterResource(R.drawable.ic_action_foul)
+    ) { gameVm.assignPot(TYPE_FOUL_ATTEMPT) }
+    IconButton(
+        text = stringResource(R.string.l_game_actions_btn_safe_success),
+        painter = painterResource(R.drawable.ic_action_safe_success),
+    ) { gameVm.assignPot(TYPE_SAFE) }
+    IconButton(
+        text = stringResource(R.string.l_game_actions_btn_safe_miss),
+        painter = painterResource(R.drawable.ic_action_safe_miss),
+    ) { gameVm.assignPot(TYPE_SAFE_MISS) }
+    IconButton(
+        text = stringResource(R.string.l_game_actions_btn_snooker),
+        painter = painterResource(R.drawable.ic_action_snooker),
+    ) { gameVm.assignPot(TYPE_SNOOKER) }
+
+    VerticalDivider(spacing = 8.dp)
+    IconButton(
         text = stringResource(R.string.l_game_actions_btn_long),
-        painter = painterResource(R.drawable.ic_temp_shot_type_long),
+        painter = painterResource(R.drawable.ic_action_shot_type_long),
         isSelected = isLongSelected
     ) {
         Toggle.LongShot.toggleEnabled()
         gameVm.onEventSettingsUpdated()
     }
-    ToggleButton(
+    IconButton(
         text = stringResource(R.string.l_game_actions_btn_rest),
-        painter = painterResource(R.drawable.ic_temp_shot_type_rest),
+        painter = painterResource(R.drawable.ic_action_shot_type_rest),
         isSelected = isRestSelected
     ) {
         Toggle.RestShot.toggleEnabled()
         gameVm.onEventSettingsUpdated()
     }
-}
-
-@Composable
-fun RowScope.ButtonActionHoist(
-    text: String,
-    weight: Float = 1f,
-    height: Dp = 40.dp,
-    isSelected: Boolean = false,
-    isEnabled: Boolean = true,
-    onAction: () -> Unit,
-) {
-    ButtonStandard(
-        Modifier.weight(weight),
-        text = text,
-        height = height,
-        onClick = onAction,
-        isSelected = isSelected,
-        isEnabled = isEnabled
-    )
 }

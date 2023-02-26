@@ -124,7 +124,7 @@ val Typography = Typography(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Bold,
         lineHeight = 16.sp,
-        fontSize = 11.sp,
+        fontSize = 10.sp,
         letterSpacing = 0.5.sp,
         color = Color.White
     )

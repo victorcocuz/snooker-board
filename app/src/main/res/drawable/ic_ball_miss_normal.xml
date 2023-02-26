@@ -9,7 +9,7 @@
     <path
         android:fillAlpha="0.5"
         android:fillColor="@color/ball_shine"
-        android:pathData="M33.21,9.6m-4.8,0a4.8,4.8 0,1 1,9.6 0a4.8,4.8 0,1 1,-9.6 0"
+        android:pathData="M30.576,12.721a3.75,4.5 120,1 0,3.75 -6.495a3.75,4.5 120,1 0,-3.75 6.495z"
         android:strokeAlpha="0.5" />
     <path
         android:fillColor="@color/ball_red_normal"

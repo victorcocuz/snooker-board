@@ -79,7 +79,7 @@ sealed class DomainBall(
 // Checker methods
 fun MutableList<DomainBall>.isLastBall() = size == 1
 fun MutableList<DomainBall>.isLastBlack() = size == 2
-fun MutableList<DomainBall>.isInColors() = size <= 7
+fun MutableList<DomainBall>.isInColors() = if (!Toggle.FreeBall.isEnabled) size <= 7 else size <= 8
 fun MutableList<DomainBall>.isInColorsWithFreeBall() = size <= 8
 fun MutableList<DomainBall>.wasPreviousBallColor() = size in (7..37).filter { it % 2 == 1 }
 fun List<DomainBall>.isThisBallColorAndNotLast() = size in (10..38).filter { it % 2 == 0 }

@@ -23,12 +23,23 @@ fun RowScope.RowHorizontalDivider() = Divider(
 
 
 @Composable
-fun VerticalDivider(spacing: Dp) = Row {
+fun VerticalDivider(spacing: Dp = 0.dp) = Row {
     Spacer(Modifier.width(spacing))
     Divider(
         Modifier
             .fillMaxHeight()
-            .width(1.dp), color = Beige
+            .width(MaterialTheme.spacing.border), color = Beige
+    )
+    Spacer(Modifier.width(spacing))
+}
+
+@Composable
+fun HorizontalDivider(spacing: Dp = 0.dp) = Column {
+    Spacer(Modifier.width(spacing))
+    Divider(
+        Modifier
+            .fillMaxWidth()
+            .height(MaterialTheme.spacing.border), color = Beige
     )
     Spacer(Modifier.width(spacing))
 }

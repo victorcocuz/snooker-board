@@ -17,6 +17,8 @@ val listOfAdvancedShowablePotTypes = listOf(TYPE_HIT, TYPE_FOUL, TYPE_FREE, TYPE
 val listOfPotTypesPointsAdding = listOf(TYPE_HIT, TYPE_FREE, TYPE_ADDRED)
 val listOfPotTypesPointGenerating = listOfPotTypesPointsAdding.plus(TYPE_FOUL)
 val listOfStandardShowablePotTypes = listOfPotTypesPointGenerating.plus(TYPE_REMOVE_RED)
+val listOfPotTypesAddingRemovingBalls = listOf(TYPE_ADDRED, TYPE_REMOVE_RED, TYPE_REMOVE_COLOR)
+val listOfStandardShowablePotTypes2 = listOfPotTypesPointGenerating.plus(listOfPotTypesAddingRemovingBalls)
 val listOfPotTypesForNoBallSnackbar = listOf(TYPE_HIT, TYPE_MISS, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_SNOOKER, TYPE_FOUL, TYPE_FOUL_ATTEMPT)
 
 enum class PotAction { FIRST, SWITCH, CONTINUE, RETAKE }

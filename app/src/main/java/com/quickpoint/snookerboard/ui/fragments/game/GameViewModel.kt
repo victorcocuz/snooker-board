@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.quickpoint.snookerboard.BuildConfig
 import com.quickpoint.snookerboard.base.Event
-import com.quickpoint.snookerboard.base.ValueKeeperLiveData
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.DomainBall.FREEBALL
 import com.quickpoint.snookerboard.domain.DomainBall.NOBALL
@@ -19,6 +18,8 @@ import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.domain.objects.*
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
 import com.quickpoint.snookerboard.repository.SnookerRepository
+import com.quickpoint.snookerboard.ui.navigation.MenuItem
+import com.quickpoint.snookerboard.ui.navigation.MenuItemIds
 import com.quickpoint.snookerboard.utils.Constants
 import com.quickpoint.snookerboard.utils.JobQueue
 import com.quickpoint.snookerboard.utils.MatchAction
@@ -45,22 +46,15 @@ class GameViewModel(
     private lateinit var jobQueue: JobQueue
 
     // Observables
-    private val _eventGameAction = ValueKeeperLiveData<Event<MatchAction?>>()
-    val eventGameAction: ValueKeeperLiveData<Event<MatchAction?>> = _eventGameAction
+//    private val _eventGameAction = ValueKeeperLiveData<Event<MatchAction?>>()
+//    val eventGameAction: ValueKeeperLiveData<Event<MatchAction?>> = _eventGameAction
 
     private val _eventAction = MutableSharedFlow<MatchAction?>()
     val eventAction = _eventAction.asSharedFlow()
     fun onEventGameAction(matchAction: MatchAction?, queue: Boolean = false): Boolean {
-        if (queue) jobQueue.submit {
-            _eventGameAction.postValue(Event(matchAction))
-            viewModelScope.launch {
-                _eventAction.emit(matchAction)
-            }
-        } else {
-            _eventGameAction.postValue(Event(matchAction))
-            viewModelScope.launch {
-                _eventAction.emit(matchAction)
-            }
+        viewModelScope.launch {
+            if (queue) jobQueue.submit { _eventAction.emit(matchAction) }
+            else _eventAction.emit(matchAction)
         }
         return matchAction != null
     }
@@ -216,5 +210,17 @@ class GameViewModel(
         val body = "${Settings.getAsText()} \n\n $json \n\n $logs"
         Timber.e(json)
         context.sendEmail(arrayOf(BuildConfig.ADMIN_EMAIL), Constants.EMAIL_SUBJECT_LOGS, body)
+    }
+
+    fun onMenuItemSelected(menuItem: MenuItem) {
+        when (menuItem.id) {
+            MenuItemIds.ID_MENU_ITEM_LOG -> onEventGameAction(FRAME_LOG_ACTIONS_DIALOG)
+            MenuItemIds.ID_MENU_ITEM_UNDO -> if (frameStack.isFrameInProgress()) assignPot(null) else onEventGameAction(SNACK_UNDO)
+            MenuItemIds.ID_MENU_ITEM_RERACK -> onEventGameAction(if (frameStack.isFrameInProgress()) FRAME_RERACK_DIALOG else SNACK_FRAME_RERACK_DIALOG)
+            MenuItemIds.ID_MENU_ITEM_CONCEDE_FRAME -> onEventGameAction(if (!score.isFrameEqual()) FRAME_ENDING_DIALOG else SNACK_FRAME_ENDING_DIALOG)
+            MenuItemIds.ID_MENU_ITEM_CONCEDE_MATCH -> onEventGameAction(if (!score.isFrameAndMatchEqual()) MATCH_ENDING_DIALOG else SNACK_MATCH_ENDING_DIALOG)
+            MenuItemIds.ID_MENU_ITEM_CANCEL_MATCH -> onEventGameAction(if (score.isMatchInProgress()) MATCH_CANCEL_DIALOG else MATCH_CANCEL)
+            else -> {}
+        }
     }
 }

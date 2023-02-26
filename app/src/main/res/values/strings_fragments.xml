@@ -1,8 +1,8 @@
 <resources>
 
     <!-- Actions -->
-    <string name="l_game_actions_btn_safe">SAFE</string>
-    <string name="l_game_actions_btn_safe_miss">SAFE MISS</string>
+    <string name="l_game_actions_btn_safe_success">SAFE</string>
+    <string name="l_game_actions_btn_safe_miss">UNSAFE</string>
     <string name="l_game_actions_btn_snooker">SNOOKER</string>
     <string name="l_game_actions_btn_ball_miss">MISS</string>
     <string name="l_game_actions_btn_foul">FOUL</string>

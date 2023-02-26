@@ -1,70 +1,57 @@
 package com.quickpoint.snookerboard.ui.fragments.gamedialogs
 
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import com.quickpoint.snookerboard.R
+import com.quickpoint.snookerboard.base.EventObserver
+import com.quickpoint.snookerboard.databinding.FragmentDialogGenBinding
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.ui.components.ButtonStandard
 import com.quickpoint.snookerboard.ui.components.TextParagraph
 import com.quickpoint.snookerboard.ui.components.TextSubtitle
+import com.quickpoint.snookerboard.ui.fragments.game.GameFragment
 import com.quickpoint.snookerboard.ui.fragments.game.GameViewModel
 import com.quickpoint.snookerboard.ui.fragments.rules.RuleSelectionItem
 import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.*
 
-//class GenericDialogFragment : DialogFragment() {
-//    private val dialogVm: DialogViewModel by activityViewModels()
-//    private var gameVm: GameViewModel? = null
-//    private lateinit var matchAction: MatchAction
-//
-//    override fun onCreateView(
-//        inflater: LayoutInflater, container: ViewGroup?,
-//        savedInstanceState: Bundle?,
-//    ): View {
-//        val binding: FragmentDialogGenBinding =
-//            DataBindingUtil.inflate(inflater, R.layout.fragment_dialog_gen, container, false)
-//
-//        if (requireParentFragment().childFragmentManager.fragments[0] is GameFragment)
-//            gameVm = ViewModelProvider(requireParentFragment().childFragmentManager.fragments[0])[GameViewModel::class.java]
-//
-//        // Observers
-//        dialogVm.eventDialogAction.observe(viewLifecycleOwner, EventObserver { action ->
-//            matchAction = action
-//            dismiss() // Close dialog once a match action as been clicked on
-//        })
-//
-//        return binding.root
-//    }
-//
-//    override fun onDestroy() { // Pass action back here to avoid crash during navigation
-//        super.onDestroy()
-//        if (this::matchAction.isInitialized) gameVm?.onEventGameAction(
-//            matchAction, when (matchAction) {
-//                MATCH_CANCEL, FRAME_RERACK, FRAME_START_NEW -> true
-//                else -> false
-//            }
-//        )
-//    }
-//}
-
 @Composable
-fun DialogGeneric(dialogVm: DialogViewModel) {
+fun DialogGeneric(dialogVm: DialogViewModel, gameVm: GameViewModel? = null) {
+    val matchActions by dialogVm.matchActions.collectAsState()
+
+    LaunchedEffect(key1 = true) {
+        dialogVm.eventDialogAction.collect { matchAction ->
+            gameVm?.onEventGameAction(
+                matchAction, when (matchAction) {
+                    MATCH_CANCEL, FRAME_RERACK, FRAME_START_NEW -> true
+                    else -> false
+                }
+            )
+        }
+    }
     if (dialogVm.isGenericDialogShown) {
         FragmentDialogGeneric(
-            matchActions = listOf(IGNORE, IGNORE, INFO_FOUL_DIALOG),
+            gameVm = gameVm,
+            matchActions = matchActions,
             onDismiss = { dialogVm.onDismissGenericDialog() },
-            onConfirm = { dialogVm.onEventDialogAction(it) }
+            onConfirm = { matchAction -> dialogVm.onEventDialogAction(matchAction) }
         )
     }
 }
@@ -72,7 +59,7 @@ fun DialogGeneric(dialogVm: DialogViewModel) {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FragmentDialogGeneric(
-    gameVm: GameViewModel? = null,
+    gameVm: GameViewModel?,
     matchActions: List<MatchAction>,
     onDismiss: () -> Unit,
     onConfirm: (MatchAction) -> Unit,
@@ -114,8 +101,15 @@ fun FragmentDialogGeneric(
                             ButtonGenericDialogHoist(onAction = { onConfirm(matchActions[0]) }, text = "No")
                         if (matchActions[1] == MATCH_ENDED_DISCARD_FRAME)
                             ButtonGenericDialogHoist(onAction = { onConfirm(matchActions[1]) }, text = getDialogGameBText(matchActions[1]))
-                        if (!(matchActions[1] !in listOf(MATCH_ENDED_DISCARD_FRAME, IGNORE) && domainFrame?.value?.score?.isFrameEqual() == true))
-                            ButtonGenericDialogHoist(onAction = { onConfirm(matchActions[2]) }, text = getDialogGameCText(matchActions[1], matchActions[2]))
+                        if (!(matchActions[1] !in listOf(
+                                MATCH_ENDED_DISCARD_FRAME,
+                                IGNORE
+                            ) && domainFrame?.value?.score?.isFrameEqual() == true)
+                        )
+                            ButtonGenericDialogHoist(
+                                onAction = { onConfirm(matchActions[2]) },
+                                text = getDialogGameCText(matchActions[1], matchActions[2])
+                            )
                     })
             }
         }
@@ -123,7 +117,7 @@ fun FragmentDialogGeneric(
 }
 
 @Composable
-fun ButtonGenericDialogHoist(text: String, onAction: () -> Unit, ) {
+fun ButtonGenericDialogHoist(text: String, onAction: () -> Unit) {
     ButtonStandard(text = text, onClick = { onAction() })
 }
 

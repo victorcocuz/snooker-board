@@ -19,6 +19,7 @@ data class Spacing(
     val extraLarge: Dp = 64.dp,
 
     val btnHeight: Dp =  40.dp,
+    val ballSize: Dp = 48.dp,
 
     val breakTextInfo: Dp = 40.dp,
 )

@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.ScreenMain
 import com.quickpoint.snookerboard.billing.PurchaseHelper
+import com.quickpoint.snookerboard.ui.fragments.game.GameViewModel
 import com.quickpoint.snookerboard.ui.fragments.game.ScreenGame
 import com.quickpoint.snookerboard.ui.fragments.navdrawer.*
 import com.quickpoint.snookerboard.ui.fragments.rules.ScreenRules
@@ -17,6 +18,7 @@ import com.quickpoint.snookerboard.utils.DataStore
 fun NavGraph(
     navController: NavHostController,
     mainVm: MainViewModel,
+    gameVm: GameViewModel,
     dataStore: DataStore,
     purchaseHelper: PurchaseHelper
 ) {
@@ -30,7 +32,7 @@ fun NavGraph(
             ScreenRules(navController = navController, mainVm = mainVm, dataStore = dataStore)
         }
         composable(route = Screen.Game.route) {
-            ScreenGame(navController = navController, mainVm = mainVm, dataStore = dataStore)
+            ScreenGame(navController = navController, mainVm = mainVm, gameVm = gameVm, dataStore = dataStore)
         }
         composable(route = Screen.Summary.route) {
             ScreenSummary(navController = navController, mainVm = mainVm)

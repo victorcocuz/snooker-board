@@ -4,11 +4,26 @@
     android:viewportWidth="@integer/vp_ball"
     android:viewportHeight="@integer/vp_ball">
     <path
-        android:fillColor="@color/ball_free_normal"
-        android:pathData="M24,24m-24,0a24,24 0,1 1,48 0a24,24 0,1 1,-48 0" />
+        android:fillColor="@color/ball_yellow_normal"
+        android:pathData="M3.2,12a23.94,23.94 0,0 0,-2 19.46L19.09,0.51A24,24 0,0 0,3.2 12Z" />
+    <path
+        android:fillColor="@color/ball_green_normal"
+        android:pathData="M19.09,0.51 L1.2,31.49A24.08,24.08 0,0 0,5.76 39.6L28.39,0.4A24,24 0,0 0,19.09 0.51Z" />
+    <path
+        android:fillColor="@color/ball_brown_normal"
+        android:pathData="M36,3.2A24.07,24.07 0,0 0,28.39 0.4L5.76,39.6A23.92,23.92 0,0 0,12 44.78L36,3.22Z" />
+    <path
+        android:fillColor="@color/ball_blue_normal"
+        android:pathData="M36,3.22 L12,44.78l0,0a24.23,24.23 0,0 0,7.59 2.8L42.24,8.4A23.73,23.73 0,0 0,36 3.22Z" />
+    <path
+        android:fillColor="@color/ball_pink_normal"
+        android:pathData="M19.62,47.6a24.24,24.24 0,0 0,9.3 -0.11l17.88,-31A24,24 0,0 0,42.24 8.4Z" />
+    <path
+        android:fillColor="@color/ball_black_normal"
+        android:pathData="M44.8,36a23.94,23.94 0,0 0,2 -19.46l-17.88,31A24,24 0,0 0,44.8 36Z" />
     <path
         android:fillAlpha="0.5"
         android:fillColor="@color/ball_shine"
-        android:pathData="M33.21,9.6m-4.8,0a4.8,4.8 0,1 1,9.6 0a4.8,4.8 0,1 1,-9.6 0"
+        android:pathData="M30.576,12.721a3.75,4.5 120,1 0,3.75 -6.495a3.75,4.5 120,1 0,-3.75 6.495z"
         android:strokeAlpha="0.5" />
 </vector>

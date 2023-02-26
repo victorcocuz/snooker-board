@@ -5,6 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Snackbar
 import androidx.compose.material.SnackbarHost
@@ -109,6 +111,25 @@ fun StandardRow(
     horizontalArrangement = horizontalArrangement,
     verticalAlignment = verticalAlignment
 ) { content() }
+
+@Composable
+fun <T> StandardLazyRow(
+    modifier: Modifier = Modifier,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+    lazyItems: List<T>,
+    key: ((T) -> Any)?,
+    item: @Composable (item: T) -> Unit
+) = LazyRow(
+    modifier = modifier,
+    horizontalArrangement = horizontalArrangement,
+    verticalAlignment = verticalAlignment
+) {
+    items(items = lazyItems,
+    key = key) {choice ->
+        item(choice)
+    }
+}
 
 @Composable
 fun VerticalGrid(

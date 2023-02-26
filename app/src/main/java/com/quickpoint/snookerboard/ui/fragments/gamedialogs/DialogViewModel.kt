@@ -3,16 +3,18 @@ package com.quickpoint.snookerboard.ui.fragments.gamedialogs
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.quickpoint.snookerboard.base.Event
+import androidx.lifecycle.viewModelScope
 import com.quickpoint.snookerboard.domain.DomainBall
 import com.quickpoint.snookerboard.domain.PotAction
 import com.quickpoint.snookerboard.domain.objects.Toggle
 import com.quickpoint.snookerboard.utils.MatchAction
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class DialogViewModel : ViewModel() {
 
@@ -20,17 +22,21 @@ class DialogViewModel : ViewModel() {
     var isGenericDialogShown by mutableStateOf(false)
         private set
 
-    fun onOpenGenericDialog() {
+    private val _matchActions = MutableStateFlow<List<MatchAction>>(emptyList())
+    val matchActions = _matchActions.asStateFlow()
+    fun onOpenGenericDialog(matchActions: List<MatchAction>) {
         isGenericDialogShown = true
+        _matchActions.value = matchActions
     }
+
     fun onDismissGenericDialog() {
         isGenericDialogShown = false
     }
 
-    private val _eventDialogAction = MutableLiveData<Event<MatchAction>>()
-    val eventDialogAction: LiveData<Event<MatchAction>> = _eventDialogAction
-    fun onEventDialogAction(matchAction: MatchAction) {
-        _eventDialogAction.value = Event(matchAction)
+    private val _eventDialogAction = MutableSharedFlow<MatchAction>()
+    val eventDialogAction = _eventDialogAction.asSharedFlow()
+    fun onEventDialogAction(matchAction: MatchAction) = viewModelScope.launch {
+        _eventDialogAction.emit(matchAction)
         onDismissGenericDialog()
     }
 

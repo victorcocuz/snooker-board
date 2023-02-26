@@ -66,7 +66,7 @@ fun MutableList<DomainBreak>.findMaxBreak(): Int {
 
 
 fun List<DomainBreak>.displayShots(): MutableList<DomainBreak> {
-    val list = mutableListOf<DomainBreak>() // Create a list of pots show within the break rv (SAFE, MISS, REMOVERED are not shown)
+    val list = mutableListOf<DomainBreak>()
     forEach {
         val listOfPotTypes: List<PotType> = if (Toggle.AdvancedBreaks.isEnabled) listOfAdvancedShowablePotTypes else listOfStandardShowablePotTypes
         if (it.pots.last().potType in listOfPotTypes) list.add(it.copy())

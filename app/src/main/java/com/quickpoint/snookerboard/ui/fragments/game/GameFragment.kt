@@ -14,17 +14,16 @@ import androidx.lifecycle.ViewModelProvider
 import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.admob.AdMob
-import com.quickpoint.snookerboard.base.EventObserver
 import com.quickpoint.snookerboard.databinding.FragmentGameBinding
-import com.quickpoint.snookerboard.domain.*
-import com.quickpoint.snookerboard.domain.PotType.TYPE_ADDRED
-import com.quickpoint.snookerboard.domain.PotType.TYPE_REMOVE_COLOR
-import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
-import com.quickpoint.snookerboard.domain.objects.MatchState
+import com.quickpoint.snookerboard.domain.isFrameAndMatchEqual
+import com.quickpoint.snookerboard.domain.isFrameEqual
+import com.quickpoint.snookerboard.domain.isFrameInProgress
+import com.quickpoint.snookerboard.domain.isMatchInProgress
 import com.quickpoint.snookerboard.ui.fragments.gamedialogs.DialogViewModel
-import com.quickpoint.snookerboard.utils.*
+import com.quickpoint.snookerboard.utils.GenericViewModelFactory
 import com.quickpoint.snookerboard.utils.MatchAction.*
-import timber.log.Timber
+import com.quickpoint.snookerboard.utils.onMenuItemLongClickListener
+import com.quickpoint.snookerboard.utils.setItemActive
 
 
 class GameFragment : Fragment() {
@@ -59,63 +58,63 @@ class GameFragment : Fragment() {
         }
 
 //         Observers
-        gameVm.apply {
-            eventGameAction.observe(viewLifecycleOwner, EventObserver { action ->
-                Timber.i("Observed eventFrameAction: $action")
-                when (action) {
-                    // Directly observed from gameVm
-                    TRANSITION_TO_FRAGMENT -> mainVm.turnOffSplashScreen(200)
-                    FRAME_UPDATED -> {
-                        requireActivity().invalidateOptionsMenu() // Reset the menu every time the frame has been updated
-                        Timber.i(getString(R.string.helper_update_frame_info))
-                    }
-                    SNACK_UNDO, SNACK_ADD_RED, SNACK_REMOVE_COLOR, SNACK_FRAME_RERACK_DIALOG,
-                    SNACK_FRAME_ENDING_DIALOG, SNACK_MATCH_ENDING_DIALOG, SNACK_NO_BALL,
-                    -> {
-                    } // snackbar action
-
-                    // Dialogs relating
-//                    FOUL_DIALOG -> navigate(GameFragmentDirections.foulDialogFrag())
-                    FOUL_CONFIRM -> {
-                        gameVm.assignPot(PotType.TYPE_FOUL, dialogVm.ballClicked.value!!, PotAction.FIRST) // Temp Pot Action
-                        dialogVm.onDismissFoulDialog()
-                    }
-                    FRAME_LOG_ACTIONS_DIALOG, FRAME_LAST_BLACK_FOULED_DIALOG, FRAME_RESPOT_BLACK_DIALOG, FRAME_RERACK_DIALOG, FRAME_ENDING_DIALOG, MATCH_ENDING_DIALOG,
-                    MATCH_CANCEL_DIALOG, FRAME_MISS_FORFEIT_DIALOG,
-                    -> {
-                        val actions =
-                            action.getListOfDialogActions(score.isMatchEnding(), score.isNoFrameFinished(), isFrameMathematicallyOver())
-//                        navigate(GameFragmentDirections.genDialogFrag(actions[0], actions[1], actions[2]))
-                    }
-                    FRAME_LOG_ACTIONS -> gameVm.emailLogs(requireContext())
-                    FRAME_FREE_ACTIVE, FRAME_UNDO, FRAME_REMOVE_RED, FRAME_LAST_BLACK_FOULED, FRAME_RESPOT_BLACK -> gameVm.assignPot(action.getPotType())
-                    FRAME_MISS_FORFEIT -> gameVm.onEventGameAction(
-                        action.queryEndFrameOrMatch(
-                            score.isMatchEnding(),
-                            isFrameMathematicallyOver()
-                        )
-                    )
-                    FRAME_TO_END, FRAME_ENDED, MATCH_TO_END, MATCH_ENDED -> gameVm.endFrame(action)
-                    FRAME_RERACK, FRAME_START_NEW -> {
-                        adMob.showInterstitialAd()
-                        gameVm.resetFrame(action)
-                    }
-                    MATCH_ENDED_DISCARD_FRAME -> {
-                        gameVm.deleteCrtFrameFromDb()
-                        gameVm.onEventGameAction(NAV_TO_POST_MATCH)
-                    }
-                    NAV_TO_POST_MATCH -> {
-                        Settings.matchState = MatchState.SUMMARY
-//                        navigate(GameFragmentDirections.summaryFrag(), adMob)
-                    }
-                    MATCH_CANCEL -> {
-                        gameVm.deleteMatchFromDb()
-//                        navigate(GameFragmentDirections.rulesFrag(), adMob)
-                    }
-                    else -> Timber.i("No implementation for observed action $action")
-                }
-            })
-        }
+//        gameVm.apply {
+//            eventGameAction.observe(viewLifecycleOwner, EventObserver { action ->
+//                Timber.i("Observed eventFrameAction: $action")
+//                when (action) {
+//                    // Directly observed from gameVm
+//                    TRANSITION_TO_FRAGMENT -> mainVm.turnOffSplashScreen(200)
+//                    FRAME_UPDATED -> {
+//                        requireActivity().invalidateOptionsMenu() // Reset the menu every time the frame has been updated
+//                        Timber.i(getString(R.string.helper_update_frame_info))
+//                    }
+//                    SNACK_UNDO, SNACK_ADD_RED, SNACK_REMOVE_COLOR, SNACK_FRAME_RERACK_DIALOG,
+//                    SNACK_FRAME_ENDING_DIALOG, SNACK_MATCH_ENDING_DIALOG, SNACK_NO_BALL,
+//                    -> {
+//                    } // snackbar action
+//
+//                    // Dialogs relating
+////                    FOUL_DIALOG -> navigate(GameFragmentDirections.foulDialogFrag())
+//                    FOUL_CONFIRM -> {
+//                        gameVm.assignPot(PotType.TYPE_FOUL, dialogVm.ballClicked.value!!, PotAction.FIRST) // Temp Pot Action
+//                        dialogVm.onDismissFoulDialog()
+//                    }
+//                    FRAME_LOG_ACTIONS_DIALOG, FRAME_LAST_BLACK_FOULED_DIALOG, FRAME_RESPOT_BLACK_DIALOG, FRAME_RERACK_DIALOG, FRAME_ENDING_DIALOG, MATCH_ENDING_DIALOG,
+//                    MATCH_CANCEL_DIALOG, FRAME_MISS_FORFEIT_DIALOG,
+//                    -> {
+//                        val actions =
+//                            action.getListOfDialogActions(score.isMatchEnding(), score.isNoFrameFinished(), isFrameMathematicallyOver())
+////                        navigate(GameFragmentDirections.genDialogFrag(actions[0], actions[1], actions[2]))
+//                    }
+//                    FRAME_LOG_ACTIONS -> gameVm.emailLogs(requireContext())
+//                    FRAME_FREE_ACTIVE, FRAME_UNDO, FRAME_REMOVE_RED, FRAME_LAST_BLACK_FOULED, FRAME_RESPOT_BLACK -> gameVm.assignPot(action.getPotType())
+//                    FRAME_MISS_FORFEIT -> gameVm.onEventGameAction(
+//                        action.queryEndFrameOrMatch(
+//                            score.isMatchEnding(),
+//                            isFrameMathematicallyOver()
+//                        )
+//                    )
+//                    FRAME_TO_END, FRAME_ENDED, MATCH_TO_END, MATCH_ENDED -> gameVm.endFrame(action)
+//                    FRAME_RERACK, FRAME_START_NEW -> {
+//                        adMob.showInterstitialAd()
+//                        gameVm.resetFrame(action)
+//                    }
+//                    MATCH_ENDED_DISCARD_FRAME -> {
+//                        gameVm.deleteCrtFrameFromDb()
+//                        gameVm.onEventGameAction(NAV_TO_POST_MATCH)
+//                    }
+//                    NAV_TO_POST_MATCH -> {
+//                        Settings.matchState = MatchState.SUMMARY
+////                        navigate(GameFragmentDirections.summaryFrag(), adMob)
+//                    }
+//                    MATCH_CANCEL -> {
+//                        gameVm.deleteMatchFromDb()
+////                        navigate(GameFragmentDirections.rulesFrag(), adMob)
+//                    }
+//                    else -> Timber.i("No implementation for observed action $action")
+//                }
+//            })
+//        }
 
         // Menu items - tied to lifecycle owner; The lifecycle state indicates when the menu should be visible
         val menuHost: MenuHost = requireActivity()
@@ -131,10 +130,6 @@ class GameFragment : Fragment() {
                         R.id.menu_item_log -> onEventGameAction(FRAME_LOG_ACTIONS_DIALOG)
                         R.id.menu_item_undo ->
                             if (frameStack.isFrameInProgress()) assignPot(null) else onEventGameAction(SNACK_UNDO)
-                        R.id.menu_item_add_red ->
-                            if (ballStack.isAddRedAvailable()) assignPot(TYPE_ADDRED) else onEventGameAction(SNACK_ADD_RED)
-                        R.id.menu_item_remove_color ->
-                            if (isRemoveColorAvailable()) assignPot(TYPE_REMOVE_COLOR) else onEventGameAction(SNACK_REMOVE_COLOR)
                         R.id.menu_item_rerack ->
                             onEventGameAction(if (frameStack.isFrameInProgress()) FRAME_RERACK_DIALOG else SNACK_FRAME_RERACK_DIALOG)
                         R.id.menu_item_concede_frame ->
@@ -153,8 +148,6 @@ class GameFragment : Fragment() {
             override fun onPrepareMenu(menu: Menu) { // Set the enabled value of menu items to match the match circumstances
                 gameVm.apply { // the menu dropdown is available when frame isn't updating, then apply rules for each button
                     menu.findItem(R.id.menu_item_undo).setItemActive(frameStack.isFrameInProgress())
-                    menu.findItem(R.id.menu_item_add_red).setItemActive(ballStack.isAddRedAvailable())
-                    menu.findItem(R.id.menu_item_remove_color).setItemActive(isRemoveColorAvailable())
                     menu.findItem(R.id.menu_item_rerack).setItemActive(frameStack.isFrameInProgress())
                     menu.findItem(R.id.menu_item_concede_frame).setItemActive(!score.isFrameEqual())
                     menu.findItem(R.id.menu_item_concede_match).setItemActive(!score.isFrameAndMatchEqual())

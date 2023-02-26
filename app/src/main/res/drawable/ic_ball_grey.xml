@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/ball_green_pressed">
+    android:color="@color/ball_free_pressed">
     <item android:id="@+id/ball_free">
         <selector>
             <item
-                android:drawable="@drawable/ic_ball_free_pressed"
+                android:drawable="@drawable/ic_ball_grey_pressed"
                 android:state_selected="true">
             </item>
             <item
-                android:drawable="@drawable/ic_ball_free_normal"
+                android:drawable="@drawable/ic_ball_grey_normal"
                 android:state_selected="false">
             </item>
         </selector>

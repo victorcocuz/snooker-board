@@ -18,11 +18,11 @@ import com.quickpoint.snookerboard.domain.isMatchEnding
 import com.quickpoint.snookerboard.domain.isNoFrameFinished
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
 import com.quickpoint.snookerboard.domain.objects.MatchState
-import com.quickpoint.snookerboard.domain.objects.Toggle
 import com.quickpoint.snookerboard.ui.components.FragmentContent
 import com.quickpoint.snookerboard.ui.components.RowHorizontalDivider
 import com.quickpoint.snookerboard.ui.components.TextSubtitle
 import com.quickpoint.snookerboard.ui.fragments.gamedialogs.DialogFoul
+import com.quickpoint.snookerboard.ui.fragments.gamedialogs.DialogGeneric
 import com.quickpoint.snookerboard.ui.fragments.gamedialogs.DialogViewModel
 import com.quickpoint.snookerboard.ui.theme.spacing
 import com.quickpoint.snookerboard.utils.*
@@ -33,15 +33,15 @@ import timber.log.Timber
 fun ScreenGame(
     navController: NavController,
     mainVm: MainViewModel,
+    gameVm: GameViewModel,
     dataStore: DataStore,
 ) {
-    val gameVm: GameViewModel = viewModel(factory = GenericViewModelFactory(dataStore))
     val dialogVm: DialogViewModel = viewModel(factory = GenericViewModelFactory())
 
     val context = LocalContext.current
     LaunchedEffect(key1 = true) {
-
         gameVm.eventAction.collect { action ->
+            Timber.e("action is $action")
             when (action) {
                 // Directly observed from gameVm
                 TRANSITION_TO_FRAGMENT -> mainVm.turnOffSplashScreen(200)
@@ -69,7 +69,7 @@ fun ScreenGame(
                             gameVm.score.isNoFrameFinished(),
                             gameVm.isFrameMathematicallyOver()
                         )
-//                        navigate(GameFragmentDirections.genDialogFrag(actions[0], actions[1], actions[2]))
+                    dialogVm.onOpenGenericDialog(actions)
                 }
                 FRAME_LOG_ACTIONS -> gameVm.emailLogs(context)
                 FRAME_FREE_ACTIVE, FRAME_UNDO, FRAME_REMOVE_RED, FRAME_LAST_BLACK_FOULED, FRAME_RESPOT_BLACK -> gameVm.assignPot(action.getPotType())
@@ -102,8 +102,7 @@ fun ScreenGame(
     }
 
     val domainFrame by gameVm.frameState.collectAsState()
-    var isLongSelected by remember { mutableStateOf(Toggle.LongShot.isEnabled) }
-    var isRestSelected by remember { mutableStateOf(Toggle.RestShot.isEnabled) }
+
     LaunchedEffect(true) {
         if (Settings.matchState == MatchState.RULES_IDLE) {
             gameVm.resetMatch()
@@ -111,20 +110,15 @@ fun ScreenGame(
         } else mainVm.eventStoredFrame.collect { event ->
             gameVm.loadMatch(event.getContentIfNotHandled())
         }
-        gameVm.eventSettingsUpdated.collect {
-            isLongSelected = Toggle.LongShot.isEnabled
-            isRestSelected = Toggle.RestShot.isEnabled
-        }
     }
 
     var crtPlayer by remember { mutableStateOf(Settings.crtPlayer) }
     LaunchedEffect(domainFrame) {
         crtPlayer = Settings.crtPlayer
-        isLongSelected = Toggle.LongShot.isEnabled
-        isRestSelected = Toggle.RestShot.isEnabled
     }
 
     FragmentContent(paddingValues = PaddingValues(MaterialTheme.spacing.default), withBottomSpacer = false) {
+        DialogGeneric(dialogVm, gameVm)
         DialogFoul(gameVm, dialogVm, mainVm)
         GameModulePlayerNames(crtPlayer)
         GameModuleContainer(
@@ -139,7 +133,7 @@ fun ScreenGame(
                 title = stringResource(R.string.l_game_score_ll_line_module_breaks),
                 spacerSize = 60.dp
             ) { GameModuleBreaks(domainFrame.frameStack) }
-            Row(Modifier.align(Alignment.BottomEnd)) { ActionButtonsToggles(gameVm, isLongSelected, isRestSelected) }
+//            Row(Modifier.align(Alignment.BottomEnd)) { ActionButtonsToggles(gameVm, isLongSelected, isRestSelected) }
         }
         GameModuleActions(gameVm, domainFrame.ballStack)
     }

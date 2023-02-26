@@ -11,10 +11,7 @@ import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.ui.components.ButtonStandardHoist
 import com.quickpoint.snookerboard.ui.components.RulesHandicapLabel
 import com.quickpoint.snookerboard.ui.fragments.gamedialogs.DialogViewModel
-import com.quickpoint.snookerboard.utils.K_INT_MATCH_AVAILABLE_REDS
-import com.quickpoint.snookerboard.utils.K_INT_MATCH_FOUL_MODIFIER
-import com.quickpoint.snookerboard.utils.K_INT_MATCH_HANDICAP_FRAME
-import com.quickpoint.snookerboard.utils.K_INT_MATCH_HANDICAP_MATCH
+import com.quickpoint.snookerboard.utils.*
 
 @Composable
 fun ColumnAdvancedRules(rulesVm: RulesViewModel, dialogVm: DialogViewModel, show: Boolean) {
@@ -36,7 +33,7 @@ fun ColumnAdvancedRules(rulesVm: RulesViewModel, dialogVm: DialogViewModel, show
             },
             contentIcon = {
                 Icon(
-                    modifier = Modifier.clickable { dialogVm.onOpenGenericDialog() },
+                    modifier = Modifier.clickable { dialogVm.onOpenGenericDialog(MatchAction.INFO_FOUL_DIALOG.getListOfDialogActions()) },
                     painter = painterResource(id = R.drawable.ic_temp_info),
                     contentDescription = null
                 )
