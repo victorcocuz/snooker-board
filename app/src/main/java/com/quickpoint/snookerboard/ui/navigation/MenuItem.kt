@@ -9,6 +9,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.quickpoint.snookerboard.R
+import com.quickpoint.snookerboard.domain.isFrameAndMatchEqual
+import com.quickpoint.snookerboard.domain.isFrameEqual
+import com.quickpoint.snookerboard.domain.isFrameInProgress
+import com.quickpoint.snookerboard.ui.fragments.game.GameViewModel
 
 class MenuItem(
     val id: String,
@@ -66,12 +70,13 @@ fun getMenuItems() = listOf(
 )
 
 @Composable
-fun getActionItems() = listOf(
+fun GameViewModel.getActionItems() = listOf(
     MenuItem(
         id = MenuItemIds.ID_MENU_ITEM_UNDO,
         title = stringResource(R.string.menu_item_undo),
         contentDescription = stringResource(R.string.menu_item_undo),
-        imageVector = Icons.Default.Undo
+        imageVector = Icons.Default.Undo,
+        isActive = frameStack.isFrameInProgress()
     ),
     MenuItem(
         id = MenuItemIds.ID_MENU_ITEM_MORE,
@@ -82,24 +87,27 @@ fun getActionItems() = listOf(
 )
 
 @Composable
-fun getActionItemsOverflow() = listOf(
+fun GameViewModel.getActionItemsOverflow() = listOf(
     MenuItem(
         id = MenuItemIds.ID_MENU_ITEM_RERACK,
         title = stringResource(R.string.menu_item_rerack),
         contentDescription = stringResource(R.string.menu_item_rerack),
-        icon = painterResource(R.drawable.ic_temp_action_rerack)
+        icon = painterResource(R.drawable.ic_temp_action_rerack),
+        isActive = frameStack.isFrameInProgress()
     ),
     MenuItem(
         id = MenuItemIds.ID_MENU_ITEM_CONCEDE_FRAME,
         title = stringResource(R.string.menu_item_concede_frame),
         contentDescription = stringResource(R.string.menu_item_concede_frame),
-        icon = painterResource(R.drawable.ic_temp_action_concede_frame)
+        icon = painterResource(R.drawable.ic_temp_action_concede_frame),
+        isActive = !score.isFrameEqual()
     ),
     MenuItem(
         id = MenuItemIds.ID_MENU_ITEM_CONCEDE_MATCH,
         title = stringResource(R.string.menu_item_concede_match),
         contentDescription = stringResource(R.string.menu_item_concede_match),
-        icon = painterResource(R.drawable.ic_temp_action_concede_match)
+        icon = painterResource(R.drawable.ic_temp_action_concede_match),
+        isActive = !score.isFrameAndMatchEqual()
     ),
     MenuItem(
         id = MenuItemIds.ID_MENU_ITEM_CANCEL_MATCH,

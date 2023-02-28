@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.content.res.Configuration
-import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
@@ -16,29 +15,16 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
-import androidx.navigation.NavDirections
-import androidx.navigation.fragment.findNavController
-import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.admob.AdMob
 import com.quickpoint.snookerboard.utils.Constants.EMAIL_BASE_URI
 
 
 // General
-fun Fragment.navigate(directions: NavDirections, adMob: AdMob? = null) {
-    findNavController().navigate(directions)
-}
-
-fun Fragment.toast(message: CharSequence) = Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
 fun Any.asText() = toString()
     .replace("DomainActionLog(description=", Constants.EMPTY_STRING)
@@ -49,29 +35,6 @@ fun Any.asText() = toString()
     .removePrefix("[")
     .removeSuffix("]")
 
-fun MenuItem.setItemActive(isEnabled: Boolean) {
-    icon?.alpha = if (isEnabled) 255 else 120
-    val s = SpannableString(title)
-    s.setSpan(
-        ForegroundColorSpan(
-            if (isEnabled) Color.argb(255, 255, 255, 255)
-            else Color.argb(120, 255, 255, 255)
-        ), 0, s.length, 0
-    )
-    title = s
-}
-
-fun MenuItem.onMenuItemLongClickListener(menu: Menu, function: () -> (Unit)) {
-    if (itemId != R.id.menu_item_more) {
-        setActionView(R.layout.item_action_button)
-        actionView?.findViewById<ImageButton>(R.id.i_action_button)?.setImageDrawable(icon)
-        actionView?.setOnLongClickListener {
-            function()
-            true
-        }
-        actionView?.setOnClickListener { menu.performIdentifierAction(itemId, 0) }
-    }
-}
 
 // Keyboard
 fun Fragment.hideKeyboard() {
@@ -86,10 +49,6 @@ fun Context.hideKeyboard(view: View) {
 }
 
 // Dialog
-fun DialogFragment.setLayoutSizeByFactor(factor: Float) {
-    val width = Resources.getSystem().displayMetrics.widthPixels
-    dialog?.window?.setLayout((width * factor).toInt(), WindowManager.LayoutParams.WRAP_CONTENT)
-}
 
 // Scrolling
 fun Context.getFactoredDimen(factor: Int): Int {
@@ -102,19 +61,10 @@ fun Context.getFactoredDimen(factor: Int): Int {
 }
 
 // Context
-fun Context.lifecycleOwner(): LifecycleOwner? {
-    var curContext = this
-    var maxDepth = 20
-    while (maxDepth-- > 0 && curContext !is LifecycleOwner) {
-        curContext = (curContext as ContextWrapper).baseContext
-    }
-    return if (curContext is LifecycleOwner) curContext
-    else null
-}
 
-tailrec fun Context.activity(): Activity? = when (this) {
+tailrec fun Context.getActivity(): Activity? = when (this) {
     is Activity -> this
-    else -> (this as? ContextWrapper)?.baseContext?.activity()
+    else -> (this as? ContextWrapper)?.baseContext?.getActivity()
 }
 
 fun Context.vibrateOnce() {

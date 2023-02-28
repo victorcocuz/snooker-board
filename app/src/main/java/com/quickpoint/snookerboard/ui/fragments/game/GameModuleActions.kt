@@ -41,6 +41,7 @@ fun GameModuleActions(gameVm: GameViewModel, ballsList: List<DomainBall>) {
     BoxWithConstraints(Modifier.background(BrownDark)) {
         val ballSize = 48.dp
         Column {
+            Spacer(modifier = Modifier.height(8.dp))
             ActionButtonsContainer(Modifier.height(ballSize + MaterialTheme.spacing.medium)) {
                 ActionButtonsIcons(gameVm, isLongSelected, isRestSelected)
             }
@@ -48,12 +49,12 @@ fun GameModuleActions(gameVm: GameViewModel, ballsList: List<DomainBall>) {
                 ActionButtonsBalls(ballsList, ballSize) { potType, domainBall ->
                     gameVm.assignPot(potType, domainBall)
                 }
-                VerticalDivider(spacing = 8.dp)
+//                VerticalDivider(spacing = 8.dp)
                 ActionButtonsBallsExtra(ballsList, ballSize, gameVm.isRemoveColorAvailable()) { potType, domainBall ->
                     gameVm.assignPot(potType, domainBall)
                 }
             }
-            HorizontalDivider()
+//            HorizontalDivider()
         }
     }
 }
@@ -66,7 +67,7 @@ fun ActionButtonsContainer(
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
     content: @Composable RowScope.() -> Unit,
 ) = Column {
-    if (showDivider) HorizontalDivider()
+//    if (showDivider) HorizontalDivider()
     if (text != "") {
         Spacer(Modifier.height(16.dp))
         TextSubtitle(text)
@@ -136,7 +137,7 @@ fun ActionButtonsIcons(gameVm: GameViewModel, isLongSelected: Boolean, isRestSel
         painter = painterResource(R.drawable.ic_action_snooker),
     ) { gameVm.assignPot(TYPE_SNOOKER) }
 
-    VerticalDivider(spacing = 8.dp)
+//    VerticalDivider(spacing = 8.dp)
     IconButton(
         text = stringResource(R.string.l_game_actions_btn_long),
         painter = painterResource(R.drawable.ic_action_shot_type_long),

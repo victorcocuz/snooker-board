@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.quickpoint.snookerboard.BuildConfig
 import com.quickpoint.snookerboard.base.Event
+import com.quickpoint.snookerboard.base.ValueKeeperLiveData
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.DomainBall.FREEBALL
 import com.quickpoint.snookerboard.domain.DomainBall.NOBALL
@@ -46,8 +47,8 @@ class GameViewModel(
     private lateinit var jobQueue: JobQueue
 
     // Observables
-//    private val _eventGameAction = ValueKeeperLiveData<Event<MatchAction?>>()
-//    val eventGameAction: ValueKeeperLiveData<Event<MatchAction?>> = _eventGameAction
+    private val _eventGameAction = ValueKeeperLiveData<Event<MatchAction?>>()
+    val eventGameAction: ValueKeeperLiveData<Event<MatchAction?>> = _eventGameAction
 
     private val _eventAction = MutableSharedFlow<MatchAction?>()
     val eventAction = _eventAction.asSharedFlow()
@@ -213,6 +214,7 @@ class GameViewModel(
     }
 
     fun onMenuItemSelected(menuItem: MenuItem) {
+        Timber.e("menuItem ${menuItem.id}")
         when (menuItem.id) {
             MenuItemIds.ID_MENU_ITEM_LOG -> onEventGameAction(FRAME_LOG_ACTIONS_DIALOG)
             MenuItemIds.ID_MENU_ITEM_UNDO -> if (frameStack.isFrameInProgress()) assignPot(null) else onEventGameAction(SNACK_UNDO)

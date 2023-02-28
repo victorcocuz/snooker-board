@@ -1,10 +1,15 @@
 package com.quickpoint.snookerboard.ui.fragments.summary
 
-import androidx.lifecycle.*
-import com.quickpoint.snookerboard.domain.DomainScore
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.quickpoint.snookerboard.base.Event
+import com.quickpoint.snookerboard.domain.emptyDomainScore
 import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.utils.MatchAction
-import com.quickpoint.snookerboard.base.Event
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class SummaryViewModel(
@@ -17,18 +22,18 @@ class SummaryViewModel(
         _eventSummaryAction.value = Event(matchAction)
     }
 
-    private val _totalsA = MutableLiveData<DomainScore>()
-    val totalsA: LiveData<DomainScore> = _totalsA
+    private val _totalsA = MutableStateFlow(emptyDomainScore)
+    val totalsA = _totalsA.asStateFlow()
 
-    private val _totalsB = MutableLiveData<DomainScore>()
-    val totalsB: LiveData<DomainScore> = _totalsB
+    private val _totalsB = MutableStateFlow(emptyDomainScore)
+    val totalsB = _totalsB.asStateFlow()
 
     val score = snookerRepository.score
 
     init { // Gets the score from repository and stores it in live data within the vm
         viewModelScope.launch {
-            _totalsA.postValue(snookerRepository.getTotals(0))
-            _totalsB.postValue(snookerRepository.getTotals(1))
+            _totalsA.emit(snookerRepository.getTotals(0))
+            _totalsB.emit(snookerRepository.getTotals(1))
         }
     }
 }

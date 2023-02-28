@@ -152,7 +152,7 @@ fun IconButton(
         border = BorderStroke(1.dp, if (isSelected && isEnabled) Beige else Black),
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSelected && isEnabled) Green else CreamBright
+            containerColor = if (isSelected && isEnabled) Green else Beige
         ),
         enabled = isEnabled
     ) {
@@ -204,4 +204,12 @@ fun BallView(
         { it.setBallBackground(ball, ballAdapterType, isBallSelected) }
         TextBallInfo(text)
     }
+}
+
+@Composable
+fun MainButton(text: String, onclick: () -> Unit) = Button(
+    shape = RoundedCornerShape(48.dp),
+    onClick = onclick,
+) {
+    TextSubtitle(text.uppercase())
 }

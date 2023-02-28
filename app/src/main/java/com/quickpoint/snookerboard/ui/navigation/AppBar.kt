@@ -18,8 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.quickpoint.snookerboard.R
+import com.quickpoint.snookerboard.ui.theme.BrownDark
 import com.quickpoint.snookerboard.ui.theme.Transparent
-import com.quickpoint.snookerboard.ui.theme.White
 
 @Composable
 fun AppBar(
@@ -32,23 +32,22 @@ fun AppBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    TopAppBar(title = { Text(text = stringResource(id = R.string.app_name), color = White) },
+    TopAppBar(title = { stringResource(id = R.string.app_name) },
         backgroundColor = Transparent,
         contentColor = MaterialTheme.colorScheme.onBackground,
         elevation = 0.dp,
         navigationIcon = {
             if (currentRoute.isDrawerRoute()) {
                 IconButton(onClick = { navController.navigateUp() }) {
-                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back", tint = White)
+                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back", tint = BrownDark)
                 }
             } else if (currentRoute == Screen.Rules.route) {
                 IconButton(onClick = onNavigationIconClick) {
-                    Icon(imageVector = Icons.Default.Menu, contentDescription = "Toggle drawer", tint = White)
+                    Icon(imageVector = Icons.Default.Menu, contentDescription = "Toggle drawer", tint = BrownDark)
                 }
             }
         },
         actions = {
-            if (currentRoute == Screen.Game.route) {
                 var showMenu by remember { mutableStateOf(false) }
 
                 ActionMenuBody(
@@ -68,7 +67,6 @@ fun AppBar(
                             showMenu = false
                         })
                 }
-            }
         })
 }
 
@@ -84,7 +82,7 @@ fun ActionMenuBody(
             onClick = {
                 if (item.id == MenuItemIds.ID_MENU_ITEM_MORE) onShowMenuClick()
                 else onItemClick(item)
-            }) { Icon(imageVector = item.imageVector!!, contentDescription = item.contentDescription, tint = White) }
+            }) { Icon(imageVector = item.imageVector!!, contentDescription = item.contentDescription, tint = BrownDark) }
     }
 }
 
@@ -97,9 +95,9 @@ fun ActionMenuOverflowBody(
         DropdownMenuItem(
             modifier = Modifier.alpha(if (item.isActive) 1f else 0.5f),
             onClick = { onItemClick(item) }) {
-            Icon(painter = item.icon!!, contentDescription = item.contentDescription, modifier = Modifier.size(24.dp), tint = White)
+            Icon(painter = item.icon!!, contentDescription = item.contentDescription, modifier = Modifier.size(24.dp), tint = BrownDark)
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = item.title, modifier = Modifier.weight(1f), color = White)
+            Text(text = item.title, modifier = Modifier.weight(1f), color = BrownDark)
         }
     }
 }

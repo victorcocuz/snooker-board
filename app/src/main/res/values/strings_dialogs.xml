@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Generic Dialog -->
+    <string name="d_generic_module_actions">Actions</string>
+
+    <string name="d_generic_title_frame_miss_forfeit">Forfeit frame</string>
+    <string name="d_generic_title_match_cancel">Cancel match</string>
+    <string name="d_generic_title_frame_rerack">Rerack</string>
+    <string name="d_generic_title_frame_to_end">Concede frame</string>
+    <string name="d_generic_title_match_to_end">Concede match</string>
+    <string name="d_generic_title_frame_ended">Frame ended</string>
+    <string name="d_generic_title_match_ended">Match ended</string>
+    <string name="d_generic_title_info_foul_dialog">Foul</string>
+    <string name="d_generic_title_last_black_fouled">Info foul</string>
+    <string name="d_generic_title_frame_respot_black">Last black fouled</string>
+    <string name="d_generic_title_frame_log_actions">Actions log</string>
+
+    <string name="d_generic_text_frame_miss_forfeit">If a player commits Foul and a Miss three times in a row while the object ball is fully visible, this results in the frame being automatically lost. If this is the case, please choose to forfeit frame.</string>
+    <string name="d_generic_text_match_cancel">Are you sure you want to cancel the current match? All match progress will be lost.</string>
+    <string name="d_generic_text_frame_rerack">Are you sure you want to rerack? All frame progress will be lost.</string>
+    <string name="d_generic_text_frame_to_end">This frame is still in progress, are you sure you want to end it?</string>
+    <string name="d_generic_text_match_to_end">This match is still in progress, are you sure you want to end it?</string>
+    <string name="d_generic_text_frame_ended">This frame has mathematically ended. Would you like to proceed?</string>
+    <string name="d_generic_text_match_ended">This match has mathematically ended. Would you like to proceed?</string>
+    <string name="d_generic_text_info_foul_dialog">A typical foul in snooker is worth 4 points. You may wish to decrease this value.</string>
+    <string name="d_generic_text_last_black_fouled">There was a foul committed on the last black. According to regulations, the frame is now over.</string>
+    <string name="d_generic_text_frame_respot_black">Looks like you and your opponent are tied at the end of the frame! The black ball will be re-spotted to decide the winner. The player who started the frame will attempt to pot the black first.</string>
+    <string name="d_generic_text_frame_log_actions">If you experienced any issues during this match you can submit an action log, which will be reviewed by the developer. Would you like to submit an action log?</string>
+
+    <string name="d_generic_note_frame_miss_forfeit">NOTE: Please read carefully, this action cannot be undone</string>
+    <string name="d_generic_note_match_tie_if_keep">NOTE: Keeping the current frame will result in a draw</string>
+    <string name="d_generic_note_mitch_tie_if_discard">NOTE: Discarding the current frame will result in a draw</string>
+
+    <string name="d_generic_answer_a_generic">No</string>
+
+    <string name="d_generic_answer_b">Yes &amp; remove this frame</string>
+
+    <string name="d_generic_answer_c_no_action">I understand"</string>
+    <string name="d_generic_answer_c_frame_miss_forfeit">Yes, forfeit the frame</string>
+    <string name="d_generic_answer_c_generic">Yes</string>
+
+    <string name="d_generic_not_implemented">%1$s not implemented</string>
+</resources>

@@ -6,7 +6,6 @@ import com.quickpoint.snookerboard.domain.PotAction.RETAKE
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
 import com.quickpoint.snookerboard.domain.objects.Toggle
-import timber.log.Timber
 
 // The DOMAIN Ball is the simplest game data unit. It stores ball information
 enum class BallType { TYPE_NOBALL, TYPE_WHITE, TYPE_RED, TYPE_YELLOW, TYPE_GREEN, TYPE_BROWN, TYPE_BLUE, TYPE_PINK, TYPE_BLACK, TYPE_COLOR, TYPE_FREEBALL, TYPE_FREEBALLTOGGLE, TYPE_FREEBALLAVAILABLE }
@@ -108,7 +107,6 @@ fun List<DomainBall>?.availablePoints(): Int {
 // Frame methods
 fun MutableList<DomainBall>.resetBalls() {
     clear()
-    Timber.e("availableReds ${Settings.availableReds}")
     addNextBalls(Settings.availableReds * 2 + 7)
 }
 

@@ -5,10 +5,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.quickpoint.snookerboard.domain.*
+import com.quickpoint.snookerboard.domain.DomainBall
+import com.quickpoint.snookerboard.domain.DomainBreak
 import com.quickpoint.snookerboard.domain.PotType.*
+import com.quickpoint.snookerboard.domain.listOfPotTypesPointGenerating
 import com.quickpoint.snookerboard.ui.fragments.game.BallAdapter
-import com.quickpoint.snookerboard.ui.fragments.game.BreakAdapter
 
 @BindingAdapter("setBreakVisibilityBreak", "setBreakVisibilityPlayer")
 fun LinearLayout.setBreakVisibility(crtBreak: DomainBreak, player: Int) {
@@ -51,10 +52,4 @@ fun RecyclerView.bindPotsRv(crtBreak: DomainBreak?, player: Int) {
     crtBreak?.pots?.forEach { if (it.potType in listOfPotTypesPointGenerating) balls.add(it.ball) }
     adapter.submitList(if (crtBreak?.player == player) balls else emptyList())
     visibility = if (adapter.itemCount > 0 || crtBreak?.pots?.lastOrNull()?.potType == TYPE_FOUL) View.VISIBLE else View.GONE
-}
-
-@BindingAdapter("bindBreakData")
-fun RecyclerView.bindBreakRv(breaks: MutableList<DomainBreak>?) = breaks?.let {
-    val adapter = this.adapter as BreakAdapter
-    adapter.submitList(breaks.displayShots())
 }

@@ -1,5 +1,8 @@
 package com.quickpoint.snookerboard.ui.components
 
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.OnBackPressedDispatcher
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,13 +15,16 @@ import androidx.compose.material.Snackbar
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.quickpoint.snookerboard.ui.theme.GreenBright
 import com.quickpoint.snookerboard.ui.theme.GreenBrighter
 import com.quickpoint.snookerboard.ui.theme.spacing
@@ -119,14 +125,16 @@ fun <T> StandardLazyRow(
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     lazyItems: List<T>,
     key: ((T) -> Any)?,
-    item: @Composable (item: T) -> Unit
+    item: @Composable (item: T) -> Unit,
 ) = LazyRow(
     modifier = modifier,
     horizontalArrangement = horizontalArrangement,
     verticalAlignment = verticalAlignment
 ) {
-    items(items = lazyItems,
-    key = key) {choice ->
+    items(
+        items = lazyItems,
+        key = key
+    ) { choice ->
         item(choice)
     }
 }
@@ -184,6 +192,23 @@ fun LazyListState.disableScrolling(scope: CoroutineScope) {
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun GenericDialog(
+    onDismissRequest: () -> Unit,
+    isCancelable: Boolean,
+    content: @Composable ColumnScope.() -> Unit,
+) = Dialog(
+    onDismissRequest = onDismissRequest,
+    properties = DialogProperties(
+        usePlatformDefaultWidth = false,
+        dismissOnBackPress = isCancelable,
+        dismissOnClickOutside = isCancelable
+    )
+) {
+    DialogCard { content() }
+}
+
 @Composable
 fun DialogCard(
     content: @Composable ColumnScope.() -> Unit,
@@ -194,4 +219,46 @@ fun DialogCard(
         .fillMaxWidth(0.95f)
         .border(1.dp, color = Color.Red, shape = RoundedCornerShape(8.dp)),
     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
-) { content() }
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(15.dp),
+        verticalArrangement = Arrangement.spacedBy(25.dp)
+    ) { content() }
+}
+
+@Composable
+fun CentredTextBox(
+    modifier: Modifier = Modifier,
+    content: @Composable BoxScope.() -> Unit,
+) = Box(
+    modifier = modifier.fillMaxHeight(),
+    contentAlignment = Alignment.Center) {
+    content()
+}
+
+@Composable
+fun BackPressHandler(
+    backPressedDispatcher: OnBackPressedDispatcher? =
+        LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher,
+    onBackPressed: () -> Unit
+) {
+    val currentOnBackPressed by rememberUpdatedState(newValue = onBackPressed)
+
+    val backCallback = remember {
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                currentOnBackPressed()
+            }
+        }
+    }
+
+    DisposableEffect(key1 = backPressedDispatcher) {
+        backPressedDispatcher?.addCallback(backCallback)
+
+        onDispose {
+            backCallback.remove()
+        }
+    }
+}

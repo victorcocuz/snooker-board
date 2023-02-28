@@ -1,168 +1,176 @@
 package com.quickpoint.snookerboard.ui.fragments.game
 
-import android.os.Bundle
-import android.view.*
-import androidx.activity.OnBackPressedCallback
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
-import androidx.core.view.forEach
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.admob.AdMob
-import com.quickpoint.snookerboard.databinding.FragmentGameBinding
-import com.quickpoint.snookerboard.domain.isFrameAndMatchEqual
-import com.quickpoint.snookerboard.domain.isFrameEqual
-import com.quickpoint.snookerboard.domain.isFrameInProgress
+import com.quickpoint.snookerboard.ScreenEvents
+import com.quickpoint.snookerboard.admob.showInterstitialAd
+import com.quickpoint.snookerboard.domain.PotType
+import com.quickpoint.snookerboard.domain.isMatchEnding
 import com.quickpoint.snookerboard.domain.isMatchInProgress
+import com.quickpoint.snookerboard.domain.isNoFrameFinished
+import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
+import com.quickpoint.snookerboard.domain.objects.MatchState
+import com.quickpoint.snookerboard.ui.components.BackPressHandler
+import com.quickpoint.snookerboard.ui.components.FragmentContent
+import com.quickpoint.snookerboard.ui.components.RowHorizontalDivider
+import com.quickpoint.snookerboard.ui.components.TextSubtitle
+import com.quickpoint.snookerboard.ui.fragments.gamedialogs.DialogFoul
+import com.quickpoint.snookerboard.ui.fragments.gamedialogs.DialogGeneric
 import com.quickpoint.snookerboard.ui.fragments.gamedialogs.DialogViewModel
-import com.quickpoint.snookerboard.utils.GenericViewModelFactory
+import com.quickpoint.snookerboard.ui.navigation.Screen
+import com.quickpoint.snookerboard.ui.navigation.getActionItems
+import com.quickpoint.snookerboard.ui.navigation.getActionItemsOverflow
+import com.quickpoint.snookerboard.ui.theme.Transparent
+import com.quickpoint.snookerboard.ui.theme.spacing
+import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.*
-import com.quickpoint.snookerboard.utils.onMenuItemLongClickListener
-import com.quickpoint.snookerboard.utils.setItemActive
+import timber.log.Timber
 
+@Composable
+fun ScreenGame(
+    navController: NavController,
+    mainVm: MainViewModel,
+    dataStore: DataStore,
+) {
+    val gameVm: GameViewModel = viewModel(factory = GenericViewModelFactory(dataStore))
+    val dialogVm: DialogViewModel = viewModel(factory = GenericViewModelFactory())
+    val domainFrame by gameVm.frameState.collectAsState()
+    val context = LocalContext.current
 
-class GameFragment : Fragment() {
-    private lateinit var gameVm: GameViewModel
-    private val dialogVm: DialogViewModel by activityViewModels()
-    private val mainVm: MainViewModel by activityViewModels()
-    private lateinit var binding: FragmentGameBinding
+    mainVm.setupActionBarActions(
+        gameVm.getActionItems(),
+        gameVm.getActionItemsOverflow()
+    ) { gameVm.onMenuItemSelected(it) }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        postponeEnterTransition() // Wait for data to load before displaying fragment
-        gameVm = ViewModelProvider(this, GenericViewModelFactory())[GameViewModel::class.java]
+    var crtPlayer by remember { mutableStateOf(Settings.crtPlayer) }
+    LaunchedEffect(domainFrame) {
+        crtPlayer = Settings.crtPlayer
+    }
 
-//         AdMob
-        val adMob = AdMob(this.requireContext())
-        adMob.loadInterstitialAd()
-        adMob.interstitialAdSetContentCallbacks()
+    LaunchedEffect(key1 = true) {
+        if (Settings.matchState == MatchState.RULES_IDLE) {
+            gameVm.resetMatch()
+            Settings.matchState = MatchState.GAME_IN_PROGRESS
+        } else gameVm.loadMatch(mainVm.cachedFrame)
 
-//         Bind view elements
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_game, container, false)
-        binding.apply { // Bind all layouts
-            lifecycleOwner = viewLifecycleOwner
-            fGameLScoreBreakdown.apply {
-                varGameVm = gameVm
-                fGameRvBreak.apply {
-                    adapter = BreakAdapter(requireActivity())
-                    itemAnimator = null
+        gameVm.eventAction.collect { action ->
+            when (action) {
+                // Directly observed from gameVm
+                TRANSITION_TO_FRAGMENT -> mainVm.turnOffSplashScreen(200)
+                FRAME_UPDATED -> Timber.i(context.getString(R.string.helper_update_frame_info))
+                SNACK_UNDO, SNACK_ADD_RED, SNACK_REMOVE_COLOR, SNACK_FRAME_RERACK_DIALOG,
+                SNACK_FRAME_ENDING_DIALOG, SNACK_MATCH_ENDING_DIALOG, SNACK_NO_BALL,
+                -> mainVm.onEmit(ScreenEvents.SnackEvent(action))
+
+                // Concerning dialogs
+                FOUL_DIALOG -> dialogVm.onOpenFoulDialog()
+                FOUL_CONFIRM -> {
+                    gameVm.assignPot(PotType.TYPE_FOUL, dialogVm.ballClicked.value!!, dialogVm.actionClicked.value) // Temp Pot Action
+                    dialogVm.onDismissFoulDialog()
                 }
+                FRAME_LOG_ACTIONS_DIALOG, FRAME_LAST_BLACK_FOULED_DIALOG, FRAME_RESPOT_BLACK_DIALOG, FRAME_RERACK_DIALOG, FRAME_ENDING_DIALOG, MATCH_ENDING_DIALOG,
+                MATCH_CANCEL_DIALOG, FRAME_MISS_FORFEIT_DIALOG,
+                -> {
+                    val actions =
+                        action.getListOfDialogActions(
+                            gameVm.score.isMatchEnding(),
+                            gameVm.score.isNoFrameFinished(),
+                            gameVm.isFrameMathematicallyOver()
+                        )
+                    dialogVm.onOpenGenericDialog(actions)
+                }
+                FRAME_LOG_ACTIONS -> gameVm.emailLogs(context)
+                FRAME_FREE_ACTIVE, FRAME_UNDO, FRAME_REMOVE_RED, FRAME_LAST_BLACK_FOULED, FRAME_RESPOT_BLACK -> gameVm.assignPot(action.getPotType())
+                FRAME_MISS_FORFEIT -> gameVm.onEventGameAction(
+                    action.queryEndFrameOrMatch(
+                        gameVm.score.isMatchEnding(),
+                        gameVm.isFrameMathematicallyOver()
+                    )
+                )
+                FRAME_TO_END, FRAME_ENDED, MATCH_TO_END, MATCH_ENDED -> gameVm.endFrame(action)
+                FRAME_RERACK, FRAME_START_NEW -> {
+                    showInterstitialAd(context)
+                    gameVm.resetFrame(action)
+                }
+                MATCH_ENDED_DISCARD_FRAME -> {
+                    gameVm.deleteCrtFrameFromDb()
+                    gameVm.onEventGameAction(NAV_TO_POST_MATCH)
+                }
+                NAV_TO_POST_MATCH -> {
+                    Settings.matchState = MatchState.SUMMARY
+                    mainVm.onEmit(ScreenEvents.Navigate(Screen.Summary.route))
+
+                }
+                MATCH_CANCEL -> {
+                    gameVm.deleteMatchFromDb()
+                    mainVm.onEmit(ScreenEvents.Navigate(Screen.Rules.route))
+                }
+                else -> Timber.i("No implementation for observed action $action")
             }
         }
-
-//         Observers
-//        gameVm.apply {
-//            eventGameAction.observe(viewLifecycleOwner, EventObserver { action ->
-//                Timber.i("Observed eventFrameAction: $action")
-//                when (action) {
-//                    // Directly observed from gameVm
-//                    TRANSITION_TO_FRAGMENT -> mainVm.turnOffSplashScreen(200)
-//                    FRAME_UPDATED -> {
-//                        requireActivity().invalidateOptionsMenu() // Reset the menu every time the frame has been updated
-//                        Timber.i(getString(R.string.helper_update_frame_info))
-//                    }
-//                    SNACK_UNDO, SNACK_ADD_RED, SNACK_REMOVE_COLOR, SNACK_FRAME_RERACK_DIALOG,
-//                    SNACK_FRAME_ENDING_DIALOG, SNACK_MATCH_ENDING_DIALOG, SNACK_NO_BALL,
-//                    -> {
-//                    } // snackbar action
-//
-//                    // Dialogs relating
-////                    FOUL_DIALOG -> navigate(GameFragmentDirections.foulDialogFrag())
-//                    FOUL_CONFIRM -> {
-//                        gameVm.assignPot(PotType.TYPE_FOUL, dialogVm.ballClicked.value!!, PotAction.FIRST) // Temp Pot Action
-//                        dialogVm.onDismissFoulDialog()
-//                    }
-//                    FRAME_LOG_ACTIONS_DIALOG, FRAME_LAST_BLACK_FOULED_DIALOG, FRAME_RESPOT_BLACK_DIALOG, FRAME_RERACK_DIALOG, FRAME_ENDING_DIALOG, MATCH_ENDING_DIALOG,
-//                    MATCH_CANCEL_DIALOG, FRAME_MISS_FORFEIT_DIALOG,
-//                    -> {
-//                        val actions =
-//                            action.getListOfDialogActions(score.isMatchEnding(), score.isNoFrameFinished(), isFrameMathematicallyOver())
-////                        navigate(GameFragmentDirections.genDialogFrag(actions[0], actions[1], actions[2]))
-//                    }
-//                    FRAME_LOG_ACTIONS -> gameVm.emailLogs(requireContext())
-//                    FRAME_FREE_ACTIVE, FRAME_UNDO, FRAME_REMOVE_RED, FRAME_LAST_BLACK_FOULED, FRAME_RESPOT_BLACK -> gameVm.assignPot(action.getPotType())
-//                    FRAME_MISS_FORFEIT -> gameVm.onEventGameAction(
-//                        action.queryEndFrameOrMatch(
-//                            score.isMatchEnding(),
-//                            isFrameMathematicallyOver()
-//                        )
-//                    )
-//                    FRAME_TO_END, FRAME_ENDED, MATCH_TO_END, MATCH_ENDED -> gameVm.endFrame(action)
-//                    FRAME_RERACK, FRAME_START_NEW -> {
-//                        adMob.showInterstitialAd()
-//                        gameVm.resetFrame(action)
-//                    }
-//                    MATCH_ENDED_DISCARD_FRAME -> {
-//                        gameVm.deleteCrtFrameFromDb()
-//                        gameVm.onEventGameAction(NAV_TO_POST_MATCH)
-//                    }
-//                    NAV_TO_POST_MATCH -> {
-//                        Settings.matchState = MatchState.SUMMARY
-////                        navigate(GameFragmentDirections.summaryFrag(), adMob)
-//                    }
-//                    MATCH_CANCEL -> {
-//                        gameVm.deleteMatchFromDb()
-////                        navigate(GameFragmentDirections.rulesFrag(), adMob)
-//                    }
-//                    else -> Timber.i("No implementation for observed action $action")
-//                }
-//            })
-//        }
-
-        // Menu items - tied to lifecycle owner; The lifecycle state indicates when the menu should be visible
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.menu_game_overflow, menu)
-                menu.forEach { it.onMenuItemLongClickListener(menu) {} }
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                gameVm.apply {
-                    when (menuItem.itemId) {
-                        R.id.menu_item_log -> onEventGameAction(FRAME_LOG_ACTIONS_DIALOG)
-                        R.id.menu_item_undo ->
-                            if (frameStack.isFrameInProgress()) assignPot(null) else onEventGameAction(SNACK_UNDO)
-                        R.id.menu_item_rerack ->
-                            onEventGameAction(if (frameStack.isFrameInProgress()) FRAME_RERACK_DIALOG else SNACK_FRAME_RERACK_DIALOG)
-                        R.id.menu_item_concede_frame ->
-                            onEventGameAction(if (!score.isFrameEqual()) FRAME_ENDING_DIALOG else SNACK_FRAME_ENDING_DIALOG)
-                        R.id.menu_item_concede_match ->
-                            onEventGameAction(if (!score.isFrameAndMatchEqual()) MATCH_ENDING_DIALOG else SNACK_MATCH_ENDING_DIALOG)
-                        R.id.menu_item_cancel_match ->
-                            onEventGameAction(if (score.isMatchInProgress()) MATCH_CANCEL_DIALOG else MATCH_CANCEL)
-                        else -> return false
-                    }
-                }
-                requireActivity().invalidateOptionsMenu() // Reset options menu every time a button is pressed
-                return true
-            }
-
-            override fun onPrepareMenu(menu: Menu) { // Set the enabled value of menu items to match the match circumstances
-                gameVm.apply { // the menu dropdown is available when frame isn't updating, then apply rules for each button
-                    menu.findItem(R.id.menu_item_undo).setItemActive(frameStack.isFrameInProgress())
-                    menu.findItem(R.id.menu_item_rerack).setItemActive(frameStack.isFrameInProgress())
-                    menu.findItem(R.id.menu_item_concede_frame).setItemActive(!score.isFrameEqual())
-                    menu.findItem(R.id.menu_item_concede_match).setItemActive(!score.isFrameAndMatchEqual())
-                }
-            }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-
-        // Handle back button pressing
-        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                gameVm.onEventGameAction(if (gameVm.score.isMatchInProgress()) MATCH_CANCEL_DIALOG else MATCH_CANCEL)
-            }
-        })
-
-        return binding.root
     }
+
+    FragmentContent(paddingValues = PaddingValues(MaterialTheme.spacing.default), withBottomSpacer = false) {
+        DialogGeneric(dialogVm, gameVm)
+        DialogFoul(gameVm, dialogVm, mainVm)
+
+        Column(
+            Modifier
+                .background(Transparent)
+                .padding(8.dp, 0.dp)
+        ) {
+            GameModuleContainer { GameModulePlayerNames(crtPlayer) }
+            Spacer(modifier = Modifier.height(8.dp))
+            GameModuleContainer { GameModuleScore(domainFrame) }
+            GameModuleContainer { GameModuleStatistics(domainFrame.score) }
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+        GameModuleContainer(
+            modifier = Modifier.weight(1f),
+            spacerSize = 60.dp
+        ) { GameModuleBreaks(domainFrame.frameStack) }
+        GameModuleActions(gameVm, domainFrame.ballStack)
+    }
+
+    BackPressHandler { gameVm.onEventGameAction(if (gameVm.score.isMatchInProgress()) MATCH_CANCEL_DIALOG else MATCH_CANCEL) }
 }
+
+@Composable
+fun GameModuleContainer(
+    modifier: Modifier = Modifier,
+    title: String = Constants.EMPTY_STRING,
+    spacerSize: Dp = MaterialTheme.spacing.default,
+    content: @Composable ColumnScope.() -> Unit,
+) = Column(modifier) {
+    if (title != Constants.EMPTY_STRING) ModuleTitle(title)
+    content()
+    Spacer(Modifier.size(spacerSize))
+}
+
+@Composable
+fun ModuleTitle(
+    text: String,
+) = Row(
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(0.dp, 16.dp, 0.dp, 8.dp),
+    verticalAlignment = Alignment.CenterVertically
+) {
+    RowHorizontalDivider()
+    TextSubtitle(text)
+    RowHorizontalDivider()
+}
+
+
 

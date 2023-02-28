@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -18,13 +16,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.gms.ads.MobileAds
+import com.quickpoint.snookerboard.admob.loadInterstitialAd
 import com.quickpoint.snookerboard.billing.PurchaseHelper
 import com.quickpoint.snookerboard.domain.objects.DomainPlayer.Player01
 import com.quickpoint.snookerboard.domain.objects.DomainPlayer.Player02
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
 import com.quickpoint.snookerboard.ui.components.DefaultSnackbar
 import com.quickpoint.snookerboard.ui.components.GenericSurface
-import com.quickpoint.snookerboard.ui.fragments.game.GameViewModel
 import com.quickpoint.snookerboard.ui.navigation.*
 import com.quickpoint.snookerboard.ui.theme.Green
 import com.quickpoint.snookerboard.ui.theme.SnookerBoardTheme
@@ -40,9 +38,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen() // Keep splash screen on until match loading check is complete
         super.onCreate(savedInstanceState) // Create view after installing splash screen
-        setContent {
-            SnookerBoardApp(this, splashScreen)
-        }
+        setContent { SnookerBoardApp(this, splashScreen) }
     }
 }
 
@@ -52,7 +48,10 @@ fun SnookerBoardApp(activity: MainActivity, splashScreen: androidx.core.splashsc
     val dataStore = DataStore(context)
     val navController = rememberNavController()
     val mainVm: MainViewModel = viewModel(factory = GenericViewModelFactory(dataStore, navController))
-    val gameVm: GameViewModel = viewModel(factory = GenericViewModelFactory(dataStore))
+
+    val actionItems by mainVm.actionItems.collectAsState()
+    val actionItemsOverflow by mainVm.actionItemsOverflow.collectAsState()
+    val onMenuItemSelectedClick by mainVm.actionItemOnClick.collectAsState()
 
     splashScreen.setKeepOnScreenCondition { mainVm.keepSplashScreen.value }
     val systemUiController = rememberSystemUiController()
@@ -74,9 +73,9 @@ fun SnookerBoardApp(activity: MainActivity, splashScreen: androidx.core.splashsc
                                 scaffoldState.drawerState.open()
                             }
                         },
-                        onMenuItemClick = { gameVm.onMenuItemSelected(it)},
-                        getActionItems(),
-                        getActionItemsOverflow()
+                        onMenuItemClick = onMenuItemSelectedClick,
+                        actionItems,
+                        actionItemsOverflow
                     )
                 },
                 drawerContent = {
@@ -95,6 +94,7 @@ fun SnookerBoardApp(activity: MainActivity, splashScreen: androidx.core.splashsc
                 Box(modifier = Modifier.padding(paddingValues)) {
                     LaunchedEffect(key1 = true) {
                         MobileAds.initialize(context) // AdMob
+                        loadInterstitialAd(context)
                         mainVm.eventSharedFlow.collect { event ->
                             when (event) {
                                 is ScreenEvents.Navigate -> {
@@ -107,7 +107,7 @@ fun SnookerBoardApp(activity: MainActivity, splashScreen: androidx.core.splashsc
                             }
                         }
                     }
-                    NavGraph(navController, mainVm, gameVm, dataStore, purchaseHelper)
+                    NavGraph(navController, mainVm, dataStore, purchaseHelper)
                     DefaultSnackbar(
                         snackbarHostState = scaffoldState.snackbarHostState,
                         onDismiss = { scaffoldState.snackbarHostState.currentSnackbarData?.dismiss() },

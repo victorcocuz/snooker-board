@@ -8,9 +8,11 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,13 +28,21 @@ import com.quickpoint.snookerboard.ui.theme.BrownMedium
 import com.quickpoint.snookerboard.ui.theme.spacing
 import com.quickpoint.snookerboard.utils.BallAdapterType
 import com.quickpoint.snookerboard.utils.Constants
-import timber.log.Timber
 
 @Composable
 fun GameModuleBreaks(frameStack: List<DomainBreak>) {
+
+    val lazyListState = rememberLazyListState()
+    LaunchedEffect(frameStack.size) {
+        lazyListState.animateScrollToItem(frameStack.size)
+    }
+
     BoxWithConstraints(Modifier.fillMaxSize()) {
         val ballHeight = (maxWidth / 2 - MaterialTheme.spacing.breakTextInfo) / 6
-        LazyColumn(reverseLayout = true) {
+        LazyColumn(
+            reverseLayout = true,
+            state = lazyListState
+        ) {
             items(frameStack.displayShots()) { domainBreak ->
                 StandardRow(Modifier.height(ballHeight * ((domainBreak.pots.size - 1) / 6 + 1) + MaterialTheme.spacing.medium)) {
                     BreakRow(domainBreak, 0) { domainBreak, player ->
@@ -78,10 +88,7 @@ fun RowScope.BreakRow(
 @Composable
 fun RowScope.BreakBalls(domainBreak: DomainBreak, ballHeight: Dp, player: Int) {
     val ballsList = when {
-        (domainBreak.breakSize > 0) && domainBreak.player == player -> {
-            Timber.e("balls are ${domainBreak.ballsList(player)}")
-            domainBreak.ballsList(player)
-        }
+        (domainBreak.breakSize > 0) && domainBreak.player == player -> domainBreak.ballsList(player)
         (domainBreak.isLastBallFoul()) && domainBreak.player != player -> domainBreak.ballsList(1 - player)
         else -> emptyList()
     }
