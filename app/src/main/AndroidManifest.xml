@@ -11,12 +11,13 @@
         android:name="com.quickpoint.snookerboard.SnookerApp"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
-        android:theme="@style/Theme.App.Starting"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:theme="@style/Theme.App.Starting"
         android:usesCleartextTraffic="true"
         tools:ignore="UnusedAttribute">
         <activity

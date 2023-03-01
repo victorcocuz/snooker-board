@@ -1,6 +1,7 @@
 package com.quickpoint.snookerboard.ui.components
 
 import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.base.Event
 import com.quickpoint.snookerboard.domain.DomainBall
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
@@ -27,7 +29,6 @@ import com.quickpoint.snookerboard.ui.fragments.rules.RulesViewModel
 import com.quickpoint.snookerboard.ui.theme.*
 import com.quickpoint.snookerboard.utils.BallAdapterType
 import com.quickpoint.snookerboard.utils.K_INT_MATCH_HANDICAP_FRAME
-import com.quickpoint.snookerboard.utils.setBallBackground
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -203,6 +204,29 @@ fun BallView(
             })
         { it.setBallBackground(ball, ballAdapterType, isBallSelected) }
         TextBallInfo(text)
+    }
+}
+
+fun ImageView.setBallBackground(item: DomainBall?, ballAdapterType: BallAdapterType, isBallSelected: Boolean) {
+    item?.let {
+        // TODO: animate ball changes
+//        if (ballAdapterType == MATCH) startAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_in_short))
+        val ripple = ballAdapterType != BallAdapterType.BREAK
+        setBackgroundResource(
+            when (item) {
+                // COLOR is for potting extra red
+                is DomainBall.RED, is DomainBall.COLOR -> if (isBallSelected) R.drawable.ic_ball_red_pressed else if (ripple) R.drawable.ic_ball_red else R.drawable.ic_ball_red_normal
+                is DomainBall.YELLOW -> if (isBallSelected) R.drawable.ic_ball_yellow_pressed else if (ripple) R.drawable.ic_ball_yellow else R.drawable.ic_ball_yellow_normal
+                is DomainBall.GREEN -> if (isBallSelected) R.drawable.ic_ball_green_pressed else if (ripple) R.drawable.ic_ball_green else R.drawable.ic_ball_green_normal
+                is DomainBall.BROWN -> if (isBallSelected) R.drawable.ic_ball_brown_pressed else if (ripple) R.drawable.ic_ball_brown else R.drawable.ic_ball_brown_normal
+                is DomainBall.BLUE -> if (isBallSelected) R.drawable.ic_ball_blue_pressed else if (ripple) R.drawable.ic_ball_blue else R.drawable.ic_ball_blue_normal
+                is DomainBall.PINK -> if (isBallSelected) R.drawable.ic_ball_pink_pressed else if (ripple) R.drawable.ic_ball_pink else R.drawable.ic_ball_pink_normal
+                is DomainBall.BLACK -> if (isBallSelected) R.drawable.ic_ball_black_pressed else if (ripple) R.drawable.ic_ball_black else R.drawable.ic_ball_black_normal
+                is DomainBall.FREEBALL -> if (isBallSelected) R.drawable.ic_ball_free_pressed else if (ripple) R.drawable.ic_ball_free else R.drawable.ic_ball_free_normal
+                is DomainBall.NOBALL -> if (ripple) R.drawable.ic_ball_miss else R.drawable.ic_ball_miss_normal
+                else -> if (isBallSelected) R.drawable.ic_ball_white_pressed else if (ripple) R.drawable.ic_ball_white else R.drawable.ic_ball_white_normal
+            }
+        )
     }
 }
 

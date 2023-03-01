@@ -138,7 +138,7 @@ fun ActionButtonsIcons(gameVm: GameViewModel, isLongSelected: Boolean, isRestSel
     ) { gameVm.assignPot(TYPE_SNOOKER) }
 
 //    VerticalDivider(spacing = 8.dp)
-    IconButton(
+    if (Toggle.AdvancedStatistics.isEnabled)  IconButton(
         text = stringResource(R.string.l_game_actions_btn_long),
         painter = painterResource(R.drawable.ic_action_shot_type_long),
         isSelected = isLongSelected
@@ -146,7 +146,7 @@ fun ActionButtonsIcons(gameVm: GameViewModel, isLongSelected: Boolean, isRestSel
         Toggle.LongShot.toggleEnabled()
         gameVm.onEventSettingsUpdated()
     }
-    IconButton(
+    if (Toggle.AdvancedStatistics.isEnabled) IconButton(
         text = stringResource(R.string.l_game_actions_btn_rest),
         painter = painterResource(R.drawable.ic_action_shot_type_rest),
         isSelected = isRestSelected

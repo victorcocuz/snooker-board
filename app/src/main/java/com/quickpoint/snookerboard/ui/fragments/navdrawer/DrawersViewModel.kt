@@ -13,8 +13,8 @@ class DrawersViewModel(private val dataStore: DataStore) : ViewModel() {
         context.vibrateOnce()
         when (key) {
             K_BOOL_TOGGLE_ADVANCED_RULES -> dataStore.savePreferences(key, Toggle.AdvancedRules.toggleEnabled())
-            K_BOOL_TOGGLE_ADVANCED_STATISTICS -> dataStore.savePreferences(key, Toggle.AdvancedRules.toggleEnabled())
-            K_BOOL_TOGGLE_ADVANCED_BREAKS -> dataStore.savePreferences(key, Toggle.AdvancedRules.toggleEnabled())
+            K_BOOL_TOGGLE_ADVANCED_STATISTICS -> dataStore.savePreferences(key, Toggle.AdvancedStatistics.toggleEnabled())
+            K_BOOL_TOGGLE_ADVANCED_BREAKS -> dataStore.savePreferences(key, Toggle.AdvancedBreaks.toggleEnabled())
         }
         _eventToggleChange.value = Event(Unit)
     }

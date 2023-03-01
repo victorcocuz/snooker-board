@@ -70,16 +70,6 @@ fun FragmentContent(
 }
 
 @Composable
-fun DialogFragmentColumn(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) = Column(
-    modifier = modifier
-        .fillMaxSize(0.8f)
-        .padding(MaterialTheme.spacing.medium, 0.dp, MaterialTheme.spacing.medium, MaterialTheme.spacing.large)
-) {
-    content()
-    Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
-}
-
-@Composable
 fun DefaultSnackbar(
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
@@ -88,15 +78,11 @@ fun DefaultSnackbar(
     SnackbarHost(
         hostState = snackbarHostState, snackbar = { data ->
             Snackbar(modifier = Modifier.padding(16.dp), content = {
-                androidx.compose.material3.Text(
-                    text = data.message, style = MaterialTheme.typography.bodyMedium
-                )
+                Text(text = data.message, style = MaterialTheme.typography.bodyMedium)
             }, action = {
                 data.actionLabel?.let { actionLabel ->
                     TextButton(onClick = onDismiss) {
-                        androidx.compose.material3.Text(
-                            text = actionLabel, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodyMedium
-                        )
+                        Text(text = actionLabel, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodyMedium)
                     }
                 }
             })
@@ -229,23 +215,12 @@ fun DialogCard(
 }
 
 @Composable
-fun CentredTextBox(
-    modifier: Modifier = Modifier,
-    content: @Composable BoxScope.() -> Unit,
-) = Box(
-    modifier = modifier.fillMaxHeight(),
-    contentAlignment = Alignment.Center) {
-    content()
-}
-
-@Composable
 fun BackPressHandler(
     backPressedDispatcher: OnBackPressedDispatcher? =
         LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     val currentOnBackPressed by rememberUpdatedState(newValue = onBackPressed)
-
     val backCallback = remember {
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -253,12 +228,8 @@ fun BackPressHandler(
             }
         }
     }
-
     DisposableEffect(key1 = backPressedDispatcher) {
         backPressedDispatcher?.addCallback(backCallback)
-
-        onDispose {
-            backCallback.remove()
-        }
+        onDispose { backCallback.remove() }
     }
 }

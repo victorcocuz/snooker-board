@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android' // Compose?
     id 'kotlin-kapt'    // Data binding
-    id 'androidx.navigation.safeargs.kotlin'
+//    id 'androidx.navigation.safeargs.kotlin'
     id 'org.jetbrains.kotlin.android'
 }
 
@@ -10,8 +10,8 @@ android {
     namespace 'com.quickpoint.snookerboard'
     compileSdkVersion 33
     buildFeatures {
-        viewBinding true
-        dataBinding true
+//        viewBinding true
+//        dataBinding true
         compose true
     }
     composeOptions {
@@ -61,8 +61,6 @@ dependencies {
     implementation "androidx.core:core-ktx:$version_core"
     implementation "androidx.appcompat:appcompat:$version_appcompat"
     implementation "androidx.legacy:legacy-support-v4:$version_legacy_support"
-//    implementation "com.google.android.material:material:$version_material"
-    implementation "androidx.constraintlayout:constraintlayout:$version_constraint_layout"
     implementation 'androidx.core:core-ktx:1.9.0'
     testImplementation 'junit:junit:4.13.2'
 

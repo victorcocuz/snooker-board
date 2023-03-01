@@ -36,9 +36,10 @@ fun ScreenRules(
     }
 
     FragmentContent(Modifier.pointerInput(Unit) { detectTapGestures(onTap = { focusManager.clearFocus() }) }) {
+        DialogGeneric(dialogVm)
+
         ColumnBasicRules(rulesVm)
         ColumnAdvancedRules(rulesVm, dialogVm, Toggle.AdvancedRules.isEnabled)
-        DialogGeneric(dialogVm)
         MainButton("Start Match") { rulesVm.startMatchQuery() }
     }
 

@@ -15,10 +15,10 @@ import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.domain.DomainScore
 import com.quickpoint.snookerboard.ui.components.StandardRow
 import com.quickpoint.snookerboard.ui.components.TextSubtitle
+import com.quickpoint.snookerboard.ui.helpers.setPercentage
 import com.quickpoint.snookerboard.ui.theme.Beige
 import com.quickpoint.snookerboard.ui.theme.BrownMedium
 import com.quickpoint.snookerboard.ui.theme.spacing
-import com.quickpoint.snookerboard.utils.setPercentage
 
 @Composable
 fun GameModuleStatistics(score: List<DomainScore>) {

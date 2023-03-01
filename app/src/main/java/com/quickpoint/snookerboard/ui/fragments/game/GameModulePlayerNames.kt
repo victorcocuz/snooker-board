@@ -11,9 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.domain.objects.DomainPlayer
 import com.quickpoint.snookerboard.ui.components.TextSubtitle
 import com.quickpoint.snookerboard.ui.theme.*
+import com.quickpoint.snookerboard.utils.PlayerTagType
+import com.quickpoint.snookerboard.utils.colorTransition
 
 @Composable
 fun GameModulePlayerNames(crtPlayer: Int) = Row(Modifier.fillMaxWidth()) {
@@ -47,4 +50,11 @@ fun RowScope.PlayerNameBox(
 ) {
     TextSubtitle(textTitle, color = Beige)
     TextSubtitle(textSubtitle, color = Beige)
+}
+
+fun setActivePlayer(isActivePlayer: Boolean, activePlayerTag: PlayerTagType) {
+    //todo: Add color transition when changing players
+//    if (activePlayerTag == STATISTICS) setBackgroundColor(ContextCompat.getColor(context, R.color.transparent))
+//    else
+    colorTransition(isActivePlayer, if (isActivePlayer) R.color.transparent else R.color.brown)
 }

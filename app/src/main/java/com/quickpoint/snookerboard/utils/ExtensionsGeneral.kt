@@ -1,7 +1,5 @@
 package com.quickpoint.snookerboard.utils
 
-import android.animation.ArgbEvaluator
-import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
@@ -9,7 +7,6 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Rect
-import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.VibrationEffect
@@ -19,7 +16,6 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.annotation.ColorRes
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.quickpoint.snookerboard.utils.Constants.EMAIL_BASE_URI
 
@@ -105,26 +101,28 @@ fun View.removeFocusAndHideKeyboard(context: Context, event: MotionEvent) {
     }
 }
 
-fun LinearLayout.colorTransition(isActivePlayer: Boolean, @ColorRes endColor: Int, delay: Long = 200L) {
+
+fun colorTransition(isActivePlayer: Boolean, @ColorRes endColor: Int, delay: Long = 200L) {
+//todo  add color transition, revise this method
     var colorFrom = Color.TRANSPARENT
-    if (background is ColorDrawable)
-        colorFrom = (background as ColorDrawable).color
-    val colorTo = ContextCompat.getColor(context, endColor)
-    val colorAnimation: ValueAnimator = ValueAnimator.ofObject(ArgbEvaluator(), colorFrom, colorTo)
-    colorAnimation.apply {
-        duration = delay
-        addUpdateListener {
-            if (it.animatedValue is Int) {
-                val color = it.animatedValue as Int
-                setBackgroundColor(color)
-            }
-        }
-        start()
-    }
-    for (i in 0 until childCount) {
-        getChildAt(i).animate().apply {
-            duration = delay
-            alpha(if (isActivePlayer) 1F else 0.5F)
-        }
-    }
+//    if (background is ColorDrawable)
+//        colorFrom = (background as ColorDrawable).color
+//    val colorTo = ContextCompat.getColor(context, endColor)
+//    val colorAnimation: ValueAnimator = ValueAnimator.ofObject(ArgbEvaluator(), colorFrom, colorTo)
+//    colorAnimation.apply {
+//        duration = delay
+//        addUpdateListener {
+//            if (it.animatedValue is Int) {
+//                val color = it.animatedValue as Int
+//                setBackgroundColor(color)
+//            }
+//        }
+//        start()
+//    }
+//    for (i in 0 until childCount) {
+//        getChildAt(i).animate().apply {
+//            duration = delay
+//            alpha(if (isActivePlayer) 1F else 0.5F)
+//        }
+//    }
 }

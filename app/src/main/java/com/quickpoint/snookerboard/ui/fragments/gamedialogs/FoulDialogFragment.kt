@@ -15,6 +15,7 @@ import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.ScreenEvents
 import com.quickpoint.snookerboard.domain.DomainBall
+import com.quickpoint.snookerboard.domain.DomainFrame
 import com.quickpoint.snookerboard.domain.PotAction
 import com.quickpoint.snookerboard.domain.maxRemoveReds
 import com.quickpoint.snookerboard.domain.objects.Toggle
@@ -27,7 +28,6 @@ import com.quickpoint.snookerboard.utils.BallAdapterType
 import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.MatchAction.*
 import com.quickpoint.snookerboard.utils.getGenericDialogTitleText
-import com.quickpoint.snookerboard.utils.onChangeListener
 
 @Composable
 fun DialogFoul(gameVm: GameViewModel, dialogVm: DialogViewModel, mainVm: MainViewModel) {
@@ -58,91 +58,26 @@ fun FragmentDialogFoul(
         onDismissRequest = { onDismiss() },
         isCancelable = isCancelable
     ) {
-            var isLongSelected by remember { mutableStateOf(Toggle.LongShot.isEnabled) }
-            var isRestSelected by remember { mutableStateOf(Toggle.RestShot.isEnabled) }
-            var isFreeBallSelected by remember { mutableStateOf(Toggle.FreeBall.isEnabled) }
-            LaunchedEffect(true) {
-                gameVm.eventSettingsUpdated.collect {
-                    isLongSelected = Toggle.LongShot.isEnabled
-                    isRestSelected = Toggle.RestShot.isEnabled
-                    isFreeBallSelected = Toggle.FreeBall.isEnabled
-                }
+        TextSubtitle(getGenericDialogTitleText(FOUL_DIALOG, FOUL_DIALOG))
+        FoulDialogActions(dialogVm, gameVm.ballStack)
+        FoulDialogPotAction(dialogVm, domainFrame, actionClicked)
+        if (domainFrame.ballStack.maxRemoveReds() > 0)
+            ActionButtonsContainer(text = stringResource(R.string.f_dialog_foul_tv_reds_label)) {
+                RedsPottedOnFoulSlider(dialogReds, domainFrame.ballStack.maxRemoveReds().toFloat()) { dialogVm.onDialogReds(it) }
             }
+        FoulDialogOtherActions(gameVm, domainFrame, actionClicked)
 
-            TextSubtitle(getGenericDialogTitleText(FOUL_DIALOG, FOUL_DIALOG))
-            FoulDialogActions(dialogVm, gameVm.ballStack)
-            ActionButtonsContainer(text = stringResource(R.string.f_dialog_foul_tv_action_label)) {
-                ButtonActionHoist(
-                    text = stringResource(R.string.f_dialog_foul_btn_continue),
-                    height = 56.dp,
-                    isSelected = actionClicked == PotAction.SWITCH
-                ) { dialogVm.onActionClicked(PotAction.SWITCH) }
-                Spacer(Modifier.width(8.dp))
-                ButtonActionHoist(
-                    text = stringResource(R.string.f_dialog_foul_btn_force_continue),
-                    height = 56.dp,
-                    isSelected = actionClicked == PotAction.CONTINUE,
-                    isEnabled = domainFrame.isFoulAndAMiss()
-                ) { dialogVm.onActionClicked(PotAction.CONTINUE) }
-                Spacer(Modifier.width(8.dp))
-                ButtonActionHoist(
-                    text = stringResource(R.string.f_dialog_foul_btn_force_retake),
-                    height = 56.dp,
-                    isSelected = actionClicked == PotAction.RETAKE,
-                    isEnabled = domainFrame.isFoulAndAMiss()
-                ) { dialogVm.onActionClicked(PotAction.RETAKE) }
+        ActionButtonsContainer(Modifier.fillMaxWidth(), showDivider = false)
+        {
+            ButtonStandard(text = stringResource(R.string.f_dialog_foul_btn_cancel)) { onDismiss() }
+            ButtonStandard(text = stringResource(R.string.f_dialog_foul_btn_submit)) {
+                if (dialogVm.foulIsValid()) {
+                    repeat(dialogVm.eventDialogReds.value) { gameVm.onEventGameAction(FRAME_REMOVE_RED, true) }
+                    gameVm.onEventGameAction(FOUL_CONFIRM, true)
+                    if (Toggle.FreeBall.isEnabled) gameVm.onEventGameAction(FRAME_FREE_ACTIVE, true)
+                } else mainVm.onEmit(ScreenEvents.SnackEvent(SNACK_INVALID_FOUL))
             }
-            if (domainFrame.ballStack.maxRemoveReds() > 0)
-                ActionButtonsContainer(text = stringResource(R.string.f_dialog_foul_tv_reds_label)) {
-                    RedsPottedOnFoulSlider(dialogReds, domainFrame.ballStack.maxRemoveReds().toFloat()) { dialogVm.onDialogReds(it) }
-                }
-            ActionButtonsContainer(
-                Modifier.fillMaxWidth(),
-                text = stringResource(R.string.f_dialog_foul_tv_shot_type_label),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                val isFreeBallEnabled = actionClicked == PotAction.SWITCH && domainFrame.ballStack.size > 2
-                if (!isFreeBallEnabled) {
-                    Toggle.FreeBall.setDisabled()
-                    gameVm.onEventSettingsUpdated()
-                }
-                IconButton(
-                    text = stringResource(R.string.l_game_actions_btn_free_ball),
-                    painter = painterResource(R.drawable.ic_temp_freeball),
-                    isSelected = isFreeBallSelected,
-                    isEnabled = isFreeBallEnabled
-                ) {
-                    Toggle.FreeBall.toggleEnabled()
-                    gameVm.onEventSettingsUpdated()
-                }
-                IconButton(
-                    text = stringResource(R.string.l_game_actions_btn_long),
-                    painter = painterResource(R.drawable.ic_temp_shot_type_long),
-                    isSelected = isLongSelected
-                ) {
-                    Toggle.LongShot.toggleEnabled()
-                    gameVm.onEventSettingsUpdated()
-                }
-                IconButton(
-                    text = stringResource(R.string.l_game_actions_btn_rest),
-                    painter = painterResource(R.drawable.ic_temp_shot_type_rest),
-                    isSelected = isRestSelected
-                ) {
-                    Toggle.RestShot.toggleEnabled()
-                    gameVm.onEventSettingsUpdated()
-                }
-            }
-            ActionButtonsContainer(Modifier.fillMaxWidth(), showDivider = false)
-            {
-                ButtonStandard(text = stringResource(R.string.f_dialog_foul_btn_cancel)) { onDismiss() }
-                ButtonStandard(text = stringResource(R.string.f_dialog_foul_btn_submit)) {
-                    if (dialogVm.foulIsValid()) {
-                        repeat(dialogVm.eventDialogReds.value) { gameVm.onEventGameAction(FRAME_REMOVE_RED, true) }
-                        gameVm.onEventGameAction(FOUL_CONFIRM, true)
-                        if (Toggle.FreeBall.isEnabled) gameVm.onEventGameAction(FRAME_FREE_ACTIVE, true)
-                    } else mainVm.onEmit(ScreenEvents.SnackEvent(SNACK_INVALID_FOUL))
-                }
-            }
+        }
     }
 }
 
@@ -160,7 +95,7 @@ fun RedsPottedOnFoulSlider(
                 valueFrom = 0f
                 valueTo = rangeTop
                 labelBehavior = LabelFormatter.LABEL_GONE
-                onChangeListener { onValueChange(it) }
+                addOnChangeListener { _, value, _ -> onValueChange(value.toInt()) }
             }
         },
         update = { slider ->
@@ -197,5 +132,88 @@ fun FoulDialogActions(dialogVm: DialogViewModel, balls: List<DomainBall>) {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun FoulDialogPotAction(
+    dialogVm: DialogViewModel,
+    domainFrame: DomainFrame,
+    actionClicked: PotAction,
+) = ActionButtonsContainer(text = stringResource(R.string.f_dialog_foul_tv_action_label)) {
+    ButtonActionHoist(
+        text = stringResource(R.string.f_dialog_foul_btn_continue),
+        height = 56.dp,
+        isSelected = actionClicked == PotAction.SWITCH
+    ) { dialogVm.onActionClicked(PotAction.SWITCH) }
+    Spacer(Modifier.width(8.dp))
+    ButtonActionHoist(
+        text = stringResource(R.string.f_dialog_foul_btn_force_continue),
+        height = 56.dp,
+        isSelected = actionClicked == PotAction.CONTINUE,
+        isEnabled = domainFrame.isFoulAndAMiss()
+    ) { dialogVm.onActionClicked(PotAction.CONTINUE) }
+    Spacer(Modifier.width(8.dp))
+    ButtonActionHoist(
+        text = stringResource(R.string.f_dialog_foul_btn_force_retake),
+        height = 56.dp,
+        isSelected = actionClicked == PotAction.RETAKE,
+        isEnabled = domainFrame.isFoulAndAMiss()
+    ) { dialogVm.onActionClicked(PotAction.RETAKE) }
+}
+
+@Composable
+fun FoulDialogOtherActions(
+    gameVm: GameViewModel,
+    domainFrame: DomainFrame,
+    actionClicked: PotAction,
+) = ActionButtonsContainer(
+    Modifier.fillMaxWidth(),
+    text = stringResource(R.string.f_dialog_foul_tv_shot_type_label),
+    horizontalArrangement = Arrangement.SpaceEvenly
+) {
+
+    val isFreeBallEnabled = actionClicked == PotAction.SWITCH && domainFrame.ballStack.size > 2
+    if (!isFreeBallEnabled) {
+        Toggle.FreeBall.setDisabled()
+        gameVm.onEventSettingsUpdated()
+    }
+
+    var isLongSelected by remember { mutableStateOf(Toggle.LongShot.isEnabled) }
+    var isRestSelected by remember { mutableStateOf(Toggle.RestShot.isEnabled) }
+    var isFreeBallSelected by remember { mutableStateOf(Toggle.FreeBall.isEnabled) }
+
+    LaunchedEffect(true) {
+        gameVm.eventSettingsUpdated.collect {
+            isLongSelected = Toggle.LongShot.isEnabled
+            isRestSelected = Toggle.RestShot.isEnabled
+            isFreeBallSelected = Toggle.FreeBall.isEnabled
+        }
+    }
+
+    IconButton(
+        text = stringResource(R.string.l_game_actions_btn_free_ball),
+        painter = painterResource(R.drawable.ic_temp_freeball),
+        isSelected = isFreeBallSelected,
+        isEnabled = isFreeBallEnabled
+    ) {
+        Toggle.FreeBall.toggleEnabled()
+        gameVm.onEventSettingsUpdated()
+    }
+    if (Toggle.AdvancedStatistics.isEnabled) IconButton(
+        text = stringResource(R.string.l_game_actions_btn_long),
+        painter = painterResource(R.drawable.ic_temp_shot_type_long),
+        isSelected = isLongSelected
+    ) {
+        Toggle.LongShot.toggleEnabled()
+        gameVm.onEventSettingsUpdated()
+    }
+    if (Toggle.AdvancedStatistics.isEnabled) IconButton(
+        text = stringResource(R.string.l_game_actions_btn_rest),
+        painter = painterResource(R.drawable.ic_temp_shot_type_rest),
+        isSelected = isRestSelected
+    ) {
+        Toggle.RestShot.toggleEnabled()
+        gameVm.onEventSettingsUpdated()
     }
 }
