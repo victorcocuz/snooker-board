@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="@color/ball_green_pressed">
-    <item android:id="@+id/ball_free">
+    <item>
         <selector>
             <item
                 android:drawable="@drawable/ic_ball_free_pressed"

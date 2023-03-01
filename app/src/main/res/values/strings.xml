@@ -1,7 +1,6 @@
 <resources>
     <!--General-->
     <string name="app_name">Snooker Board</string>
-    <string name="cd_logo">Logo</string>
 
     <!-- Ad Mob-->
     <string name="admob_id">ca-app-pub-8063036382786622~9725880072</string>
@@ -9,60 +8,28 @@
     <string name="admob_id_interstitial_test">ca-app-pub-3940256099942544/1033173712</string>
 
     <!-- Menu Items -->
-    <string name="menu_action_button">menu_action_button</string>
     <string name="menu_item_more">Main Menu</string>
     <string name="menu_item_log">Submit Issues Log</string>
     <string name="menu_item_undo">Undo</string>
     <string name="menu_item_rerack">Rerack</string>
-    <string name="menu_item_add_red">Pot Extra Red</string>
-    <string name="menu_item_remove_red">Remove Red</string>
-    <string name="menu_item_remove_color">Remove Color</string>
     <string name="menu_item_concede_frame">Concede Frame</string>
     <string name="menu_item_concede_match">Concede Match</string>
     <string name="menu_item_cancel_match">Cancel Match</string>
 
     <!-- Items -->
-    <string name="i_ball_view_btn_ball">Ball to be clicked</string>
 
     <!-- Shared Preferences -->
     <string name="sp_file_key">PREFERENCE_FILE_KEY</string>
     <string name="sp_match_state">matchState</string>
-    <string name="sp_match_name_first_a">matchNameFirstA</string>
-    <string name="sp_match_name_last_a">matchNameLastA</string>
-    <string name="sp_match_name_first_b">matchNameFirstB</string>
-    <string name="sp_match_name_last_b">matchNameLastB</string>
-
-    <string name="sp_match_unique_id">matchUniqueId</string>
-    <string name="sp_match_max_frames_available">matchFrames</string>
-    <string name="sp_match_reds">matchReds</string>
-    <string name="sp_match_foul">matchFoul</string>
-    <string name="sp_match_first_player">matchFirst</string>
-    <string name="sp_match_crt_player">matchCrtPlayer</string>
-    <string name="sp_match_crt_frame">matchCrtFrame</string>
-    <string name="sp_match_max_available_points">matchFrameMax</string>
-    <string name="sp_match_max_counter_retake">matchCounterRetake</string>
-    <string name="sp_match_toggle_freeball">matchToggleFreeball</string>
-    <string name="sp_match_toggle_long">matchToggleLong</string>
-    <string name="sp_match_toggle_rest">matchToggleRest</string>
-    <string name="sp_match_handicap_frame">matchHandicapFrame</string>
-    <string name="sp_match_handicap_match">matchHandicapMatch</string>
-    <string name="sp_match_ongoing_points_without_return">matchOngoingPointsWithoutReturn</string>
-
-    <string name="sp_toggle_advanced_rules">matchToggleAdvancedRules</string>
-    <string name="sp_toggle_advanced_statistics">matchToggleAdvancedStatistics</string>
-    <string name="sp_toggle_advanced_breaks">matchToggleAdvancedBreaks</string>
 
     <!-- Helper   -->
     <string name="empty" />
     <string name="helper_first_line">"+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"</string>
     <string name="helper_update_frame_info">"---------------------------------------------FRAME UPDATED------------------------------------------------"</string>
-    <string name="helper_save_match">"---------------------------------------------MATCH SAVED------------------------------------------------"</string>
     <string name="_0">0</string>
     <string name="_1">1</string>
     <string name="_2">2</string>
     <string name="_3">3</string>
-    <string name="cd_shot_type_long_button">Long shot type button</string>
-    <string name="cd_shot_type_rest_button">Rest shot type button</string>
     <string name="ball_add_one">+1</string>
     <string name="ball_remove_one">-1</string>
 </resources>

@@ -3,7 +3,7 @@ package com.quickpoint.snookerboard.domain.objects
 import com.quickpoint.snookerboard.domain.PotAction
 import com.quickpoint.snookerboard.domain.PotAction.*
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
-import com.quickpoint.snookerboard.domain.objects.MatchState.NONE
+import com.quickpoint.snookerboard.domain.objects.MatchState.RULES_IDLE
 import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.FRAME_START_NEW
 import timber.log.Timber
@@ -15,7 +15,7 @@ sealed class MatchSettings(
 ) {
     object Settings : MatchSettings(null) {
 
-        private var mMatchState: MatchState = NONE
+        private var mMatchState: MatchState = RULES_IDLE
         var matchState: MatchState
             get() = mMatchState
             set(value) {

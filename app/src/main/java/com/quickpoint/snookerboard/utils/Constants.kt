@@ -21,8 +21,6 @@ object Constants {
     const val ID_SCREEN_DRAWER_RULES = "screen_drawer_rules"
     const val ID_SCREEN_DRAWER_SETTINGS = "screen_drawer_settings"
     const val ID_SCREEN_DRAWER_SUPPORT = "screen_drawer_support"
-    const val ID_SCREEN_DIALOG_GENERIC = "screen_dialog_generic"
-    const val ID_SCREEN_DIALOG_FOUL = "screen_dialog_foul"
 
     // Generic
     const val EMPTY_STRING = ""

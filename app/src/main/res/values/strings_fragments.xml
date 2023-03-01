@@ -4,7 +4,6 @@
     <string name="l_game_actions_btn_safe_success">SAFE</string>
     <string name="l_game_actions_btn_safe_miss">UNSAFE</string>
     <string name="l_game_actions_btn_snooker">SNOOKER</string>
-    <string name="l_game_actions_btn_ball_miss">MISS</string>
     <string name="l_game_actions_btn_foul">FOUL</string>
     <string name="l_game_actions_btn_long">LONG</string>
     <string name="l_game_actions_btn_rest">REST</string>
@@ -14,8 +13,6 @@
     <!-- Fragment Rules -->
     <string name="l_rules_main_hint_name_first">First Name</string>
     <string name="l_rules_main_hint_name_last">Last Name</string>
-    <string name="l_rules_main_autofill_name_first">personGivenName</string>
-    <string name="l_rules_main_autofill_name_last">personFamilyName</string>
 
     <string name="l_rules_main_tv_player_a_label">Player 1</string>
     <string name="l_rules_main_tv_player_b_label">Player 2</string>
@@ -37,18 +34,13 @@
     <string name="l_rules_extra_tv_handicap_frame_label">Frame Handicap</string>
     <string name="l_rules_extra_btn_handicap_frame_less">-10</string>
     <string name="l_rules_extra_btn_handicap_frame_more">+10</string>
-    <string name="l_rules_extra_tv_handicap_dash">-</string>
-    <string name="f_rules_btn_game_f">START</string>
 
     <string name="snack_f_rules_no_player">Please add player names to start a new match</string>
     <string name="snack_f_rules_select_no_first">Please select who is breaking first</string>
     <string name="snack_f_rules_handicap_frame_limit">The frame handicap cannot be larger than the number of points in a frame</string>
     <string name="snack_f_rules_handicap_match_limit">The match handicap cannot be larger than the maximum match score</string>
-    <string name="l_rules_extra_btn_foul_modifier_info">Foul Modifier Info</string>
 
     <!-- Fragment Game -->
-    <string name="l_game_score_tv_remaining_label">Remaining</string>
-    <string name="l_game_score_tv_diff_label">Difference</string>
     <string name="l_game_score_tv_snookers_label">Snookers</string>
     <string name="l_game_score_tv_fouls_label">Fouls</string>
     <string name="l_game_score_tv_long_shots_label">Long Shots %</string>
@@ -57,15 +49,11 @@
     <string name="l_game_score_tv_success_percentage_label">Pot Success %</string>
     <string name="l_game_score_tv_safety_percentage_label">Safety Success %</string>
     <string name="l_game_score_tv_break_label">Highest Break</string>
-    <string name="l_game_score_ll_line_module_score">Frame Score</string>
-    <string name="l_game_score_ll_line_module_statistics">Frame Statistics</string>
-    <string name="l_game_score_ll_line_module_breaks">Frame Breakdown</string>
 
     <string name="toast_f_game_no_balls_left">There is no ball left on the table</string>
 
     <string name="snack_f_game_undo">There are no actions to undo</string>
     <string name="snack_f_game_add_red">You can only pot an extra red after potting a red and if enough reds are on the table</string>
-    <string name="snack_f_game_remove_red">You can only remove a red ball before declaring a foul and if there are reds available on the table</string>
     <string name="snack_f_game_remove_color">You can only remove a color ball after playing a freeball, if there are no red balls on the table</string>
     <string name="snack_f_game_rerack">The frame has already been racked</string>
     <string name="snack_f_game_concede_frame">You and your opponent are tied. One must be ahead for the other one to concede frame</string>
@@ -77,7 +65,6 @@
     <string name="f_dialog_foul_tv_action_label">Do you wish to continue?</string>
     <string name="f_dialog_foul_tv_shot_type_label">Any other actions?</string>
     <string name="f_dialog_foul_tv_reds_label">Were there any reds potted?</string>
-    <string name="f_dialog_foul_tv_freeball_label">Was it a freeball?</string>
     <string name="f_dialog_foul_btn_continue">OK, I will play</string>
     <string name="f_dialog_foul_btn_force_continue">Force continue</string>
     <string name="f_dialog_foul_btn_force_retake">Force retake</string>
@@ -93,6 +80,5 @@
     <string name="l_summary_tv_footer_total">Total</string>
     <string name="l_summary_tv_header_frame_id">#</string>
     <string name="l_summary_tv_header_percentage">%</string>
-    <string name="f_summary_btn_home">GO TO MAIN MENU</string>
     <string name="f_summary_game_match_score">(%1$d - %2$d)</string>
 </resources>

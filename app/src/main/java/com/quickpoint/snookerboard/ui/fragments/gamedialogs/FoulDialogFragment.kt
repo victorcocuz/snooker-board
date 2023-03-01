@@ -193,7 +193,7 @@ fun FoulDialogOtherActions(
 
     IconButton(
         text = stringResource(R.string.l_game_actions_btn_free_ball),
-        painter = painterResource(R.drawable.ic_temp_freeball),
+        painter = painterResource(R.drawable.ic_action_shot_type_free),
         isSelected = isFreeBallSelected,
         isEnabled = isFreeBallEnabled
     ) {
@@ -202,7 +202,7 @@ fun FoulDialogOtherActions(
     }
     if (Toggle.AdvancedStatistics.isEnabled) IconButton(
         text = stringResource(R.string.l_game_actions_btn_long),
-        painter = painterResource(R.drawable.ic_temp_shot_type_long),
+        painter = painterResource(R.drawable.ic_action_shot_type_long),
         isSelected = isLongSelected
     ) {
         Toggle.LongShot.toggleEnabled()
@@ -210,7 +210,7 @@ fun FoulDialogOtherActions(
     }
     if (Toggle.AdvancedStatistics.isEnabled) IconButton(
         text = stringResource(R.string.l_game_actions_btn_rest),
-        painter = painterResource(R.drawable.ic_temp_shot_type_rest),
+        painter = painterResource(R.drawable.ic_action_shot_type_rest),
         isSelected = isRestSelected
     ) {
         Toggle.RestShot.toggleEnabled()

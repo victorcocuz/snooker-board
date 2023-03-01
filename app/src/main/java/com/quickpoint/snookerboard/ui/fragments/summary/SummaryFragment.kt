@@ -23,6 +23,7 @@ import com.quickpoint.snookerboard.domain.DomainScore
 import com.quickpoint.snookerboard.domain.emptyDomainScore
 import com.quickpoint.snookerboard.domain.objects.MatchSettings
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings.crtPlayer
+import com.quickpoint.snookerboard.domain.objects.MatchState
 import com.quickpoint.snookerboard.domain.objects.getDisplayFrames
 import com.quickpoint.snookerboard.ui.components.*
 import com.quickpoint.snookerboard.ui.fragments.game.GameModuleContainer
@@ -38,7 +39,8 @@ import com.quickpoint.snookerboard.ui.theme.Black
 import com.quickpoint.snookerboard.ui.theme.BrownDark
 import com.quickpoint.snookerboard.ui.theme.White
 import com.quickpoint.snookerboard.ui.theme.spacing
-import com.quickpoint.snookerboard.utils.*
+import com.quickpoint.snookerboard.utils.GenericViewModelFactory
+import com.quickpoint.snookerboard.utils.StatisticsType
 
 @Composable
 fun ScreenSummary(
@@ -52,6 +54,11 @@ fun ScreenSummary(
     val score: ArrayList<Pair<DomainScore, DomainScore>>? by summaryVm.score.observeAsState()
 
     mainVm.setupActionBarActions(emptyList(), emptyList()) { }
+
+    LaunchedEffect(Unit) {
+        mainVm.turnOffSplashScreen()
+        MatchSettings.Settings.matchState = MatchState.SUMMARY
+    }
 
     val crtPlayer by remember { mutableStateOf(crtPlayer) }
 
@@ -91,7 +98,7 @@ fun ScreenSummary(
 }
 
 fun MainViewModel.navigateToRulesScreen() {
-    // TODO:  deleteMatchFromDb()
+    deleteMatchFromDb()
     onEmit(ScreenEvents.Navigate(Screen.Rules.route))
 }
 

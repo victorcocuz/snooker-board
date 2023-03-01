@@ -20,6 +20,7 @@ import com.quickpoint.snookerboard.domain.isMatchEnding
 import com.quickpoint.snookerboard.domain.isMatchInProgress
 import com.quickpoint.snookerboard.domain.isNoFrameFinished
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
+import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings.crtPlayer
 import com.quickpoint.snookerboard.domain.objects.MatchState
 import com.quickpoint.snookerboard.ui.components.BackPressHandler
 import com.quickpoint.snookerboard.ui.components.FragmentContent
@@ -53,21 +54,17 @@ fun ScreenGame(
         gameVm.getActionItemsOverflow()
     ) { gameVm.onMenuItemSelected(it) }
 
-    var crtPlayer by remember { mutableStateOf(Settings.crtPlayer) }
-    LaunchedEffect(domainFrame) {
-        crtPlayer = Settings.crtPlayer
-    }
-
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(Unit) {
         if (Settings.matchState == MatchState.RULES_IDLE) {
             gameVm.resetMatch()
             Settings.matchState = MatchState.GAME_IN_PROGRESS
         } else gameVm.loadMatch(mainVm.cachedFrame)
 
+//        mainVm.turnOffSplashScreen()
+
         gameVm.eventAction.collect { action ->
             when (action) {
                 // Directly observed from gameVm
-                TRANSITION_TO_FRAGMENT -> mainVm.turnOffSplashScreen(200)
                 FRAME_UPDATED -> Timber.i(context.getString(R.string.helper_update_frame_info))
                 SNACK_UNDO, SNACK_ADD_RED, SNACK_REMOVE_COLOR, SNACK_FRAME_RERACK_DIALOG,
                 SNACK_FRAME_ENDING_DIALOG, SNACK_MATCH_ENDING_DIALOG, SNACK_NO_BALL,
@@ -104,21 +101,22 @@ fun ScreenGame(
                     gameVm.resetFrame(action)
                 }
                 MATCH_ENDED_DISCARD_FRAME -> {
-                    gameVm.deleteCrtFrameFromDb()
+                    mainVm.deleteCrtFrameFromDb()
                     gameVm.onEventGameAction(NAV_TO_POST_MATCH)
                 }
-                NAV_TO_POST_MATCH -> {
-                    Settings.matchState = MatchState.SUMMARY
-                    mainVm.onEmit(ScreenEvents.Navigate(Screen.Summary.route))
-
-                }
+                NAV_TO_POST_MATCH -> mainVm.onEmit(ScreenEvents.Navigate(Screen.Summary.route))
                 MATCH_CANCEL -> {
-                    gameVm.deleteMatchFromDb()
+                    mainVm.deleteMatchFromDb()
                     mainVm.onEmit(ScreenEvents.Navigate(Screen.Rules.route))
                 }
                 else -> Timber.i("No implementation for observed action $action")
             }
         }
+    }
+
+    var crtPlayer by remember { mutableStateOf(crtPlayer) }
+    LaunchedEffect(domainFrame) {
+        crtPlayer = Settings.crtPlayer
     }
 
     FragmentContent(paddingValues = PaddingValues(MaterialTheme.spacing.default), withBottomSpacer = false) {

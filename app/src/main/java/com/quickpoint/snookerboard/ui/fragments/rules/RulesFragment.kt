@@ -30,7 +30,7 @@ fun ScreenRules(
 
     mainVm.setupActionBarActions(emptyList(), emptyList()) { }
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(Unit) {
         mainVm.turnOffSplashScreen()
         rulesVm.eventSharedFlow.collect { mainVm.onEmit(it) }
     }

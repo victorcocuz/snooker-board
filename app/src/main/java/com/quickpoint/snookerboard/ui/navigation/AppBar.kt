@@ -82,7 +82,7 @@ fun ActionMenuBody(
             onClick = {
                 if (item.id == MenuItemIds.ID_MENU_ITEM_MORE) onShowMenuClick()
                 else onItemClick(item)
-            }) { Icon(imageVector = item.imageVector!!, contentDescription = item.contentDescription, tint = BrownDark) }
+            }) { Icon(imageVector = item.imageVector, contentDescription = item.contentDescription, tint = BrownDark) }
     }
 }
 
@@ -95,7 +95,7 @@ fun ActionMenuOverflowBody(
         DropdownMenuItem(
             modifier = Modifier.alpha(if (item.isActive) 1f else 0.5f),
             onClick = { onItemClick(item) }) {
-            Icon(painter = item.icon!!, contentDescription = item.contentDescription, modifier = Modifier.size(24.dp), tint = BrownDark)
+            Icon(imageVector = item.imageVector, contentDescription = item.contentDescription, modifier = Modifier.size(24.dp), tint = BrownDark)
             Spacer(modifier = Modifier.width(8.dp))
             Text(text = item.title, modifier = Modifier.weight(1f), color = BrownDark)
         }

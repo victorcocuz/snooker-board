@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.quickpoint.snookerboard.database.models.asDomain
 import com.quickpoint.snookerboard.domain.DomainFrame
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
+import com.quickpoint.snookerboard.domain.objects.MatchState
 import com.quickpoint.snookerboard.domain.objects.MatchState.RULES_IDLE
 import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.ui.navigation.MenuItem
@@ -21,29 +22,37 @@ class MainViewModel(
     private val snookerRepository: SnookerRepository,
 ) : ViewModel() {
 
-    fun turnOffSplashScreen(msDelay: Long = 0) = viewModelScope.launch {
-        delay(msDelay)
-        _keepSplashScreen.value = false
-    }
-
     private val _keepSplashScreen = MutableStateFlow(true)
     val keepSplashScreen = _keepSplashScreen.asStateFlow()
-
-    var cachedFrame: DomainFrame? = null
-
-    fun loadMatchIfSaved() = viewModelScope.launch {
-        snookerRepository.getCrtFrame().let { crtFrame ->
-            if (crtFrame == null) Settings.matchState = RULES_IDLE // Reset the app when something went wrong
-            else cachedFrame = crtFrame.asDomain()
-            Settings.matchState = RULES_IDLE // Temp
-            onEmit(ScreenEvents.Navigate(getRouteFromMatchState(Settings.matchState)))
-        }
+    fun turnOffSplashScreen() = viewModelScope.launch {
+        delay(200)
+        _keepSplashScreen.value = false
     }
 
     private val _eventSharedFlow = MutableSharedFlow<ScreenEvents>()
     val eventSharedFlow = _eventSharedFlow.asSharedFlow()
     fun onEmit(screenEvent: ScreenEvents) = viewModelScope.launch {
         _eventSharedFlow.emit(screenEvent)
+    }
+
+    var cachedFrame: DomainFrame? = null
+    fun loadMatchIfSaved() = viewModelScope.launch {
+        snookerRepository.getCrtFrame().let { crtFrame ->
+            if (crtFrame == null) Settings.matchState = RULES_IDLE
+            else cachedFrame = crtFrame.asDomain()
+            onEmit(ScreenEvents.Navigate(getRouteFromMatchState(Settings.matchState)))
+        }
+    }
+
+    // Repository
+    fun deleteCrtFrameFromDb() = viewModelScope.launch {
+        snookerRepository.deleteCrtFrame(Settings.crtFrame)
+    }
+
+    fun deleteMatchFromDb() = viewModelScope.launch { // When starting a new match or cancelling an existing match
+        Settings.matchState = MatchState.RULES_IDLE
+        Settings.resetRules()
+        snookerRepository.deleteCrtMatch()
     }
 
     // AppBar

@@ -97,12 +97,8 @@ fun SnookerBoardApp(activity: MainActivity, splashScreen: androidx.core.splashsc
                         loadInterstitialAd(context)
                         mainVm.eventSharedFlow.collect { event ->
                             when (event) {
-                                is ScreenEvents.Navigate -> {
-                                    navController.navigate(event.route)
-                                }
-                                is ScreenEvents.SnackEvent -> {
-                                    scaffoldState.snackbarHostState.showSnackbar(event.action.getSnackText(context))
-                                }
+                                is ScreenEvents.Navigate -> navController.navigate(event.route)
+                                is ScreenEvents.SnackEvent -> scaffoldState.snackbarHostState.showSnackbar(event.action.getSnackText(context))
                                 else -> Timber.e("No implementation for event $event")
                             }
                         }

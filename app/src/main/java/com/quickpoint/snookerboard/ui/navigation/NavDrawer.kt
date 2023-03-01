@@ -55,10 +55,7 @@ fun DrawerBody(
                 .fillMaxWidth()
                 .clickable { onItemClick(item) }
                 .padding(16.dp)) {
-                Icon(
-                    painter = item.icon!!,
-                    contentDescription = item.contentDescription
-                )
+                Icon(imageVector = item.imageVector, contentDescription = item.contentDescription)
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
                     text = item.title,

@@ -1,7 +1,8 @@
 package com.quickpoint.snookerboard.ui.navigation
 
 import com.quickpoint.snookerboard.domain.objects.MatchState
-import com.quickpoint.snookerboard.domain.objects.MatchState.*
+import com.quickpoint.snookerboard.domain.objects.MatchState.GAME_IN_PROGRESS
+import com.quickpoint.snookerboard.domain.objects.MatchState.RULES_IDLE
 import com.quickpoint.snookerboard.ui.navigation.Screen.*
 import com.quickpoint.snookerboard.utils.Constants
 
@@ -19,10 +20,6 @@ sealed class Screen(val route: String) {
     object DrawerRules: Screen(Constants.ID_SCREEN_DRAWER_RULES)
     object DrawerSettings: Screen(Constants.ID_SCREEN_DRAWER_SETTINGS)
     object DrawerSupport: Screen(Constants.ID_SCREEN_DRAWER_SUPPORT)
-
-    // Dialog Fragments
-    object DialogGeneric: Screen(Constants.ID_SCREEN_DIALOG_GENERIC)
-    object DialogFoul: Screen(Constants.ID_SCREEN_DIALOG_FOUL)
 
     fun withArgs(vararg args: String): String {
         return buildString {
@@ -43,7 +40,7 @@ fun String?.isDrawerRoute() = this in listOf(
 )
 
 fun getRouteFromMatchState(matchState: MatchState) = when (matchState) {
-    RULES_IDLE, RULES_PENDING -> Rules.route
-    GAME_IN_PROGRESS, GAME_SAVED -> Game.route
+    RULES_IDLE -> Rules.route
+    GAME_IN_PROGRESS -> Game.route
     else -> Summary.route
 }

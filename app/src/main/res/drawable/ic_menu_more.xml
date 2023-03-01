@@ -1,9 +1,0 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="@dimen/icon_btn_nav_size"
-    android:height="@dimen/icon_btn_nav_size"
-    android:viewportWidth="@integer/vp_nav_icon"
-    android:viewportHeight="@integer/vp_nav_icon">
-  <path
-      android:fillColor="@android:color/white"
-      android:pathData="M12,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,10c-1.1,0 -2,0.9 -2,2s0.9,2 2,2 2,-0.9 2,-2 -0.9,-2 -2,-2zM12,16c-1.1,0 -2,0.9 -2,2s0.9,2 2,2 2,-0.9 2,-2 -0.9,-2 -2,-2z"/>
-</vector>

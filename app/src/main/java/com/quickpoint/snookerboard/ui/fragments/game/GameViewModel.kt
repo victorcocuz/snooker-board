@@ -87,7 +87,6 @@ class GameViewModel(
         score = it.score.toMutableList()
         ballStack = it.ballStack.toMutableList()
         frameStack = it.frameStack.toMutableList()
-        onEventGameAction(TRANSITION_TO_FRAGMENT)
         onEventFrameUpdated(DomainActionLog("loadMatch(): ${it.getTextInfo()}"))
     }
 
@@ -95,7 +94,6 @@ class GameViewModel(
         jobQueue = JobQueue()
         score.resetMatch()
         resetFrame(MATCH_START_NEW)
-        onEventGameAction(TRANSITION_TO_FRAGMENT)
         onEventFrameUpdated(DomainActionLog("resetMatch()"))
     }
 
@@ -194,16 +192,6 @@ class GameViewModel(
     // Checker methods
     fun isFrameMathematicallyOver() = ballStack.availablePoints() < score.frameScoreDiff()
     fun isRemoveColorAvailable() = ballStack.isInColors() && frameStack.lastPotType() == TYPE_FREE
-
-    fun deleteCrtFrameFromDb() = viewModelScope.launch {
-        snookerRepository.deleteCrtFrame(Settings.crtFrame)
-    }
-
-    fun deleteMatchFromDb() = viewModelScope.launch { // When starting a new match or cancelling an existing match
-        Settings.matchState = MatchState.RULES_IDLE
-        Settings.resetRules()
-        snookerRepository.deleteCrtMatch()
-    }
 
     fun emailLogs(context: Context) = viewModelScope.launch {
         val logs = snookerRepository.getDomainActionLogs().toString()

@@ -4,9 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.Color
-import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.VibrationEffect
@@ -44,20 +42,7 @@ fun Context.hideKeyboard(view: View) {
     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
-// Dialog
-
-// Scrolling
-fun Context.getFactoredDimen(factor: Int): Int {
-    val width = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-        resources.displayMetrics.widthPixels
-    } else {
-        resources.displayMetrics.heightPixels
-    }
-    return width / factor
-}
-
 // Context
-
 tailrec fun Context.getActivity(): Activity? = when (this) {
     is Activity -> this
     else -> (this as? ContextWrapper)?.baseContext?.getActivity()
@@ -87,21 +72,6 @@ fun Context.sendEmail(to: Array<String>, subject: String, body: String = Constan
 }
 
 // Other
-fun View.removeFocusAndHideKeyboard(context: Context, event: MotionEvent) {
-    if (event.action == MotionEvent.ACTION_DOWN) {
-        if (this is EditText) {
-            val outRect = Rect()
-            getGlobalVisibleRect(outRect)
-            if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
-                clearFocus()
-                val imm: InputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(getWindowToken(), 0)
-            }
-        }
-    }
-}
-
-
 fun colorTransition(isActivePlayer: Boolean, @ColorRes endColor: Int, delay: Long = 200L) {
 //todo  add color transition, revise this method
     var colorFrom = Color.TRANSPARENT

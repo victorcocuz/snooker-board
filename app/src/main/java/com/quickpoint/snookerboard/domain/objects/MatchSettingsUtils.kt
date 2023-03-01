@@ -5,16 +5,13 @@ import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
 import com.quickpoint.snookerboard.domain.objects.MatchState.*
 import com.quickpoint.snookerboard.utils.*
 
-enum class MatchState { RULES_IDLE, RULES_PENDING, GAME_IN_PROGRESS, GAME_SAVED, SUMMARY, NONE }
+enum class MatchState { RULES_IDLE, GAME_IN_PROGRESS, SUMMARY }
 
 fun getHandicap(value: Int, pol: Int) = if (pol * value > 0) pol * value else 0
 fun getMatchStateFromOrdinal(ordinal: Int): MatchState = when (ordinal) {
     0 -> RULES_IDLE
-    1 -> RULES_PENDING
-    2 -> GAME_IN_PROGRESS
-    3 -> GAME_SAVED
-    4 -> SUMMARY
-    else -> NONE // Always 5
+    1 -> GAME_IN_PROGRESS
+    else -> SUMMARY
 }
 
 fun isSettingsButtonSelected(key: String, value: Int): Boolean = value == when (key) {

@@ -53,7 +53,6 @@ enum class MatchAction {
     FRAME_LOG_ACTIONS_DIALOG, // Opens a dialog allowing users to submit an action log
     FRAME_LOG_ACTIONS, // Submit an action log by e-mail to be tested and reviewed
 
-
     SNACK_UNDO,
     SNACK_ADD_RED,
     SNACK_REMOVE_COLOR,
@@ -63,16 +62,9 @@ enum class MatchAction {
     SNACK_NO_BALL, // Assign snackbar when there are no balls on the table instead handling pot
     SNACK_INVALID_FOUL,
 
-    // Summary Fragment Actions
-    NAV_TO_PLAY, // Go to main menu
-    NAV_TO_GAME, // Go to game fragment
-    NAV_TO_DIALOG_GENERIC, // Go to generic dialog
-    NAV_TO_SUMMARY,
-
     // Redundant Actions
     CLOSE_DIALOG, // Used when the action is to continue current state
     IGNORE, // Used when action should not be shown
-    TRANSITION_TO_FRAGMENT, // Action to transition to fragment in a queue
 }
 
 val listOfMatchActionsUncancelable = listOf(MATCH_ENDED, FRAME_ENDED, FRAME_RESPOT_BLACK_DIALOG, FRAME_LAST_BLACK_FOULED_DIALOG)
