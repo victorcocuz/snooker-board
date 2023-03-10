@@ -31,21 +31,21 @@ import com.quickpoint.snookerboard.utils.K_PLAYER02_LAST_NAME
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun RulesModuleNames(
+fun ModuleRulesNames(
     rulesVm: RulesViewModel,
     focusManager: FocusManager,
     keyboardController: SoftwareKeyboardController?,
 ) = Row {
     val nameChangeEvent by rulesVm.eventPlayerNameChange.collectAsState(Event(Unit))
     nameChangeEvent.getContentIfNotHandled() // Used to trigger re-composition
-    NameColumn(
+    ComponentNameColumn(
         K_PLAYER01_FIRST_NAME,
         K_PLAYER01_LAST_NAME,
         focusManager,
         keyboardController,
     ) { key, value -> rulesVm.onPlayerNameChange(key, value) }
 
-    NameColumn(
+    ComponentNameColumn(
         K_PLAYER02_FIRST_NAME,
         K_PLAYER02_LAST_NAME,
         focusManager,
@@ -55,7 +55,7 @@ fun RulesModuleNames(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun RowScope.NameColumn(
+fun RowScope.ComponentNameColumn(
     key_first_name: String,
     key_last_name: String,
     focusManager: FocusManager,

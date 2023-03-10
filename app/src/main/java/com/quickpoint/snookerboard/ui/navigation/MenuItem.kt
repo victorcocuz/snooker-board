@@ -22,8 +22,6 @@ class MenuItem(
 object MenuItemIds {
     const val ID_MENU_ITEM_UNDO = "id_menu_item_undo"
     const val ID_MENU_ITEM_MORE = "id_menu_item_more"
-    const val ID_MENU_ITEM_ADD_RED = "id_menu_item_add_red"
-    const val ID_MENU_ITEM_REMOVE_COLOR = "id_menu_item_remove_color"
     const val ID_MENU_ITEM_RERACK = "id_menu_item_rerack"
     const val ID_MENU_ITEM_CONCEDE_FRAME = "id_menu_item_concede_frame"
     const val ID_MENU_ITEM_CONCEDE_MATCH = "id_menu_item_concede_match"

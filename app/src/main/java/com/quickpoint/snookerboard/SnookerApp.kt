@@ -3,6 +3,7 @@ package com.quickpoint.snookerboard
 import android.app.Application
 import android.content.Context
 import com.quickpoint.snookerboard.database.SnookerDatabase
+import com.quickpoint.snookerboard.repository.DataStoreRepository
 import com.quickpoint.snookerboard.repository.SnookerRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +24,7 @@ class SnookerApp : Application() {
         private fun applicationContext(): Context = instance!!.applicationContext
         fun application(): Application = instance!!
         fun repository() = SnookerRepository(SnookerDatabase.getDatabase(applicationContext()))
+        fun dataStoreRepository() = DataStoreRepository()
     }
 
     // Apply all plugins and setup - reinstate delayed recurring work when needed

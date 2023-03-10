@@ -14,6 +14,7 @@
     <string name="d_generic_title_last_black_fouled">Info foul</string>
     <string name="d_generic_title_frame_respot_black">Last black fouled</string>
     <string name="d_generic_title_frame_log_actions">Actions log</string>
+    <string name="d_generic_title_frame_foul">Foul</string>
 
     <string name="d_generic_text_frame_miss_forfeit">If a player commits Foul and a Miss three times in a row while the object ball is fully visible, this results in the frame being automatically lost. If this is the case, please choose to forfeit frame.</string>
     <string name="d_generic_text_match_cancel">Are you sure you want to cancel the current match? All match progress will be lost.</string>

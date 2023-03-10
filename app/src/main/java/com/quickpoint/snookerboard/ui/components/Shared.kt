@@ -1,4 +1,4 @@
-package com.quickpoint.snookerboard.ui.fragments.game
+package com.quickpoint.snookerboard.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -10,16 +10,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.quickpoint.snookerboard.R
+import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.objects.DomainPlayer
-import com.quickpoint.snookerboard.ui.components.TextSubtitle
 import com.quickpoint.snookerboard.ui.theme.*
+import com.quickpoint.snookerboard.utils.BallAdapterType
 import com.quickpoint.snookerboard.utils.PlayerTagType
 import com.quickpoint.snookerboard.utils.colorTransition
 
 @Composable
-fun GameModulePlayerNames(crtPlayer: Int) = Row(Modifier.fillMaxWidth()) {
+fun ComponentPlayerNames(crtPlayer: Int) = ContainerRow(Modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 8.dp)){
     PlayerNameBox(
         textTitle = DomainPlayer.Player01.firstName,
         textSubtitle = DomainPlayer.Player01.lastName,
@@ -57,4 +59,24 @@ fun setActivePlayer(isActivePlayer: Boolean, activePlayerTag: PlayerTagType) {
 //    if (activePlayerTag == STATISTICS) setBackgroundColor(ContextCompat.getColor(context, R.color.transparent))
 //    else
     colorTransition(isActivePlayer, if (isActivePlayer) R.color.transparent else R.color.brown)
+}
+
+@Composable
+fun RowScope.GameButtonsBalls(
+    ballsList: List<DomainBall>,
+    ballSize: Dp,
+    ballAdapterType: BallAdapterType = BallAdapterType.MATCH,
+    selectionPosition: Long = -1,
+    onClick: (PotType, DomainBall) -> Unit = { _: PotType, _: DomainBall -> },
+) = StandardLazyRow(Modifier.weight(1f),
+    lazyItems = if (ballAdapterType == BallAdapterType.MATCH) ballsList.bindMatchBalls() else ballsList.bindFoulBalls(),
+    key = { profile -> profile.ballId }
+) { profile ->
+    BallView(
+        modifier = Modifier.size(ballSize),
+        profile,
+        ballAdapterType,
+        isBallSelected = selectionPosition == profile.ballId,
+        text = if (ballAdapterType == BallAdapterType.MATCH && profile is DomainBall.RED) ballsList.redsRemaining().toString() else ""
+    ) { onClick(PotType.TYPE_HIT, profile) }
 }

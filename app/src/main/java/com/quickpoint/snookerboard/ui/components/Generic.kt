@@ -1,62 +1,22 @@
 package com.quickpoint.snookerboard.ui.components
 
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.OnBackPressedDispatcher
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
-import androidx.compose.foundation.MutatePriority
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Snackbar
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
-import com.quickpoint.snookerboard.ui.theme.GreenBright
-import com.quickpoint.snookerboard.ui.theme.GreenBrighter
 import com.quickpoint.snookerboard.ui.theme.spacing
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.awaitCancellation
-import kotlinx.coroutines.launch
-
-@Composable
-fun GenericSurface(content: @Composable () -> Unit) {
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        GreenBright, GreenBrighter
-                    )
-                )
-            ),
-        color = Color.Transparent
-    ) {
-        content()
-    }
-}
 
 @Composable
 fun FragmentContent(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues = PaddingValues(MaterialTheme.spacing.medium, 0.dp),
     horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
-    verticalArrangement: Arrangement.Vertical = Arrangement.SpaceEvenly,
-    withBottomSpacer: Boolean = true,
+    verticalArrangement: Arrangement.Vertical = Arrangement.SpaceBetween,
+    showBottomSpacer: Boolean = true,
     content: @Composable ColumnScope.() -> Unit,
 ) = Column(
     modifier = modifier
@@ -66,31 +26,12 @@ fun FragmentContent(
     verticalArrangement = verticalArrangement,
 ) {
     content()
-    if (withBottomSpacer) Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
+    if (showBottomSpacer) Spacer(modifier = Modifier.height(MaterialTheme.spacing.medium))
 }
 
 @Composable
-fun DefaultSnackbar(
-    snackbarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier,
-    onDismiss: () -> Unit = { },
-) {
-    SnackbarHost(
-        hostState = snackbarHostState, snackbar = { data ->
-            Snackbar(modifier = Modifier.padding(16.dp), content = {
-                Text(text = data.message, style = MaterialTheme.typography.bodyMedium)
-            }, action = {
-                data.actionLabel?.let { actionLabel ->
-                    TextButton(onClick = onDismiss) {
-                        Text(text = actionLabel, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodyMedium)
-                    }
-                }
-            })
-        }, modifier = modifier
-            .fillMaxWidth()
-            .wrapContentHeight(Alignment.Bottom)
-    )
-}
+fun FragmentExtras(content: @Composable ColumnScope.() -> Unit) = Column(Modifier.fillMaxSize()) { content() }
+
 
 @Composable
 fun StandardRow(
@@ -116,120 +57,43 @@ fun <T> StandardLazyRow(
     modifier = modifier,
     horizontalArrangement = horizontalArrangement,
     verticalAlignment = verticalAlignment
-) {
-    items(
-        items = lazyItems,
-        key = key
-    ) { choice ->
-        item(choice)
-    }
-}
+) { items(items = lazyItems, key = key) { choice -> item(choice) } }
 
 @Composable
-fun VerticalGrid(
+fun ContainerRow(
     modifier: Modifier = Modifier,
-    columns: Int = 2,
-    content: @Composable () -> Unit,
-) {
-    Layout(
-        content = content,
-        modifier = modifier
-    ) { measurables, constraints ->
-        val itemWidth = constraints.maxWidth / columns
-        // Keep given height constraints, but set an exact width
-        val itemConstraints = constraints.copy(
-            minWidth = itemWidth,
-            maxWidth = itemWidth
-        )
-        // Measure each item with these constraints
-        val placeables = measurables.map { it.measure(itemConstraints) }
-        // Track each columns height so we can calculate the overall height
-        val columnHeights = Array(columns) { 0 }
-        placeables.forEachIndexed { index, placeable ->
-            val column = index % columns
-            columnHeights[column] += placeable.height
-        }
-        val height = (columnHeights.maxOrNull() ?: constraints.minHeight)
-            .coerceAtMost(constraints.maxHeight)
-        layout(
-            width = constraints.maxWidth,
-            height = height
-        ) {
-            // Track the Y co-ord per column we have placed up to
-            val columnY = Array(columns) { 0 }
-            placeables.forEachIndexed { index, placeable ->
-                val column = index % columns
-                placeable.placeRelative(
-                    x = column * itemWidth,
-                    y = columnY[column]
-                )
-                columnY[column] += placeable.height
-            }
-        }
+    title: String = "",
+    trailingIcon: (@Composable () -> Unit)? = null,
+    content: @Composable RowScope.() -> Unit,
+) = Column(modifier.fillMaxWidth()) {
+    if (title != "") StandardRow(Modifier.padding(0.dp, 8.dp)) {
+        TextSubtitle(title)
+        Spacer(Modifier.width(16.dp))
+        trailingIcon?.let { trailingIcon() }
     }
+    StandardRow(Modifier.fillMaxWidth()) { content() }
 }
 
-fun LazyListState.disableScrolling(scope: CoroutineScope) {
-    scope.launch {
-        scroll(scrollPriority = MutatePriority.PreventUserInput) {
-            // Await indefinitely, blocking scrolls
-            awaitCancellation()
-        }
-    }
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun GenericDialog(
-    onDismissRequest: () -> Unit,
-    isCancelable: Boolean,
+fun ContainerColumn(
+    modifier: Modifier = Modifier,
+    title: String = "",
+    trailingIcon: (@Composable () -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
-) = Dialog(
-    onDismissRequest = onDismissRequest,
-    properties = DialogProperties(
-        usePlatformDefaultWidth = false,
-        dismissOnBackPress = isCancelable,
-        dismissOnClickOutside = isCancelable
-    )
-) {
-    DialogCard { content() }
+) = Column(modifier.fillMaxWidth()) {
+    if (title != "") StandardRow {
+        TextSubtitle(title)
+        Spacer(Modifier.width(16.dp))
+        trailingIcon?.let { it() }
+    }
+    content()
 }
 
 @Composable
-fun DialogCard(
-    content: @Composable ColumnScope.() -> Unit,
-) = ElevatedCard(
-    elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
-    shape = RoundedCornerShape(8.dp),
-    modifier = Modifier
-        .fillMaxWidth(0.95f)
-        .border(1.dp, color = Color.Red, shape = RoundedCornerShape(8.dp)),
-    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary)
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(15.dp),
-        verticalArrangement = Arrangement.spacedBy(25.dp)
-    ) { content() }
-}
-
-@Composable
-fun BackPressHandler(
-    backPressedDispatcher: OnBackPressedDispatcher? =
-        LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher,
-    onBackPressed: () -> Unit,
-) {
-    val currentOnBackPressed by rememberUpdatedState(newValue = onBackPressed)
-    val backCallback = remember {
-        object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                currentOnBackPressed()
-            }
-        }
-    }
-    DisposableEffect(key1 = backPressedDispatcher) {
-        backPressedDispatcher?.addCallback(backCallback)
-        onDispose { backCallback.remove() }
-    }
+fun SingleParagraph(
+    title: String,
+    paragraph: String,
+) = Column {
+    TextSubtitle(text = title)
+    TextParagraph(text = paragraph)
 }

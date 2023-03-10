@@ -2,9 +2,11 @@ package com.quickpoint.snookerboard.utils
 
 import android.content.Context
 import androidx.datastore.core.DataStore
+import androidx.datastore.core.IOException
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import com.quickpoint.snookerboard.BuildConfig
+import com.quickpoint.snookerboard.domain.ShotType
 import com.quickpoint.snookerboard.domain.objects.DomainPlayer.Player01
 import com.quickpoint.snookerboard.domain.objects.DomainPlayer.Player02
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
@@ -12,7 +14,9 @@ import com.quickpoint.snookerboard.domain.objects.Toggle
 import com.quickpoint.snookerboard.domain.objects.getMatchStateFromOrdinal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -54,29 +58,57 @@ class DataStore(private val context: Context) {
                 "String" -> preferences[stringPreferencesKey(key)] = value as String
                 "Int" -> preferences[intPreferencesKey(key)] = value as Int
                 "Long" -> preferences[longPreferencesKey(key)] = value as Long
-                "Boolean" -> preferences[booleanPreferencesKey(key)] = value as Boolean
+                "Boolean" -> {
+                    preferences[booleanPreferencesKey(key)] = value as Boolean
+                    if (key == K_BOOL_TOGGLE_FREEBALL) Toggle.FreeBall.isEnabled = value
+                }
                 else -> Timber.e("DataStore saving functionality for class ${value::class.simpleName} not implemented")
             }
         }
     }
 
-    fun loadPreferences() = CoroutineScope(Dispatchers.IO).launch {
-        val preferences = context.dataStore.data.first()
+    fun saveAndSwitchValue(key: String) = CoroutineScope(Dispatchers.IO).launch {
+        val temp = context.dataStore.data.first()[booleanPreferencesKey(key)] ?: false
+        savePreferences(key, !temp)
+    }
 
-        Toggle.AdvancedRules.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_ADVANCED_RULES)] ?: true
-        Toggle.AdvancedStatistics.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_ADVANCED_STATISTICS)] ?: true
-        Toggle.AdvancedBreaks.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_ADVANCED_BREAKS)] ?: true
-        Toggle.FreeBall.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_FREEBALL)] ?: false
-        Toggle.LongShot.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_LONG_SHOT)] ?: false
-        Toggle.RestShot.isEnabled = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_REST_SHOT)] ?: false
+    fun preferencesBooleanFlow(key: String) = context.dataStore.data.map {
+        it[booleanPreferencesKey(key)] ?: false
+    }
+
+    suspend fun getShotType(): ShotType {
+        val preferences = context.dataStore.data.first()
+        val longShot = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_LONG_SHOT)] ?: false
+        val restShot = preferences[booleanPreferencesKey(K_BOOL_TOGGLE_REST_SHOT)] ?: false
+        return when {
+            longShot && restShot -> ShotType.LONG_AND_REST
+            longShot -> ShotType.LONG
+            restShot -> ShotType.REST
+            else -> ShotType.STANDARD
+        }
+    }
+
+    fun loadPreferences() = CoroutineScope(Dispatchers.IO).launch {
+        val preferencesFlow = context.dataStore.data.catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        val preferences = preferencesFlow.first()
 
         Player01.loadPreferences(
-            firstName = preferences[stringPreferencesKey(K_PLAYER01_FIRST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "Ronnie" else Constants.EMPTY_STRING,
-            lastName = preferences[stringPreferencesKey(K_PLAYER01_LAST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "O'Sullivan" else Constants.EMPTY_STRING
+            firstName = preferences[stringPreferencesKey(K_PLAYER01_FIRST_NAME)]
+                ?: if (BuildConfig.DEBUG_TOGGLE) "Ronnie" else Constants.EMPTY_STRING,
+            lastName = preferences[stringPreferencesKey(K_PLAYER01_LAST_NAME)]
+                ?: if (BuildConfig.DEBUG_TOGGLE) "O'Sullivan" else Constants.EMPTY_STRING
         )
         Player02.loadPreferences(
-            firstName = preferences[stringPreferencesKey(K_PLAYER02_FIRST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "John" else Constants.EMPTY_STRING,
-            lastName = preferences[stringPreferencesKey(K_PLAYER02_LAST_NAME)] ?: if (BuildConfig.DEBUG_TOGGLE) "Higgins" else Constants.EMPTY_STRING
+            firstName = preferences[stringPreferencesKey(K_PLAYER02_FIRST_NAME)]
+                ?: if (BuildConfig.DEBUG_TOGGLE) "John" else Constants.EMPTY_STRING,
+            lastName = preferences[stringPreferencesKey(K_PLAYER02_LAST_NAME)]
+                ?: if (BuildConfig.DEBUG_TOGGLE) "Higgins" else Constants.EMPTY_STRING
         )
 
         Settings.loadPreferences(

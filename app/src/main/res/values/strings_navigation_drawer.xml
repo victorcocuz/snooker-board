@@ -7,51 +7,51 @@
     <string name="menu_drawer_about">About</string>
 
     <!-- Fragment Rules -->
-    <string name="f_nav_rules_tv_heading_01_ball_terminology">Ball Terminology</string>
-    <string name="f_nav_rules_tv_body_01_ball_terminology">* Cue ball - the white ball, the only ball that you may hit with the cue\n* Red - red in color, there are 15 at the start of the game\n* Colour - one of the six balls that are neither red nor white</string>
-    <string name="f_nav_rules_tv_heading_02_ball_values">Ball values</string>
-    <string name="f_nav_rules_tv_body_02_ball_values">Red - 1\nYellow - 2\nGreen - 3\nBrown - 4\nBlue - 5\nPink - 6\nBlack - 7</string>
-    <string name="f_nav_rules_tv_heading_03_snooker_terminology">Snooker terminology</string>
-    <string name="f_nav_rules_tv_body_03_snooker_terminology">Pot - to put a ball into a pocket (and have it stay there)\nFoul - to do something against the rules\nSnookered - to be unable to roll the cue ball in a straight line and hit the ball chosen.\nBall ON - the ball you intend to hit with the cue ball</string>
-    <string name="f_nav_rules_tv_heading_04_fundamentals">Fundamentals</string>
-    <string name="f_nav_rules_tv_body_04_fundamentals">1 - You hit the cue ball so that it, in turn, hits another ball and hopefully pots it.\n2 - You must not pot the cue ball\nWhen there are still red balls on the table:\n3 - Your first shot on every turn must be to hit a red with the cue ball\n4 - If you pot that red (red is the ball ON), then you score 1 point and your next shot may be on any of the colours (be sure to say which one you have chosen). The red stays in the pocket.\n5 - If you pot that colour (which is now the ball ON), then you score the value of the colour and your next shot must be a red. The colour goes back on its own spot. If it does not fit on its spot, then it goes on the highest valued spot available.\n6 - If you fail to pot, or if you foul, then your turn is ended and your opponent gets to try\n7 - continue with red-colour-red-colour until all reds are in the pockets\nWhen all red balls are gone:\n8. Balls are pocketed in this order - yellow(2), green(3), brown(4), blue(5), pink(6), black(7). They stay in the pocket.</string>
-    <string name="f_nav_rules_tv_heading_05_foul_rules">Foul Rules</string>
-    <string name="f_nav_rules_tv_body_05_foul_rules">1 - Once struck, cue ball must make contact with ball ON first otherwise, foul is committed\n2 - If your cue ball does not hit anything on the table, your opponent may choose to take the shot or turn the table back to you\n3 - If you commit a foul and your opponent is snookered on all balls ON, he may be allowed to select a freeball(any ball on the table). The freeball, for this shot only, becomes another ball ON and has the same value and is re-spotted if potted.\n4 - If your cue ball first hits a ball other than the ball ON, then the penalty is the value of the ball struck or 4 points, whichever is greater.\n5 - If you pot a ball other than the ball ON, then you do NOT score the value of the ball ON but your opponent scores the value of the ball pocketed.\n6 - If you touch any ball on the table at any time,then the penalty is the value of the ball touched or 4 points, whichever is greater.</string>
-    <string name="f_nav_rules_tv_heading_06_game_end">The game ends when</string>
-    <string name="f_nav_rules_tv_body_06_game_end">1. A player resigns because there are not enough balls on the table to make up for the opponent\\\'s score OR he does not have enough options to execute a good snooker to force the opponent into a foul.\n2. All reds and ball colors are pocketed.</string>
-    <string name="f_nav_rules_tv_heading_07_winner">Winner</string>
-    <string name="f_nav_rules_tv_body_07_winner">The player with the most points at the end of the game wins!</string>
-    <string name="f_nav_rules_tv_heading_08_more_info">More Info</string>
-    <string name="f_nav_rules_tv_body_08_more_info">For more information visit: \nhttp://www.rulesofsnooker.com/snooker-for-beginners.html</string>
+    <string name="dr_rules_tv_heading_01">Ball Terminology</string>
+    <string name="dr_rules_tv_body_01">* Cue ball - the white ball, the only ball that you may hit with the cue\n* Red - red in color, there are 15 at the start of the game\n* Colour - one of the six balls that are neither red nor white</string>
+    <string name="dr_rules_tv_heading_02">Ball values</string>
+    <string name="dr_rules_tv_body_02">Red - 1\nYellow - 2\nGreen - 3\nBrown - 4\nBlue - 5\nPink - 6\nBlack - 7</string>
+    <string name="dr_rules_tv_heading_03">Snooker terminology</string>
+    <string name="dr_rules_tv_body_03">Pot - to put a ball into a pocket (and have it stay there)\nFoul - to do something against the rules\nSnookered - to be unable to roll the cue ball in a straight line and hit the ball chosen.\nBall ON - the ball you intend to hit with the cue ball</string>
+    <string name="dr_rules_tv_heading_04">Fundamentals</string>
+    <string name="dr_rules_tv_body_04">1 - You hit the cue ball so that it, in turn, hits another ball and hopefully pots it.\n2 - You must not pot the cue ball\nWhen there are still red balls on the table:\n3 - Your first shot on every turn must be to hit a red with the cue ball\n4 - If you pot that red (red is the ball ON), then you score 1 point and your next shot may be on any of the colours (be sure to say which one you have chosen). The red stays in the pocket.\n5 - If you pot that colour (which is now the ball ON), then you score the value of the colour and your next shot must be a red. The colour goes back on its own spot. If it does not fit on its spot, then it goes on the highest valued spot available.\n6 - If you fail to pot, or if you foul, then your turn is ended and your opponent gets to try\n7 - continue with red-colour-red-colour until all reds are in the pockets\nWhen all red balls are gone:\n8. Balls are pocketed in this order - yellow(2), green(3), brown(4), blue(5), pink(6), black(7). They stay in the pocket.</string>
+    <string name="dr_rules_tv_heading">Foul Rules</string>
+    <string name="dr_rules_tv_body_05">1 - Once struck, cue ball must make contact with ball ON first otherwise, foul is committed\n2 - If your cue ball does not hit anything on the table, your opponent may choose to take the shot or turn the table back to you\n3 - If you commit a foul and your opponent is snookered on all balls ON, he may be allowed to select a freeball(any ball on the table). The freeball, for this shot only, becomes another ball ON and has the same value and is re-spotted if potted.\n4 - If your cue ball first hits a ball other than the ball ON, then the penalty is the value of the ball struck or 4 points, whichever is greater.\n5 - If you pot a ball other than the ball ON, then you do NOT score the value of the ball ON but your opponent scores the value of the ball pocketed.\n6 - If you touch any ball on the table at any time,then the penalty is the value of the ball touched or 4 points, whichever is greater.</string>
+    <string name="dr_rules_tv_heading_06">The game ends when</string>
+    <string name="dr_rules_tv_body_06">1. A player resigns because there are not enough balls on the table to make up for the opponent\\\'s score OR he does not have enough options to execute a good snooker to force the opponent into a foul.\n2. All reds and ball colors are pocketed.</string>
+    <string name="dr_rules_tv_heading_07">Winner</string>
+    <string name="dr_rules_tv_body_07">The player with the most points at the end of the game wins!</string>
+    <string name="dr_rules_tv_heading_08">More Info</string>
+    <string name="dr_rules_tv_body_08">For more information visit: \nhttp://www.rulesofsnooker.com/snooker-for-beginners.html</string>
 
     <!--Fragment Help Improve-->
-    <string name="f_nav_improve_tv_description">Hi, \n\nThanks for trying out my app! I am an amateur app developer with a life long passion for snooker. I wanted to do something for this sport so I set out to create this app in my spare time. My dream is to improve this app constantly and make it useful to the snooker community, by implementing a login to save all previous matches, showing career statistics and adding many new features.\n\nUnfortunately my time and coding skills are not at par with my wishes, so if you feel inspired to help I\'d be glad to share in my efforts.</string>
-    <string name="f_nav_improve_tv_survey_header">Survey</string>
-    <string name="f_nav_improve_tv_survey_body">I would be very grateful if you were able to take a few minutes to complete the survey below.</string>
-    <string name="f_nav_improve_tv_survey_link">Snooker Board User Survey</string>
-    <string name="f_nav_improve_tv_contact_header">Contact me</string>
-    <string name="f_nav_improve_tv_contact_body">If you wish to get in touch or report an issue please feel free to send me an e-mail:</string>
-    <string name="f_nav_improve_tv_contact_email">E-mail me</string>
+    <string name="dr_improve_tv_description">Hi, \n\nThanks for trying out my app! I am an amateur app developer with a life long passion for snooker. I wanted to do something for this sport so I set out to create this app in my spare time. My dream is to improve this app constantly and make it useful to the snooker community, by implementing a login to save all previous matches, showing career statistics and adding many new features.\n\nUnfortunately my time and coding skills are not at par with my wishes, so if you feel inspired to help I\'d be glad to share in my efforts.</string>
+    <string name="dr_improve_tv_survey_header">Survey</string>
+    <string name="dr_improve_tv_survey_body">I would be very grateful if you were able to take a few minutes to complete the survey below.</string>
+    <string name="dr_improve_tv_survey_link">Snooker Board User Survey</string>
+    <string name="dr_improve_tv_contact_header">Contact me</string>
+    <string name="dr_improve_tv_contact_body">If you wish to get in touch or report an issue please feel free to send me an e-mail:</string>
+    <string name="dr_improve_tv_contact_email">E-mail me</string>
 
     <!--Fragment Donate-->
-    <string name="f_nav_donate_tv_description">Hey there, I hope you enjoy my app :). If you would like to see new features and feel like helping out, you can buy me a coffee, beer or lunch to keep me working. Cheers :D</string>
-    <string name="f_nav_donate_tv_coffee_title">Coffee</string>
-    <string name="f_nav_donate_tv_beer_title">Beer</string>
-    <string name="f_nav_donate_tv_lunch_title">Lunch</string>
+    <string name="dr_donate_tv_description">Hey there, I hope you enjoy my app :). If you would like to see new features and feel like helping out, you can buy me a coffee, beer or lunch to keep me working. Cheers :D</string>
+    <string name="dr_donate_tv_coffee_title">Coffee</string>
+    <string name="dr_donate_tv_beer_title">Beer</string>
+    <string name="dr_donate_tv_lunch_title">Lunch</string>
 
     <!--Fragment Settings-->
-    <string name="f_nav_settings_toggle_advanced_rules_title">Advanced Rules</string>
-    <string name="f_nav_settings_toggle_advanced_rules_description">Show options for setting number of reds, faul modifier and handicap</string>
-    <string name="f_nav_settings_toggle_advanced_statistics_title">Advanced Statistics</string>
-    <string name="f_nav_settings_toggle_advanced_statistics_description">Show detailed score statistics during the match</string>
-    <string name="f_nav_settings_toggle_advanced_breaks_title">Advanced Breaks</string>
-    <string name="f_nav_settings_toggle_advanced_breaks_description">Show all the shots during the match, not only the ones that add to the score</string>
+    <string name="dr_settings_toggle_advanced_rules_title">Advanced Rules</string>
+    <string name="dr_settings_toggle_advanced_rules_description">Show options for setting number of reds, faul modifier and handicap</string>
+    <string name="dr_settings_toggle_advanced_statistics_title">Advanced Statistics</string>
+    <string name="dr_settings_toggle_advanced_statistics_description">Show detailed score statistics during the match</string>
+    <string name="dr_settings_toggle_advanced_breaks_title">Advanced Breaks</string>
+    <string name="dr_settings_toggle_advanced_breaks_description">Show all the shots during the match, not only the ones that add to the score</string>
 <string name="helper_not_implemented">Not Implemented</string>
     <!--Fragment About-->
-    <string name="f_nav_about_tv_description">Snooker Board is a simple snooker score keeping app that focuses on recording one full match at a time, with care to encompass all rules from the WPBSA (World Professional Billiards and Snooker Association) Official Rules of the Games of Snooker and Billiards</string>
-    <string name="f_nav_about_tv_version_title">Releases</string>
+    <string name="dr_about_tv_description">Snooker Board is a simple snooker score keeping app that focuses on recording one full match at a time, with care to encompass all rules from the WPBSA (World Professional Billiards and Snooker Association) Official Rules of the Games of Snooker and Billiards</string>
+    <string name="dr_about_tv_version_title">Releases</string>
 
-    <string-array name="f_nav_about_tv_version_1_0_11_list">
+    <string-array name="dr_about_tv_version_1_0_11_list">
         <item>Version 1.0.11</item>
         <item>• Added remove reds and free ball functionality too the foul screen</item>
         <item>• Added options to keep statistics on long shots and rest shots</item>
@@ -61,7 +61,7 @@
         <item>• Implemented logic for an edge rule of finishing the match when fouling on the last black</item>
     </string-array>
 
-    <string-array name="f_nav_about_tv_version_1_0_10_list">
+    <string-array name="dr_about_tv_version_1_0_10_list">
         <item>Version 1.0.10</item>
         <item>• Added new features: Force retake option, check for game forfeiting at 3 consecutive fouls, frame handicap, match handicap</item>
         <item>• Added a new screen for settings</item>
@@ -71,7 +71,7 @@
         <item>• Minor UI fixes for foul dialog, switch player animation, balls remaining, ad showing, splash screen, etc.</item>
     </string-array>
 
-    <string-array name="f_nav_about_tv_version_1_0_9_list">
+    <string-array name="dr_about_tv_version_1_0_9_list">
         <item>Version 1.0.9</item>
         <item>• Fixed dialogs malfunctions on screen rotation</item>
         <item>• Simplified background logic for better tracking of game actions</item>
@@ -83,7 +83,7 @@
         <item>• Fixed minor UI glitches for balls list, splash screen, text appearance, etc</item>
     </string-array>
 
-    <string-array name="f_nav_about_tv_version_1_0_8_list">
+    <string-array name="dr_about_tv_version_1_0_8_list">
         <item>Version 1.0.8</item>
         <item>• Added new features: Remove color, Safe miss and Snooker</item>
         <item>• Implemented tests to check game logic</item>
@@ -95,7 +95,7 @@
         <item>• Removed legacy unused fragments</item>
     </string-array>
 
-    <string-array name="f_nav_about_tv_version_1_0_7_list">
+    <string-array name="dr_about_tv_version_1_0_7_list">
         <item>Version 1.0.7</item>
         <item>• Add interstitial ads</item>
         <item>• Fix app support price issues</item>
@@ -105,13 +105,13 @@
         <item>• Have all actions show in the frame breakdown</item>
     </string-array>
 
-    <string-array name="f_nav_about_tv_version_1_0_6_list">
+    <string-array name="dr_about_tv_version_1_0_6_list">
         <item>Version 1.0.6</item>
         <item>• Implement billing for in app purchases to enable financial support</item>
         <item>• Fix player switching glitch</item>
     </string-array>
 
-    <string-array name="f_nav_about_tv_version_1_0_5_list">
+    <string-array name="dr_about_tv_version_1_0_5_list">
         <item>Version 1.0.5</item>
         <item>• Fix UI screens overlapping</item>
         <item>• Fix DB saving glitches</item>
@@ -119,7 +119,7 @@
         <item>• Add new ball colour for no ball</item>
     </string-array>
 
-    <string-array name="f_nav_about_tv_version_1_0_4_list">
+    <string-array name="dr_about_tv_version_1_0_4_list">
         <item>Version 1.0.4</item>
         <item>• Added readMe file</item>
         <item>• Added Improve screen and a dummy Support the app screen</item>
@@ -128,7 +128,7 @@
         <item>• Fixed match saving and loading glitches and minor UI glitches</item>
     </string-array>
 
-    <string-array name="f_nav_about_tv_version_1_0_3_list">
+    <string-array name="dr_about_tv_version_1_0_3_list">
         <item>Version 1.0.3</item>
         <item>• Added splash screen</item>
         <item>• Added navigation bar</item>
@@ -139,12 +139,12 @@
         <item>• Fixed UI glitches such as scroll view</item>
     </string-array>
 
-    <string-array name="f_nav_about_tv_version_1_0_2_list">
+    <string-array name="dr_about_tv_version_1_0_2_list">
         <item>• Open app straight onto match statistics when needed</item>
         <item>• Fixed undo glitches, match saving glitches and UI glitches</item>
     </string-array>
 
-    <string-array name="f_nav_about_tv_version_1_0_1_list">
+    <string-array name="dr_about_tv_version_1_0_1_list">
         <item>Version 1.0.1</item>
         <item>• Added freeball toggle and remove it from foul dialog</item>
         <item>• Check for game in progress and load a continuing match directly rather than always starting with the match settings screen</item>
@@ -152,7 +152,7 @@
         <item>• Fixed match action glitches and add new dialogs for major actions</item>
     </string-array>
 
-    <string-array name="f_nav_about_tv_version_1_0_0_list">
+    <string-array name="dr_about_tv_version_1_0_0_list">
         <item>Version 1</item>
         <item>• Initial Release</item>
     </string-array>

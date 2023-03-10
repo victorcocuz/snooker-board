@@ -6,7 +6,6 @@ import com.quickpoint.snookerboard.domain.ShotType.*
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
 import com.quickpoint.snookerboard.domain.objects.getHandicap
 import com.quickpoint.snookerboard.domain.objects.getOtherPlayer
-import com.quickpoint.snookerboard.domain.objects.resetToggleLongAndRest
 import com.quickpoint.snookerboard.utils.MatchAction
 import com.quickpoint.snookerboard.utils.MatchAction.FRAME_RERACK
 import kotlin.math.abs
@@ -114,12 +113,10 @@ fun MutableList<DomainScore>.calculatePoints(pot: DomainPot, pol: Int, lastFoulS
         TYPE_HIT, TYPE_FREE, TYPE_SAFE, TYPE_SNOOKER -> {
             if (pot.shotType in listOf(LONG_AND_REST, LONG)) this[Settings.crtPlayer].longShotsSuccess += pol
             if (pot.shotType in listOf(LONG_AND_REST, REST)) this[Settings.crtPlayer].restShotsSuccess += pol
-            resetToggleLongAndRest()
         }
         TYPE_FOUL, TYPE_MISS, TYPE_SAFE_MISS -> {
             if (pot.shotType in listOf(LONG_AND_REST, LONG)) this[Settings.crtPlayer].longShotsMissed += pol
             if (pot.shotType in listOf(LONG_AND_REST, REST)) this[Settings.crtPlayer].restShotsMissed += pol
-            resetToggleLongAndRest()
         }
         else -> {}
     }

@@ -18,39 +18,17 @@ fun NavGraph(
     navController: NavHostController,
     mainVm: MainViewModel,
     dataStore: DataStore,
-    purchaseHelper: PurchaseHelper
+    purchaseHelper: PurchaseHelper,
 ) {
     NavHost(navController = navController, startDestination = Screen.Main.route) {
-        composable(route = Screen.Main.route) {
-            ScreenMain(mainVm = mainVm, dataStore = dataStore)
-        }
-
-        // Main Fragments
-        composable(route = Screen.Rules.route) {
-            ScreenRules(navController = navController, mainVm = mainVm, dataStore = dataStore)
-        }
-        composable(route = Screen.Game.route) {
-            ScreenGame(navController = navController, mainVm = mainVm, dataStore = dataStore)
-        }
-        composable(route = Screen.Summary.route) {
-            ScreenSummary(navController = navController, mainVm = mainVm)
-        }
-
-        // Drawer Fragments
-        composable(route = Screen.DrawerAbout.route) {
-            ScreenDrawerAbout(navController = navController)
-        }
-        composable(route = Screen.DrawerImprove.route) {
-            ScreenDrawerImprove(navController = navController)
-        }
-        composable(route = Screen.DrawerRules.route) {
-            ScreenDrawerRules(navController = navController)
-        }
-        composable(route = Screen.DrawerSettings.route) {
-            ScreenDrawerSettings(dataStore)
-        }
-        composable(route = Screen.DrawerSupport.route) {
-            ScreenDrawerSupport(navController = navController, purchaseHelper = purchaseHelper)
-        }
+        composable(Screen.Main.route) { ScreenMain(mainVm = mainVm, dataStore = dataStore) }
+        composable(Screen.Rules.route) { ScreenRules(mainVm = mainVm, dataStore = dataStore) }
+        composable(Screen.Game.route) { ScreenGame(mainVm = mainVm, dataStore = dataStore) }
+        composable(Screen.Summary.route) { ScreenSummary(mainVm = mainVm) }
+        composable(Screen.DrawerAbout.route) { ScreenDrawerAbout() }
+        composable(Screen.DrawerImprove.route) { ScreenDrawerImprove() }
+        composable(Screen.DrawerRules.route) { ScreenDrawerRules() }
+        composable(Screen.DrawerSettings.route) { ScreenDrawerSettings(mainVm = mainVm, dataStore = dataStore) }
+        composable(Screen.DrawerSupport.route) { ScreenDrawerSupport(purchaseHelper = purchaseHelper) }
     }
 }

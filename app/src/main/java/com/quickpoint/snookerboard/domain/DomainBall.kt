@@ -76,11 +76,11 @@ sealed class DomainBall(
 }
 
 // Checker methods
-fun MutableList<DomainBall>.isLastBall() = size == 1
-fun MutableList<DomainBall>.isLastBlack() = size == 2
-fun MutableList<DomainBall>.isInColors() = if (!Toggle.FreeBall.isEnabled) size <= 7 else size <= 8
-fun MutableList<DomainBall>.isInColorsWithFreeBall() = size <= 8
-fun MutableList<DomainBall>.wasPreviousBallColor() = size in (7..37).filter { it % 2 == 1 }
+fun List<DomainBall>.isLastBall() = size == 1
+fun List<DomainBall>.isLastBlack() = size == 2
+fun List<DomainBall>.isInColors() = if (Toggle.FreeBall.isEnabled) size <= 8 else size <= 7
+fun List<DomainBall>.isInColorsWithFreeBall() = size <= 8
+fun List<DomainBall>.wasPreviousBallColor() = size in (7..37).filter { it % 2 == 1 }
 fun List<DomainBall>.isThisBallColorAndNotLast() = size in (10..38).filter { it % 2 == 0 }
 fun List<DomainBall>.isAddRedAvailable() = isThisBallColorAndNotLast() && !Toggle.FreeBall.isEnabled
 fun List<DomainBall>.redsRemaining() = (this.size - 7) / 2
@@ -233,7 +233,7 @@ fun removeBallsForFoulDialog(ballList: List<DomainBall>): MutableList<DomainBall
     }
 }
 
-fun List<DomainBall>.bindBallOptions() = when (lastOrNull()) {
+fun List<DomainBall>.bindMatchBalls() = when (lastOrNull()) {
     is COLOR -> listOfBallsColors
     is WHITE -> listOf(NOBALL())
     null -> emptyList()

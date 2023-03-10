@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.ui.components.BallView
+import com.quickpoint.snookerboard.ui.components.ContainerColumn
 import com.quickpoint.snookerboard.ui.components.StandardRow
 import com.quickpoint.snookerboard.ui.components.TextParagraph
 import com.quickpoint.snookerboard.ui.theme.BrownDark
@@ -30,7 +31,7 @@ import com.quickpoint.snookerboard.utils.BallAdapterType
 import com.quickpoint.snookerboard.utils.Constants
 
 @Composable
-fun GameModuleBreaks(frameStack: List<DomainBreak>) {
+fun ColumnScope.ModuleGameBreaks(frameStack: List<DomainBreak>, isAdvancedBreaksActive: Boolean) = ContainerColumn(Modifier.weight(1f)){
 
     val lazyListState = rememberLazyListState()
     LaunchedEffect(frameStack.size) {
@@ -43,16 +44,16 @@ fun GameModuleBreaks(frameStack: List<DomainBreak>) {
             reverseLayout = true,
             state = lazyListState
         ) {
-            items(frameStack.displayShots()) { domainBreak ->
+            items(frameStack.displayShots(isAdvancedBreaksActive)) { domainBreak ->
                 StandardRow(Modifier.height(ballHeight * ((domainBreak.pots.size - 1) / 6 + 1) + MaterialTheme.spacing.medium)) {
-                    BreakRow(domainBreak, 0) { domainBreak, player ->
+                    SingleBreak(domainBreak, 0) { domainBreak, player ->
                         if (domainBreak.player == player || domainBreak.isLastBallFoul()) {
                             BreakBalls(domainBreak, ballHeight, player)
                             BreakInfo(domainBreak, player)
                             BreakPoints(domainBreak, player)
                         }
                     }
-                    BreakRow(domainBreak, 1) { domainBreak, player ->
+                    SingleBreak(domainBreak, 1) { domainBreak, player ->
                         if (domainBreak.player == player || domainBreak.isLastBallFoul()) {
                             BreakPoints(domainBreak, player)
                             BreakBalls(domainBreak, ballHeight, player)
@@ -66,7 +67,7 @@ fun GameModuleBreaks(frameStack: List<DomainBreak>) {
 }
 
 @Composable
-fun RowScope.BreakRow(
+fun RowScope.SingleBreak(
     domainBreak: DomainBreak,
     player: Int,
     content: @Composable (DomainBreak, Int) -> Unit,
@@ -81,9 +82,7 @@ fun RowScope.BreakRow(
             MaterialTheme.spacing.border,
             if (domainBreak.player == player || domainBreak.isLastBallFoul()) BrownDark else Color.Transparent
         )
-) {
-    content(domainBreak, player)
-}
+) { content(domainBreak, player) }
 
 @Composable
 fun RowScope.BreakBalls(domainBreak: DomainBreak, ballHeight: Dp, player: Int) {

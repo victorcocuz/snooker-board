@@ -5,11 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.quickpoint.snookerboard.database.models.asDomain
 import com.quickpoint.snookerboard.domain.DomainFrame
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
-import com.quickpoint.snookerboard.domain.objects.MatchState
 import com.quickpoint.snookerboard.domain.objects.MatchState.RULES_IDLE
 import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.ui.navigation.MenuItem
+import com.quickpoint.snookerboard.ui.navigation.Screen
 import com.quickpoint.snookerboard.ui.navigation.getRouteFromMatchState
+import com.quickpoint.snookerboard.utils.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val snookerRepository: SnookerRepository,
+    private val dataStore: DataStore
 ) : ViewModel() {
 
     private val _keepSplashScreen = MutableStateFlow(true)
@@ -36,6 +38,8 @@ class MainViewModel(
     }
 
     var cachedFrame: DomainFrame? = null
+        private set
+
     fun loadMatchIfSaved() = viewModelScope.launch {
         snookerRepository.getCrtFrame().let { crtFrame ->
             if (crtFrame == null) Settings.matchState = RULES_IDLE
@@ -50,7 +54,7 @@ class MainViewModel(
     }
 
     fun deleteMatchFromDb() = viewModelScope.launch { // When starting a new match or cancelling an existing match
-        Settings.matchState = MatchState.RULES_IDLE
+        Settings.matchState = RULES_IDLE
         Settings.resetRules()
         snookerRepository.deleteCrtMatch()
     }
@@ -69,4 +73,19 @@ class MainViewModel(
             _actionItemsOverflow.emit(actionItemsOverflow)
             _actionItemOnClick.emit(onMenuItemSelected)
         }
+
+    // Data Store
+    val toggleAdvancedRules = dataStore.preferencesBooleanFlow(K_BOOL_TOGGLE_ADVANCED_RULES)
+    val toggleAdvancedStatistics = dataStore.preferencesBooleanFlow(K_BOOL_TOGGLE_ADVANCED_STATISTICS)
+    val toggleAdvancedBreaks = dataStore.preferencesBooleanFlow(K_BOOL_TOGGLE_ADVANCED_BREAKS)
+    val toggleLongShot = dataStore.preferencesBooleanFlow(K_BOOL_TOGGLE_LONG_SHOT)
+    val toggleRestShot = dataStore.preferencesBooleanFlow(K_BOOL_TOGGLE_REST_SHOT)
+    val toggleFreeball = dataStore.preferencesBooleanFlow(K_BOOL_TOGGLE_FREEBALL)
+    fun savePref(key: String, value: Boolean) = dataStore.savePreferences(key, value)
+
+}
+
+fun MainViewModel.navigateToRulesScreen() {
+    deleteMatchFromDb()
+    onEmit(ScreenEvents.Navigate(Screen.Rules.route))
 }

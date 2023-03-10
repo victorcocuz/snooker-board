@@ -16,25 +16,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.quickpoint.snookerboard.MainViewModel
-import com.quickpoint.snookerboard.ScreenEvents
 import com.quickpoint.snookerboard.domain.DomainScore
 import com.quickpoint.snookerboard.domain.emptyDomainScore
 import com.quickpoint.snookerboard.domain.objects.MatchSettings
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings.crtPlayer
 import com.quickpoint.snookerboard.domain.objects.MatchState
 import com.quickpoint.snookerboard.domain.objects.getDisplayFrames
+import com.quickpoint.snookerboard.navigateToRulesScreen
 import com.quickpoint.snookerboard.ui.components.*
-import com.quickpoint.snookerboard.ui.fragments.game.GameModuleContainer
-import com.quickpoint.snookerboard.ui.fragments.game.GameModulePlayerNames
 import com.quickpoint.snookerboard.ui.fragments.game.ScoreFrameContainer
 import com.quickpoint.snookerboard.ui.fragments.game.ScoreMatchContainer
 import com.quickpoint.snookerboard.ui.helpers.setGameStatsValue
 import com.quickpoint.snookerboard.ui.helpers.setMatchPoints
 import com.quickpoint.snookerboard.ui.helpers.setPercentage
 import com.quickpoint.snookerboard.ui.helpers.setStatsTableBackground
-import com.quickpoint.snookerboard.ui.navigation.Screen
 import com.quickpoint.snookerboard.ui.theme.Black
 import com.quickpoint.snookerboard.ui.theme.BrownDark
 import com.quickpoint.snookerboard.ui.theme.White
@@ -44,8 +40,7 @@ import com.quickpoint.snookerboard.utils.StatisticsType
 
 @Composable
 fun ScreenSummary(
-    navController: NavController,
-    mainVm: MainViewModel,
+    mainVm: MainViewModel
 ) {
     val summaryVm: SummaryViewModel = viewModel(factory = GenericViewModelFactory())
 
@@ -63,16 +58,14 @@ fun ScreenSummary(
     val crtPlayer by remember { mutableStateOf(crtPlayer) }
 
     FragmentContent {
-        GameModuleContainer { GameModulePlayerNames(crtPlayer) }
-        GameModuleContainer {
-            StandardRow(Modifier.fillMaxWidth()) {
+        ComponentPlayerNames(crtPlayer)
+        ContainerRow {
                 ScoreFrameContainer("${totalsA.matchPoints}")
                 ScoreMatchContainer(text = MatchSettings.Settings.getDisplayFrames())
                 ScoreFrameContainer("${totalsB.matchPoints}")
-            }
         }
         score?.let { score ->
-            GameModuleContainer(
+            ContainerRow(
                 Modifier
                     .weight(1f)
                     .clip(RoundedCornerShape(MaterialTheme.spacing.small))
@@ -80,9 +73,10 @@ fun ScreenSummary(
                         width = MaterialTheme.spacing.border,
                         shape = RoundedCornerShape(MaterialTheme.spacing.small),
                         color = BrownDark
-                    )) {
+                    )
+            ) {
                 SummaryScoreRow(Pair(emptyDomainScore, emptyDomainScore))
-                LazyColumn(Modifier.weight(1f)){
+                LazyColumn(Modifier.weight(1f)) {
                     itemsIndexed(score) { index, item ->
                         SummaryScoreRow(item = item, index = index, size = score.size)
                         HorizontalDivider()
@@ -94,12 +88,9 @@ fun ScreenSummary(
         MainButton("Go To Main Menu") { mainVm.navigateToRulesScreen() }
     }
 
-    BackPressHandler { mainVm.navigateToRulesScreen()}
-}
-
-fun MainViewModel.navigateToRulesScreen() {
-    deleteMatchFromDb()
-    onEmit(ScreenEvents.Navigate(Screen.Rules.route))
+    FragmentExtras {
+        BackPressHandler { mainVm.navigateToRulesScreen() }
+    }
 }
 
 @Composable

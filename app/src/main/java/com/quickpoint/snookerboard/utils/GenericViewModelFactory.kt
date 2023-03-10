@@ -18,7 +18,7 @@ class GenericViewModelFactory(
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(SnookerApp.repository()) as T
+            return MainViewModel(SnookerApp.repository(), dataStore!!) as T
         }
         if (modelClass.isAssignableFrom(RulesViewModel::class.java)) {
             return RulesViewModel() as T
@@ -27,13 +27,13 @@ class GenericViewModelFactory(
             return SummaryViewModel(SnookerApp.repository()) as T
         }
         if (modelClass.isAssignableFrom(GameViewModel::class.java)) {
-            return GameViewModel(SnookerApp.repository()) as T
+            return GameViewModel(SnookerApp.repository(), dataStore!!) as T
         }
         if (modelClass.isAssignableFrom(DrawersViewModel::class.java)) {
             return DrawersViewModel(dataStore!!) as T
         }
         if (modelClass.isAssignableFrom(DialogViewModel::class.java)) {
-            return DialogViewModel() as T
+            return DialogViewModel(dataStore!!) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")    }
 }

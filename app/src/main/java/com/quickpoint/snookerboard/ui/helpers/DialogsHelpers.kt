@@ -23,6 +23,7 @@ fun getGenericDialogTitleText(matchActionB: MatchAction, matchActionC: MatchActi
         matchActionC == FRAME_LAST_BLACK_FOULED -> R.string.d_generic_title_last_black_fouled
         matchActionC == FRAME_RESPOT_BLACK -> R.string.d_generic_title_frame_respot_black
         matchActionC == FRAME_LOG_ACTIONS -> R.string.d_generic_title_frame_log_actions
+        matchActionC == FOUL_DIALOG -> R.string.d_generic_title_frame_foul
         else -> R.string.d_generic_not_implemented
     }, matchActionC
 )

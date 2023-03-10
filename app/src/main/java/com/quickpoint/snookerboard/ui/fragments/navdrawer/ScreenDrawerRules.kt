@@ -9,46 +9,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.ui.components.FragmentContent
+import com.quickpoint.snookerboard.ui.components.SingleParagraph
 import com.quickpoint.snookerboard.ui.components.TextHeadline
-import com.quickpoint.snookerboard.ui.components.TextParagraph
-import com.quickpoint.snookerboard.ui.components.TextSubtitle
 
 @Composable
-fun ScreenDrawerRules(
-    navController: NavController,
-) {
-    FragmentContent(Modifier.verticalScroll(rememberScrollState())) {
-        TextHeadline(stringResource(R.string.menu_drawer_rules))
-        TextSubtitle(stringResource(R.string.f_nav_rules_tv_heading_01_ball_terminology))
-        TextParagraph(stringResource(R.string.f_nav_rules_tv_body_01_ball_terminology))
-        TextSubtitle(stringResource(R.string.f_nav_rules_tv_heading_02_ball_values))
-        TextParagraph(stringResource(R.string.f_nav_rules_tv_body_02_ball_values))
-        TextSubtitle(stringResource(R.string.f_nav_rules_tv_heading_03_snooker_terminology))
-        TextParagraph(stringResource(R.string.f_nav_rules_tv_body_03_snooker_terminology))
-        TextSubtitle(stringResource(R.string.f_nav_rules_tv_heading_04_fundamentals))
-        TextParagraph(stringResource(R.string.f_nav_rules_tv_body_04_fundamentals))
-        TextSubtitle(stringResource(R.string.f_nav_rules_tv_heading_05_foul_rules))
-        TextParagraph(stringResource(R.string.f_nav_rules_tv_body_05_foul_rules))
-        TextSubtitle(stringResource(R.string.f_nav_rules_tv_heading_06_game_end))
-        TextParagraph(stringResource(R.string.f_nav_rules_tv_body_06_game_end))
-        TextSubtitle(stringResource(R.string.f_nav_rules_tv_heading_07_winner))
-        TextParagraph(stringResource(R.string.f_nav_rules_tv_body_07_winner))
-        TextSubtitle(stringResource(R.string.f_nav_rules_tv_heading_08_more_info))
-        TextParagraph(stringResource(R.string.f_nav_rules_tv_body_08_more_info))
-    }
+fun ScreenDrawerRules() = FragmentContent(Modifier.verticalScroll(rememberScrollState())) {
+    TextHeadline(stringResource(R.string.menu_drawer_rules))
+    SingleParagraph(stringResource(R.string.dr_rules_tv_heading_01), stringResource(R.string.dr_rules_tv_body_01))
+    SingleParagraph(stringResource(R.string.dr_rules_tv_heading_02), stringResource(R.string.dr_rules_tv_body_02))
+    SingleParagraph(stringResource(R.string.dr_rules_tv_heading_03), stringResource(R.string.dr_rules_tv_body_03))
+    SingleParagraph(stringResource(R.string.dr_rules_tv_heading_04), stringResource(R.string.dr_rules_tv_body_04))
+    SingleParagraph(stringResource(R.string.dr_rules_tv_heading), stringResource(R.string.dr_rules_tv_body_05))
+    SingleParagraph(stringResource(R.string.dr_rules_tv_heading_06), stringResource(R.string.dr_rules_tv_body_06))
+    SingleParagraph(stringResource(R.string.dr_rules_tv_heading_07), stringResource(R.string.dr_rules_tv_body_07))
+    SingleParagraph(stringResource(R.string.dr_rules_tv_heading_08), stringResource(R.string.dr_rules_tv_body_08))
 }
 
 @Preview(showBackground = true)
 @Composable
-fun FragmentDrawerRulesPreview() {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colors.background
-    ) {
-        ScreenDrawerRules(rememberNavController())
-    }
-}
+fun FragmentDrawerRulesPreview() = Surface(
+    modifier = Modifier.fillMaxSize(),
+    color = MaterialTheme.colors.background
+) { ScreenDrawerRules() }
+

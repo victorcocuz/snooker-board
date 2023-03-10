@@ -14,6 +14,7 @@ import com.quickpoint.snookerboard.domain.availablePoints
 import com.quickpoint.snookerboard.domain.frameScoreDiff
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
 import com.quickpoint.snookerboard.domain.objects.getDisplayFrames
+import com.quickpoint.snookerboard.ui.components.ContainerColumn
 import com.quickpoint.snookerboard.ui.components.StandardRow
 import com.quickpoint.snookerboard.ui.components.TextSubtitle
 import com.quickpoint.snookerboard.ui.components.TextTitle
@@ -22,7 +23,7 @@ import com.quickpoint.snookerboard.ui.theme.BrownMedium
 import com.quickpoint.snookerboard.ui.theme.spacing
 
 @Composable
-fun GameModuleScore(domainFrame: DomainFrame) {
+fun ModuleGameScore(domainFrame: DomainFrame) = ContainerColumn(Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp)) {
     val score = domainFrame.score
     if (score.size == 2) {
         StandardRow(modifier = Modifier.fillMaxWidth()) {

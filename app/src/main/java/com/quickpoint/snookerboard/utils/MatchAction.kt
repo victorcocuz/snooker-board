@@ -42,7 +42,7 @@ enum class MatchAction {
     FRAME_ENDING_DIALOG, // Open frame end dialog
     FRAME_TO_END, // On clicking the concede frame button while the frame is still ongoing
     FRAME_ENDED, // Frame end has been confirmed and will be processed. On clicking the concede frame button when the point difference is big enough, or automatically triggered when only one ball left
-    FRAME_LAST_BLACK_FOULED_DIALOG, // When a foul is commetted on the last black the black will not be repositioned unless there is a tie
+    FRAME_LAST_BLACK_FOULED_DIALOG, // When a foul is commented on the last black the black will not be repositioned unless there is a tie
     FRAME_LAST_BLACK_FOULED, // After dialog is closed, remove last black from ballstack
     FRAME_RESPOT_BLACK_DIALOG, // When both players are tied at the end of the frame
     FRAME_RESPOT_BLACK, // After the RESPOT_BLACK_DIALOG is closed, respot black

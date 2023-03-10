@@ -1,14 +1,10 @@
 package com.quickpoint.snookerboard.ui.fragments.game
 
 import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.quickpoint.snookerboard.BuildConfig
-import com.quickpoint.snookerboard.base.Event
-import com.quickpoint.snookerboard.base.ValueKeeperLiveData
 import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.domain.DomainBall.FREEBALL
 import com.quickpoint.snookerboard.domain.DomainBall.NOBALL
@@ -16,16 +12,16 @@ import com.quickpoint.snookerboard.domain.DomainPot.FOULATTEMPT
 import com.quickpoint.snookerboard.domain.DomainPot.FREE
 import com.quickpoint.snookerboard.domain.PotAction.FIRST
 import com.quickpoint.snookerboard.domain.PotType.*
-import com.quickpoint.snookerboard.domain.objects.*
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
+import com.quickpoint.snookerboard.domain.objects.getAsText
+import com.quickpoint.snookerboard.domain.objects.getCrtPlayerFromPotAction
+import com.quickpoint.snookerboard.domain.objects.handlePotFreeballToggle
+import com.quickpoint.snookerboard.domain.objects.handleUndoFreeballToggle
 import com.quickpoint.snookerboard.repository.SnookerRepository
 import com.quickpoint.snookerboard.ui.navigation.MenuItem
 import com.quickpoint.snookerboard.ui.navigation.MenuItemIds
-import com.quickpoint.snookerboard.utils.Constants
-import com.quickpoint.snookerboard.utils.JobQueue
-import com.quickpoint.snookerboard.utils.MatchAction
+import com.quickpoint.snookerboard.utils.*
 import com.quickpoint.snookerboard.utils.MatchAction.*
-import com.quickpoint.snookerboard.utils.sendEmail
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,6 +32,7 @@ import timber.log.Timber
 
 class GameViewModel(
     private val snookerRepository: SnookerRepository,
+    private val dataStore: DataStore,
 ) : ViewModel() {
 
     // Variables
@@ -47,9 +44,6 @@ class GameViewModel(
     private lateinit var jobQueue: JobQueue
 
     // Observables
-    private val _eventGameAction = ValueKeeperLiveData<Event<MatchAction?>>()
-    val eventGameAction: ValueKeeperLiveData<Event<MatchAction?>> = _eventGameAction
-
     private val _eventAction = MutableSharedFlow<MatchAction?>()
     val eventAction = _eventAction.asSharedFlow()
     fun onEventGameAction(matchAction: MatchAction?, queue: Boolean = false): Boolean {
@@ -63,26 +57,20 @@ class GameViewModel(
     private val _frameState: MutableStateFlow<DomainFrame> =
         MutableStateFlow(DomainFrame(0, emptyList(), emptyList(), emptyList(), emptyList(), 0))
     val frameState = _frameState.asStateFlow()
-
-    private val _crtPlayer = MutableLiveData<Int>()
-    val crtPlayer: LiveData<Int> = _crtPlayer
     private fun onEventFrameUpdated(actionLog: DomainActionLog) = jobQueue.submit {
         _frameState.value =
             DomainFrame(Settings.crtFrame, ballStack, score, frameStack, actionLogs.toList(), Settings.maxFramePoints)
         if (actionLogs.size > 0) snookerRepository.saveCrtFrame(_frameState.value)
         actionLogs.addLog(actionLog)
-        _crtPlayer.value = Settings.crtPlayer
         onEventGameAction(FRAME_UPDATED)
+        savePref(K_BOOL_TOGGLE_LONG_SHOT, false)
+        savePref(K_BOOL_TOGGLE_REST_SHOT, false)
     }
 
-    private val _eventSettingsUpdated = MutableSharedFlow<Event<Unit>>()
-    val eventSettingsUpdated = _eventSettingsUpdated.asSharedFlow()
-    fun onEventSettingsUpdated() = viewModelScope.launch {
-        _eventSettingsUpdated.emit(Event(Unit))
-    }
+    fun savePref(key: String, value: Boolean) = dataStore.savePreferences(key, value)
 
     // Match actions
-    fun loadMatch(frame: DomainFrame?) = frame?.let { // Will load latest frame once observed from play fragment
+    fun loadMatch(frame: DomainFrame?) = frame?.let {
         jobQueue = JobQueue()
         score = it.score.toMutableList()
         ballStack = it.ballStack.toMutableList()
@@ -90,15 +78,15 @@ class GameViewModel(
         onEventFrameUpdated(DomainActionLog("loadMatch(): ${it.getTextInfo()}"))
     }
 
-    fun resetMatch() { // When starting new match, cancelling or ending an existing match
+    fun resetMatch() {
         jobQueue = JobQueue()
         score.resetMatch()
         resetFrame(MATCH_START_NEW)
         onEventFrameUpdated(DomainActionLog("resetMatch()"))
     }
 
-    fun resetFrame(matchAction: MatchAction) { // Reset all frame values on match reset, frame rerack and frame start new
-        Toggle.FreeBall.isEnabled = false
+    fun resetFrame(matchAction: MatchAction) {
+        savePref(K_BOOL_TOGGLE_FREEBALL, false)
         Settings.resetFrameAndGetFirstPlayer(matchAction)
         score.resetFrame(matchAction)
         ballStack.resetBalls()
@@ -106,31 +94,29 @@ class GameViewModel(
         onEventFrameUpdated(DomainActionLog("resetFrame()"))
     }
 
-    fun endFrame(matchAction: MatchAction) { // Update frame data in match view model
+    fun endFrame(matchAction: MatchAction) {
         score.endFrame()
         onEventFrameUpdated(DomainActionLog("endFrame()"))
         if (matchAction in listOf(FRAME_MISS_FORFEIT, FRAME_TO_END, FRAME_ENDED)) onEventGameAction(FRAME_START_NEW, true)
         if (matchAction in listOf(MATCH_TO_END, MATCH_ENDED)) onEventGameAction(NAV_TO_POST_MATCH, true)
     }
 
-    @JvmOverloads // Assign pot action
-    fun assignPot(potType: PotType?, ball: DomainBall = NOBALL(), action: PotAction = FIRST) {
+    fun assignPot(potType: PotType?, ball: DomainBall = NOBALL(), action: PotAction = FIRST) = viewModelScope.launch {
         if (!isUpdateInProgress) {
             isUpdateInProgress = true
             if (potType == null) handleUndo()
             else {
-                val pot = potType.getPotFromType(ball, action, getShotType())
-                if (handlePotExceptionsBefore(pot)) {
-                    isUpdateInProgress = false
-                    return
+                val pot = potType.getPotFromType(ball, action, dataStore.getShotType())
+                if (handlePotExceptionsBefore(pot)) isUpdateInProgress = false
+                else {
+                    handlePot(
+                        if (pot.ball is FREEBALL) FREE(
+                            ball = FREEBALL(points = pot.ball.points),
+                            shotType = dataStore.getShotType()
+                        ) else pot
+                    )
+                    handlePotExceptionsPost(pot)
                 }
-                handlePot(
-                    if (pot.ball is FREEBALL) FREE(
-                        ball = FREEBALL(points = pot.ball.points),
-                        shotType = getShotType()
-                    ) else pot
-                )
-                handlePotExceptionsPost(pot)
             }
             isUpdateInProgress = false
         }
@@ -147,7 +133,7 @@ class GameViewModel(
 
     private fun handlePot(pot: DomainPot) {
         pot.potId = Settings.assignUniqueId()
-        Toggle.FreeBall.handlePotFreeballToggle(pot)
+        handlePotFreeballToggle(pot.potType, dataStore)
         ballStack.onPot(pot.potType, pot.potAction)
         frameStack.onPot(pot, score[Settings.crtPlayer].pointsWithoutReturn, score)
         score.calculatePoints(pot, 1, ballStack.foulValue())
@@ -174,7 +160,7 @@ class GameViewModel(
         val pot = frameStack.removeLastPotFromFrameStack(score)
         val actionLog = pot.getActionLog("HandleUndo()", ballStack.lastOrNull()?.ballType, frameStack.size)
         ballStack.onUndo(pot.potType, pot.potAction, frameStack)
-        Toggle.FreeBall.handleUndoFreeballToggle(pot.potType, frameStack.lastPotType())
+        handleUndoFreeballToggle(pot.potType, frameStack.lastPotType(), dataStore)
         score.calculatePoints(pot, -1, ballStack.foulValue())
         onEventFrameUpdated(actionLog)
         handleUndoExceptionsPost(pot)
@@ -191,7 +177,6 @@ class GameViewModel(
 
     // Checker methods
     fun isFrameMathematicallyOver() = ballStack.availablePoints() < score.frameScoreDiff()
-    fun isRemoveColorAvailable() = ballStack.isInColors() && frameStack.lastPotType() == TYPE_FREE
 
     fun emailLogs(context: Context) = viewModelScope.launch {
         val logs = snookerRepository.getDomainActionLogs().toString()

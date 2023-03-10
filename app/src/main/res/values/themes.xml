@@ -1,7 +1,24 @@
 <resources>
+    <style name="Theme.SnookerBoard" parent="Theme.MaterialComponents.Light.NoActionBar">
+<!--        &lt;!&ndash; Primary brand color. &ndash;&gt;-->
+<!--        <item name="colorPrimary">@color/brown</item>-->
+<!--        <item name="colorPrimaryVariant">@color/brown_dark</item>-->
+<!--        <item name="colorOnPrimary">@color/beige</item>-->
+<!--        &lt;!&ndash; Secondary brand color. &ndash;&gt;-->
+<!--        <item name="colorSecondary">@color/green</item>-->
+<!--        <item name="colorSecondaryVariant">@color/green_dark</item>-->
+<!--        &lt;!&ndash; Status bar color. &ndash;&gt;-->
+<!--        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>-->
+
+<!--        &lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+<!--        <item name="windowActionBar">false</item>-->
+<!--        <item name="windowNoTitle">true</item>-->
+<!--        <item name="android:windowBackground">@drawable/background</item>-->
+    </style>
+
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/beige</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_temp_splash_screen</item>
-        <item name="postSplashScreenTheme">@style/Theme.AppCompat.Light.NoActionBar</item>
+        <item name="postSplashScreenTheme">@style/Theme.SnookerBoard</item>
     </style>
 </resources>

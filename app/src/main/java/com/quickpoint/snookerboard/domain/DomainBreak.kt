@@ -5,7 +5,6 @@ import com.quickpoint.snookerboard.domain.PotAction.CONTINUE
 import com.quickpoint.snookerboard.domain.PotAction.RETAKE
 import com.quickpoint.snookerboard.domain.PotType.*
 import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
-import com.quickpoint.snookerboard.domain.objects.Toggle
 import com.quickpoint.snookerboard.domain.objects.getOtherPlayer
 
 // The DOMAIN Break class is a list of balls potted in one visit (consecutive balls by one player until the other player takes over or the frame ends)
@@ -40,12 +39,12 @@ data class DomainBreak(
 }
 
 // Checker methods
-fun MutableList<DomainBreak>.isFrameInProgress() = size > 0
-fun MutableList<DomainBreak>.lastPot() = lastOrNull()?.lastPot()
-fun MutableList<DomainBreak>.lastPotType() = lastOrNull()?.lastPotType()
-fun MutableList<DomainBreak>.lastBall() = lastPot()?.ball
-fun MutableList<DomainBreak>.lastBallType() = lastBall()?.ballType
-fun MutableList<DomainBreak>.lastBallTypeBeforeRemoveBall(): BallType? {
+fun List<DomainBreak>.isFrameInProgress() = isNotEmpty()
+fun List<DomainBreak>.lastPot() = lastOrNull()?.lastPot()
+fun List<DomainBreak>.lastPotType() = lastOrNull()?.lastPotType()
+fun List<DomainBreak>.lastBall() = lastPot()?.ball
+fun List<DomainBreak>.lastBallType() = lastBall()?.ballType
+fun List<DomainBreak>.lastBallTypeBeforeRemoveBall(): BallType? {
     reversed().forEach { crtBreak ->
         crtBreak.pots.reversed().forEach { crtPot ->
             if (crtPot.potType == TYPE_HIT) return crtPot.ball.ballType
@@ -65,10 +64,10 @@ fun MutableList<DomainBreak>.findMaxBreak(): Int {
 }
 
 
-fun List<DomainBreak>.displayShots(): MutableList<DomainBreak> {
+fun List<DomainBreak>.displayShots(isAdvancedBreaksActive: Boolean): List<DomainBreak> {
     val list = mutableListOf<DomainBreak>()
     forEach {
-        val listOfPotTypes: List<PotType> = if (Toggle.AdvancedBreaks.isEnabled) listOfAdvancedShowablePotTypes else listOfStandardShowablePotTypes
+        val listOfPotTypes: List<PotType> = if (isAdvancedBreaksActive) listOfAdvancedShowablePotTypes else listOfStandardShowablePotTypes
         if (it.pots.last().potType in listOfPotTypes) list.add(it.copy())
     }
     return list
