@@ -1,7 +1,6 @@
 package com.quickpoint.snookerboard.ui.fragments.game
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,7 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.domain.DomainScore
+import com.quickpoint.snookerboard.domain.models.DomainScore
 import com.quickpoint.snookerboard.ui.components.ContainerColumn
 import com.quickpoint.snookerboard.ui.components.StandardRow
 import com.quickpoint.snookerboard.ui.components.TextSubtitle

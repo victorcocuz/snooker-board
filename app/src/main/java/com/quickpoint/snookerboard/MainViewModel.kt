@@ -2,25 +2,29 @@ package com.quickpoint.snookerboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.quickpoint.snookerboard.database.models.asDomain
-import com.quickpoint.snookerboard.domain.DomainFrame
-import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
-import com.quickpoint.snookerboard.domain.objects.MatchState.RULES_IDLE
-import com.quickpoint.snookerboard.repository.SnookerRepository
+import com.quickpoint.snookerboard.core.ScreenEvents
+import com.quickpoint.snookerboard.data.DataStore
+import com.quickpoint.snookerboard.data.database.models.asDomain
+import com.quickpoint.snookerboard.domain.models.DomainFrame
+import com.quickpoint.snookerboard.domain.repository.GameRepository
+import com.quickpoint.snookerboard.domain.utils.DomainPlayer
+import com.quickpoint.snookerboard.domain.utils.MatchSettings.Settings
+import com.quickpoint.snookerboard.domain.utils.MatchState.RULES_IDLE
 import com.quickpoint.snookerboard.ui.navigation.MenuItem
 import com.quickpoint.snookerboard.ui.navigation.Screen
 import com.quickpoint.snookerboard.ui.navigation.getRouteFromMatchState
-import com.quickpoint.snookerboard.utils.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
-class MainViewModel(
-    private val snookerRepository: SnookerRepository,
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val gameRepository: GameRepository,
     private val dataStore: DataStore
 ) : ViewModel() {
 
@@ -41,7 +45,11 @@ class MainViewModel(
         private set
 
     fun loadMatchIfSaved() = viewModelScope.launch {
-        snookerRepository.getCrtFrame().let { crtFrame ->
+        dataStore.loadPreferences()
+        DomainPlayer.Player01.assignDataStore(dataStore)
+        DomainPlayer.Player02.assignDataStore(dataStore)
+        Settings.dataStore = dataStore
+        gameRepository.getCrtFrame().let { crtFrame ->
             if (crtFrame == null) Settings.matchState = RULES_IDLE
             else cachedFrame = crtFrame.asDomain()
             onEmit(ScreenEvents.Navigate(getRouteFromMatchState(Settings.matchState)))
@@ -50,13 +58,13 @@ class MainViewModel(
 
     // Repository
     fun deleteCrtFrameFromDb() = viewModelScope.launch {
-        snookerRepository.deleteCrtFrame(Settings.crtFrame)
+        gameRepository.deleteCrtFrame(Settings.crtFrame)
     }
 
     fun deleteMatchFromDb() = viewModelScope.launch { // When starting a new match or cancelling an existing match
         Settings.matchState = RULES_IDLE
         Settings.resetRules()
-        snookerRepository.deleteCrtMatch()
+        gameRepository.deleteCrtMatch()
     }
 
     // AppBar
@@ -73,16 +81,6 @@ class MainViewModel(
             _actionItemsOverflow.emit(actionItemsOverflow)
             _actionItemOnClick.emit(onMenuItemSelected)
         }
-
-    // Data Store
-    val toggleAdvancedRules = dataStore.preferencesBooleanFlow(K_BOOL_TOGGLE_ADVANCED_RULES)
-    val toggleAdvancedStatistics = dataStore.preferencesBooleanFlow(K_BOOL_TOGGLE_ADVANCED_STATISTICS)
-    val toggleAdvancedBreaks = dataStore.preferencesBooleanFlow(K_BOOL_TOGGLE_ADVANCED_BREAKS)
-    val toggleLongShot = dataStore.preferencesBooleanFlow(K_BOOL_TOGGLE_LONG_SHOT)
-    val toggleRestShot = dataStore.preferencesBooleanFlow(K_BOOL_TOGGLE_REST_SHOT)
-    val toggleFreeball = dataStore.preferencesBooleanFlow(K_BOOL_TOGGLE_FREEBALL)
-    fun savePref(key: String, value: Boolean) = dataStore.savePreferences(key, value)
-
 }
 
 fun MainViewModel.navigateToRulesScreen() {

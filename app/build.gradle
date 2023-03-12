@@ -1,9 +1,9 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android' // Compose?
-    id 'kotlin-kapt'    // Data binding
-//    id 'androidx.navigation.safeargs.kotlin'
+    id 'kotlin-kapt'
     id 'org.jetbrains.kotlin.android'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -56,6 +56,10 @@ android {
     }
 }
 
+kapt {
+    correctErrorTypes true
+}
+
 dependencies {
     // Init
     implementation "androidx.core:core-ktx:$version_core"
@@ -83,11 +87,11 @@ dependencies {
     implementation 'androidx.compose.runtime:runtime-livedata' // Integration with LiveData
     implementation 'androidx.compose.runtime:runtime-rxjava2' // Integration with RxJava
     implementation 'androidx.activity:activity-compose:1.6.1' // Integration with activities
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1' // Integration with ViewModels
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0' // Integration with ViewModels
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1" // ConstraintLayout
-    implementation "androidx.navigation:navigation-compose:2.6.0-alpha05" // Navigation
+    implementation "androidx.navigation:navigation-compose:2.6.0-alpha07" // Navigation
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.27.0" // SystemUiController
-    implementation "androidx.compose.runtime:runtime-livedata:1.4.0-beta01" // LiveData
+    implementation "androidx.compose.runtime:runtime-livedata:1.4.0-rc01" // LiveData
 
     // Splash screen
     implementation "androidx.core:core-splashscreen:$version_splash_screen"
@@ -114,6 +118,12 @@ dependencies {
     kapt "androidx.room:room-compiler:$version_room"
     annotationProcessor "androidx.room:room-compiler:$version_room"
 
+    // Dagger
+    implementation 'com.google.dagger:hilt-android:2.45'
+    kapt 'com.google.dagger:hilt-compiler:2.45'
+    kapt "androidx.hilt:hilt-compiler:1.0.0"
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
+
     // Others
     implementation "com.jakewharton.timber:timber:$version_timber" // Timber
     implementation "com.google.code.gson:gson:$version_gson" // Gson
@@ -125,19 +135,23 @@ dependencies {
     testImplementation "junit:junit:$version_junit"
     testImplementation "org.robolectric:robolectric:$version_test_roboelectric"
     testImplementation "com.google.truth:truth:$version_test_truth"
-    testImplementation 'androidx.arch.core:core-testing:2.1.0'
-    androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
+    testImplementation 'androidx.arch.core:core-testing:2.2.0'
+    testImplementation 'com.google.dagger:hilt-android-testing:2.45' // Dagger
+    kaptTest 'com.google.dagger:hilt-compiler:2.45' // Dagger
 
-    testImplementation "io.mockk:mockk:1.13.3"
-    androidTestImplementation "io.mockk:mockk:1.13.3"
-    testImplementation "io.mockk:mockk-agent-jvm:1.13.3"
-    androidTestImplementation "io.mockk:mockk-agent-jvm:1.13.3"
+    testImplementation "io.mockk:mockk:1.13.4" // Mockk
+    testImplementation "io.mockk:mockk-agent-jvm:1.13.4" // Mockk
 
     // Test Androidx Implementation
     testImplementation "androidx.test.ext:junit-ktx:$version_test_x_junit"
     testImplementation "androidx.test:core-ktx:$version_test_x_core"
 
     // Android Test Implementations
+    androidTestImplementation 'androidx.arch.core:core-testing:2.2.0'
     androidTestImplementation "androidx.test.ext:junit:$version_test_x_junit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$version_test_espresso_core"
+    androidTestImplementation "io.mockk:mockk:1.13.4" // Mockk
+    androidTestImplementation "io.mockk:mockk-agent-jvm:1.13.4" // Mockk
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.45' // Dagger
+    kaptAndroidTest 'com.google.dagger:hilt-compiler:2.45' // Dagger
 }

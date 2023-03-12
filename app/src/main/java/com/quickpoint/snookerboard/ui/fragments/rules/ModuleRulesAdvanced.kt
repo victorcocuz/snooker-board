@@ -6,13 +6,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.quickpoint.snookerboard.R
+import com.quickpoint.snookerboard.core.utils.MatchAction.INFO_FOUL_DIALOG
+import com.quickpoint.snookerboard.core.utils.getListOfDialogActions
+import com.quickpoint.snookerboard.data.K_INT_MATCH_AVAILABLE_REDS
+import com.quickpoint.snookerboard.data.K_INT_MATCH_FOUL_MODIFIER
+import com.quickpoint.snookerboard.data.K_INT_MATCH_HANDICAP_FRAME
+import com.quickpoint.snookerboard.data.K_INT_MATCH_HANDICAP_MATCH
 import com.quickpoint.snookerboard.ui.components.ButtonStandardHoist
 import com.quickpoint.snookerboard.ui.components.ContainerRow
 import com.quickpoint.snookerboard.ui.components.IconInfo
 import com.quickpoint.snookerboard.ui.components.RulesHandicapLabel
 import com.quickpoint.snookerboard.ui.fragments.gamedialogs.DialogViewModel
-import com.quickpoint.snookerboard.utils.*
-import com.quickpoint.snookerboard.utils.MatchAction.INFO_FOUL_DIALOG
 
 @Composable
 fun ModuleRulesAdvanced(rulesVm: RulesViewModel, dialogVm: DialogViewModel, show: Boolean) {

@@ -9,19 +9,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.android.material.slider.LabelFormatter
 import com.google.android.material.slider.Slider
-import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.domain.DomainBall
-import com.quickpoint.snookerboard.domain.DomainFrame
-import com.quickpoint.snookerboard.domain.PotAction
-import com.quickpoint.snookerboard.domain.maxRemoveReds
+import com.quickpoint.snookerboard.core.utils.BallAdapterType
+import com.quickpoint.snookerboard.core.utils.MatchAction.FOUL_DIALOG
+import com.quickpoint.snookerboard.data.K_BOOL_TOGGLE_FREEBALL
+import com.quickpoint.snookerboard.data.K_BOOL_TOGGLE_LONG_SHOT
+import com.quickpoint.snookerboard.data.K_BOOL_TOGGLE_REST_SHOT
+import com.quickpoint.snookerboard.domain.models.DomainBall
+import com.quickpoint.snookerboard.domain.models.DomainFrame
+import com.quickpoint.snookerboard.domain.models.PotAction
+import com.quickpoint.snookerboard.domain.models.maxRemoveReds
 import com.quickpoint.snookerboard.ui.components.*
 import com.quickpoint.snookerboard.ui.fragments.game.GameViewModel
-import com.quickpoint.snookerboard.utils.*
-import com.quickpoint.snookerboard.utils.MatchAction.FOUL_DIALOG
+import com.quickpoint.snookerboard.utils.getGenericDialogTitleText
 
 @Composable
-fun DialogFoul(mainVm: MainViewModel, gameVm: GameViewModel, dialogVm: DialogViewModel, onDismiss: () -> Unit, onConfirm: () -> Unit) {
+fun DialogFoul(gameVm: GameViewModel, dialogVm: DialogViewModel, onDismiss: () -> Unit, onConfirm: () -> Unit) {
     if (dialogVm.isFoulDialogShown) {
         val frame by gameVm.frameState.collectAsState()
         val actionClicked by dialogVm.actionClicked.collectAsState()
@@ -35,7 +38,7 @@ fun DialogFoul(mainVm: MainViewModel, gameVm: GameViewModel, dialogVm: DialogVie
             FoulDialogRedsPottedSlider(dialogReds, frame.ballStack.maxRemoveReds().toFloat(), frame.ballStack.maxRemoveReds() > 0) {
                 dialogVm.onDialogReds(it)
             }
-            FoulDialogOtherActions(mainVm,gameVm, frame, actionClicked)
+            FoulDialogOtherActions(gameVm, frame, actionClicked)
             ContainerRow {
                 ButtonStandard(text = stringResource(R.string.f_dialog_foul_btn_cancel)) { onDismiss() }
                 ButtonStandard(text = stringResource(R.string.f_dialog_foul_btn_submit)) { onConfirm() }
@@ -121,7 +124,6 @@ fun FoulDialogRedsPottedSlider(
 
 @Composable
 fun FoulDialogOtherActions(
-    mainVm: MainViewModel,
     gameVm: GameViewModel,
     domainFrame: DomainFrame,
     actionClicked: PotAction,
@@ -130,10 +132,10 @@ fun FoulDialogOtherActions(
     title = stringResource(R.string.f_dialog_foul_tv_shot_type_label),
 ) {
 
-    val isLongActive by mainVm.toggleLongShot.collectAsState(false)
-    val isRestActive by mainVm.toggleRestShot.collectAsState(false)
-    val isFreeballActive by mainVm.toggleFreeball.collectAsState(false)
-    val isAdvancesStatisticsActive by mainVm.toggleAdvancedStatistics.collectAsState(false)
+    val isLongActive by gameVm.dataStoreRepository.toggleLongShot.collectAsState(false)
+    val isRestActive by gameVm.dataStoreRepository.toggleRestShot.collectAsState(false)
+    val isFreeballActive by gameVm.dataStoreRepository.toggleFreeball.collectAsState(false)
+    val isAdvancesStatisticsActive by gameVm.dataStoreRepository.toggleAdvancedStatistics.collectAsState(false)
 
     val isFreeBallEnabled = actionClicked == PotAction.SWITCH && domainFrame.ballStack.size > 2
     if (!isFreeBallEnabled) gameVm.savePref(K_BOOL_TOGGLE_FREEBALL, false)

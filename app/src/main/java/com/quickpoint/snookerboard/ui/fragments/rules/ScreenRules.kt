@@ -8,7 +8,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.platform.LocalView
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.findViewTreeViewModelStoreOwner
 import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.ui.components.BackPressHandler
 import com.quickpoint.snookerboard.ui.components.FragmentContent
@@ -16,21 +18,17 @@ import com.quickpoint.snookerboard.ui.components.FragmentExtras
 import com.quickpoint.snookerboard.ui.components.MainButton
 import com.quickpoint.snookerboard.ui.fragments.gamedialogs.DialogGeneric
 import com.quickpoint.snookerboard.ui.fragments.gamedialogs.DialogViewModel
-import com.quickpoint.snookerboard.utils.DataStore
-import com.quickpoint.snookerboard.utils.GenericViewModelFactory
 
 @Composable
-fun ScreenRules(
-    mainVm: MainViewModel,
-    dataStore: DataStore
-) {
-    val rulesVm: RulesViewModel = viewModel(factory = GenericViewModelFactory(dataStore))
-    val dialogVm: DialogViewModel = viewModel(factory = GenericViewModelFactory(dataStore))
+fun ScreenRules() {
+    val mainVm = LocalView.current.findViewTreeViewModelStoreOwner().let { hiltViewModel<MainViewModel>(it!!) }
+    val rulesVm = hiltViewModel<RulesViewModel>()
+    val dialogVm = hiltViewModel<DialogViewModel>()
     val focusManager = LocalFocusManager.current
 
     mainVm.setupActionBarActions(emptyList(), emptyList()) { }
 
-    val isAdvancedRules by mainVm.toggleAdvancedRules.collectAsState(false)
+    val isAdvancedRules by rulesVm.dataStoreRepository.toggleAdvancedRules.collectAsState(false)
 
     LaunchedEffect(Unit) {
         mainVm.turnOffSplashScreen()

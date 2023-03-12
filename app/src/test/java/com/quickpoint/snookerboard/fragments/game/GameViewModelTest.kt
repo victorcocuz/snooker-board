@@ -7,10 +7,10 @@ package com.quickpoint.snookerboard.fragments.game
 //import com.google.gson.reflect.TypeToken
 //import com.quickpoint.snookerboard.database.SnookerDatabase
 //import com.quickpoint.snookerboard.domain.*
-//import com.quickpoint.snookerboard.domain.BallType.*
-//import com.quickpoint.snookerboard.domain.DomainBall.*
-//import com.quickpoint.snookerboard.domain.DomainPot.*
-//import com.quickpoint.snookerboard.domain.PotAction.*
+//import com.quickpoint.snookerboard.domain.models.BallType.*
+//import com.quickpoint.snookerboard.domain.models.DomainBall.*
+//import com.quickpoint.snookerboard.domain.models.DomainPot.*
+//import com.quickpoint.snookerboard.domain.models.PotAction.*
 //import com.quickpoint.snookerboard.domain.objects.MatchSettings.*
 //import com.quickpoint.snookerboard.repository.SnookerRepository
 //import com.quickpoint.snookerboard.ui.fragments.game.GameViewModel

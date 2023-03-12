@@ -5,18 +5,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.quickpoint.snookerboard.domain.DomainBall
-import com.quickpoint.snookerboard.domain.PotAction
-import com.quickpoint.snookerboard.utils.DataStore
-import com.quickpoint.snookerboard.utils.K_BOOL_TOGGLE_FREEBALL
-import com.quickpoint.snookerboard.utils.MatchAction
+import com.quickpoint.snookerboard.core.utils.MatchAction
+import com.quickpoint.snookerboard.data.DataStore
+import com.quickpoint.snookerboard.data.K_BOOL_TOGGLE_FREEBALL
+import com.quickpoint.snookerboard.domain.models.DomainBall
+import com.quickpoint.snookerboard.domain.models.PotAction
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DialogViewModel(
+@HiltViewModel
+class DialogViewModel @Inject constructor(
     private val dataStore: DataStore
     ) : ViewModel() {
 

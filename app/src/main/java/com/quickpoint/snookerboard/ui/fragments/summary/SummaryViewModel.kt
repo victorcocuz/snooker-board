@@ -2,17 +2,22 @@ package com.quickpoint.snookerboard.ui.fragments.summary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.quickpoint.snookerboard.domain.emptyDomainScore
-import com.quickpoint.snookerboard.repository.SnookerRepository
+import com.quickpoint.snookerboard.domain.models.DomainScore
+import com.quickpoint.snookerboard.domain.models.emptyDomainScore
+import com.quickpoint.snookerboard.domain.repository.GameRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SummaryViewModel(
-    private val snookerRepository: SnookerRepository,
+@HiltViewModel
+class SummaryViewModel @Inject constructor(
+    private val gameRepository: GameRepository,
 ) : ViewModel() {
 
-    val score = snookerRepository.score
+    val score: Flow<ArrayList<Pair<DomainScore, DomainScore>>> = gameRepository.score
 
     private val _totalsA = MutableStateFlow(emptyDomainScore)
     val totalsA = _totalsA.asStateFlow()
@@ -21,8 +26,8 @@ class SummaryViewModel(
 
     init {
         viewModelScope.launch {
-            _totalsA.emit(snookerRepository.getTotals(0))
-            _totalsB.emit(snookerRepository.getTotals(1))
+            _totalsA.emit(gameRepository.getTotals(0))
+            _totalsB.emit(gameRepository.getTotals(1))
         }
     }
 }

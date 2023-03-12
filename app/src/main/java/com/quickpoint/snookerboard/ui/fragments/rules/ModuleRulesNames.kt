@@ -19,15 +19,15 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.base.Event
-import com.quickpoint.snookerboard.domain.objects.getPlaceholderStringIdByKey
-import com.quickpoint.snookerboard.domain.objects.getPlayerNameByKey
+import com.quickpoint.snookerboard.core.base.Event
+import com.quickpoint.snookerboard.domain.utils.getPlaceholderStringIdByKey
+import com.quickpoint.snookerboard.domain.utils.getPlayerNameByKey
 import com.quickpoint.snookerboard.ui.components.TextSubtitle
 import com.quickpoint.snookerboard.ui.theme.spacing
-import com.quickpoint.snookerboard.utils.K_PLAYER01_FIRST_NAME
-import com.quickpoint.snookerboard.utils.K_PLAYER01_LAST_NAME
-import com.quickpoint.snookerboard.utils.K_PLAYER02_FIRST_NAME
-import com.quickpoint.snookerboard.utils.K_PLAYER02_LAST_NAME
+import com.quickpoint.snookerboard.data.K_PLAYER01_FIRST_NAME
+import com.quickpoint.snookerboard.data.K_PLAYER01_LAST_NAME
+import com.quickpoint.snookerboard.data.K_PLAYER02_FIRST_NAME
+import com.quickpoint.snookerboard.data.K_PLAYER02_LAST_NAME
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

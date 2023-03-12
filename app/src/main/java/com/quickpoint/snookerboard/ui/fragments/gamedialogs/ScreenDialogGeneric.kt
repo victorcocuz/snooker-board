@@ -7,11 +7,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.domain.isFrameEqual
+import com.quickpoint.snookerboard.core.utils.MatchAction
+import com.quickpoint.snookerboard.domain.models.isFrameEqual
 import com.quickpoint.snookerboard.ui.components.*
 import com.quickpoint.snookerboard.ui.fragments.game.GameViewModel
 import com.quickpoint.snookerboard.utils.*
-import com.quickpoint.snookerboard.utils.MatchAction.*
+import com.quickpoint.snookerboard.core.utils.MatchAction.*
+import com.quickpoint.snookerboard.core.utils.listOfMatchActionsUncancelable
 
 @Composable
 fun DialogGeneric(

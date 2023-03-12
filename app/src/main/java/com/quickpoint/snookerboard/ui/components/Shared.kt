@@ -13,12 +13,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.domain.*
-import com.quickpoint.snookerboard.domain.objects.DomainPlayer
+import com.quickpoint.snookerboard.core.utils.BallAdapterType
+import com.quickpoint.snookerboard.core.utils.PlayerTagType
+import com.quickpoint.snookerboard.core.utils.colorTransition
+import com.quickpoint.snookerboard.domain.models.*
+import com.quickpoint.snookerboard.domain.utils.DomainPlayer
 import com.quickpoint.snookerboard.ui.theme.*
-import com.quickpoint.snookerboard.utils.BallAdapterType
-import com.quickpoint.snookerboard.utils.PlayerTagType
-import com.quickpoint.snookerboard.utils.colorTransition
 
 @Composable
 fun ComponentPlayerNames(crtPlayer: Int) = ContainerRow(Modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 8.dp)){

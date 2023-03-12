@@ -18,13 +18,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.base.Event
-import com.quickpoint.snookerboard.domain.objects.MatchSettings
+import com.quickpoint.snookerboard.core.base.Event
+import com.quickpoint.snookerboard.data.K_INT_MATCH_AVAILABLE_FRAMES
+import com.quickpoint.snookerboard.data.K_INT_MATCH_STARTING_PLAYER
+import com.quickpoint.snookerboard.domain.utils.MatchSettings
 import com.quickpoint.snookerboard.ui.components.ButtonStandardHoist
 import com.quickpoint.snookerboard.ui.components.ContainerRow
 import com.quickpoint.snookerboard.ui.theme.spacing
-import com.quickpoint.snookerboard.utils.K_INT_MATCH_AVAILABLE_FRAMES
-import com.quickpoint.snookerboard.utils.K_INT_MATCH_STARTING_PLAYER
 import com.shawnlin.numberpicker.NumberPicker
 
 @OptIn(ExperimentalComposeUiApi::class)

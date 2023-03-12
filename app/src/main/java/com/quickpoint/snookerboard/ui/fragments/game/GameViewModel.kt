@@ -5,23 +5,32 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.quickpoint.snookerboard.BuildConfig
-import com.quickpoint.snookerboard.domain.*
-import com.quickpoint.snookerboard.domain.DomainBall.FREEBALL
-import com.quickpoint.snookerboard.domain.DomainBall.NOBALL
-import com.quickpoint.snookerboard.domain.DomainPot.FOULATTEMPT
-import com.quickpoint.snookerboard.domain.DomainPot.FREE
-import com.quickpoint.snookerboard.domain.PotAction.FIRST
-import com.quickpoint.snookerboard.domain.PotType.*
-import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
-import com.quickpoint.snookerboard.domain.objects.getAsText
-import com.quickpoint.snookerboard.domain.objects.getCrtPlayerFromPotAction
-import com.quickpoint.snookerboard.domain.objects.handlePotFreeballToggle
-import com.quickpoint.snookerboard.domain.objects.handleUndoFreeballToggle
-import com.quickpoint.snookerboard.repository.SnookerRepository
+import com.quickpoint.snookerboard.core.utils.Constants
+import com.quickpoint.snookerboard.core.utils.JobQueue
+import com.quickpoint.snookerboard.core.utils.MatchAction
+import com.quickpoint.snookerboard.core.utils.MatchAction.*
+import com.quickpoint.snookerboard.core.utils.sendEmail
+import com.quickpoint.snookerboard.data.DataStore
+import com.quickpoint.snookerboard.data.K_BOOL_TOGGLE_FREEBALL
+import com.quickpoint.snookerboard.data.K_BOOL_TOGGLE_LONG_SHOT
+import com.quickpoint.snookerboard.data.K_BOOL_TOGGLE_REST_SHOT
+import com.quickpoint.snookerboard.domain.models.*
+import com.quickpoint.snookerboard.domain.models.DomainBall.FREEBALL
+import com.quickpoint.snookerboard.domain.models.DomainBall.NOBALL
+import com.quickpoint.snookerboard.domain.models.DomainPot.FOULATTEMPT
+import com.quickpoint.snookerboard.domain.models.DomainPot.FREE
+import com.quickpoint.snookerboard.domain.models.PotAction.FIRST
+import com.quickpoint.snookerboard.domain.models.PotType.*
+import com.quickpoint.snookerboard.domain.repository.DataStoreRepository
+import com.quickpoint.snookerboard.domain.repository.GameRepository
+import com.quickpoint.snookerboard.domain.utils.MatchSettings.Settings
+import com.quickpoint.snookerboard.domain.utils.getAsText
+import com.quickpoint.snookerboard.domain.utils.getCrtPlayerFromPotAction
+import com.quickpoint.snookerboard.domain.utils.handlePotFreeballToggle
+import com.quickpoint.snookerboard.domain.utils.handleUndoFreeballToggle
 import com.quickpoint.snookerboard.ui.navigation.MenuItem
 import com.quickpoint.snookerboard.ui.navigation.MenuItemIds
-import com.quickpoint.snookerboard.utils.*
-import com.quickpoint.snookerboard.utils.MatchAction.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,10 +38,13 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
-class GameViewModel(
-    private val snookerRepository: SnookerRepository,
-    private val dataStore: DataStore,
+@HiltViewModel
+class GameViewModel @Inject constructor(
+    private val gameRepository: GameRepository,
+    val dataStoreRepository: DataStoreRepository,
+    private val dataStore: DataStore
 ) : ViewModel() {
 
     // Variables
@@ -60,7 +72,7 @@ class GameViewModel(
     private fun onEventFrameUpdated(actionLog: DomainActionLog) = jobQueue.submit {
         _frameState.value =
             DomainFrame(Settings.crtFrame, ballStack, score, frameStack, actionLogs.toList(), Settings.maxFramePoints)
-        if (actionLogs.size > 0) snookerRepository.saveCrtFrame(_frameState.value)
+        if (actionLogs.size > 0) gameRepository.saveCrtFrame(_frameState.value)
         actionLogs.addLog(actionLog)
         onEventGameAction(FRAME_UPDATED)
         savePref(K_BOOL_TOGGLE_LONG_SHOT, false)
@@ -179,8 +191,8 @@ class GameViewModel(
     fun isFrameMathematicallyOver() = ballStack.availablePoints() < score.frameScoreDiff()
 
     fun emailLogs(context: Context) = viewModelScope.launch {
-        val logs = snookerRepository.getDomainActionLogs().toString()
-        val json = Gson().toJson(snookerRepository.getDomainActionLogs())
+        val logs = gameRepository.getDomainActionLogs().toString()
+        val json = Gson().toJson(gameRepository.getDomainActionLogs())
         val body = "${Settings.getAsText()} \n\n $json \n\n $logs"
         Timber.e(json)
         context.sendEmail(arrayOf(BuildConfig.ADMIN_EMAIL), Constants.EMAIL_SUBJECT_LOGS, body)

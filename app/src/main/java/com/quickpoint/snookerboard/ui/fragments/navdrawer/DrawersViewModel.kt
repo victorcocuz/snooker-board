@@ -2,12 +2,15 @@ package com.quickpoint.snookerboard.ui.fragments.navdrawer
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import com.quickpoint.snookerboard.utils.DataStore
-import com.quickpoint.snookerboard.utils.vibrateOnce
+import com.quickpoint.snookerboard.core.utils.vibrateOnce
+import com.quickpoint.snookerboard.domain.repository.DataStoreRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class DrawersViewModel(private val dataStore: DataStore) : ViewModel() {
+@HiltViewModel
+class DrawersViewModel @Inject constructor(val dataStoreRepository: DataStoreRepository) : ViewModel() {
     fun onToggleChange(key: String, context: Context) {
         context.vibrateOnce()
-        dataStore.saveAndSwitchValue(key)
+        dataStoreRepository.switchBoolAndSavePref(key)
     }
 }

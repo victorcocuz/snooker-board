@@ -2,22 +2,26 @@ package com.quickpoint.snookerboard.ui.fragments.rules
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.quickpoint.snookerboard.ScreenEvents
-import com.quickpoint.snookerboard.base.Event
-import com.quickpoint.snookerboard.domain.objects.DomainPlayer.Player01
-import com.quickpoint.snookerboard.domain.objects.DomainPlayer.Player02
-import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
-import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings.updateSettings
-import com.quickpoint.snookerboard.domain.objects.handicapFrameExceedsLimit
-import com.quickpoint.snookerboard.domain.objects.handicapMatchExceedsLimit
-import com.quickpoint.snookerboard.domain.objects.setPlayerName
+import com.quickpoint.snookerboard.core.ScreenEvents
+import com.quickpoint.snookerboard.core.base.Event
+import com.quickpoint.snookerboard.core.utils.MatchAction.*
+import com.quickpoint.snookerboard.domain.repository.DataStoreRepository
+import com.quickpoint.snookerboard.domain.utils.DomainPlayer.Player01
+import com.quickpoint.snookerboard.domain.utils.DomainPlayer.Player02
+import com.quickpoint.snookerboard.domain.utils.MatchSettings.Settings
+import com.quickpoint.snookerboard.domain.utils.MatchSettings.Settings.updateSettings
+import com.quickpoint.snookerboard.domain.utils.handicapFrameExceedsLimit
+import com.quickpoint.snookerboard.domain.utils.handicapMatchExceedsLimit
+import com.quickpoint.snookerboard.domain.utils.setPlayerName
 import com.quickpoint.snookerboard.ui.navigation.Screen
-import com.quickpoint.snookerboard.utils.MatchAction.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RulesViewModel: ViewModel() {
+@HiltViewModel
+class RulesViewModel @Inject constructor(val dataStoreRepository: DataStoreRepository): ViewModel() {
 
     private fun onEmit(screenEvent: ScreenEvents) = viewModelScope.launch {
         _eventSharedFlow.emit(screenEvent)

@@ -6,9 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.domain.isFrameAndMatchEqual
-import com.quickpoint.snookerboard.domain.isFrameEqual
-import com.quickpoint.snookerboard.domain.isFrameInProgress
+import com.quickpoint.snookerboard.domain.models.isFrameAndMatchEqual
+import com.quickpoint.snookerboard.domain.models.isFrameEqual
+import com.quickpoint.snookerboard.domain.models.isFrameInProgress
 import com.quickpoint.snookerboard.ui.fragments.game.GameViewModel
 
 class MenuItem(

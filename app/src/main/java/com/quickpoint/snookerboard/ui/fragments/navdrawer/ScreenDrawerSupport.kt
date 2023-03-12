@@ -16,16 +16,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.billing.PurchaseHelper
+import com.quickpoint.snookerboard.core.billing.PurchaseHelper
+import com.quickpoint.snookerboard.core.utils.Constants
+import com.quickpoint.snookerboard.core.utils.Constants.PRODUCT_BEER
+import com.quickpoint.snookerboard.core.utils.Constants.PRODUCT_COFFEE
+import com.quickpoint.snookerboard.core.utils.Constants.PRODUCT_LUNCH
 import com.quickpoint.snookerboard.ui.components.FragmentContent
 import com.quickpoint.snookerboard.ui.components.TextHeadline
 import com.quickpoint.snookerboard.ui.components.TextParagraph
 import com.quickpoint.snookerboard.ui.components.TextSubtitle
 import com.quickpoint.snookerboard.ui.theme.spacing
-import com.quickpoint.snookerboard.utils.Constants
-import com.quickpoint.snookerboard.utils.Constants.PRODUCT_BEER
-import com.quickpoint.snookerboard.utils.Constants.PRODUCT_COFFEE
-import com.quickpoint.snookerboard.utils.Constants.PRODUCT_LUNCH
 
 @Composable
 fun ScreenDrawerSupport(purchaseHelper: PurchaseHelper) {

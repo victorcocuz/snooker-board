@@ -9,11 +9,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.quickpoint.snookerboard.domain.DomainFrame
-import com.quickpoint.snookerboard.domain.availablePoints
-import com.quickpoint.snookerboard.domain.frameScoreDiff
-import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
-import com.quickpoint.snookerboard.domain.objects.getDisplayFrames
+import com.quickpoint.snookerboard.domain.models.DomainFrame
+import com.quickpoint.snookerboard.domain.models.availablePoints
+import com.quickpoint.snookerboard.domain.models.frameScoreDiff
+import com.quickpoint.snookerboard.domain.utils.MatchSettings.Settings
+import com.quickpoint.snookerboard.domain.utils.getDisplayFrames
 import com.quickpoint.snookerboard.ui.components.ContainerColumn
 import com.quickpoint.snookerboard.ui.components.StandardRow
 import com.quickpoint.snookerboard.ui.components.TextSubtitle

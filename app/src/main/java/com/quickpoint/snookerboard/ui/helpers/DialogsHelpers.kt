@@ -3,11 +3,13 @@ package com.quickpoint.snookerboard.utils
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.domain.DomainScore
-import com.quickpoint.snookerboard.domain.isFrameWinResultingMatchTie
-import com.quickpoint.snookerboard.domain.isMatchEqual
-import com.quickpoint.snookerboard.domain.isNoFrameFinished
-import com.quickpoint.snookerboard.utils.MatchAction.*
+import com.quickpoint.snookerboard.core.utils.Constants
+import com.quickpoint.snookerboard.core.utils.MatchAction
+import com.quickpoint.snookerboard.domain.models.DomainScore
+import com.quickpoint.snookerboard.domain.models.isFrameWinResultingMatchTie
+import com.quickpoint.snookerboard.domain.models.isMatchEqual
+import com.quickpoint.snookerboard.domain.models.isNoFrameFinished
+import com.quickpoint.snookerboard.core.utils.MatchAction.*
 
 @Composable
 fun getGenericDialogTitleText(matchActionB: MatchAction, matchActionC: MatchAction) = stringResource(

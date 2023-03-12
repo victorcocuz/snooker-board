@@ -10,10 +10,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.quickpoint.snookerboard.BuildConfig
 import com.quickpoint.snookerboard.R
+import com.quickpoint.snookerboard.core.utils.Constants.EMAIL_SUBJECT_IMPROVE
+import com.quickpoint.snookerboard.core.utils.Constants.GOOGLE_FORM_URI
+import com.quickpoint.snookerboard.core.utils.sendEmail
 import com.quickpoint.snookerboard.ui.components.*
-import com.quickpoint.snookerboard.utils.Constants.EMAIL_SUBJECT_IMPROVE
-import com.quickpoint.snookerboard.utils.Constants.GOOGLE_FORM_URI
-import com.quickpoint.snookerboard.utils.sendEmail
 
 @Composable
 fun ScreenDrawerImprove() = FragmentContent(Modifier.verticalScroll(rememberScrollState())) {

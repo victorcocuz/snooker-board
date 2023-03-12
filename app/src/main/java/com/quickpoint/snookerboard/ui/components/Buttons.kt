@@ -16,17 +16,17 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.base.Event
-import com.quickpoint.snookerboard.domain.DomainBall
-import com.quickpoint.snookerboard.domain.DomainBall.*
-import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
-import com.quickpoint.snookerboard.domain.objects.getHandicap
-import com.quickpoint.snookerboard.domain.objects.getSettingsTextIdByKeyAndValue
-import com.quickpoint.snookerboard.domain.objects.isSettingsButtonSelected
+import com.quickpoint.snookerboard.core.base.Event
+import com.quickpoint.snookerboard.core.utils.BallAdapterType
+import com.quickpoint.snookerboard.data.K_INT_MATCH_HANDICAP_FRAME
+import com.quickpoint.snookerboard.domain.models.DomainBall
+import com.quickpoint.snookerboard.domain.models.DomainBall.*
+import com.quickpoint.snookerboard.domain.utils.MatchSettings.Settings
+import com.quickpoint.snookerboard.domain.utils.getHandicap
+import com.quickpoint.snookerboard.domain.utils.getSettingsTextIdByKeyAndValue
+import com.quickpoint.snookerboard.domain.utils.isSettingsButtonSelected
 import com.quickpoint.snookerboard.ui.fragments.rules.RulesViewModel
 import com.quickpoint.snookerboard.ui.theme.*
-import com.quickpoint.snookerboard.utils.BallAdapterType
-import com.quickpoint.snookerboard.utils.K_INT_MATCH_HANDICAP_FRAME
 import kotlinx.coroutines.launch
 
 

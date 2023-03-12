@@ -19,7 +19,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
-import com.quickpoint.snookerboard.domain.*
 import com.quickpoint.snookerboard.ui.components.BallView
 import com.quickpoint.snookerboard.ui.components.ContainerColumn
 import com.quickpoint.snookerboard.ui.components.StandardRow
@@ -27,8 +26,9 @@ import com.quickpoint.snookerboard.ui.components.TextParagraph
 import com.quickpoint.snookerboard.ui.theme.BrownDark
 import com.quickpoint.snookerboard.ui.theme.BrownMedium
 import com.quickpoint.snookerboard.ui.theme.spacing
-import com.quickpoint.snookerboard.utils.BallAdapterType
-import com.quickpoint.snookerboard.utils.Constants
+import com.quickpoint.snookerboard.core.utils.BallAdapterType
+import com.quickpoint.snookerboard.core.utils.Constants
+import com.quickpoint.snookerboard.domain.models.*
 
 @Composable
 fun ColumnScope.ModuleGameBreaks(frameStack: List<DomainBreak>, isAdvancedBreaksActive: Boolean) = ContainerColumn(Modifier.weight(1f)){

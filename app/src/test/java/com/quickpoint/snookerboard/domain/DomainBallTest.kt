@@ -1,7 +1,7 @@
 package com.quickpoint.snookerboard.domain
 //
 //import com.google.common.truth.Truth.assertThat
-//import com.quickpoint.snookerboard.domain.BallType.*
+//import com.quickpoint.snookerboard.domain.models.BallType.*
 //import com.quickpoint.snookerboard.utils.FrameToggles
 //import org.junit.Test
 //

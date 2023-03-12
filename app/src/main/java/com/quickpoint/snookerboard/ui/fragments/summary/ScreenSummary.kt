@@ -8,21 +8,23 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.findViewTreeViewModelStoreOwner
 import com.quickpoint.snookerboard.MainViewModel
-import com.quickpoint.snookerboard.domain.DomainScore
-import com.quickpoint.snookerboard.domain.emptyDomainScore
-import com.quickpoint.snookerboard.domain.objects.MatchSettings
-import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings.crtPlayer
-import com.quickpoint.snookerboard.domain.objects.MatchState
-import com.quickpoint.snookerboard.domain.objects.getDisplayFrames
+import com.quickpoint.snookerboard.core.utils.StatisticsType
+import com.quickpoint.snookerboard.domain.models.DomainScore
+import com.quickpoint.snookerboard.domain.models.emptyDomainScore
+import com.quickpoint.snookerboard.domain.utils.MatchSettings
+import com.quickpoint.snookerboard.domain.utils.MatchSettings.Settings.crtPlayer
+import com.quickpoint.snookerboard.domain.utils.MatchState
+import com.quickpoint.snookerboard.domain.utils.getDisplayFrames
 import com.quickpoint.snookerboard.navigateToRulesScreen
 import com.quickpoint.snookerboard.ui.components.*
 import com.quickpoint.snookerboard.ui.fragments.game.ScoreFrameContainer
@@ -35,18 +37,15 @@ import com.quickpoint.snookerboard.ui.theme.Black
 import com.quickpoint.snookerboard.ui.theme.BrownDark
 import com.quickpoint.snookerboard.ui.theme.White
 import com.quickpoint.snookerboard.ui.theme.spacing
-import com.quickpoint.snookerboard.utils.GenericViewModelFactory
-import com.quickpoint.snookerboard.utils.StatisticsType
 
 @Composable
-fun ScreenSummary(
-    mainVm: MainViewModel
-) {
-    val summaryVm: SummaryViewModel = viewModel(factory = GenericViewModelFactory())
+fun ScreenSummary() {
+    val mainVm = LocalView.current.findViewTreeViewModelStoreOwner().let { hiltViewModel<MainViewModel>(it!!) }
+    val summaryVm = hiltViewModel<SummaryViewModel>()
 
     val totalsA by summaryVm.totalsA.collectAsState()
     val totalsB by summaryVm.totalsB.collectAsState()
-    val score: ArrayList<Pair<DomainScore, DomainScore>>? by summaryVm.score.observeAsState()
+    val score by summaryVm.score.collectAsState(null)
 
     mainVm.setupActionBarActions(emptyList(), emptyList()) { }
 
@@ -60,14 +59,13 @@ fun ScreenSummary(
     FragmentContent {
         ComponentPlayerNames(crtPlayer)
         ContainerRow {
-                ScoreFrameContainer("${totalsA.matchPoints}")
-                ScoreMatchContainer(text = MatchSettings.Settings.getDisplayFrames())
-                ScoreFrameContainer("${totalsB.matchPoints}")
+            ScoreFrameContainer("${totalsA.matchPoints}")
+            ScoreMatchContainer(text = MatchSettings.Settings.getDisplayFrames())
+            ScoreFrameContainer("${totalsB.matchPoints}")
         }
         score?.let { score ->
-            ContainerRow(
+            ContainerColumn(
                 Modifier
-                    .weight(1f)
                     .clip(RoundedCornerShape(MaterialTheme.spacing.small))
                     .border(
                         width = MaterialTheme.spacing.border,
@@ -75,16 +73,17 @@ fun ScreenSummary(
                         color = BrownDark
                     )
             ) {
-                SummaryScoreRow(Pair(emptyDomainScore, emptyDomainScore))
-                LazyColumn(Modifier.weight(1f)) {
+                SummaryScoreRow(Pair(emptyDomainScore, emptyDomainScore), isLabel = true)
+                LazyColumn {
                     itemsIndexed(score) { index, item ->
-                        SummaryScoreRow(item = item, index = index, size = score.size)
-                        HorizontalDivider()
+                        SummaryScoreRow(item = item, index = index, isLabel = false)
+                        if (index < score.size) HorizontalDivider()
                     }
                 }
-                SummaryScoreRow(Pair(totalsA, totalsB))
+                SummaryScoreRow(Pair(totalsA, totalsB), isLabel = true)
             }
         }
+        Spacer(Modifier.weight(1f))
         MainButton("Go To Main Menu") { mainVm.navigateToRulesScreen() }
     }
 
@@ -94,15 +93,15 @@ fun ScreenSummary(
 }
 
 @Composable
-fun SummaryScoreRow(item: Pair<DomainScore, DomainScore>, index: Int = 0, size: Int = 1) = StandardRow(
+fun SummaryScoreRow(item: Pair<DomainScore, DomainScore>, index: Int = 0, isLabel: Boolean) = StandardRow(
     Modifier
-        .background(setStatsTableBackground(index = index, size))
+        .background(setStatsTableBackground(index, isLabel))
         .fillMaxWidth()
         .height(40.dp)
         .padding(4.dp),
     horizontalArrangement = Arrangement.SpaceBetween
 ) {
-    val textColor = if (size == 1) Black else White
+    val textColor = if (isLabel) Black else White
     CentredScore(setGameStatsValue(StatisticsType.HIGHEST_BREAK, item.first.highestBreak), textColor)
     CentredScore(setPercentage(item.first.successShots, item.first.missedShots), textColor)
     CentredScore(setGameStatsValue(StatisticsType.FRAME_POINTS, item.first.highestBreak), textColor)

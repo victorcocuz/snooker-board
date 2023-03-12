@@ -12,22 +12,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.quickpoint.snookerboard.MainViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.quickpoint.snookerboard.R
+import com.quickpoint.snookerboard.data.K_BOOL_TOGGLE_ADVANCED_BREAKS
+import com.quickpoint.snookerboard.data.K_BOOL_TOGGLE_ADVANCED_RULES
+import com.quickpoint.snookerboard.data.K_BOOL_TOGGLE_ADVANCED_STATISTICS
 import com.quickpoint.snookerboard.ui.components.FragmentContent
 import com.quickpoint.snookerboard.ui.components.SingleParagraph
 import com.quickpoint.snookerboard.ui.theme.spacing
-import com.quickpoint.snookerboard.utils.*
 
 @Composable
-fun ScreenDrawerSettings(mainVm: MainViewModel, dataStore: DataStore) {
-    val drawersVm: DrawersViewModel = viewModel(factory = GenericViewModelFactory(dataStore))
+fun ScreenDrawerSettings() {
+    val drawersVm = hiltViewModel<DrawersViewModel>()
     val context = LocalContext.current
 
-    val isAdvancedRules by mainVm.toggleAdvancedRules.collectAsState(false)
-    val isAdvancedStatistics by mainVm.toggleAdvancedStatistics.collectAsState(false)
-    val isAdvancedBreaks by mainVm.toggleAdvancedBreaks.collectAsState(false)
+    val isAdvancedRules by drawersVm.dataStoreRepository.toggleAdvancedRules.collectAsState(false)
+    val isAdvancedStatistics by drawersVm.dataStoreRepository.toggleAdvancedStatistics.collectAsState(false)
+    val isAdvancedBreaks by drawersVm.dataStoreRepository.toggleAdvancedBreaks.collectAsState(false)
 
     FragmentContent {
         SettingsToggleHoist(K_BOOL_TOGGLE_ADVANCED_RULES, isAdvancedRules) { drawersVm.onToggleChange(it, context)}

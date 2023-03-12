@@ -6,18 +6,24 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.platform.LocalView
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.findViewTreeViewModelStoreOwner
 import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.R
-import com.quickpoint.snookerboard.ScreenEvents
-import com.quickpoint.snookerboard.admob.showInterstitialAd
-import com.quickpoint.snookerboard.domain.PotType
-import com.quickpoint.snookerboard.domain.isMatchEnding
-import com.quickpoint.snookerboard.domain.isMatchInProgress
-import com.quickpoint.snookerboard.domain.isNoFrameFinished
-import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings
-import com.quickpoint.snookerboard.domain.objects.MatchSettings.Settings.crtPlayer
-import com.quickpoint.snookerboard.domain.objects.MatchState
+import com.quickpoint.snookerboard.core.ScreenEvents
+import com.quickpoint.snookerboard.core.admob.showInterstitialAd
+import com.quickpoint.snookerboard.core.utils.MatchAction.*
+import com.quickpoint.snookerboard.core.utils.getListOfDialogActions
+import com.quickpoint.snookerboard.core.utils.getPotType
+import com.quickpoint.snookerboard.core.utils.queryEndFrameOrMatch
+import com.quickpoint.snookerboard.domain.models.PotType
+import com.quickpoint.snookerboard.domain.models.isMatchEnding
+import com.quickpoint.snookerboard.domain.models.isMatchInProgress
+import com.quickpoint.snookerboard.domain.models.isNoFrameFinished
+import com.quickpoint.snookerboard.domain.utils.MatchSettings.Settings
+import com.quickpoint.snookerboard.domain.utils.MatchSettings.Settings.crtPlayer
+import com.quickpoint.snookerboard.domain.utils.MatchState
 import com.quickpoint.snookerboard.ui.components.BackPressHandler
 import com.quickpoint.snookerboard.ui.components.ComponentPlayerNames
 import com.quickpoint.snookerboard.ui.components.FragmentContent
@@ -30,21 +36,17 @@ import com.quickpoint.snookerboard.ui.navigation.getActionItems
 import com.quickpoint.snookerboard.ui.navigation.getActionItemsOverflow
 import com.quickpoint.snookerboard.ui.theme.Transparent
 import com.quickpoint.snookerboard.ui.theme.spacing
-import com.quickpoint.snookerboard.utils.*
-import com.quickpoint.snookerboard.utils.MatchAction.*
 import timber.log.Timber
 
 @Composable
-fun ScreenGame(
-    mainVm: MainViewModel,
-    dataStore: DataStore,
-) {
-    val gameVm: GameViewModel = viewModel(factory = GenericViewModelFactory(dataStore))
-    val dialogVm: DialogViewModel = viewModel(factory = GenericViewModelFactory(dataStore))
+fun ScreenGame() {
+    val mainVm = LocalView.current.findViewTreeViewModelStoreOwner().let { hiltViewModel<MainViewModel>(it!!) }
+    val gameVm = hiltViewModel<GameViewModel>()
+    val dialogVm = hiltViewModel<DialogViewModel>()
     val domainFrame by gameVm.frameState.collectAsState()
     val context = LocalContext.current
-    val isFreeballActive by mainVm.toggleFreeball.collectAsState(false)
-    val isAdvancedBreaksActive by mainVm.toggleAdvancedBreaks.collectAsState(false)
+    val isFreeballActive by gameVm.dataStoreRepository.toggleFreeball.collectAsState(false)
+    val isAdvancedBreaksActive by gameVm.dataStoreRepository.toggleAdvancedBreaks.collectAsState(false)
 
     mainVm.setupActionBarActions(
         gameVm.getActionItems(),
@@ -123,14 +125,14 @@ fun ScreenGame(
         ModuleGameScore(domainFrame)
         ModuleGameStatistics(domainFrame.score, domainFrame.score.size == 2)
         ModuleGameBreaks(domainFrame.frameStack, isAdvancedBreaksActive)
-        ModuleGameActions(mainVm, gameVm, domainFrame.ballStack, domainFrame.frameStack)
+        ModuleGameActions(gameVm, domainFrame.ballStack, domainFrame.frameStack)
     }
 
     FragmentExtras {
         DialogGeneric(dialogVm, gameVm,
             onDismiss = { dialogVm.onDismissGenericDialog() },
             onConfirm = { matchAction -> dialogVm.onEventDialogAction(matchAction) })
-        DialogFoul(mainVm, gameVm, dialogVm,
+        DialogFoul(gameVm, dialogVm,
             onDismiss = { dialogVm.onDismissFoulDialog() },
             onConfirm = {
                 if (dialogVm.foulIsValid()) {

@@ -1,10 +1,10 @@
 package com.quickpoint.snookerboard.ui.navigation
 
-import com.quickpoint.snookerboard.domain.objects.MatchState
-import com.quickpoint.snookerboard.domain.objects.MatchState.GAME_IN_PROGRESS
-import com.quickpoint.snookerboard.domain.objects.MatchState.RULES_IDLE
+import com.quickpoint.snookerboard.domain.utils.MatchState
+import com.quickpoint.snookerboard.domain.utils.MatchState.GAME_IN_PROGRESS
+import com.quickpoint.snookerboard.domain.utils.MatchState.RULES_IDLE
 import com.quickpoint.snookerboard.ui.navigation.Screen.*
-import com.quickpoint.snookerboard.utils.Constants
+import com.quickpoint.snookerboard.core.utils.Constants
 
 sealed class Screen(val route: String) {
     object Main: Screen(Constants.ID_SCREEN_MAIN)

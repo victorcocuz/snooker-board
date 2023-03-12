@@ -3,11 +3,11 @@ package com.quickpoint.snookerboard.ui.helpers
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.quickpoint.snookerboard.R
+import com.quickpoint.snookerboard.core.utils.StatisticsType
+import com.quickpoint.snookerboard.core.utils.StatisticsType.*
 import com.quickpoint.snookerboard.ui.theme.Beige
 import com.quickpoint.snookerboard.ui.theme.GreenDark
 import com.quickpoint.snookerboard.ui.theme.GreenDarker
-import com.quickpoint.snookerboard.utils.StatisticsType
-import com.quickpoint.snookerboard.utils.StatisticsType.*
 import java.text.DecimalFormat
 
 @Composable
@@ -38,8 +38,8 @@ fun setGameStatsValue(type: StatisticsType, value: Int) = when (value) {
     }
 
 @Composable
-fun setStatsTableBackground(index: Int, size: Int) = when {
-    size == 1 -> Beige
-    index in (0..size).filter { x -> x % 2 == 0 } -> GreenDarker
+fun setStatsTableBackground(index: Int, isLabel: Boolean) = when {
+    isLabel -> Beige
+    index % 2 == 0 -> GreenDarker
     else -> GreenDark
 }
