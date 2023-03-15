@@ -9,7 +9,6 @@ import com.quickpoint.snookerboard.domain.repository.DataStoreRepository
 import com.quickpoint.snookerboard.domain.utils.DomainPlayer.Player01
 import com.quickpoint.snookerboard.domain.utils.DomainPlayer.Player02
 import com.quickpoint.snookerboard.domain.utils.MatchSettings.Settings
-import com.quickpoint.snookerboard.domain.utils.MatchSettings.Settings.updateSettings
 import com.quickpoint.snookerboard.domain.utils.handicapFrameExceedsLimit
 import com.quickpoint.snookerboard.domain.utils.handicapMatchExceedsLimit
 import com.quickpoint.snookerboard.domain.utils.setPlayerName
@@ -50,7 +49,7 @@ class RulesViewModel @Inject constructor(val dataStoreRepository: DataStoreRepos
         when {
             Settings.handicapFrameExceedsLimit(key, value) -> onEmit(ScreenEvents.SnackEvent(SNACK_HANDICAP_FRAME_LIMIT))
             Settings.handicapMatchExceedsLimit(key, value) -> onEmit(ScreenEvents.SnackEvent(SNACK_HANDICAP_MATCH_LIMIT))
-            else -> updateSettings(key, value)
+            else -> Settings.updateSettings(key, value)
         }
         _eventMatchSettingsChange.emit(Event(Unit))
     }
