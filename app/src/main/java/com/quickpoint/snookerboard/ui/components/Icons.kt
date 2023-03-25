@@ -33,9 +33,10 @@ fun IconMenu() = IconDefault(
 )
 
 @Composable
-fun IconDefault(modifier: Modifier = Modifier, imageVector: ImageVector, contentDescription: String, tint: Color = BrownDark) = Icon(
-    modifier = modifier,
-    imageVector = imageVector,
-    contentDescription = contentDescription,
-    tint = tint
-)
+fun IconDefault(modifier: Modifier = Modifier, imageVector: ImageVector, contentDescription: String, tint: Color = BrownDark) =
+    Icon(
+        modifier = modifier,
+        imageVector = imageVector,
+        contentDescription = contentDescription,
+        tint = tint
+    )

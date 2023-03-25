@@ -45,6 +45,8 @@ class DialogViewModel @Inject constructor(
         onDismissGenericDialog()
     }
 
+    //Test
+
     // Foul Dialog
     var isFoulDialogShown by mutableStateOf(false)
         private set
