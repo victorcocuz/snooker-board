@@ -24,8 +24,6 @@ import com.quickpoint.snookerboard.domain.models.PotType.*
 import com.quickpoint.snookerboard.domain.repository.DataStoreRepository
 import com.quickpoint.snookerboard.domain.repository.GameRepository
 import com.quickpoint.snookerboard.domain.utils.MatchSettings
-import com.quickpoint.snookerboard.domain.utils.handlePotFreeballToggle
-import com.quickpoint.snookerboard.domain.utils.handleUndoFreeballToggle
 import com.quickpoint.snookerboard.ui.navigation.MenuItem
 import com.quickpoint.snookerboard.ui.navigation.MenuItemIds
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,8 +39,7 @@ import javax.inject.Inject
 @HiltViewModel
 class GameViewModel @Inject constructor(
     private val gameRepository: GameRepository,
-    val dataStoreRepository: DataStoreRepository,
-    private val dataStore: DataStore
+    val dataStoreRepository: DataStoreRepository
 ) : ViewModel() {
 
     // Variables
@@ -77,7 +74,7 @@ class GameViewModel @Inject constructor(
         savePref(K_BOOL_TOGGLE_REST_SHOT, false)
     }
 
-    fun savePref(key: String, value: Boolean) = dataStore.savePreferences(key, value)
+    fun savePref(key: String, value: Boolean) = dataStoreRepository.savePrefs(key, value)
 
     // Match actions
     fun loadMatch(frame: DomainFrame?) = frame?.let {
@@ -116,13 +113,13 @@ class GameViewModel @Inject constructor(
             isUpdateInProgress = true
             if (potType == null) handleUndo()
             else {
-                val pot = potType.getPotFromType(ball, action, dataStore.getShotType())
+                val pot = potType.getPotFromType(ball, action, dataStoreRepository.getShotType())
                 if (handlePotExceptionsBefore(pot)) isUpdateInProgress = false
                 else {
                     handlePot(
                         if (pot.ball is FREEBALL) FREE(
                             ball = FREEBALL(points = pot.ball.points),
-                            shotType = dataStore.getShotType()
+                            shotType = dataStoreRepository.getShotType()
                         ) else pot
                     )
                     handlePotExceptionsPost(pot)
@@ -143,7 +140,7 @@ class GameViewModel @Inject constructor(
 
     private fun handlePot(pot: DomainPot) {
         pot.potId = MatchSettings.uniqueId
-        handlePotFreeballToggle(pot.potType, dataStore)
+        handlePotFreeballToggle(pot.potType)
         ballStack.onPot(pot.potType, pot.potAction)
         frameStack.onPot(pot, score[MatchSettings.crtPlayer].pointsWithoutReturn, score)
         score.calculatePoints(pot, 1, ballStack.foulValue())
@@ -170,7 +167,7 @@ class GameViewModel @Inject constructor(
         val pot = frameStack.removeLastPotFromFrameStack(score)
         val actionLog = pot.getActionLog("HandleUndo()", ballStack.lastOrNull()?.ballType, frameStack.size)
         ballStack.onUndo(pot.potType, pot.potAction, frameStack)
-        handleUndoFreeballToggle(pot.potType, frameStack.lastPotType(), dataStore)
+        handleUndoFreeballToggle(pot.potType, frameStack.lastPotType())
         score.calculatePoints(pot, -1, ballStack.foulValue())
         onEventFrameUpdated(actionLog)
         handleUndoExceptionsPost(pot)
@@ -205,6 +202,27 @@ class GameViewModel @Inject constructor(
             MenuItemIds.ID_MENU_ITEM_CONCEDE_MATCH -> onEventGameAction(if (!score.isFrameAndMatchEqual()) MATCH_ENDING_DIALOG else SNACK_MATCH_ENDING_DIALOG)
             MenuItemIds.ID_MENU_ITEM_CANCEL_MATCH -> onEventGameAction(if (score.isMatchInProgress()) MATCH_CANCEL_DIALOG else MATCH_CANCEL)
             else -> {}
+        }
+    }
+
+    private fun handlePotFreeballToggle(potType: PotType) { // Control freeball visibility and selection
+        when (potType) {
+            TYPE_FREE_ACTIVE -> dataStoreRepository.savePrefAndSwitchBoolValue(K_BOOL_TOGGLE_FREEBALL)
+            TYPE_HIT, TYPE_FREE, TYPE_MISS, TYPE_SAFE, TYPE_SAFE_MISS, TYPE_SNOOKER, TYPE_FOUL -> dataStoreRepository.savePrefs(
+                K_BOOL_TOGGLE_FREEBALL, false)
+            TYPE_ADDRED, TYPE_REMOVE_RED, TYPE_REMOVE_COLOR, TYPE_LAST_BLACK_FOULED, TYPE_RESPOT_BLACK, TYPE_FOUL_ATTEMPT -> {}
+        }
+    }
+
+    private fun handleUndoFreeballToggle(potType: PotType, lastPotType: PotType?) {
+        when (potType) {
+            TYPE_FREE -> dataStoreRepository.savePrefAndSwitchBoolValue(K_BOOL_TOGGLE_FREEBALL)
+            TYPE_FREE_ACTIVE -> dataStoreRepository.savePrefs(K_BOOL_TOGGLE_FREEBALL, false)
+            TYPE_SAFE, TYPE_MISS, TYPE_SAFE_MISS, TYPE_SNOOKER, TYPE_FOUL -> when (lastPotType) {
+                TYPE_FREE_ACTIVE -> dataStoreRepository.savePrefAndSwitchBoolValue(K_BOOL_TOGGLE_FREEBALL)
+                else -> dataStoreRepository.savePrefs(K_BOOL_TOGGLE_FREEBALL, false)
+            }
+            TYPE_HIT, TYPE_ADDRED, TYPE_REMOVE_RED, TYPE_REMOVE_COLOR, TYPE_LAST_BLACK_FOULED, TYPE_RESPOT_BLACK, TYPE_FOUL_ATTEMPT -> {}
         }
     }
 }

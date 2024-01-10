@@ -21,6 +21,7 @@ import com.quickpoint.snookerboard.data.K_LONG_MATCH_CRT_FRAME
 import com.quickpoint.snookerboard.data.K_LONG_MATCH_STATE
 import com.quickpoint.snookerboard.data.database.models.asDomain
 import com.quickpoint.snookerboard.domain.models.DomainFrame
+import com.quickpoint.snookerboard.domain.repository.DataStoreRepository
 import com.quickpoint.snookerboard.domain.repository.GameRepository
 import com.quickpoint.snookerboard.domain.utils.DomainPlayer
 import com.quickpoint.snookerboard.domain.utils.MatchState.RULES_IDLE
@@ -41,7 +42,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val gameRepository: GameRepository,
-    private val dataStore: DataStore,
+    private val dataStoreRepository: DataStoreRepository,
     private val matchSettings: MatchSettings
 ) : ViewModel() {
 
@@ -63,8 +64,8 @@ class MainViewModel @Inject constructor(
         private set
 
     fun loadMatchIfSaved() = viewModelScope.launch {
-        dataStore.loadPreferences()
-        val preferences = dataStore.getPreferences()
+        dataStoreRepository.loadPreferences()
+        val preferences = dataStoreRepository.getPreferences()
         matchSettings.loadPreferences(  matchState = getMatchStateFromOrdinal(preferences[intPreferencesKey(K_LONG_MATCH_STATE)] ?: 0),
             uniqueId = preferences[longPreferencesKey(K_INT_MATCH_UNIQUE_ID)] ?: 0,
             availableFrames = preferences[intPreferencesKey(K_INT_MATCH_AVAILABLE_FRAMES)] ?: 2,
@@ -78,8 +79,8 @@ class MainViewModel @Inject constructor(
             maxFramePoints = preferences[intPreferencesKey(K_INT_MATCH_AVAILABLE_POINTS)] ?: 0,
             counterRetake = preferences[intPreferencesKey(K_INT_MATCH_COUNTER_RETAKE)] ?: 0,
             pointsWithoutReturn = preferences[intPreferencesKey(K_INT_MATCH_POINTS_WITHOUT_RETURN)] ?: 0)
-        DomainPlayer.Player01.assignDataStore(dataStore)
-        DomainPlayer.Player02.assignDataStore(dataStore)
+        DomainPlayer.Player01.assignDataStore(dataStoreRepository)
+        DomainPlayer.Player02.assignDataStore(dataStoreRepository)
         gameRepository.getCrtFrame().let { crtFrame ->
             if (crtFrame == null) MatchSettings.matchState = RULES_IDLE
             else cachedFrame = crtFrame.asDomain()

@@ -5,6 +5,7 @@ import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_START_NEW
 import com.quickpoint.snookerboard.data.*
 import com.quickpoint.snookerboard.domain.models.PotAction
 import com.quickpoint.snookerboard.domain.models.PotAction.*
+import com.quickpoint.snookerboard.domain.repository.DataStoreRepository
 import com.quickpoint.snookerboard.domain.utils.MatchState.RULES_IDLE
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +18,7 @@ import kotlin.math.absoluteValue
 
 @Singleton
 class MatchSettings @Inject constructor(
-    private val dataStore: DataStore
+    private val dataStoreRepository: DataStoreRepository
 ) {
     companion object {
         fun getOtherPlayer() = 1 - crtPlayer
@@ -79,6 +80,7 @@ class MatchSettings @Inject constructor(
         var counterRetake = 0
         var pointsWithoutReturn = 0
         var crtFrame = 0L
+        var isFreeballEnabled = false
     }
 
     private var _uniqueId = 0L
@@ -94,6 +96,7 @@ class MatchSettings @Inject constructor(
     private var _counterRetake = 0
     private var _pointsWithoutReturn = 0
     private var _crtFrame = 0L
+    private var _isFreeballEnabled = false
 
 
     init {
@@ -106,56 +109,60 @@ class MatchSettings @Inject constructor(
                 delay(1000) // Check every second
                 if (_uniqueId != uniqueId) {
                     _uniqueId = uniqueId
-                    dataStore.savePreferences(K_INT_MATCH_UNIQUE_ID, _uniqueId)
+                    dataStoreRepository.savePrefs(K_INT_MATCH_UNIQUE_ID, _uniqueId)
                 }
                 if (_foulModifier != foulModifier) {
                     _foulModifier = foulModifier
-                    dataStore.savePreferences(K_INT_MATCH_FOUL_MODIFIER, _foulModifier)
+                    dataStoreRepository.savePrefs(K_INT_MATCH_FOUL_MODIFIER, _foulModifier)
                 }
                 if (_matchState != matchState) {
                     _matchState = matchState
-                    dataStore.savePreferences(K_LONG_MATCH_STATE, _matchState.ordinal)
+                    dataStoreRepository.savePrefs(K_LONG_MATCH_STATE, _matchState.ordinal)
                     Timber.i("Match state updated: $_matchState")
                 }
                 if (_availableFrames != availableFrames) {
                     _availableFrames = availableFrames
-                    dataStore.savePreferences(K_INT_MATCH_AVAILABLE_FRAMES, _availableFrames)
+                    dataStoreRepository.savePrefs(K_INT_MATCH_AVAILABLE_FRAMES, _availableFrames)
                 }
                 if (_availableReds != availableReds) {
                     _availableReds = availableReds
-                    dataStore.savePreferences(K_INT_MATCH_AVAILABLE_REDS, _availableReds)
+                    dataStoreRepository.savePrefs(K_INT_MATCH_AVAILABLE_REDS, _availableReds)
                 }
                 if (_startingPlayer != startingPlayer) {
                     _startingPlayer = startingPlayer
-                    dataStore.savePreferences(K_INT_MATCH_STARTING_PLAYER, _startingPlayer)
+                    dataStoreRepository.savePrefs(K_INT_MATCH_STARTING_PLAYER, _startingPlayer)
                 }
                 if (_handicapFrame != handicapFrame) {
                     _handicapFrame = handicapFrame
-                    dataStore.savePreferences(K_INT_MATCH_HANDICAP_FRAME, _handicapFrame)
+                    dataStoreRepository.savePrefs(K_INT_MATCH_HANDICAP_FRAME, _handicapFrame)
                 }
                 if (_handicapMatch != handicapMatch){
                     _handicapMatch = handicapMatch
-                    dataStore.savePreferences(K_INT_MATCH_HANDICAP_MATCH, _handicapMatch)
+                    dataStoreRepository.savePrefs(K_INT_MATCH_HANDICAP_MATCH, _handicapMatch)
                 }
                 if (_crtPlayer != crtPlayer) {
                     _crtPlayer = crtPlayer
-                    dataStore.savePreferences(K_INT_MATCH_CRT_PLAYER, _crtPlayer)
+                    dataStoreRepository.savePrefs(K_INT_MATCH_CRT_PLAYER, _crtPlayer)
                 }
                 if (_maxFramePoints != maxFramePoints) {
                     _maxFramePoints = maxFramePoints
-                    dataStore.savePreferences(K_INT_MATCH_AVAILABLE_POINTS, _maxFramePoints)
+                    dataStoreRepository.savePrefs(K_INT_MATCH_AVAILABLE_POINTS, _maxFramePoints)
                 }
                 if (_counterRetake != counterRetake) {
                     _counterRetake = counterRetake
-                    dataStore.savePreferences(K_INT_MATCH_COUNTER_RETAKE, _counterRetake)
+                    dataStoreRepository.savePrefs(K_INT_MATCH_COUNTER_RETAKE, _counterRetake)
                 }
                 if (_pointsWithoutReturn != pointsWithoutReturn) {
                     _pointsWithoutReturn = pointsWithoutReturn
-                    dataStore.savePreferences(K_INT_MATCH_POINTS_WITHOUT_RETURN, _pointsWithoutReturn)
+                    dataStoreRepository.savePrefs(K_INT_MATCH_POINTS_WITHOUT_RETURN, _pointsWithoutReturn)
                 }
                 if (_crtFrame != crtFrame) {
                     _crtFrame = crtFrame
-                    dataStore.savePreferences(K_LONG_MATCH_CRT_FRAME, _crtFrame)
+                    dataStoreRepository.savePrefs(K_LONG_MATCH_CRT_FRAME, _crtFrame)
+                }
+                if (_isFreeballEnabled != isFreeballEnabled) {
+                    _isFreeballEnabled = isFreeballEnabled
+                    dataStoreRepository.savePrefs(K_BOOL_TOGGLE_FREEBALL, _isFreeballEnabled)
                 }
             }
         }

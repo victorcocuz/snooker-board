@@ -1,6 +1,7 @@
 package com.quickpoint.snookerboard.data.repository
 
 import com.quickpoint.snookerboard.data.*
+import com.quickpoint.snookerboard.domain.models.ShotType
 import com.quickpoint.snookerboard.domain.repository.DataStoreRepository
 import javax.inject.Inject
 
@@ -26,7 +27,12 @@ class DataStoreRepositoryImpl @Inject constructor(private val dataStore: DataSto
 
     override val crtFrame = dataStore.getLongFlow(K_LONG_MATCH_CRT_FRAME)
 
-    override fun savePref(key: String, value: Any) = dataStore.savePreferences(key, value)
-    override fun switchBoolAndSavePref(key: String) = dataStore.saveAndSwitchValue(key)
+    override fun savePrefs(key: String, value: Any) = dataStore.savePrefs(key, value)
+    override fun savePrefAndSwitchBoolValue(key: String) = dataStore.savePrefAndSwitchBoolValue(key)
+
+    override suspend fun getShotType() = dataStore.getShotType()
+    override suspend fun getPreferences() = dataStore.getPreferences()
+    override suspend fun loadPreferences() = dataStore.loadPreferences()
+
 
 }

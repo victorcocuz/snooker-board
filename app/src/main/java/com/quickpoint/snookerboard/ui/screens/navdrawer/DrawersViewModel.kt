@@ -11,6 +11,6 @@ import javax.inject.Inject
 class DrawersViewModel @Inject constructor(val dataStoreRepository: DataStoreRepository) : ViewModel() {
     fun onToggleChange(key: String, context: Context) {
         context.vibrateOnce()
-        dataStoreRepository.switchBoolAndSavePref(key)
+        dataStoreRepository.savePrefAndSwitchBoolValue(key)
     }
 }

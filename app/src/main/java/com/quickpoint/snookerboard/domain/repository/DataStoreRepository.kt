@@ -1,5 +1,7 @@
 package com.quickpoint.snookerboard.domain.repository
 
+import androidx.datastore.preferences.core.Preferences
+import com.quickpoint.snookerboard.domain.models.ShotType
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 
@@ -24,6 +26,10 @@ interface DataStoreRepository {
 
     val crtFrame: Flow<Long>
 
-    fun savePref(key: String, value: Any): Job
-    fun switchBoolAndSavePref(key: String): Job
+    fun savePrefs(key: String, value: Any): Job
+    fun savePrefAndSwitchBoolValue(key: String): Job
+
+    suspend fun getShotType(): ShotType
+    suspend fun getPreferences(): Preferences
+    suspend fun loadPreferences(): Job
 }

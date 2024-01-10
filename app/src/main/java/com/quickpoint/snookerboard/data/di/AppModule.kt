@@ -3,6 +3,7 @@ package com.quickpoint.snookerboard.data.di
 import android.content.Context
 import com.quickpoint.snookerboard.data.DataStore
 import com.quickpoint.snookerboard.data.database.SnookerDatabase
+import com.quickpoint.snookerboard.domain.repository.DataStoreRepository
 import com.quickpoint.snookerboard.domain.utils.MatchSettings
 import dagger.Module
 import dagger.Provides
@@ -28,5 +29,5 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideSettings(dataStore: DataStore) = MatchSettings(dataStore)
+    fun provideSettings(dataStoreRepository: DataStoreRepository) = MatchSettings(dataStoreRepository)
 }

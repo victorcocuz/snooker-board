@@ -5,7 +5,6 @@ import com.quickpoint.snookerboard.domain.models.DomainBall.*
 import com.quickpoint.snookerboard.domain.models.PotAction.RETAKE
 import com.quickpoint.snookerboard.domain.models.PotType.*
 import com.quickpoint.snookerboard.domain.utils.MatchSettings
-import com.quickpoint.snookerboard.domain.utils.Toggle
 
 // The DOMAIN Ball is the simplest game data unit. It stores ball information
 enum class BallType { TYPE_NOBALL, TYPE_WHITE, TYPE_RED, TYPE_YELLOW, TYPE_GREEN, TYPE_BROWN, TYPE_BLUE, TYPE_PINK, TYPE_BLACK, TYPE_COLOR, TYPE_FREEBALL, TYPE_FREEBALLTOGGLE, TYPE_FREEBALLAVAILABLE }
@@ -78,11 +77,11 @@ sealed class DomainBall(
 // Checker methods
 fun List<DomainBall>.isLastBall() = size == 1
 fun List<DomainBall>.isLastBlack() = size == 2
-fun List<DomainBall>.isInColors() = if (Toggle.FreeBall.isEnabled) size <= 8 else size <= 7
+fun List<DomainBall>.isInColors() = if (MatchSettings.isFreeballEnabled) size <= 8 else size <= 7
 fun List<DomainBall>.isInColorsWithFreeBall() = size <= 8
 fun List<DomainBall>.wasPreviousBallColor() = size in (7..37).filter { it % 2 == 1 }
 fun List<DomainBall>.isThisBallColorAndNotLast() = size in (10..38).filter { it % 2 == 0 }
-fun List<DomainBall>.isAddRedAvailable() = isThisBallColorAndNotLast() && !Toggle.FreeBall.isEnabled
+fun List<DomainBall>.isAddRedAvailable() = isThisBallColorAndNotLast() && !MatchSettings.isFreeballEnabled
 fun List<DomainBall>.redsRemaining() = (size - 7) / 2
 
 fun List<DomainBall>.redsOnTheTable(): Int {
@@ -99,8 +98,8 @@ fun List<DomainBall>.maxRemoveReds() = minOf(redsOnTheTable(), 3)
 fun MutableList<DomainBall>.foulValue() = if (size > 4) 4 else (7 - 2 * (size - 1))
 fun List<DomainBall>?.availablePoints(): Int {
     if (this == null) return 0
-    val freeSize = (if (Toggle.FreeBall.isEnabled) size - 1 else size)
-    return if (freeSize <= 7) (-(8 - freeSize) * ((8 - freeSize) + 1) + 56) / 2 + (if (Toggle.FreeBall.isEnabled) (9 - freeSize) else 0)
+    val freeSize = (if (MatchSettings.isFreeballEnabled) size - 1 else size)
+    return if (freeSize <= 7) (-(8 - freeSize) * ((8 - freeSize) + 1) + 56) / 2 + (if (MatchSettings.isFreeballEnabled) (9 - freeSize) else 0)
     else 27 + ((size - 7) / 2) * 8 + (if (size % 2 == 0) 7 else 0)
 }
 
@@ -120,7 +119,7 @@ fun MutableList<DomainBall>.onPot(potType: PotType, potAction: PotAction) {
                 removeFreeBall()
             }
         }
-        TYPE_FREE_ACTIVE -> if (Toggle.FreeBall.isEnabled) addFreeBall(1) else removeFreeBall()
+        TYPE_FREE_ACTIVE -> if (MatchSettings.isFreeballEnabled) addFreeBall(1) else removeFreeBall()
         TYPE_LAST_BLACK_FOULED -> removeBalls(1)
         TYPE_RESPOT_BLACK -> addBalls(BLACK())
         TYPE_FOUL_ATTEMPT -> {}
@@ -141,7 +140,7 @@ fun MutableList<DomainBall>.onUndo(potType: PotType, potAction: PotAction, frame
                 else -> {}
             }
         }
-        TYPE_FREE_ACTIVE -> if (Toggle.FreeBall.isEnabled) removeFreeBall() else addFreeBall(1)
+        TYPE_FREE_ACTIVE -> if (MatchSettings.isFreeballEnabled) removeFreeBall() else addFreeBall(1)
         TYPE_LAST_BLACK_FOULED -> addNextBalls(1)
         TYPE_RESPOT_BLACK -> removeBalls(1)
         TYPE_FOUL_ATTEMPT -> {}

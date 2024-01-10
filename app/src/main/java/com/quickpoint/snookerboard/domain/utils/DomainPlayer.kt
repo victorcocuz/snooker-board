@@ -3,19 +3,20 @@ package com.quickpoint.snookerboard.domain.utils
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.core.utils.Constants
 import com.quickpoint.snookerboard.data.*
+import com.quickpoint.snookerboard.domain.repository.DataStoreRepository
 import com.quickpoint.snookerboard.domain.utils.DomainPlayer.Player01
 import com.quickpoint.snookerboard.domain.utils.DomainPlayer.Player02
 
 sealed class DomainPlayer(
-    var dataStore: DataStore?,
+    var dataStoreRepository: DataStoreRepository?,
     var firstName: String,
     var lastName: String,
 ) {
     object Player01 : DomainPlayer(null, Constants.EMPTY_STRING, Constants.EMPTY_STRING)
     object Player02 : DomainPlayer(null, Constants.EMPTY_STRING, Constants.EMPTY_STRING)
 
-    fun assignDataStore(dataStore: DataStore) {
-        this.dataStore = dataStore
+    fun assignDataStore(dataStoreRepository: DataStoreRepository) {
+        this.dataStoreRepository = dataStoreRepository
     }
 
     fun loadPreferences(firstName: String, lastName: String) {
@@ -31,7 +32,7 @@ fun Player01.setPlayerName(key: String, value: String) {
         K_PLAYER01_FIRST_NAME -> firstName = value
         K_PLAYER01_LAST_NAME -> lastName = value
     }
-    dataStore?.savePreferences(key, value)
+    dataStoreRepository?.savePrefs(key, value)
 }
 
 fun Player02.setPlayerName(key: String, value: String) {
@@ -39,7 +40,7 @@ fun Player02.setPlayerName(key: String, value: String) {
         K_PLAYER02_FIRST_NAME -> Player02.firstName = value
         K_PLAYER02_LAST_NAME -> Player02.lastName = value
     }
-    dataStore?.savePreferences(key, value)
+    dataStoreRepository?.savePrefs(key, value)
 }
 
 fun getPlayerNameByKey(key: String): String = when (key) {

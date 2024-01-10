@@ -10,7 +10,6 @@ import com.quickpoint.snookerboard.core.utils.Constants.EMPTY_STRING
 import com.quickpoint.snookerboard.domain.models.ShotType
 import com.quickpoint.snookerboard.domain.utils.DomainPlayer.Player01
 import com.quickpoint.snookerboard.domain.utils.DomainPlayer.Player02
-import com.quickpoint.snookerboard.domain.utils.Toggle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
@@ -74,25 +73,21 @@ class DataStore(private val context: Context) {
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("UserEmail")
     }
 
-    fun savePreferences(key: String, value: Any) = CoroutineScope(Dispatchers.IO).launch {
+    fun savePrefs(key: String, value: Any) = CoroutineScope(Dispatchers.IO).launch {
         context.dataStore.edit { preferences ->
             when (value::class.simpleName) {
                 "String" -> preferences[stringPreferencesKey(key)] = value as String
                 "Int" -> preferences[intPreferencesKey(key)] = value as Int
                 "Long" -> preferences[longPreferencesKey(key)] = value as Long
-                "Boolean" -> {
-                    preferences[booleanPreferencesKey(key)] = value as Boolean
-                    if (key == K_BOOL_TOGGLE_FREEBALL) Toggle.FreeBall.isEnabled = value
-                }
-
+                "Boolean" -> preferences[booleanPreferencesKey(key)] = value as Boolean
                 else -> Timber.e("DataStore saving functionality for class ${value::class.simpleName} not implemented")
             }
         }
     }
 
-    fun saveAndSwitchValue(key: String) = CoroutineScope(Dispatchers.IO).launch {
+    fun savePrefAndSwitchBoolValue(key: String) = CoroutineScope(Dispatchers.IO).launch {
         val value = context.dataStore.data.first()[booleanPreferencesKey(key)] ?: false
-        savePreferences(key, !value)
+        savePrefs(key, !value)
     }
 
     fun getStringFlow(key: String) = context.dataStore.data.map { it[getPrefKey(key)] as? String ?: EMPTY_STRING }

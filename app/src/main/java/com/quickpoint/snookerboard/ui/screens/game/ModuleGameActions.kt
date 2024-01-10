@@ -65,12 +65,12 @@ fun GameButtonsIcons(gameVm: GameViewModel) {
             text = stringResource(R.string.l_game_actions_btn_long),
             painter = painterResource(R.drawable.ic_action_shot_type_long),
             isSelected = isLongActive
-        ) { gameVm.dataStoreRepository.savePref(K_BOOL_TOGGLE_LONG_SHOT, !isLongActive) }
+        ) { gameVm.dataStoreRepository.savePrefs(K_BOOL_TOGGLE_LONG_SHOT, !isLongActive) }
         if (isAdvancedStatistics) IconButton(
             text = stringResource(R.string.l_game_actions_btn_rest),
             painter = painterResource(R.drawable.ic_action_shot_type_rest),
             isSelected = isRestActive
-        ) { gameVm.dataStoreRepository.savePref(K_BOOL_TOGGLE_REST_SHOT, !isRestActive) }
+        ) { gameVm.dataStoreRepository.savePrefs(K_BOOL_TOGGLE_REST_SHOT, !isRestActive) }
     }
 }
 

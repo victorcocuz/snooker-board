@@ -10,6 +10,7 @@ import com.quickpoint.snookerboard.data.DataStore
 import com.quickpoint.snookerboard.data.K_BOOL_TOGGLE_FREEBALL
 import com.quickpoint.snookerboard.domain.models.DomainBall
 import com.quickpoint.snookerboard.domain.models.PotAction
+import com.quickpoint.snookerboard.domain.repository.DataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DialogViewModel @Inject constructor(
-    private val dataStore: DataStore
+    private val dataStoreRepository: DataStoreRepository
     ) : ViewModel() {
 
     // Generic Dialog
@@ -68,7 +69,7 @@ class DialogViewModel @Inject constructor(
     val actionClicked = _actionClicked.asStateFlow()
     fun onActionClicked(action: PotAction) {
         _actionClicked.value = action
-        dataStore.savePreferences(K_BOOL_TOGGLE_FREEBALL, false)
+        dataStoreRepository.savePrefs(K_BOOL_TOGGLE_FREEBALL, false)
     }
 
     fun foulIsValid() = ballClicked != null
@@ -76,7 +77,7 @@ class DialogViewModel @Inject constructor(
         ballClicked = null
         _eventDialogReds.value = 0
         _actionClicked.value = PotAction.SWITCH
-        dataStore.savePreferences(K_BOOL_TOGGLE_FREEBALL, false)
+        dataStoreRepository.savePrefs(K_BOOL_TOGGLE_FREEBALL, false)
         isFoulDialogShown = false
     }
 
