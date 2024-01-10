@@ -78,8 +78,8 @@ fun SnookerBoardApp(purchaseHelper: PurchaseHelper, splashScreen: SplashScreen) 
                         navController = navController,
                         onNavigationIconClick = { coroutineScope.launch { scaffoldState.drawerState.open() } },
                         onMenuItemClick = onMenuItemSelectedClick,
-                        actionItems,
-                        actionItemsOverflow
+                        actionItems = actionItems,
+                        actionItemsOverflow = actionItemsOverflow
                     )
                 },
                 drawerContent = {
@@ -97,13 +97,13 @@ fun SnookerBoardApp(purchaseHelper: PurchaseHelper, splashScreen: SplashScreen) 
             ) { paddingValues ->
                 Box(modifier = Modifier.padding(paddingValues)) {
                     LaunchedEffect(Unit) {
-                        MobileAds.initialize(context) // AdMob
+                        MobileAds.initialize(context)
                         loadInterstitialAd(context)
-                        mainVm.eventSharedFlow.collect { event ->
+                        mainVm.screenEventAction.collect { event ->
                             when (event) {
                                 is ScreenEvents.Navigate -> navController.navigate(event.route)
-                                is ScreenEvents.SnackEvent -> scaffoldState.snackbarHostState.showSnackbar(event.action.getSnackText(context))
-                                else -> Timber.e("No implementation for event $event")
+                                is ScreenEvents.SnackAction -> scaffoldState.snackbarHostState.showSnackbar(event.action.getSnackText(context))
+                                else -> Timber.e("No implementation for action $event")
                             }
                         }
                     }

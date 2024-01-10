@@ -6,10 +6,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.quickpoint.snookerboard.ScreenMain
 import com.quickpoint.snookerboard.core.billing.PurchaseHelper
-import com.quickpoint.snookerboard.ui.fragments.game.ScreenGame
-import com.quickpoint.snookerboard.ui.fragments.navdrawer.*
-import com.quickpoint.snookerboard.ui.fragments.rules.ScreenRules
-import com.quickpoint.snookerboard.ui.fragments.summary.ScreenSummary
+import com.quickpoint.snookerboard.ui.screens.game.ScreenGame
+import com.quickpoint.snookerboard.ui.screens.navdrawer.*
+import com.quickpoint.snookerboard.ui.screens.rules.ScreenRules
+import com.quickpoint.snookerboard.ui.screens.summary.ScreenSummary
 
 @Composable
 fun NavGraph(

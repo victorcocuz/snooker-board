@@ -6,20 +6,20 @@ import androidx.datastore.core.IOException
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import com.quickpoint.snookerboard.BuildConfig
-import com.quickpoint.snookerboard.core.utils.Constants
+import com.quickpoint.snookerboard.core.utils.Constants.EMPTY_STRING
 import com.quickpoint.snookerboard.domain.models.ShotType
 import com.quickpoint.snookerboard.domain.utils.DomainPlayer.Player01
 import com.quickpoint.snookerboard.domain.utils.DomainPlayer.Player02
-import com.quickpoint.snookerboard.domain.utils.MatchSettings.Settings
 import com.quickpoint.snookerboard.domain.utils.Toggle
-import com.quickpoint.snookerboard.domain.utils.getMatchStateFromOrdinal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
+import javax.inject.Singleton
 
 const val K_PLAYER01_FIRST_NAME = "ds_key_player01_first_name"
 const val K_PLAYER01_LAST_NAME = "ds_key_player01_last_name"
@@ -68,7 +68,7 @@ fun getPrefKey(key: String) = when (key) {
     else -> booleanPreferencesKey(key) // boolean
 }
 
-
+@Singleton
 class DataStore(private val context: Context) {
     companion object {
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("UserEmail")
@@ -84,19 +84,21 @@ class DataStore(private val context: Context) {
                     preferences[booleanPreferencesKey(key)] = value as Boolean
                     if (key == K_BOOL_TOGGLE_FREEBALL) Toggle.FreeBall.isEnabled = value
                 }
+
                 else -> Timber.e("DataStore saving functionality for class ${value::class.simpleName} not implemented")
             }
         }
     }
 
     fun saveAndSwitchValue(key: String) = CoroutineScope(Dispatchers.IO).launch {
-        val temp = context.dataStore.data.first()[booleanPreferencesKey(key)] ?: false
-        savePreferences(key, !temp)
+        val value = context.dataStore.data.first()[booleanPreferencesKey(key)] ?: false
+        savePreferences(key, !value)
     }
 
-    fun getPrefFlow(key: String) = context.dataStore.data.map {
-        it[getPrefKey(key)]
-    }
+    fun getStringFlow(key: String) = context.dataStore.data.map { it[getPrefKey(key)] as? String ?: EMPTY_STRING }
+    fun getIntFlow(key: String) = context.dataStore.data.map { it[getPrefKey(key)] as? Int ?: 0 }
+    fun getLongFlow(key: String) = context.dataStore.data.map { it[getPrefKey(key)] as? Long ?: 0 }
+    fun getBoolFlow(key: String) = context.dataStore.data.map { it[getPrefKey(key)] as? Boolean ?: false }
 
     suspend fun getShotType(): ShotType {
         val preferences = context.dataStore.data.first()
@@ -107,6 +109,19 @@ class DataStore(private val context: Context) {
             longShot -> ShotType.LONG
             restShot -> ShotType.REST
             else -> ShotType.STANDARD
+        }
+    }
+
+    suspend fun getPreferences(): Preferences {
+        return withContext(Dispatchers.IO) {
+            val preferencesFlow = context.dataStore.data.catch { exception ->
+                if (exception is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }
+            preferencesFlow.first()
         }
     }
 
@@ -122,31 +137,15 @@ class DataStore(private val context: Context) {
 
         Player01.loadPreferences(
             firstName = preferences[stringPreferencesKey(K_PLAYER01_FIRST_NAME)]
-                ?: if (BuildConfig.DEBUG_TOGGLE) "Ronnie" else Constants.EMPTY_STRING,
+                ?: if (BuildConfig.DEBUG_TOGGLE) "Ronnie" else EMPTY_STRING,
             lastName = preferences[stringPreferencesKey(K_PLAYER01_LAST_NAME)]
-                ?: if (BuildConfig.DEBUG_TOGGLE) "O'Sullivan" else Constants.EMPTY_STRING
+                ?: if (BuildConfig.DEBUG_TOGGLE) "O'Sullivan" else EMPTY_STRING
         )
         Player02.loadPreferences(
             firstName = preferences[stringPreferencesKey(K_PLAYER02_FIRST_NAME)]
-                ?: if (BuildConfig.DEBUG_TOGGLE) "John" else Constants.EMPTY_STRING,
+                ?: if (BuildConfig.DEBUG_TOGGLE) "John" else EMPTY_STRING,
             lastName = preferences[stringPreferencesKey(K_PLAYER02_LAST_NAME)]
-                ?: if (BuildConfig.DEBUG_TOGGLE) "Higgins" else Constants.EMPTY_STRING
-        )
-
-        Settings.loadPreferences(
-            matchState = getMatchStateFromOrdinal(preferences[intPreferencesKey(K_LONG_MATCH_STATE)] ?: 0),
-            uniqueId = preferences[longPreferencesKey(K_INT_MATCH_UNIQUE_ID)] ?: 0,
-            availableFrames = preferences[intPreferencesKey(K_INT_MATCH_AVAILABLE_FRAMES)] ?: 0,
-            availableReds = preferences[intPreferencesKey(K_INT_MATCH_AVAILABLE_REDS)] ?: 0,
-            foulModifier = preferences[intPreferencesKey(K_INT_MATCH_FOUL_MODIFIER)] ?: 0,
-            startingPlayer = preferences[intPreferencesKey(K_INT_MATCH_STARTING_PLAYER)] ?: 0,
-            handicapFrame = preferences[intPreferencesKey(K_INT_MATCH_HANDICAP_FRAME)] ?: 0,
-            handicapMatch = preferences[intPreferencesKey(K_INT_MATCH_HANDICAP_MATCH)] ?: 0,
-            crtFrame = preferences[longPreferencesKey(K_LONG_MATCH_CRT_FRAME)] ?: 0,
-            crtPlayer = preferences[intPreferencesKey(K_INT_MATCH_CRT_PLAYER)] ?: 0,
-            maxFramePoints = preferences[intPreferencesKey(K_INT_MATCH_AVAILABLE_POINTS)] ?: 0,
-            counterRetake = preferences[intPreferencesKey(K_INT_MATCH_COUNTER_RETAKE)] ?: 0,
-            pointsWithoutReturn = preferences[intPreferencesKey(K_INT_MATCH_POINTS_WITHOUT_RETURN)] ?: 0
+                ?: if (BuildConfig.DEBUG_TOGGLE) "Higgins" else EMPTY_STRING
         )
     }
 }

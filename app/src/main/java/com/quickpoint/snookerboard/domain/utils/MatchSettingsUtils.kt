@@ -2,7 +2,6 @@ package com.quickpoint.snookerboard.domain.utils
 
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.data.*
-import com.quickpoint.snookerboard.domain.utils.MatchSettings.Settings
 import com.quickpoint.snookerboard.domain.utils.MatchState.*
 
 enum class MatchState { RULES_IDLE, GAME_IN_PROGRESS, SUMMARY }
@@ -15,10 +14,10 @@ fun getMatchStateFromOrdinal(ordinal: Int): MatchState = when (ordinal) {
 }
 
 fun isSettingsButtonSelected(key: String, value: Int): Boolean = value == when (key) {
-    K_INT_MATCH_STARTING_PLAYER -> Settings.startingPlayer
-    K_INT_MATCH_AVAILABLE_FRAMES -> Settings.availableFrames
-    K_INT_MATCH_AVAILABLE_REDS -> Settings.availableReds
-    K_INT_MATCH_FOUL_MODIFIER -> Settings.foulModifier
+    K_INT_MATCH_STARTING_PLAYER -> MatchSettings.startingPlayer
+    K_INT_MATCH_AVAILABLE_FRAMES -> MatchSettings.availableFrames
+    K_INT_MATCH_AVAILABLE_REDS -> MatchSettings.availableReds
+    K_INT_MATCH_FOUL_MODIFIER -> MatchSettings.foulModifier
     else -> -1000
 }
 

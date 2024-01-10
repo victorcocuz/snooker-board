@@ -7,14 +7,17 @@ import com.quickpoint.snookerboard.data.database.models.asDomainPair
 import com.quickpoint.snookerboard.domain.models.DomainFrame
 import com.quickpoint.snookerboard.domain.models.DomainScore
 import com.quickpoint.snookerboard.domain.repository.GameRepository
-import com.quickpoint.snookerboard.domain.utils.MatchSettings.Settings
+import com.quickpoint.snookerboard.domain.utils.MatchSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
-class GameRepositoryImpl @Inject constructor(database: SnookerDatabase) : GameRepository {
+class GameRepositoryImpl @Inject constructor(
+    database: SnookerDatabase,
+    private val matchSettings: MatchSettings,
+) : GameRepository {
 
     private val daoDbActionLog = database.daoDbActionLog
     private val daoDbBall = database.daoDbBall
@@ -25,7 +28,7 @@ class GameRepositoryImpl @Inject constructor(database: SnookerDatabase) : GameRe
 
     override suspend fun getCrtFrame(): DbFrameWithScoreAndBreakWithPotsAndBallStack? = withContext(Dispatchers.IO) {
         val crtFrame = daoDbFrame.getCrtFrame()
-        Timber.i("getCrtFrame(): State is: ${Settings.matchState}, CrtFrame is: ${crtFrame?.frame?.frameId}, frameCount is: ${Settings.crtFrame}")
+        Timber.i("getCrtFrame(): State is: ${MatchSettings.matchState}, CrtFrame is: ${crtFrame?.frame?.frameId}, frameCount is: ${MatchSettings.crtFrame}")
         crtFrame
     }
 

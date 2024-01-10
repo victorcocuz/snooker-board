@@ -4,10 +4,10 @@ import com.quickpoint.snookerboard.data.DataStore
 import com.quickpoint.snookerboard.data.K_BOOL_TOGGLE_FREEBALL
 import com.quickpoint.snookerboard.domain.models.PotType
 import com.quickpoint.snookerboard.domain.models.PotType.*
-
+import javax.inject.Singleton
 
 sealed class Toggle(
-    var isEnabled: Boolean,
+    var isEnabled: Boolean
 ) {
     object FreeBall : Toggle(false)
 }

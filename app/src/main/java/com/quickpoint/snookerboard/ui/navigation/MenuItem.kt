@@ -9,7 +9,7 @@ import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.domain.models.isFrameAndMatchEqual
 import com.quickpoint.snookerboard.domain.models.isFrameEqual
 import com.quickpoint.snookerboard.domain.models.isFrameInProgress
-import com.quickpoint.snookerboard.ui.fragments.game.GameViewModel
+import com.quickpoint.snookerboard.ui.screens.game.GameViewModel
 
 class MenuItem(
     val id: String,

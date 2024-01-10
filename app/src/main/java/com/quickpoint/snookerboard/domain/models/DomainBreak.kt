@@ -4,8 +4,7 @@ import com.quickpoint.snookerboard.data.database.models.DbPot
 import com.quickpoint.snookerboard.domain.models.PotAction.CONTINUE
 import com.quickpoint.snookerboard.domain.models.PotAction.RETAKE
 import com.quickpoint.snookerboard.domain.models.PotType.*
-import com.quickpoint.snookerboard.domain.utils.MatchSettings.Settings
-import com.quickpoint.snookerboard.domain.utils.getOtherPlayer
+import com.quickpoint.snookerboard.domain.utils.MatchSettings
 
 // The DOMAIN Break class is a list of balls potted in one visit (consecutive balls by one player until the other player takes over or the frame ends)
 data class DomainBreak(
@@ -58,7 +57,7 @@ fun DomainBreak.isLastBallFoul() = this.pots.lastOrNull()?.potType == TYPE_FOUL
 fun MutableList<DomainBreak>.findMaxBreak(): Int {
     var newBreak = 0
     forEach { crtBreak ->
-        if (crtBreak.player == Settings.crtPlayer && crtBreak.breakSize > newBreak) newBreak = crtBreak.breakSize
+        if (crtBreak.player == MatchSettings.crtPlayer && crtBreak.breakSize > newBreak) newBreak = crtBreak.breakSize
     }
     return newBreak
 }
@@ -81,42 +80,42 @@ fun MutableList<DomainBreak>.onPot(
 ) { // Add to frameStack all pots, but remove repeated freeball toggles
     if (pot.potType == TYPE_FREE_ACTIVE && lastPotType() == TYPE_FREE_ACTIVE) removeLastPotFromFrameStack(score)
     else addToFrameStack(pot, pointsWithoutReturn, score)
-    score[Settings.crtPlayer].highestBreak = findMaxBreak()
+    score[MatchSettings.crtPlayer].highestBreak = findMaxBreak()
 }
 
 fun MutableList<DomainBreak>.addToFrameStack(pot: DomainPot, pointsWithoutReturn: Int, score: MutableList<DomainScore>) {
     if (size == 0 // Add a new current break if there are no breaks
         || pot.potType !in listOfPotTypesPointsAdding // or if the current pot is not generating points
         || lastPotType() !in listOfPotTypesPointsAdding // or if previous pot was not generating points
-        || last().player != Settings.crtPlayer // or if player has changed
-    ) add(DomainBreak(Settings.assignUniqueId(), Settings.crtPlayer, Settings.crtFrame, mutableListOf(), 0, pointsWithoutReturn))
+        || last().player != MatchSettings.crtPlayer // or if player has changed
+    ) add(DomainBreak(MatchSettings.uniqueId, MatchSettings.crtPlayer, MatchSettings.crtFrame, mutableListOf(), 0, pointsWithoutReturn))
     last().pots.add(pot) // Add the current pot to the current break
 
-    if (pot.potAction == RETAKE || (pot.potType == TYPE_FOUL && pot.potAction == CONTINUE && Settings.counterRetake == 2)) // Update counter retake
-        Settings.counterRetake += 1 else Settings.counterRetake = 0 // Check for frame forfeit option
+    if (pot.potAction == RETAKE || (pot.potType == TYPE_FOUL && pot.potAction == CONTINUE && MatchSettings.counterRetake == 2)) // Update counter retake
+        MatchSettings.counterRetake += 1 else MatchSettings.counterRetake = 0 // Check for frame forfeit option
     if (pot.potType in listOfPotTypesPointsAdding) {
         last().breakSize += pot.ball.points // Update the current break size
         last().pointsWithoutReturn += pot.ball.points // Update points without return
-        score[Settings.crtPlayer].pointsWithoutReturn = last().pointsWithoutReturn
-        score[Settings.getOtherPlayer()].pointsWithoutReturn = 0
+        score[MatchSettings.crtPlayer].pointsWithoutReturn = last().pointsWithoutReturn
+        score[MatchSettings.getOtherPlayer()].pointsWithoutReturn = 0
     }
 }
 
 fun MutableList<DomainBreak>.removeLastPotFromFrameStack(score: MutableList<DomainScore>): DomainPot {
     val pot = last().pots.removeLast() // Get the last pot
-    if (Settings.counterRetake >= 0) Settings.counterRetake-- // Update counter retake
+    if (MatchSettings.counterRetake >= 0) MatchSettings.counterRetake-- // Update counter retake
     if (pot.potType in listOfPotTypesPointsAdding) {
         last().breakSize -= pot.ball.points // Update current break size
         last().pointsWithoutReturn -= pot.ball.points // Update points without return
-        score[Settings.crtPlayer].pointsWithoutReturn = last().pointsWithoutReturn
+        score[MatchSettings.crtPlayer].pointsWithoutReturn = last().pointsWithoutReturn
     }
     while (size > 0 && last().pots.size == 0) removeLast() // Remove all empty breaks, except initial one
 
     if (size == 0) { // Update points without return after removing empty pots and breaks
-        if (Settings.pointsWithoutReturn < 0) score[0].pointsWithoutReturn = Settings.pointsWithoutReturn * -1
-        else score[1].pointsWithoutReturn = Settings.pointsWithoutReturn
-    } else if (score[Settings.crtPlayer].pointsWithoutReturn == 0)
-        score[Settings.getOtherPlayer()].pointsWithoutReturn = last().pointsWithoutReturn
+        if (MatchSettings.pointsWithoutReturn < 0) score[0].pointsWithoutReturn = MatchSettings.pointsWithoutReturn * -1
+        else score[1].pointsWithoutReturn = MatchSettings.pointsWithoutReturn
+    } else if (score[MatchSettings.crtPlayer].pointsWithoutReturn == 0)
+        score[MatchSettings.getOtherPlayer()].pointsWithoutReturn = last().pointsWithoutReturn
     return pot
 }
 

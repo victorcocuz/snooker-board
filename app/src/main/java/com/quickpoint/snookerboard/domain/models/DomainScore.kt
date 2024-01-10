@@ -5,9 +5,8 @@ import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_RERACK
 import com.quickpoint.snookerboard.domain.models.BallType.TYPE_WHITE
 import com.quickpoint.snookerboard.domain.models.PotType.*
 import com.quickpoint.snookerboard.domain.models.ShotType.*
-import com.quickpoint.snookerboard.domain.utils.MatchSettings.Settings
+import com.quickpoint.snookerboard.domain.utils.MatchSettings
 import com.quickpoint.snookerboard.domain.utils.getHandicap
-import com.quickpoint.snookerboard.domain.utils.getOtherPlayer
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -35,9 +34,9 @@ data class DomainScore(
         framePoints + matchPoints + successShots + missedShots + safetyMissedShots + safetyMissedShots + snookers + fouls + highestBreak
 
     fun resetFrame(index: Int, matchAction: MatchAction) {
-        if (matchAction != FRAME_RERACK) scoreId = Settings.assignUniqueId()
+        if (matchAction != FRAME_RERACK) scoreId = MatchSettings.uniqueId
         playerId = index
-        framePoints = getHandicap(Settings.handicapFrame, if (index == 0) -1 else 1)
+        framePoints = getHandicap(MatchSettings.handicapFrame, if (index == 0) -1 else 1)
         successShots = 0
         missedShots = 0
         safetySuccessShots = 0
@@ -63,7 +62,7 @@ fun List<DomainScore>.isFrameAndMatchEqual() = isFrameEqual() && isMatchEqual()
 fun List<DomainScore>.isNoFrameFinished() = if (isEmpty()) false else this[0].matchPoints + this[1].matchPoints == 0
 fun List<DomainScore>.frameWinner() = if (isEmpty()) 0 else if (this[0].framePoints > this[1].framePoints) 0 else 1
 fun List<DomainScore>.isFrameWinResultingMatchTie() = if (isEmpty()) false else this[frameWinner()].matchPoints + 1 == this[1 - frameWinner()].matchPoints
-fun List<DomainScore>.isMatchEnding() = if (isEmpty()) false else this[frameWinner()].matchPoints + 1 == Settings.availableFrames
+fun List<DomainScore>.isMatchEnding() = if (isEmpty()) false else this[frameWinner()].matchPoints + 1 == MatchSettings.availableFrames
 fun List<DomainScore>.isMatchInProgress() = if (isEmpty()) false else (this[0].cumulatedValues() + this[1].cumulatedValues()) > 0
 
 // Helper methods
@@ -74,15 +73,15 @@ fun MutableList<DomainScore>.resetFrame(matchAction: MatchAction) {
 fun MutableList<DomainScore>.resetMatch() {
     this.clear()
     (0 until 2).forEach {
-        this.add(DomainScore(0, 0, 0, 0, getHandicap(Settings.handicapMatch, if (it == 0) -1 else 1), 0, 0, 0, 0, 0, 0, 0,0,0,0,0, 0))
+        this.add(DomainScore(0, 0, 0, 0, getHandicap(MatchSettings.handicapMatch, if (it == 0) -1 else 1), 0, 0, 0, 0, 0, 0, 0,0,0,0,0, 0))
     }
 }
 
 fun MutableList<DomainScore>.endFrame() {
-    if (Settings.counterRetake == 3) this[Settings.getOtherPlayer()].matchPoints += 1 // If a non-snooker shot was retaken 3 times game is lost by the crt player
+    if (MatchSettings.counterRetake == 3) this[MatchSettings.getOtherPlayer()].matchPoints += 1 // If a non-snooker shot was retaken 3 times game is lost by the crt player
     else this[frameWinner()].matchPoints += 1
-    for (score in this) score.frameId = Settings.crtFrame // TEMP - Assign a frameId to later use to add frame info to DATABASE
-    Settings.pointsWithoutReturn =
+    for (score in this) score.frameId = MatchSettings.crtFrame // TEMP - Assign a frameId to later use to add frame info to DATABASE
+    MatchSettings.pointsWithoutReturn =
         if (this[0].pointsWithoutReturn > 0) this[0].pointsWithoutReturn * -1
         else this[1].pointsWithoutReturn
 }
@@ -92,31 +91,31 @@ fun MutableList<DomainScore>.calculatePoints(pot: DomainPot, pol: Int, lastFoulS
     when (pot.potType) { // Generic shots score
         TYPE_HIT, TYPE_FREE, TYPE_ADDRED -> {
             points = pot.ball.points
-            this[Settings.crtPlayer].framePoints += pol * points // Polarity is used to reverse score on undo
+            this[MatchSettings.crtPlayer].framePoints += pol * points // Polarity is used to reverse score on undo
             pot.ball.points = points
-            this[Settings.crtPlayer].successShots += pol
+            this[MatchSettings.crtPlayer].successShots += pol
         }
         TYPE_FOUL -> {
             points = if (pot.ball.ballType == TYPE_WHITE) max(lastFoulSize, 4) else pot.ball.foul
             pot.ball.foul = points
-            this[Settings.getOtherPlayer()].framePoints += pol * points
-            this[Settings.crtPlayer].missedShots += pol
-            this[Settings.crtPlayer].fouls += pol
+            this[MatchSettings.getOtherPlayer()].framePoints += pol * points
+            this[MatchSettings.crtPlayer].missedShots += pol
+            this[MatchSettings.crtPlayer].fouls += pol
         }
-        TYPE_MISS -> this[Settings.crtPlayer].missedShots += pol
-        TYPE_SAFE -> this[Settings.crtPlayer].safetySuccessShots += pol
-        TYPE_SAFE_MISS -> this[Settings.crtPlayer].safetyMissedShots += pol
-        TYPE_SNOOKER -> this[Settings.crtPlayer].snookers += pol
+        TYPE_MISS -> this[MatchSettings.crtPlayer].missedShots += pol
+        TYPE_SAFE -> this[MatchSettings.crtPlayer].safetySuccessShots += pol
+        TYPE_SAFE_MISS -> this[MatchSettings.crtPlayer].safetyMissedShots += pol
+        TYPE_SNOOKER -> this[MatchSettings.crtPlayer].snookers += pol
         else -> {}
     }
     when (pot.potType) { // Long shots and rest shots score
         TYPE_HIT, TYPE_FREE, TYPE_SAFE, TYPE_SNOOKER -> {
-            if (pot.shotType in listOf(LONG_AND_REST, LONG)) this[Settings.crtPlayer].longShotsSuccess += pol
-            if (pot.shotType in listOf(LONG_AND_REST, REST)) this[Settings.crtPlayer].restShotsSuccess += pol
+            if (pot.shotType in listOf(LONG_AND_REST, LONG)) this[MatchSettings.crtPlayer].longShotsSuccess += pol
+            if (pot.shotType in listOf(LONG_AND_REST, REST)) this[MatchSettings.crtPlayer].restShotsSuccess += pol
         }
         TYPE_FOUL, TYPE_MISS, TYPE_SAFE_MISS -> {
-            if (pot.shotType in listOf(LONG_AND_REST, LONG)) this[Settings.crtPlayer].longShotsMissed += pol
-            if (pot.shotType in listOf(LONG_AND_REST, REST)) this[Settings.crtPlayer].restShotsMissed += pol
+            if (pot.shotType in listOf(LONG_AND_REST, LONG)) this[MatchSettings.crtPlayer].longShotsMissed += pol
+            if (pot.shotType in listOf(LONG_AND_REST, REST)) this[MatchSettings.crtPlayer].restShotsMissed += pol
         }
         else -> {}
     }

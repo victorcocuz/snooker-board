@@ -21,11 +21,11 @@ import com.quickpoint.snookerboard.core.utils.BallAdapterType
 import com.quickpoint.snookerboard.data.K_INT_MATCH_HANDICAP_FRAME
 import com.quickpoint.snookerboard.domain.models.DomainBall
 import com.quickpoint.snookerboard.domain.models.DomainBall.*
-import com.quickpoint.snookerboard.domain.utils.MatchSettings.Settings
+import com.quickpoint.snookerboard.domain.utils.MatchSettings
 import com.quickpoint.snookerboard.domain.utils.getHandicap
 import com.quickpoint.snookerboard.domain.utils.getSettingsTextIdByKeyAndValue
 import com.quickpoint.snookerboard.domain.utils.isSettingsButtonSelected
-import com.quickpoint.snookerboard.ui.fragments.rules.RulesViewModel
+import com.quickpoint.snookerboard.ui.screens.rules.RulesViewModel
 import com.quickpoint.snookerboard.ui.theme.*
 import kotlinx.coroutines.launch
 
@@ -46,8 +46,8 @@ fun RulesHandicapLabel(
     var handicap by remember { mutableStateOf(0) }
     LaunchedEffect(rulesUpdateAction) {
         handicap = when (key) {
-            K_INT_MATCH_HANDICAP_FRAME -> Settings.handicapFrame
-            else -> Settings.handicapMatch
+            K_INT_MATCH_HANDICAP_FRAME -> MatchSettings.handicapFrame
+            else -> MatchSettings.handicapMatch
         }
     }
     Text(
