@@ -3,8 +3,17 @@ package com.quickpoint.snookerboard.domain.models
 import com.quickpoint.snookerboard.core.utils.MatchAction
 import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_RERACK
 import com.quickpoint.snookerboard.domain.models.BallType.TYPE_WHITE
-import com.quickpoint.snookerboard.domain.models.PotType.*
-import com.quickpoint.snookerboard.domain.models.ShotType.*
+import com.quickpoint.snookerboard.domain.models.PotType.TYPE_ADDRED
+import com.quickpoint.snookerboard.domain.models.PotType.TYPE_FOUL
+import com.quickpoint.snookerboard.domain.models.PotType.TYPE_FREE
+import com.quickpoint.snookerboard.domain.models.PotType.TYPE_HIT
+import com.quickpoint.snookerboard.domain.models.PotType.TYPE_MISS
+import com.quickpoint.snookerboard.domain.models.PotType.TYPE_SAFE
+import com.quickpoint.snookerboard.domain.models.PotType.TYPE_SAFE_MISS
+import com.quickpoint.snookerboard.domain.models.PotType.TYPE_SNOOKER
+import com.quickpoint.snookerboard.domain.models.ShotType.LONG
+import com.quickpoint.snookerboard.domain.models.ShotType.LONG_AND_REST
+import com.quickpoint.snookerboard.domain.models.ShotType.REST
 import com.quickpoint.snookerboard.domain.utils.MatchSettings
 import com.quickpoint.snookerboard.domain.utils.getHandicap
 import kotlin.math.abs
@@ -67,13 +76,13 @@ fun List<DomainScore>.isMatchInProgress() = if (isEmpty()) false else (this[0].c
 
 // Helper methods
 fun MutableList<DomainScore>.resetFrame(matchAction: MatchAction) {
-    this.forEachIndexed { index, domainScore -> domainScore.resetFrame(index, matchAction) }
+    forEachIndexed { index, domainScore -> domainScore.resetFrame(index, matchAction) }
 }
 
 fun MutableList<DomainScore>.resetMatch() {
-    this.clear()
+    clear()
     (0 until 2).forEach {
-        this.add(DomainScore(0, 0, 0, 0, getHandicap(MatchSettings.handicapMatch, if (it == 0) -1 else 1), 0, 0, 0, 0, 0, 0, 0,0,0,0,0, 0))
+        add(DomainScore(0, 0, 0, 0, getHandicap(MatchSettings.handicapMatch, if (it == 0) -1 else 1), 0, 0, 0, 0, 0, 0, 0,0,0,0,0, 0))
     }
 }
 

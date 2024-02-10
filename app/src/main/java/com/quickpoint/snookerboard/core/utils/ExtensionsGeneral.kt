@@ -10,9 +10,8 @@ import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
-import android.view.*
+import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
 import androidx.annotation.ColorRes
 import androidx.fragment.app.Fragment
 import com.quickpoint.snookerboard.core.utils.Constants.EMAIL_BASE_URI
@@ -50,12 +49,12 @@ tailrec fun Context.getActivity(): Activity? = when (this) {
 
 fun Context.vibrateOnce() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        val vibratorManager =  this.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+        val vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
         val vib  = vibratorManager.defaultVibrator
         vib.vibrate(VibrationEffect.createOneShot(50,1 ))
     } else {
         @Suppress("DEPRECATION")
-        val vib  = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        val vib  = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         vib.vibrate(50)
     }
 }

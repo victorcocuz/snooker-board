@@ -15,8 +15,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class GameRepositoryImpl @Inject constructor(
-    database: SnookerDatabase,
-    private val matchSettings: MatchSettings,
+    database: SnookerDatabase
 ) : GameRepository {
 
     private val daoDbActionLog = database.daoDbActionLog

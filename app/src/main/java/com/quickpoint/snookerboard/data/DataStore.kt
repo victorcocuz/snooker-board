@@ -3,13 +3,16 @@ package com.quickpoint.snookerboard.data
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.IOException
-import androidx.datastore.preferences.core.*
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.quickpoint.snookerboard.BuildConfig
 import com.quickpoint.snookerboard.core.utils.Constants.EMPTY_STRING
 import com.quickpoint.snookerboard.domain.models.ShotType
-import com.quickpoint.snookerboard.domain.utils.DomainPlayer.Player01
-import com.quickpoint.snookerboard.domain.utils.DomainPlayer.Player02
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
@@ -19,12 +22,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Singleton
-
-const val K_PLAYER01_FIRST_NAME = "ds_key_player01_first_name"
-const val K_PLAYER01_LAST_NAME = "ds_key_player01_last_name"
-const val K_PLAYER02_FIRST_NAME = "ds_key_player02_first_name"
-const val K_PLAYER02_LAST_NAME = "ds_key_player02_last_name"
-val listOfKeysString = listOf(K_PLAYER01_FIRST_NAME, K_PLAYER01_LAST_NAME, K_PLAYER02_FIRST_NAME, K_PLAYER02_LAST_NAME)
 
 const val K_INT_MATCH_UNIQUE_ID = "ds_key_match_unique_id"
 const val K_INT_MATCH_AVAILABLE_FRAMES = "ds_key_match_available_frames"
@@ -61,7 +58,6 @@ val listOfKeysBool = listOf(
 )
 
 fun getPrefKey(key: String) = when (key) {
-    in listOfKeysString -> stringPreferencesKey(key)
     in listOfKeysInt -> intPreferencesKey(key)
     in listOfKeysLong -> longPreferencesKey(key)
     else -> booleanPreferencesKey(key) // boolean
@@ -129,18 +125,5 @@ class DataStore(private val context: Context) {
             }
         }
         val preferences = preferencesFlow.first()
-
-        Player01.loadPreferences(
-            firstName = preferences[stringPreferencesKey(K_PLAYER01_FIRST_NAME)]
-                ?: if (BuildConfig.DEBUG_TOGGLE) "Ronnie" else EMPTY_STRING,
-            lastName = preferences[stringPreferencesKey(K_PLAYER01_LAST_NAME)]
-                ?: if (BuildConfig.DEBUG_TOGGLE) "O'Sullivan" else EMPTY_STRING
-        )
-        Player02.loadPreferences(
-            firstName = preferences[stringPreferencesKey(K_PLAYER02_FIRST_NAME)]
-                ?: if (BuildConfig.DEBUG_TOGGLE) "John" else EMPTY_STRING,
-            lastName = preferences[stringPreferencesKey(K_PLAYER02_LAST_NAME)]
-                ?: if (BuildConfig.DEBUG_TOGGLE) "Higgins" else EMPTY_STRING
-        )
     }
 }

@@ -3,7 +3,9 @@ package com.quickpoint.snookerboard.domain.models
 import com.quickpoint.snookerboard.data.database.models.DbPot
 import com.quickpoint.snookerboard.domain.models.PotAction.CONTINUE
 import com.quickpoint.snookerboard.domain.models.PotAction.RETAKE
-import com.quickpoint.snookerboard.domain.models.PotType.*
+import com.quickpoint.snookerboard.domain.models.PotType.TYPE_FOUL
+import com.quickpoint.snookerboard.domain.models.PotType.TYPE_FREE_ACTIVE
+import com.quickpoint.snookerboard.domain.models.PotType.TYPE_HIT
 import com.quickpoint.snookerboard.domain.utils.MatchSettings
 
 // The DOMAIN Break class is a list of balls potted in one visit (consecutive balls by one player until the other player takes over or the frame ends)
@@ -51,7 +53,7 @@ fun List<DomainBreak>.lastBallTypeBeforeRemoveBall(): BallType? {
     }
     return null
 }
-fun DomainBreak.isLastBallFoul() = this.pots.lastOrNull()?.potType == TYPE_FOUL
+fun DomainBreak.isLastBallFoul() = pots.lastOrNull()?.potType == TYPE_FOUL
 
 // Helper methods
 fun MutableList<DomainBreak>.findMaxBreak(): Int {

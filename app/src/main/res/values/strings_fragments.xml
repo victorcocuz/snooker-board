@@ -14,6 +14,7 @@
     <string name="l_rules_main_hint_name_first">First Name</string>
     <string name="l_rules_main_hint_name_last">Last Name</string>
 
+    <string name="l_rules_main_tv_player_label">Player</string>
     <string name="l_rules_main_tv_player_a_label">Player 1</string>
     <string name="l_rules_main_tv_player_b_label">Player 2</string>
     <string name="l_rules_main_tv_frames_label">Number of Frames</string>

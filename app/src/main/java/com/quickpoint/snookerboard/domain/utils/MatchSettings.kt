@@ -2,9 +2,25 @@ package com.quickpoint.snookerboard.domain.utils
 
 import com.quickpoint.snookerboard.core.utils.MatchAction
 import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_START_NEW
-import com.quickpoint.snookerboard.data.*
+import com.quickpoint.snookerboard.data.K_BOOL_TOGGLE_FREEBALL
+import com.quickpoint.snookerboard.data.K_INT_MATCH_AVAILABLE_FRAMES
+import com.quickpoint.snookerboard.data.K_INT_MATCH_AVAILABLE_POINTS
+import com.quickpoint.snookerboard.data.K_INT_MATCH_AVAILABLE_REDS
+import com.quickpoint.snookerboard.data.K_INT_MATCH_COUNTER_RETAKE
+import com.quickpoint.snookerboard.data.K_INT_MATCH_CRT_PLAYER
+import com.quickpoint.snookerboard.data.K_INT_MATCH_FOUL_MODIFIER
+import com.quickpoint.snookerboard.data.K_INT_MATCH_HANDICAP_FRAME
+import com.quickpoint.snookerboard.data.K_INT_MATCH_HANDICAP_MATCH
+import com.quickpoint.snookerboard.data.K_INT_MATCH_POINTS_WITHOUT_RETURN
+import com.quickpoint.snookerboard.data.K_INT_MATCH_STARTING_PLAYER
+import com.quickpoint.snookerboard.data.K_INT_MATCH_UNIQUE_ID
+import com.quickpoint.snookerboard.data.K_LONG_MATCH_CRT_FRAME
+import com.quickpoint.snookerboard.data.K_LONG_MATCH_STATE
 import com.quickpoint.snookerboard.domain.models.PotAction
-import com.quickpoint.snookerboard.domain.models.PotAction.*
+import com.quickpoint.snookerboard.domain.models.PotAction.CONTINUE
+import com.quickpoint.snookerboard.domain.models.PotAction.FIRST
+import com.quickpoint.snookerboard.domain.models.PotAction.RETAKE
+import com.quickpoint.snookerboard.domain.models.PotAction.SWITCH
 import com.quickpoint.snookerboard.domain.repository.DataStoreRepository
 import com.quickpoint.snookerboard.domain.utils.MatchState.RULES_IDLE
 import kotlinx.coroutines.CoroutineScope
@@ -199,19 +215,19 @@ class MatchSettings @Inject constructor(
         counterRetake: Int,
         pointsWithoutReturn: Int,
     ) {
-        this._matchState = matchState
-        this._uniqueId = uniqueId
-        this._availableFrames = availableFrames
-        this._availableReds = availableReds
-        this._foulModifier = foulModifier
-        this._startingPlayer = startingPlayer
-        this._handicapFrame = handicapFrame
-        this._handicapMatch = handicapMatch
-        this._crtFrame = crtFrame
-        this._crtPlayer = crtPlayer
-        this._maxFramePoints = maxFramePoints
-        this._counterRetake = counterRetake
-        this._pointsWithoutReturn = pointsWithoutReturn
+        _matchState = matchState
+        _uniqueId = uniqueId
+        _availableFrames = availableFrames
+        _availableReds = availableReds
+        _foulModifier = foulModifier
+        _startingPlayer = startingPlayer
+        _handicapFrame = handicapFrame
+        _handicapMatch = handicapMatch
+        _crtFrame = crtFrame
+        _crtPlayer = crtPlayer
+        _maxFramePoints = maxFramePoints
+        _counterRetake = counterRetake
+        _pointsWithoutReturn = pointsWithoutReturn
         Timber.i("loadPreferences(): ${getAsText()}")
     }
 }

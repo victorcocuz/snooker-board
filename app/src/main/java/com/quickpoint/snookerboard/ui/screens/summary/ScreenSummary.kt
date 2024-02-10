@@ -2,12 +2,23 @@ package com.quickpoint.snookerboard.ui.screens.summary
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,17 +32,27 @@ import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.core.utils.StatisticsType
 import com.quickpoint.snookerboard.domain.models.DomainScore
 import com.quickpoint.snookerboard.domain.models.emptyDomainScore
-import com.quickpoint.snookerboard.domain.utils.MatchState
 import com.quickpoint.snookerboard.domain.utils.MatchSettings
 import com.quickpoint.snookerboard.domain.utils.MatchSettings.Companion.crtPlayer
+import com.quickpoint.snookerboard.domain.utils.MatchState
 import com.quickpoint.snookerboard.navigateToRulesScreen
-import com.quickpoint.snookerboard.ui.components.*
-import com.quickpoint.snookerboard.ui.screens.game.ScoreFrameContainer
-import com.quickpoint.snookerboard.ui.screens.game.ScoreMatchContainer
+import com.quickpoint.snookerboard.ui.components.BackPressHandler
+import com.quickpoint.snookerboard.ui.components.ComponentPlayerNames
+import com.quickpoint.snookerboard.ui.components.ContainerColumn
+import com.quickpoint.snookerboard.ui.components.ContainerRow
+import com.quickpoint.snookerboard.ui.components.FragmentContent
+import com.quickpoint.snookerboard.ui.components.FragmentExtras
+import com.quickpoint.snookerboard.ui.components.HorizontalDivider
+import com.quickpoint.snookerboard.ui.components.MainButton
+import com.quickpoint.snookerboard.ui.components.StandardRow
+import com.quickpoint.snookerboard.ui.components.TextSubtitle
 import com.quickpoint.snookerboard.ui.helpers.setGameStatsValue
 import com.quickpoint.snookerboard.ui.helpers.setMatchPoints
 import com.quickpoint.snookerboard.ui.helpers.setPercentage
 import com.quickpoint.snookerboard.ui.helpers.setStatsTableBackground
+import com.quickpoint.snookerboard.ui.screens.game.ScoreFrameContainer
+import com.quickpoint.snookerboard.ui.screens.game.ScoreMatchContainer
+import com.quickpoint.snookerboard.ui.screens.rules.RulesViewModel
 import com.quickpoint.snookerboard.ui.theme.Black
 import com.quickpoint.snookerboard.ui.theme.BrownDark
 import com.quickpoint.snookerboard.ui.theme.White
@@ -40,8 +61,10 @@ import com.quickpoint.snookerboard.ui.theme.spacing
 @Composable
 fun ScreenSummary() {
     val mainVm = LocalView.current.findViewTreeViewModelStoreOwner().let { hiltViewModel<MainViewModel>(it!!) }
+    val rulesVm = hiltViewModel<RulesViewModel>()
     val summaryVm = hiltViewModel<SummaryViewModel>()
 
+    val players by rulesVm.players.collectAsState()
     val totalsA by summaryVm.totalsA.collectAsState()
     val totalsB by summaryVm.totalsB.collectAsState()
     val score by summaryVm.score.collectAsState(null)
@@ -56,7 +79,7 @@ fun ScreenSummary() {
     val crtPlayer by remember { mutableStateOf(crtPlayer) }
 
     FragmentContent {
-        ComponentPlayerNames(crtPlayer)
+        ComponentPlayerNames(crtPlayer, players)
         ContainerRow {
             ScoreFrameContainer("${totalsA.matchPoints}")
             ScoreMatchContainer(text = MatchSettings.getDisplayFrames())

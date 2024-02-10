@@ -5,7 +5,6 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.quickpoint.snookerboard.core.ScreenEvents
-import com.quickpoint.snookerboard.data.DataStore
 import com.quickpoint.snookerboard.data.K_INT_MATCH_AVAILABLE_FRAMES
 import com.quickpoint.snookerboard.data.K_INT_MATCH_AVAILABLE_POINTS
 import com.quickpoint.snookerboard.data.K_INT_MATCH_AVAILABLE_REDS
@@ -23,9 +22,8 @@ import com.quickpoint.snookerboard.data.database.models.asDomain
 import com.quickpoint.snookerboard.domain.models.DomainFrame
 import com.quickpoint.snookerboard.domain.repository.DataStoreRepository
 import com.quickpoint.snookerboard.domain.repository.GameRepository
-import com.quickpoint.snookerboard.domain.utils.DomainPlayer
-import com.quickpoint.snookerboard.domain.utils.MatchState.RULES_IDLE
 import com.quickpoint.snookerboard.domain.utils.MatchSettings
+import com.quickpoint.snookerboard.domain.utils.MatchState.RULES_IDLE
 import com.quickpoint.snookerboard.domain.utils.getMatchStateFromOrdinal
 import com.quickpoint.snookerboard.ui.navigation.MenuItem
 import com.quickpoint.snookerboard.ui.navigation.Screen
@@ -41,7 +39,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val gameRepository: GameRepository,
+    val gameRepository: GameRepository,
     private val dataStoreRepository: DataStoreRepository,
     private val matchSettings: MatchSettings
 ) : ViewModel() {
@@ -79,8 +77,6 @@ class MainViewModel @Inject constructor(
             maxFramePoints = preferences[intPreferencesKey(K_INT_MATCH_AVAILABLE_POINTS)] ?: 0,
             counterRetake = preferences[intPreferencesKey(K_INT_MATCH_COUNTER_RETAKE)] ?: 0,
             pointsWithoutReturn = preferences[intPreferencesKey(K_INT_MATCH_POINTS_WITHOUT_RETURN)] ?: 0)
-        DomainPlayer.Player01.assignDataStore(dataStoreRepository)
-        DomainPlayer.Player02.assignDataStore(dataStoreRepository)
         gameRepository.getCrtFrame().let { crtFrame ->
             if (crtFrame == null) MatchSettings.matchState = RULES_IDLE
             else cachedFrame = crtFrame.asDomain()

@@ -1,9 +1,17 @@
 package com.quickpoint.snookerboard.ui.screens.rules
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -20,14 +28,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.core.base.Event
-import com.quickpoint.snookerboard.domain.utils.getPlaceholderStringIdByKey
-import com.quickpoint.snookerboard.domain.utils.getPlayerNameByKey
+import com.quickpoint.snookerboard.domain.models.DomainPlayer
 import com.quickpoint.snookerboard.ui.components.TextSubtitle
 import com.quickpoint.snookerboard.ui.theme.spacing
-import com.quickpoint.snookerboard.data.K_PLAYER01_FIRST_NAME
-import com.quickpoint.snookerboard.data.K_PLAYER01_LAST_NAME
-import com.quickpoint.snookerboard.data.K_PLAYER02_FIRST_NAME
-import com.quickpoint.snookerboard.data.K_PLAYER02_LAST_NAME
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -38,53 +41,53 @@ fun ModuleRulesNames(
 ) = Row {
     val nameChangeEvent by rulesVm.eventPlayerNameChange.collectAsState(Event(Unit))
     nameChangeEvent.getContentIfNotHandled() // Used to trigger re-composition
-    ComponentNameColumn(
-        K_PLAYER01_FIRST_NAME,
-        K_PLAYER01_LAST_NAME,
-        focusManager,
-        keyboardController,
-    ) { key, value -> rulesVm.onPlayerNameChange(key, value) }
 
-    ComponentNameColumn(
-        K_PLAYER02_FIRST_NAME,
-        K_PLAYER02_LAST_NAME,
-        focusManager,
-        keyboardController,
-    ) { key, value -> rulesVm.onPlayerNameChange(key, value) }
+    val players by rulesVm.players.collectAsState()
+    players.forEachIndexed { index, it ->
+        ComponentNameColumn(
+            it,
+            index,
+            focusManager,
+            keyboardController,
+        ) { player -> rulesVm.onPlayerNameChange(player) }
+    }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun RowScope.ComponentNameColumn(
-    key_first_name: String,
-    key_last_name: String,
+    player: DomainPlayer,
+    index: Int,
     focusManager: FocusManager,
     keyboardController: SoftwareKeyboardController?,
-    onChange: (String, String) -> Unit
+    onChange: (DomainPlayer) -> Unit
 ) = Column(
     Modifier
         .weight(1f)
         .padding(start = MaterialTheme.spacing.smallMedium)
 ) {
-    TextSubtitle(stringResource(R.string.l_rules_main_tv_player_a_label))
-    AppTextField(
-        key = key_first_name,
+    TextSubtitle("${stringResource(R.string.l_rules_main_tv_player_label)} ${index + 1}")
+    PlayerNameField(
+        name = player.firstName,
         keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) }),
-    ) { key, value -> onChange(key, value) }
-    AppTextField(
-        key = key_last_name,
+        orderId = if (index == 1) 3 else 1
+    ) { name -> onChange(player.copy(firstName = name)) }
+    PlayerNameField(
+        name = player.lastName,
         keyboardActions = KeyboardActions(
-            onNext = { if (key_last_name != K_PLAYER02_LAST_NAME) focusManager.moveFocus(FocusDirection.Next) },
-            onDone = { if (key_last_name == K_PLAYER02_LAST_NAME) keyboardController?.hide() }),
-    ) { key, value -> onChange(key, value) }
+            onNext = { if (index == 0) focusManager.moveFocus(FocusDirection.Next) },
+            onDone = { if (index == 1) keyboardController?.hide() }),
+        orderId = if (index == 1) 4 else 2
+    ) { name -> onChange(player.copy(lastName = name)) }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppTextField(
-    key: String,
+fun PlayerNameField(
+    name: String,
     keyboardActions: KeyboardActions = KeyboardActions(),
-    onChange: (String, String) -> Unit
+    orderId: Int,
+    onChange: (String) -> Unit
 ) {
     OutlinedTextField(
         modifier = Modifier
@@ -98,12 +101,19 @@ fun AppTextField(
             disabledBorderColor = Color.Gray,
             disabledTextColor = Color.Black
         ),
-        value = getPlayerNameByKey(key),
+        value = name,
         keyboardOptions = KeyboardOptions(
-            imeAction = if (key == K_PLAYER02_LAST_NAME) ImeAction.Done else ImeAction.Next, keyboardType = KeyboardType.Text, capitalization = KeyboardCapitalization.Sentences
+            imeAction = if (orderId == 4) ImeAction.Done else ImeAction.Next, keyboardType = KeyboardType.Text, capitalization = KeyboardCapitalization.Sentences
         ),
         keyboardActions = keyboardActions,
-        placeholder = { Text(text = stringResource(getPlaceholderStringIdByKey(key)), style = MaterialTheme.typography.titleMedium.copy(color = Color.LightGray)) },
-        onValueChange = { onChange(key, it) },
+        placeholder = { Text(text = stringResource(getPlaceholderStringIdByOrderId(orderId)), style = MaterialTheme.typography.titleMedium.copy(color = Color.LightGray)) },
+        onValueChange = { onChange(it) },
     )
+}
+
+private fun getPlaceholderStringIdByOrderId(id: Int): Int = when (id) {
+    1 -> R.string.l_rules_main_hint_name_first
+    2 -> R.string.l_rules_main_hint_name_last
+    3 -> R.string.l_rules_main_hint_name_first
+    else -> R.string.l_rules_main_hint_name_last
 }

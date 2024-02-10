@@ -42,11 +42,11 @@ data class DbFrameWithScoreAndBreakWithPotsAndBallStack(
 
 fun DbFrameWithScoreAndBreakWithPotsAndBallStack.asDomain(): DomainFrame {
     return DomainFrame(
-        frameId = this.frame.frameId,
-        score = this.frameScore.asDomain(),
-        frameStack = this.frameStack.asDomain(),
-        ballStack = this.ballStack.asDomain(),
-        actionLogs = this.debugFrameActions.asDomain(),
-        frameMax = this.frame.frameMax
+        frameId = frame.frameId,
+        score = frameScore.asDomain(),
+        frameStack = frameStack.asDomain(),
+        ballStack = ballStack.asDomain(),
+        actionLogs = debugFrameActions.asDomain(),
+        frameMax = frame.frameMax
     )
 }

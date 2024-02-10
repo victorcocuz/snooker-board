@@ -3,7 +3,13 @@ package com.quickpoint.snookerboard.ui.screens.game
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -13,7 +19,41 @@ import com.quickpoint.snookerboard.MainViewModel
 import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.core.ScreenEvents
 import com.quickpoint.snookerboard.core.admob.showInterstitialAd
-import com.quickpoint.snookerboard.core.utils.MatchAction.*
+import com.quickpoint.snookerboard.core.utils.MatchAction.FOUL_CONFIRM
+import com.quickpoint.snookerboard.core.utils.MatchAction.FOUL_DIALOG
+import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_ENDED
+import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_ENDING_DIALOG
+import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_FREE_ACTIVE
+import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_LAST_BLACK_FOULED
+import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_LAST_BLACK_FOULED_DIALOG
+import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_LOG_ACTIONS
+import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_LOG_ACTIONS_DIALOG
+import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_MISS_FORFEIT
+import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_MISS_FORFEIT_DIALOG
+import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_REMOVE_RED
+import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_RERACK
+import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_RERACK_DIALOG
+import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_RESPOT_BLACK
+import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_RESPOT_BLACK_DIALOG
+import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_START_NEW
+import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_TO_END
+import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_UNDO
+import com.quickpoint.snookerboard.core.utils.MatchAction.FRAME_UPDATED
+import com.quickpoint.snookerboard.core.utils.MatchAction.MATCH_CANCEL
+import com.quickpoint.snookerboard.core.utils.MatchAction.MATCH_CANCEL_DIALOG
+import com.quickpoint.snookerboard.core.utils.MatchAction.MATCH_ENDED
+import com.quickpoint.snookerboard.core.utils.MatchAction.MATCH_ENDED_DISCARD_FRAME
+import com.quickpoint.snookerboard.core.utils.MatchAction.MATCH_ENDING_DIALOG
+import com.quickpoint.snookerboard.core.utils.MatchAction.MATCH_TO_END
+import com.quickpoint.snookerboard.core.utils.MatchAction.NAV_TO_POST_MATCH
+import com.quickpoint.snookerboard.core.utils.MatchAction.SNACK_ADD_RED
+import com.quickpoint.snookerboard.core.utils.MatchAction.SNACK_FRAME_ENDING_DIALOG
+import com.quickpoint.snookerboard.core.utils.MatchAction.SNACK_FRAME_RERACK_DIALOG
+import com.quickpoint.snookerboard.core.utils.MatchAction.SNACK_INVALID_FOUL
+import com.quickpoint.snookerboard.core.utils.MatchAction.SNACK_MATCH_ENDING_DIALOG
+import com.quickpoint.snookerboard.core.utils.MatchAction.SNACK_NO_BALL
+import com.quickpoint.snookerboard.core.utils.MatchAction.SNACK_REMOVE_COLOR
+import com.quickpoint.snookerboard.core.utils.MatchAction.SNACK_UNDO
 import com.quickpoint.snookerboard.core.utils.getListOfDialogActions
 import com.quickpoint.snookerboard.core.utils.getPotType
 import com.quickpoint.snookerboard.core.utils.queryEndFrameOrMatch
@@ -21,19 +61,20 @@ import com.quickpoint.snookerboard.domain.models.PotType
 import com.quickpoint.snookerboard.domain.models.isMatchEnding
 import com.quickpoint.snookerboard.domain.models.isMatchInProgress
 import com.quickpoint.snookerboard.domain.models.isNoFrameFinished
-import com.quickpoint.snookerboard.domain.utils.MatchState
 import com.quickpoint.snookerboard.domain.utils.MatchSettings
 import com.quickpoint.snookerboard.domain.utils.MatchSettings.Companion.crtPlayer
+import com.quickpoint.snookerboard.domain.utils.MatchState
 import com.quickpoint.snookerboard.ui.components.BackPressHandler
 import com.quickpoint.snookerboard.ui.components.ComponentPlayerNames
 import com.quickpoint.snookerboard.ui.components.FragmentContent
 import com.quickpoint.snookerboard.ui.components.FragmentExtras
-import com.quickpoint.snookerboard.ui.screens.gamedialogs.DialogFoul
-import com.quickpoint.snookerboard.ui.screens.gamedialogs.DialogGeneric
-import com.quickpoint.snookerboard.ui.screens.gamedialogs.DialogViewModel
 import com.quickpoint.snookerboard.ui.navigation.Screen
 import com.quickpoint.snookerboard.ui.navigation.getActionItems
 import com.quickpoint.snookerboard.ui.navigation.getActionItemsOverflow
+import com.quickpoint.snookerboard.ui.screens.gamedialogs.DialogFoul
+import com.quickpoint.snookerboard.ui.screens.gamedialogs.DialogGeneric
+import com.quickpoint.snookerboard.ui.screens.gamedialogs.DialogViewModel
+import com.quickpoint.snookerboard.ui.screens.rules.RulesViewModel
 import com.quickpoint.snookerboard.ui.theme.Transparent
 import com.quickpoint.snookerboard.ui.theme.spacing
 import timber.log.Timber
@@ -42,11 +83,14 @@ import timber.log.Timber
 fun ScreenGame() {
     val mainVm = LocalView.current.findViewTreeViewModelStoreOwner().let { hiltViewModel<MainViewModel>(it!!) }
     val gameVm = hiltViewModel<GameViewModel>()
+    val rulesVm = hiltViewModel<RulesViewModel>()
     val dialogVm = hiltViewModel<DialogViewModel>()
-    val domainFrame by gameVm.frameState.collectAsState()
+
     val context = LocalContext.current
+    val domainFrame by gameVm.frameState.collectAsState()
     val isFreeballActive by gameVm.dataStoreRepository.toggleFreeball.collectAsState(false)
     val isAdvancedBreaksActive by gameVm.dataStoreRepository.toggleAdvancedBreaks.collectAsState(false)
+    val players by rulesVm.players.collectAsState()
 
     mainVm.setupActionBarActions(
         gameVm.getActionItems(),
@@ -121,7 +165,7 @@ fun ScreenGame() {
         paddingValues = PaddingValues(MaterialTheme.spacing.default),
         showBottomSpacer = false
     ) {
-        ComponentPlayerNames(crtPlayer)
+        ComponentPlayerNames(crtPlayer, players)
         ModuleGameScore(domainFrame)
         ModuleGameStatistics(domainFrame.score, domainFrame.score.size == 2)
         ModuleGameBreaks(domainFrame.frameStack, isAdvancedBreaksActive)

@@ -3,7 +3,12 @@ package com.quickpoint.snookerboard.ui.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -16,23 +21,32 @@ import com.quickpoint.snookerboard.R
 import com.quickpoint.snookerboard.core.utils.BallAdapterType
 import com.quickpoint.snookerboard.core.utils.PlayerTagType
 import com.quickpoint.snookerboard.core.utils.colorTransition
-import com.quickpoint.snookerboard.domain.models.*
-import com.quickpoint.snookerboard.domain.utils.DomainPlayer
-import com.quickpoint.snookerboard.ui.theme.*
+import com.quickpoint.snookerboard.domain.models.DomainBall
+import com.quickpoint.snookerboard.domain.models.DomainPlayer
+import com.quickpoint.snookerboard.domain.models.PotType
+import com.quickpoint.snookerboard.domain.models.bindFoulBalls
+import com.quickpoint.snookerboard.domain.models.bindMatchBalls
+import com.quickpoint.snookerboard.domain.models.redsRemaining
+import com.quickpoint.snookerboard.ui.theme.Beige
+import com.quickpoint.snookerboard.ui.theme.BrownDark
+import com.quickpoint.snookerboard.ui.theme.BrownMedium
+import com.quickpoint.snookerboard.ui.theme.Transparent
+import com.quickpoint.snookerboard.ui.theme.spacing
 
 @Composable
-fun ComponentPlayerNames(crtPlayer: Int) = ContainerRow(Modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 8.dp)){
-    PlayerNameBox(
-        textTitle = DomainPlayer.Player01.firstName,
-        textSubtitle = DomainPlayer.Player01.lastName,
-        isActive = crtPlayer == 0
-    )
-    PlayerNameBox(
-        textTitle = DomainPlayer.Player02.firstName,
-        textSubtitle = DomainPlayer.Player02.lastName,
-        isActive = crtPlayer == 1
-    )
-}
+fun ComponentPlayerNames(crtPlayer: Int, players: List<DomainPlayer>) =
+    ContainerRow(
+        Modifier
+            .fillMaxWidth()
+            .padding(0.dp, 0.dp, 0.dp, 8.dp)) {
+        players.forEachIndexed { index, player ->
+            PlayerNameBox(
+                textTitle = player.firstName,
+                textSubtitle = player.lastName,
+                isActive = crtPlayer == index
+            )
+        }
+    }
 
 @Composable
 fun RowScope.PlayerNameBox(
