@@ -53,7 +53,7 @@
 
     <string-array name="dr_about_tv_version_1_0_11_list">
         <item>Version 1.0.11</item>
-        <item>• Added remove reds and free ball functionality too the foul screen</item>
+        <item>• Added remove reds and free ball functionality to the foul screen</item>
         <item>• Added options to keep statistics on long shots and rest shots</item>
         <item>• Added statistics for points without return</item>
         <item>• Designed icons for long shots, rest shots and free ball toggles</item>
@@ -97,26 +97,25 @@
 
     <string-array name="dr_about_tv_version_1_0_7_list">
         <item>Version 1.0.7</item>
-        <item>• Add interstitial ads</item>
-        <item>• Fix app support price issues</item>
-        <item>• Add buttons for two new match tracking features: safe miss and snooker</item>
-        <item>• Add new button for missed shots in line with the rest of the balls</item>
-        <item>• Fix UI glitches, add selection color change for fouls</item>
-        <item>• Have all actions show in the frame breakdown</item>
+        <item>• Added interstitial ads</item>
+        <item>• Fixed app support price issues</item>
+        <item>• Added buttons for two new match tracking features: safe miss and snooker</item>
+        <item>• Added new button for missed shots in line with the rest of the balls</item>
+        <item>• Fixed UI glitches, add selection color change for fouls</item>
+        <item>• Added all actions to show in the frame breakdown</item>
     </string-array>
 
     <string-array name="dr_about_tv_version_1_0_6_list">
         <item>Version 1.0.6</item>
-        <item>• Implement billing for in app purchases to enable financial support</item>
-        <item>• Fix player switching glitch</item>
+        <item>• Added functionality for Support the App screen</item>
     </string-array>
 
     <string-array name="dr_about_tv_version_1_0_5_list">
         <item>Version 1.0.5</item>
-        <item>• Fix UI screens overlapping</item>
-        <item>• Fix DB saving glitches</item>
-        <item>• Replace toasts with snackbars on main screen</item>
-        <item>• Add new ball colour for no ball</item>
+        <item>• Fixed UI screens overlapping</item>
+        <item>• Fixed DB saving glitches</item>
+        <item>• Replaced toasts with snackbars on main screen</item>
+        <item>• Added new ball colour for no ball</item>
     </string-array>
 
     <string-array name="dr_about_tv_version_1_0_4_list">
@@ -140,14 +139,14 @@
     </string-array>
 
     <string-array name="dr_about_tv_version_1_0_2_list">
-        <item>• Open app straight onto match statistics when needed</item>
+        <item>• Added functionality to open app straight onto match statistics when needed</item>
         <item>• Fixed undo glitches, match saving glitches and UI glitches</item>
     </string-array>
 
     <string-array name="dr_about_tv_version_1_0_1_list">
         <item>Version 1.0.1</item>
         <item>• Added freeball toggle and remove it from foul dialog</item>
-        <item>• Check for game in progress and load a continuing match directly rather than always starting with the match settings screen</item>
+        <item>• Implemented logic to check for game in progress and load a continuing match directly rather than always starting with the match settings screen</item>
         <item>• Fixed undo glitches</item>
         <item>• Fixed match action glitches and add new dialogs for major actions</item>
     </string-array>
