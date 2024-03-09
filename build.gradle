@@ -1,24 +1,24 @@
 buildscript {
     ext {
         // Init
-        version_core = '1.9.0'
+        version_core = '1.12.0'
         version_appcompat = '1.6.1'
         version_legacy_support = '1.0.0'
         version_material = '1.8.0-beta01'
         version_constraint_layout = '2.1.4'
-        version_splash_screen = '1.0.0'
+        version_splash_screen = '1.0.1'
         version_design = '27.1.1'
-        version_navigation = '2.5.3'
-        version_lifecycle = '2.5.1'
-        version_room = '2.5.0'
-        version_billing = '5.1.0'
-        version_ad_mob = '21.5.0'
+        version_navigation = '2.7.7'
+        version_lifecycle = '2.7.0'
+        version_room = '2.6.1'
+        version_billing = '6.2.0'
+        version_ad_mob = '22.6.0'
 
         // Other
         version_timber = '5.0.1'
         version_number_picker = '2.4.13'
-        version_gson = '2.9.1'
-        version_firebase_crashlytics = '2.9.4'
+        version_gson = '2.10.1'
+        version_firebase_crashlytics = '2.9.9'
 
         // Test
         version_junit = '4.13.2'
@@ -40,8 +40,12 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0'
-        classpath "com.google.dagger:hilt-android-gradle-plugin:2.45"
+        classpath 'com.android.tools.build:gradle:8.3.0'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22'
+        classpath "com.google.dagger:hilt-android-gradle-plugin:2.51"
     }
+}
+
+plugins {
+    id 'com.google.devtools.ksp' version '1.9.22-1.0.17' apply false
 }
