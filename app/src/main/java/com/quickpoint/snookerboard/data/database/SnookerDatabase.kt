@@ -5,6 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.quickpoint.snookerboard.data.database.dao.DaoDbActionLog
+import com.quickpoint.snookerboard.data.database.dao.DaoDbAppReleaseNotes
+import com.quickpoint.snookerboard.data.database.dao.DaoDbAppReleaseVersion
 import com.quickpoint.snookerboard.data.database.dao.DaoDbBall
 import com.quickpoint.snookerboard.data.database.dao.DaoDbBreak
 import com.quickpoint.snookerboard.data.database.dao.DaoDbFrame
@@ -12,6 +14,8 @@ import com.quickpoint.snookerboard.data.database.dao.DaoDbPlayer
 import com.quickpoint.snookerboard.data.database.dao.DaoDbPot
 import com.quickpoint.snookerboard.data.database.dao.DaoDbScore
 import com.quickpoint.snookerboard.data.database.models.DbActionLog
+import com.quickpoint.snookerboard.data.database.models.DbAppReleaseNotes
+import com.quickpoint.snookerboard.data.database.models.DbAppReleaseVersion
 import com.quickpoint.snookerboard.data.database.models.DbBall
 import com.quickpoint.snookerboard.data.database.models.DbBreak
 import com.quickpoint.snookerboard.data.database.models.DbFrame
@@ -27,9 +31,11 @@ import com.quickpoint.snookerboard.data.database.models.DbScore
         DbPot::class,
         DbBreak::class,
         DbFrame::class,
-        DbPlayer::class],
-version = 26,
-exportSchema = false
+        DbPlayer::class,
+        DbAppReleaseVersion::class,
+        DbAppReleaseNotes::class],
+    version = 28,
+    exportSchema = false
 )
 abstract class SnookerDatabase : RoomDatabase() {
     abstract val daoDbActionLog: DaoDbActionLog
@@ -39,6 +45,8 @@ abstract class SnookerDatabase : RoomDatabase() {
     abstract val daoDbPot: DaoDbPot
     abstract val daoDbScore: DaoDbScore
     abstract val daoDbPlayer: DaoDbPlayer
+    abstract val daoDbAppReleaseVersion: DaoDbAppReleaseVersion
+    abstract val daoDbAppReleaseNotes: DaoDbAppReleaseNotes
 
     companion object {
         @Volatile
@@ -52,6 +60,8 @@ abstract class SnookerDatabase : RoomDatabase() {
         const val TABLE_MATCH_POTS = "match_pots_table"
         const val TABLE_MATCH_SCORE = "match_score_table"
         const val TABLE_PLAYER = "match_player_table"
+        const val TABLE_APP_RELEASE_VERSION = "match_app_release_version_table"
+        const val TABLE_APP_RELEASE_NOTES = "match_app_release_notes_table"
 
         fun getDatabase(context: Context): SnookerDatabase {
             synchronized(this) {
