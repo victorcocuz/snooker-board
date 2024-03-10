@@ -3,7 +3,7 @@
 This file is used to record all important changes for each release.
 The format is based on https://keepachangelog.com/en/1.0.0/
 
-## [vX.XX.X] - DD/MM/YYYY
+## [vX.X.XX] - DD/MM/YYYY
 ### Added
 
 ### Changed
@@ -19,6 +19,7 @@ The format is based on https://keepachangelog.com/en/1.0.0/
 ************** Copy and complete the template version and add categories to each release as needed **************
 -->
 
+
 ## [vX.XX.X] - DD/MM/YYYY
 ### Added
 * All UI **compose** elements for `GameFragment`
@@ -26,6 +27,7 @@ The format is based on https://keepachangelog.com/en/1.0.0/
 * `hilt` injection
 * `dataStore` to `hilt`
 * `changelog.md` file and populated it with all previous push and release notes
+* Change log parsing to populate the `About Screen` as well as `Release Version` and `Release Notes` in `Room` database, to have the structure to later move these notes to Firebase and cache them locally
 
 ### Changed
 * Converted navigation fragments `Rules`, `About` and `Improve` to **compose**
